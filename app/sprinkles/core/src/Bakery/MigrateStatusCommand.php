@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Illuminate\Support\Collection;
@@ -26,9 +27,9 @@ class MigrateStatusCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName("migrate:status")
-             ->setDescription("Show the list of installed and pending migration.")
-             ->setHelp("Show the list of installed and pending migration. This command also show if an installed migration is available in the Filesystem, so it can be run down by the rollback command")
+        $this->setName('migrate:status')
+             ->setDescription('Show the list of installed and pending migration.')
+             ->setHelp('Show the list of installed and pending migration. This command also show if an installed migration is available in the Filesystem, so it can be run down by the rollback command')
              ->addOption('database', 'd', InputOption::VALUE_REQUIRED, 'The database connection to use.');
     }
 
@@ -37,7 +38,7 @@ class MigrateStatusCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->io->title("Migration status");
+        $this->io->title('Migration status');
 
         // Get migrator
         $migrator = $this->ci->migrator;
@@ -58,22 +59,22 @@ class MigrateStatusCommand extends BaseCommand
         $pending = $migrator->pendingMigrations($available, $ranArray);
 
         // Display ran migrations
-        $this->io->section("Installed migrations");
+        $this->io->section('Installed migrations');
         if (count($ranArray) > 0) {
             $this->io->table(
                 ['Migration', 'Available?', 'Batch'],
                 $this->getStatusFor($ran, $available)
             );
         } else {
-            $this->io->note("No installed migrations");
+            $this->io->note('No installed migrations');
         }
 
         // Display pending migrations
-        $this->io->section("Pending migrations");
+        $this->io->section('Pending migrations');
         if (count($pending) > 0) {
             $this->io->listing($pending);
         } else {
-            $this->io->note("No pending migrations");
+            $this->io->note('No pending migrations');
         }
     }
 
@@ -81,9 +82,9 @@ class MigrateStatusCommand extends BaseCommand
      * Return an array of [migration, available] association.
      * A migration is available if it's in the available stack (class is in the Filesystem)
      *
-     * @param  Collection  $ran  The ran migrations
-     * @param  array  $available The available migrations
-     * @return array             An array of [migration, available] association
+     * @param  Collection $ran       The ran migrations
+     * @param  array      $available The available migrations
+     * @return array      An array of [migration, available] association
      */
     protected function getStatusFor(Collection $ran, array $available)
     {
@@ -93,6 +94,7 @@ class MigrateStatusCommand extends BaseCommand
             } else {
                 $available = '<fg=red>No</fg=red>';
             }
+
             return [$migration->migration, $available, $migration->batch];
         })->toArray();
     }

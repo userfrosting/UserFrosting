@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use UserFrosting\Support\DotenvEditor\DotenvEditor;
@@ -36,10 +37,10 @@ class SetupEnvCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName("setup:env")
-             ->setDescription("UserFrosting Environment Configuration Wizard")
-             ->setHelp("Helper command to setup environement mode. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.")
-             ->addOption('mode', null, InputOption::VALUE_OPTIONAL, "The environment to use");
+        $this->setName('setup:env')
+             ->setDescription('UserFrosting Environment Configuration Wizard')
+             ->setHelp('Helper command to setup environement mode. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.')
+             ->addOption('mode', null, InputOption::VALUE_OPTIONAL, 'The environment to use');
     }
 
     /**
@@ -50,7 +51,7 @@ class SetupEnvCommand extends BaseCommand
         // Display header,
         $this->io->title("UserFrosting's Environment Setup Wizard");
         $this->io->note("Environment mode will be saved in `{$this->envPath}`");
-        $this->io->write("Select desired envrionement mode. Production should only be used when deploying a live app.");
+        $this->io->write('Select desired envrionement mode. Production should only be used when deploying a live app.');
 
         // Get an instance of the DotenvEditor
         $dotenvEditor = new DotenvEditor(\UserFrosting\APP_DIR, false);
@@ -71,7 +72,7 @@ class SetupEnvCommand extends BaseCommand
      * Ask for env mode
      *
      * @param  InputInterface $args Command arguments
-     * @return string The new env mode
+     * @return string         The new env mode
      */
     protected function askForEnv(InputInterface $args)
     {
@@ -79,7 +80,7 @@ class SetupEnvCommand extends BaseCommand
         if ($args->getOption('mode')) {
             return $args->getOption('mode');
         } else {
-            $newEnvMode = $this->io->choice("Environment Mode", [
+            $newEnvMode = $this->io->choice('Environment Mode', [
                 'default',
                 'production',
                 'debug',

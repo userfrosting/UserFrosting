@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,7 +36,7 @@ class SeedListCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->io->title("Database Seeds List");
+        $this->io->title('Database Seeds List');
         $seeder = new Seeder($this->ci);
         $seeds = $seeder->getSeeds();
         $this->io->table(['Name', 'Namespace', 'Sprinkle'], $seeds);

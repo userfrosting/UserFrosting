@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core;
 
 use RocketTheme\Toolbox\Event\Event;
@@ -42,9 +43,9 @@ class Core extends Sprinkle
     public static function getSubscribedEvents()
     {
         return [
-            'onSprinklesInitialized' => ['onSprinklesInitialized', 0],
+            'onSprinklesInitialized'      => ['onSprinklesInitialized', 0],
             'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0],
-            'onAddGlobalMiddleware' => ['onAddGlobalMiddleware', 0]
+            'onAddGlobalMiddleware'       => ['onAddGlobalMiddleware', 0]
         ];
     }
 

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Controller;
 
 use Carbon\Carbon;
@@ -45,10 +46,10 @@ class AccountController extends SimpleController
      * Route: /account/check-username
      * Route Name: {none}
      * Request type: GET
+     * @param  Request             $request
+     * @param  Response            $response
+     * @param  array               $args
      * @throws BadRequestException
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function checkUsername(Request $request, Response $response, $args)
     {
@@ -98,6 +99,7 @@ class AccountController extends SimpleController
 
         if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
             $message = $translator->translate('USERNAME.NOT_AVAILABLE', $data);
+
             return $response->write($message)->withStatus(200);
         } else {
             return $response->write('true')->withStatus(200);
@@ -115,9 +117,9 @@ class AccountController extends SimpleController
      * Route: /account/set-password/deny
      * Route Name: {none}
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function denyResetPassword(Request $request, Response $response, $args)
     {
@@ -143,6 +145,7 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
+
             return $response->withRedirect($loginPage);
         }
 
@@ -150,10 +153,12 @@ class AccountController extends SimpleController
 
         if (!$passwordReset) {
             $ms->addMessageTranslated('danger', 'PASSWORD.FORGET.INVALID');
+
             return $response->withRedirect($loginPage);
         }
 
         $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_CANNED');
+
         return $response->withRedirect($loginPage);
     }
 
@@ -174,9 +179,9 @@ class AccountController extends SimpleController
      * Route: /account/forgot-password
      * Route Name: {none}
      * Request type: POST
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function forgotPassword(Request $request, Response $response, $args)
     {
@@ -203,6 +208,7 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
+
             return $response->withJson([], 400);
         }
 
@@ -218,6 +224,7 @@ class AccountController extends SimpleController
 
         if ($delay > 0) {
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', ['delay' => $delay]);
+
             return $response->withJson([], 429);
         }
 
@@ -243,8 +250,8 @@ class AccountController extends SimpleController
                 $message->from($config['address_book.admin'])
                         ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                         ->addParams([
-                            'user' => $user,
-                            'token' => $passwordReset->getToken(),
+                            'user'         => $user,
+                            'token'        => $passwordReset->getToken(),
                             'request_date' => Carbon::now()->format('Y-m-d H:i:s')
                         ]);
 
@@ -255,6 +262,7 @@ class AccountController extends SimpleController
         // TODO: create delay to prevent timing-based attacks
 
         $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_SENT', ['email' => $data['email']]);
+
         return $response->withJson([], 200);
     }
 
@@ -267,9 +275,9 @@ class AccountController extends SimpleController
      * Route: /modals/account/tos
      * Route Name: {none}
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function getModalAccountTos(Request $request, Response $response, $args)
     {
@@ -283,9 +291,9 @@ class AccountController extends SimpleController
      * Route: /account/captcha
      * Route Name: {none}
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function imageCaptcha(Request $request, Response $response, $args)
     {
@@ -313,9 +321,9 @@ class AccountController extends SimpleController
      * Route: /account/login
      * Route Name: {none}
      * Request type: POST
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function login(Request $request, Response $response, $args)
     {
@@ -331,6 +339,7 @@ class AccountController extends SimpleController
         // Return 200 success if user is already logged in
         if ($authenticator->check()) {
             $ms->addMessageTranslated('warning', 'LOGIN.ALREADY_COMPLETE');
+
             return $response->withJson([], 200);
         }
 
@@ -351,6 +360,7 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
+
             return $response->withJson([], 400);
         }
 
@@ -373,6 +383,7 @@ class AccountController extends SimpleController
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', [
                 'delay' => $delay
             ]);
+
             return $response->withJson([], 429);
         }
 
@@ -383,6 +394,7 @@ class AccountController extends SimpleController
         // Note that we do this after logging throttle event, so this error counts towards throttling limit.
         if ($isEmail && !$config['site.login.enable_email']) {
             $ms->addMessageTranslated('danger', 'USER_OR_PASS_INVALID');
+
             return $response->withJson([], 403);
         }
 
@@ -407,9 +419,9 @@ class AccountController extends SimpleController
      * Route: /account/logout
      * Route Name: {none}
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function logout(Request $request, Response $response, $args)
     {
@@ -418,6 +430,7 @@ class AccountController extends SimpleController
 
         // Return to home page
         $config = $this->ci->config;
+
         return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
     }
 
@@ -431,9 +444,9 @@ class AccountController extends SimpleController
      * Route: /account/forgot-password
      * Route Name: forgot-password
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageForgotPassword(Request $request, Response $response, $args)
     {
@@ -450,7 +463,6 @@ class AccountController extends SimpleController
         ]);
     }
 
-
     /**
      * Render the account registration page for UserFrosting.
      *
@@ -462,10 +474,10 @@ class AccountController extends SimpleController
      * Route: /account/register
      * Route Name: register
      * Request type: GET
+     * @param  Request           $request
+     * @param  Response          $response
+     * @param  array             $args
      * @throws NotFoundException If site registration is disabled
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function pageRegister(Request $request, Response $response, $args)
     {
@@ -504,7 +516,7 @@ class AccountController extends SimpleController
             ],
             'locales' => [
                 'available' => $config['site.locales.available'],
-                'current' => end($currentLocales)
+                'current'   => end($currentLocales)
             ]
         ]);
     }
@@ -519,9 +531,9 @@ class AccountController extends SimpleController
      * Route: /account/resend-verification
      * Route Name: {none}
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageResendVerification(Request $request, Response $response, $args)
     {
@@ -547,9 +559,9 @@ class AccountController extends SimpleController
      * Route: /account/set-password/confirm
      * Route Name: {none}
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageResetPassword(Request $request, Response $response, $args)
     {
@@ -580,9 +592,9 @@ class AccountController extends SimpleController
      * Route:
      * Route Name: {none}
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageSetPassword(Request $request, Response $response, $args)
     {
@@ -614,10 +626,10 @@ class AccountController extends SimpleController
      * Route: /account/settings
      * Route Name: {none}
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function pageSettings(Request $request, Response $response, $args)
     {
@@ -647,7 +659,7 @@ class AccountController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
             'locales' => $locales,
-            'page' => [
+            'page'    => [
                 'validators' => [
                     'account_settings'    => $validatorAccountSettings->rules('json', false),
                     'profile_settings'    => $validatorProfileSettings->rules('json', false)
@@ -668,9 +680,9 @@ class AccountController extends SimpleController
      * Route: /account/sign-in
      * Route Name: login
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageSignIn(Request $request, Response $response, $args)
     {
@@ -712,9 +724,9 @@ class AccountController extends SimpleController
      * Route: /account/settings/profile
      * Route Name: {none}
      * Request type: POST
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function profile(Request $request, Response $response, $args)
     {
@@ -731,6 +743,7 @@ class AccountController extends SimpleController
         // See recipe "per-field access control" for dynamic fine-grained control over which properties a user can modify.
         if (!$authorizer->checkAccess($currentUser, 'update_account_settings')) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.ACCESS_DENIED');
+
             return $response->withJson([], 403);
         }
 
@@ -782,6 +795,7 @@ class AccountController extends SimpleController
         ]);
 
         $ms->addMessageTranslated('success', 'PROFILE.UPDATED');
+
         return $response->withJson([], 200);
     }
 
@@ -805,10 +819,10 @@ class AccountController extends SimpleController
      * Route: /account/register
      * Route Name: {none}
      * Request type: POST
+     * @param  Request                $request
+     * @param  Response               $response
+     * @param  array                  $args
      * @throws SpammyRequestException
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function register(Request $request, Response $response, $args)
     {
@@ -832,12 +846,14 @@ class AccountController extends SimpleController
         // Security measure: do not allow registering new users until the master account has been created.
         if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.MASTER_NOT_EXISTS');
+
             return $response->withJson([], 403);
         }
 
         // Check if registration is currently enabled
         if (!$config['site.registration.enabled']) {
             $ms->addMessageTranslated('danger', 'REGISTRATION.DISABLED');
+
             return $response->withJson([], 403);
         }
 
@@ -847,6 +863,7 @@ class AccountController extends SimpleController
         // Prevent the user from registering if he/she is already logged in
         if ($authenticator->check()) {
             $ms->addMessageTranslated('danger', 'REGISTRATION.LOGOUT');
+
             return $response->withJson([], 403);
         }
 
@@ -928,9 +945,9 @@ class AccountController extends SimpleController
      * Route: /account/resend-verification
      * Route Name: {none}
      * Request type: POST
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function resendVerification(Request $request, Response $response, $args)
     {
@@ -957,6 +974,7 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
+
             return $response->withJson([], 400);
         }
 
@@ -972,6 +990,7 @@ class AccountController extends SimpleController
 
         if ($delay > 0) {
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', ['delay' => $delay]);
+
             return $response->withJson([], 429);
         }
 
@@ -997,7 +1016,7 @@ class AccountController extends SimpleController
                 $message->from($config['address_book.admin'])
                         ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                         ->addParams([
-                            'user' => $user,
+                            'user'  => $user,
                             'token' => $verification->getToken()
                         ]);
 
@@ -1006,6 +1025,7 @@ class AccountController extends SimpleController
         });
 
         $ms->addMessageTranslated('success', 'ACCOUNT.VERIFICATION.NEW_LINK_SENT', ['email' => $data['email']]);
+
         return $response->withJson([], 200);
     }
 
@@ -1023,9 +1043,9 @@ class AccountController extends SimpleController
      * Route: /account/set-password
      * Route Name: {none}
      * Request type: POST
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function setPassword(Request $request, Response $response, $args)
     {
@@ -1052,6 +1072,7 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
+
             return $response->withJson([], 400);
         }
 
@@ -1064,6 +1085,7 @@ class AccountController extends SimpleController
 
         if (!$passwordReset) {
             $ms->addMessageTranslated('danger', 'PASSWORD.FORGET.INVALID', ['url' => $forgotPasswordPage]);
+
             return $response->withJson([], 400);
         }
 
@@ -1082,6 +1104,7 @@ class AccountController extends SimpleController
         $authenticator->login($user);
 
         $ms->addMessageTranslated('success', 'WELCOME', $user->export());
+
         return $response->withJson([], 200);
     }
 
@@ -1098,9 +1121,9 @@ class AccountController extends SimpleController
      * Route: /account/settings
      * Route Name: settings
      * Request type: POST
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function settings(Request $request, Response $response, $args)
     {
@@ -1117,6 +1140,7 @@ class AccountController extends SimpleController
         // See recipe "per-field access control" for dynamic fine-grained control over which properties a user can modify.
         if (!$authorizer->checkAccess($currentUser, 'update_account_settings')) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.ACCESS_DENIED');
+
             return $response->withJson([], 403);
         }
 
@@ -1185,6 +1209,7 @@ class AccountController extends SimpleController
         ]);
 
         $ms->addMessageTranslated('success', 'ACCOUNT.SETTINGS.UPDATED');
+
         return $response->withJson([], 200);
     }
 
@@ -1198,9 +1223,9 @@ class AccountController extends SimpleController
      * Route: /account/suggest-username
      * Route Name: {none}
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function suggestUsername(Request $request, Response $response, $args)
     {
@@ -1231,9 +1256,9 @@ class AccountController extends SimpleController
      * Route: /account/verify
      * Route Name: {none}
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function verify(Request $request, Response $response, $args)
     {
@@ -1262,6 +1287,7 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
+
             return $response->withRedirect($loginPage);
         }
 
@@ -1269,6 +1295,7 @@ class AccountController extends SimpleController
 
         if (!$verification) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.VERIFICATION.TOKEN_NOT_FOUND');
+
             return $response->withRedirect($loginPage);
         }
 

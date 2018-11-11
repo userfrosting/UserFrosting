@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Alert;
 
 use UserFrosting\I18n\MessageTranslator;
@@ -27,9 +28,9 @@ class SessionAlertStream extends AlertStream
     /**
      * Create a new message stream.
      *
-     * @param string $messagesKey Store the messages under this key
+     * @param string                 $messagesKey Store the messages under this key
      * @param MessageTranslator|null $translator
-     * @param Session $session
+     * @param Session                $session
      */
     public function __construct($messagesKey, MessageTranslator $translator = null, Session $session)
     {
@@ -58,7 +59,7 @@ class SessionAlertStream extends AlertStream
     /**
      * Save messages to the stream
      *
-     * @param  string $messages The message
+     * @param string $messages The message
      */
     protected function saveMessages($messages)
     {

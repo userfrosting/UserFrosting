@@ -1,4 +1,10 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
 namespace UserFrosting\Tests\Integration\Error\Handler;
 
@@ -17,6 +23,7 @@ class ExceptionHandlerTest extends TestCase
     {
         $handler = new ExceptionHandler($this->ci, $this->getRequest(), $this->getResponse(), $this->getException(), false);
         $this->assertInstanceOf(ExceptionHandler::class, $handler);
+
         return $handler;
     }
 

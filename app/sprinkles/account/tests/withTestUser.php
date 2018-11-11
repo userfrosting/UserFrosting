@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Tests;
 
 use UserFrosting\Sprinkle\Account\Database\Models\User;
@@ -42,9 +43,9 @@ trait withTestUser
 
     /**
      * Create a test user with no settings/permissions for a controller test
-     * @param bool $isMaster Does this user have root access? Will bypass all permissions
-     * @param bool $login Login this user, setting him as the currentUser
-     * @param array $params User account params
+     * @param  bool  $isMaster Does this user have root access? Will bypass all permissions
+     * @param  bool  $login    Login this user, setting him as the currentUser
+     * @param  array $params   User account params
      * @return User
      */
     protected function createTestUser($isMaster = false, $login = false, array $params = [])
@@ -55,7 +56,7 @@ trait withTestUser
             $user_id = rand(0, 1222);
         }
 
-        $params = array_merge(["id" => $user_id], $params);
+        $params = array_merge(['id' => $user_id], $params);
 
         $fm = $this->ci->factory;
         $user = $fm->create(User::class, $params);
@@ -70,17 +71,17 @@ trait withTestUser
     /**
      * Gives a user a new test permission
      * @param  UserInterface $user
-     * @param  string $slug
-     * @param  string $conditions
+     * @param  string        $slug
+     * @param  string        $conditions
      * @return Permission
      */
-    protected function giveUserTestPermission(UserInterface $user, $slug, $conditions = "always()")
+    protected function giveUserTestPermission(UserInterface $user, $slug, $conditions = 'always()')
     {
-        /** @var \League\FactoryMuffin\FactoryMuffin $fm **/
+        /** @var \League\FactoryMuffin\FactoryMuffin $fm */
         $fm = $this->ci->factory;
 
         $permission = $fm->create(Permission::class, [
-            'slug' => $slug,
+            'slug'       => $slug,
             'conditions' => $conditions
         ]);
 
@@ -98,12 +99,13 @@ trait withTestUser
      */
     protected function giveUserPermission(UserInterface $user, Permission $permission)
     {
-        /** @var \League\FactoryMuffin\FactoryMuffin $fm **/
+        /** @var \League\FactoryMuffin\FactoryMuffin $fm */
         $fm = $this->ci->factory;
 
         $role = $fm->create(Role::class);
         $role->permissions()->attach($permission);
         $user->roles()->attach($role);
+
         return $role;
     }
 }

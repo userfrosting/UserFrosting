@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 /**
@@ -41,7 +42,7 @@ class PlainTextRenderer extends ErrorRenderer
     }
 
     /**
-     * @param \Exception|\Throwable $e
+     * @param  \Exception|\Throwable $e
      * @return string
      */
     public function formatExceptionFragment($e)

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Interop\Container\ContainerInterface;
@@ -31,8 +32,8 @@ class AuthorizationManager
     /**
      * Create a new AuthorizationManager object.
      *
-     * @param ContainerInterface $ci The global container object, which holds all your services.
-     * @param array $callbacks
+     * @param ContainerInterface $ci        The global container object, which holds all your services.
+     * @param array              $callbacks
      */
     public function __construct(ContainerInterface $ci, array $callbacks = [])
     {
@@ -44,12 +45,13 @@ class AuthorizationManager
      * Register an authorization callback, which can then be used in permission conditions.
      *
      * To add additional callbacks, simply extend the `authorizer` service in your Sprinkle's service provider.
-     * @param string $name
+     * @param string   $name
      * @param callable $callback
      */
     public function addCallback($name, $callback)
     {
         $this->callbacks[$name] = $callback;
+
         return $this;
     }
 
@@ -68,11 +70,11 @@ class AuthorizationManager
      *
      * Determine if this user has access to the given $slug under the given $params.
      *
-     * @param UserInterface|null $user
-     * @param string $slug The permission slug to check for access.
-     * @param array $params An array of field names => values, specifying any additional data to provide the authorization module
-     * when determining whether or not this user has access.
-     * @return bool True if the user has access, false otherwise.
+     * @param  UserInterface|null $user
+     * @param  string             $slug   The permission slug to check for access.
+     * @param  array              $params An array of field names => values, specifying any additional data to provide the authorization module
+     *                                    when determining whether or not this user has access.
+     * @return bool               True if the user has access, false otherwise.
      */
     public function checkAccess($user, $slug, array $params = [])
     {
@@ -80,14 +82,15 @@ class AuthorizationManager
 
         if (is_null($user) || !($user instanceof UserInterface)) {
             if ($debug) {
-                $this->ci->authLogger->debug("No user defined. Access denied.");
+                $this->ci->authLogger->debug('No user defined. Access denied.');
             }
+
             return false;
         }
 
         if ($debug) {
             $trace = array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3), 1);
-            $this->ci->authLogger->debug("Authorization check requested at: ", $trace);
+            $this->ci->authLogger->debug('Authorization check requested at: ', $trace);
             $this->ci->authLogger->debug("Checking authorization for user {$user->id} ('{$user->user_name}') on permission '$slug'...");
         }
 
@@ -95,8 +98,9 @@ class AuthorizationManager
         // Need to use loose comparison for now, because some DBs return `id` as a string.
         if ($user->id == $this->ci->config['reserved_user_ids.master']) {
             if ($debug) {
-                $this->ci->authLogger->debug("User is the master (root) user. Access granted.");
+                $this->ci->authLogger->debug('User is the master (root) user. Access granted.');
             }
+
             return true;
         }
 
@@ -105,8 +109,9 @@ class AuthorizationManager
 
         if (empty($permissions) || !isset($permissions[$slug])) {
             if ($debug) {
-                $this->ci->authLogger->debug("No matching permissions found. Access denied.");
+                $this->ci->authLogger->debug('No matching permissions found. Access denied.');
             }
+
             return false;
         }
 
@@ -125,12 +130,13 @@ class AuthorizationManager
                 if ($debug) {
                     $this->ci->authLogger->debug("User passed conditions '{$permission->conditions}'. Access granted.");
                 }
+
                 return true;
             }
         }
 
         if ($debug) {
-            $this->ci->authLogger->debug("User failed to pass any of the matched permissions. Access denied.");
+            $this->ci->authLogger->debug('User failed to pass any of the matched permissions. Access denied.');
         }
 
         return false;

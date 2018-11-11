@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Illuminate\Support\Arr;
@@ -49,7 +50,7 @@ class RouteListCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->io->title("Registered Routes");
+        $this->io->title('Registered Routes');
 
         // Get routes list
         $this->routes = $this->ci->router->getRoutes();
@@ -81,7 +82,7 @@ class RouteListCommand extends BaseCommand
     /**
      * Get the route information for a given route.
      *
-     * @param  Route  $route
+     * @param  Route          $route
      * @param  InputInterface $input [description]
      * @return array
      */
@@ -98,7 +99,7 @@ class RouteListCommand extends BaseCommand
     /**
      * Sort the routes by a given element.
      *
-     * @param  string  $sort
+     * @param  string $sort
      * @param  array  $routes
      * @return array
      */
@@ -112,15 +113,15 @@ class RouteListCommand extends BaseCommand
     /**
      * Filter the route by URI and / or name.
      *
-     * @param  array  $route
+     * @param  array          $route
      * @param  InputInterface $input [description]
      * @return array|null
      */
     protected function filterRoute(array $route, InputInterface $input)
     {
-        if (($input->getOption('name') && ! Str::contains($route['name'], $input->getOption('name'))) ||
-             $input->getOption('uri') && ! Str::contains($route['uri'], $input->getOption('uri')) ||
-             $input->getOption('method') && ! Str::contains($route['method'], strtoupper($input->getOption('method')))) {
+        if (($input->getOption('name') && !Str::contains($route['name'], $input->getOption('name'))) ||
+             $input->getOption('uri') && !Str::contains($route['uri'], $input->getOption('uri')) ||
+             $input->getOption('method') && !Str::contains($route['method'], strtoupper($input->getOption('method')))) {
             return;
         }
 

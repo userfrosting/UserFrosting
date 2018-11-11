@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,9 +26,9 @@ class ActivityController extends SimpleController
      * Generates a list of activities, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function getList(Request $request, Response $response, $args)
     {
@@ -64,9 +65,9 @@ class ActivityController extends SimpleController
      * This page renders a table of user activities.
      * This page requires authentication.
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageList(Request $request, Response $response, $args)
     {

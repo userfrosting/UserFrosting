@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Tests;
 
 /**
@@ -38,6 +39,7 @@ trait RefreshDatabase
     protected function usingInMemoryDatabase()
     {
         $connection = $this->ci->db->getConnection();
+
         return $connection->getDatabaseName() == ':memory:';
     }
 
@@ -54,7 +56,7 @@ trait RefreshDatabase
      */
     protected function refreshTestDatabase()
     {
-        if (! self::$migrated) {
+        if (!self::$migrated) {
 
             // Refresh the Database. Rollback all migrations and start over
             $this->ci->migrator->reset();

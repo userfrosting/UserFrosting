@@ -5,12 +5,13 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Models;
 
 use Interop\Container\ContainerInterface;
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
-use UserFrosting\Sprinkle\Core\Database\Builder ;
+use UserFrosting\Sprinkle\Core\Database\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Concerns\HasRelationships;
 
 /**
@@ -44,7 +45,7 @@ abstract class Model extends LaravelModel
     /**
      * Determine if an attribute exists on the model - even if it is null.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return bool
      */
     public function attributeExists($key)
@@ -55,10 +56,10 @@ abstract class Model extends LaravelModel
     /**
      * Determines whether a model exists by checking a unique column, including checking soft-deleted records
      *
-     * @param mixed  $value
-     * @param string $identifier
-     * @param bool   $checkDeleted set to true to include soft-deleted records
-     * @return       \UserFrosting\Sprinkle\Core\Database\Models\Model|null
+     * @param  mixed                                                  $value
+     * @param  string                                                 $identifier
+     * @param  bool                                                   $checkDeleted set to true to include soft-deleted records
+     * @return \UserFrosting\Sprinkle\Core\Database\Models\Model|null
      */
     public static function findUnique($value, $identifier, $checkDeleted = true)
     {
@@ -74,7 +75,7 @@ abstract class Model extends LaravelModel
     /**
      * Determine if an relation exists on the model - even if it is null.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return bool
      */
     public function relationExists($key)
@@ -99,7 +100,7 @@ abstract class Model extends LaravelModel
     /**
      * Overrides Laravel's base Model to return our custom Eloquent builder object.
      *
-     * @param  Builder  $query
+     * @param  Builder                                              $query
      * @return \UserFrosting\Sprinkle\Core\Database\EloquentBuilder
      */
     public function newEloquentBuilder($query)
@@ -155,6 +156,7 @@ abstract class Model extends LaravelModel
     {
         // Set query builder to fetch result sets as associative arrays (instead of creating stdClass objects)
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
+
         return DB::table(static::$table);
     }
 }

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database;
 
 use Illuminate\Database\Eloquent\Builder as LaravelEloquentBuilder;
@@ -21,7 +22,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to sum the relations.
      *
-     * @param  mixed  $relations
+     * @param  mixed $relations
      * @return self
      */
     public function withSum($relations)
@@ -34,7 +35,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to max the relations.
      *
-     * @param  mixed  $relations
+     * @param  mixed $relations
      * @return self
      */
     public function withMax($relations)
@@ -47,7 +48,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to min the relations.
      *
-     * @param  mixed  $relations
+     * @param  mixed $relations
      * @return self
      */
     public function withMin($relations)
@@ -60,7 +61,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to min the relations.
      *
-     * @param  mixed  $relations
+     * @param  mixed $relations
      * @return self
      */
     public function withAvg($relations)
@@ -73,8 +74,8 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * use the MySQL aggregate functions including AVG COUNT, SUM, MAX and MIN.
      *
-     * @param array $relations
-     * @param string $function
+     * @param  array  $relations
+     * @param  string $function
      * @return self
      */
     public function withAggregate($relations, $function = 'COUNT')

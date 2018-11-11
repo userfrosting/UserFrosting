@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Tests\Unit;
 
 use stdClass;
@@ -57,7 +58,7 @@ class DatabaseSyncableTest extends TestCase
         ]);
         $model->shouldReceive('getAttribute')->with('id')->andReturn('x');
 
-        $this->assertEquals(['created' => ['x'], 'deleted' => [1], 'updated' => [2,3]], $relation->sync($list));
+        $this->assertEquals(['created' => ['x'], 'deleted' => [1], 'updated' => [2, 3]], $relation->sync($list));
     }
 
     /**
@@ -74,6 +75,7 @@ class DatabaseSyncableTest extends TestCase
         $parent->shouldReceive('getAttribute')->with('id')->andReturn(1);
         $parent->shouldReceive('getCreatedAtColumn')->andReturn('created_at');
         $parent->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
+
         return new HasManySyncable($builder, $parent, 'table.foreign_key', 'id');
     }
 
@@ -85,11 +87,11 @@ class DatabaseSyncableTest extends TestCase
                 // First argument
                 [
                     [
-                        'id' => 2,
+                        'id'      => 2,
                         'species' => 'Tyto'
                     ],
                     [
-                        'id' => 3,
+                        'id'      => 3,
                         'species' => 'Megascops'
                     ],
                     [
@@ -105,6 +107,7 @@ class DatabaseSyncableTest extends TestCase
     {
         $relation->getRelated()->shouldReceive('newInstance')->once()->with($attributes)->andReturn($model = m::mock(Model::class));
         $model->shouldReceive('setAttribute')->with('foreign_key', 1)->andReturn($model);
+
         return $model;
     }
 
@@ -112,6 +115,7 @@ class DatabaseSyncableTest extends TestCase
     {
         $model = $this->expectNewModel($relation, $attributes);
         $model->shouldReceive('save')->andReturn($model);
+
         return $model;
     }
 }

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Interop\Container\ContainerInterface;
@@ -18,7 +19,6 @@ use UserFrosting\Assets\AssetsTemplatePlugin;
  */
 class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
-
     /**
      * @var ContainerInterface The global container object, which holds all your services.
      */
@@ -51,7 +51,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
      */
     public function getFunctions()
     {
-        return array(
+        return [
             // Add Twig function for fetching alerts
             new \Twig_SimpleFunction('getAlerts', function ($clear = true) {
                 if ($clear) {
@@ -60,12 +60,12 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
                     return $this->services['alerts']->messages();
                 }
             }),
-            new \Twig_SimpleFunction('translate', function ($hook, $params = array()) {
+            new \Twig_SimpleFunction('translate', function ($hook, $params = []) {
                 return $this->services['translator']->translate($hook, $params);
             }, [
                 'is_safe' => ['html']
             ])
-        );
+        ];
     }
 
     /**
@@ -75,8 +75,8 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
      */
     public function getFilters()
     {
-        return array(
-            /**
+        return [
+            /*
              * Converts phone numbers to a standard format.
              *
              * @param   string   $num   A unformatted phone number
@@ -88,7 +88,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
             new \Twig_SimpleFilter('unescape', function ($string) {
                 return html_entity_decode($string);
             })
-        );
+        ];
     }
 
     /**

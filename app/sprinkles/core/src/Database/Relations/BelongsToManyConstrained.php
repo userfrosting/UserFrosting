@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Relations;
 
 use Illuminate\Database\Eloquent\Model;
@@ -30,13 +31,13 @@ class BelongsToManyConstrained extends BelongsToMany
     /**
      * Create a new belongs to many constrained relationship instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
-     * @param  string  $constraintKey
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $relatedKey
-     * @param  string  $relationName
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Database\Eloquent\Model   $parent
+     * @param string                                $constraintKey
+     * @param string                                $table
+     * @param string                                $foreignKey
+     * @param string                                $relatedKey
+     * @param string                                $relationName
      */
     public function __construct(Builder $query, Model $parent, $constraintKey, $table, $foreignKey, $relatedKey, $relationName = null)
     {
@@ -47,7 +48,7 @@ class BelongsToManyConstrained extends BelongsToMany
     /**
      * Set the constraints for an eager load of the relation.
      *
-     * @param  array  $models
+     * @param array $models
      */
     public function addEagerConstraints(array $models)
     {
@@ -61,8 +62,8 @@ class BelongsToManyConstrained extends BelongsToMany
     /**
      * Gets a list of unique pivot key values from an array of models.
      *
-     * @param array $models
-     * @param string $pivotKey
+     * @param  array  $models
+     * @param  string $pivotKey
      * @return array
      */
     protected function getPivotKeys(array $models, $pivotKey)
@@ -71,6 +72,7 @@ class BelongsToManyConstrained extends BelongsToMany
         foreach ($models as $model) {
             $pivotKeys[] = $model->getRelation('pivot')->{$pivotKey};
         }
+
         return array_unique($pivotKeys);
     }
 
@@ -79,9 +81,9 @@ class BelongsToManyConstrained extends BelongsToMany
      * in the parent object to the child objects.
      *
      * @see Called in https://github.com/laravel/framework/blob/2f4135d8db5ded851d1f4f611124c53b768a3c08/src/Illuminate/Database/Eloquent/Builder.php
-     * @param  array   $models
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @param  string  $relation
+     * @param  array                                    $models
+     * @param  \Illuminate\Database\Eloquent\Collection $results
+     * @param  string                                   $relation
      * @return array
      */
     public function match(array $models, Collection $results, $relation)
@@ -109,8 +111,8 @@ class BelongsToManyConstrained extends BelongsToMany
     /**
      * Filter an array of models, only taking models whose $constraintKey value matches $pivotValue.
      *
-     * @param array $items
-     * @param mixed $pivotValue
+     * @param  array $items
+     * @param  mixed $pivotValue
      * @return array
      */
     protected function findMatchingPivots($items, $pivotValue)
@@ -121,6 +123,7 @@ class BelongsToManyConstrained extends BelongsToMany
                 $result[] = $item;
             }
         }
+
         return $result;
     }
 }

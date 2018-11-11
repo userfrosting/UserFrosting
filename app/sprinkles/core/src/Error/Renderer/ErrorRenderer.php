@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 use Psr\Http\Message\ResponseInterface;
@@ -43,10 +44,10 @@ abstract class ErrorRenderer implements ErrorRendererInterface
     /**
      * Create a new ErrorRenderer object.
      *
-     * @param ServerRequestInterface     $request   The most recent Request object
-     * @param ResponseInterface          $response  The most recent Response object
-     * @param \Throwable                 $exception The caught Exception object
-     * @param bool                       $displayErrorDetails
+     * @param ServerRequestInterface $request             The most recent Request object
+     * @param ResponseInterface      $response            The most recent Response object
+     * @param \Throwable             $exception           The caught Exception object
+     * @param bool                   $displayErrorDetails
      */
     public function __construct(ServerRequestInterface $request, ResponseInterface $response, $exception, $displayErrorDetails = false)
     {
@@ -65,6 +66,7 @@ abstract class ErrorRenderer implements ErrorRendererInterface
     {
         $body = new Body(fopen('php://temp', 'r+'));
         $body->write($this->render());
+
         return $body;
     }
 }

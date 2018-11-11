@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Csrf;
 
 use Interop\Container\ContainerInterface;
@@ -20,7 +21,7 @@ use UserFrosting\Support\Exception\BadRequestException;
 class SlimCsrfProvider implements CsrfProviderInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      * @return \Slim\Csrf\Guard
      */
     public static function setupService(ContainerInterface $ci)
@@ -38,7 +39,7 @@ class SlimCsrfProvider implements CsrfProviderInterface
         $csrfStorage = $ci->session[$csrfKey];
 
         $onFailure = function ($request, $response, $next) {
-            $e = new BadRequestException("The CSRF code was invalid or not provided.");
+            $e = new BadRequestException('The CSRF code was invalid or not provided.');
             $e->addUserMessage('CSRF_MISSING');
             throw $e;
 
@@ -49,7 +50,7 @@ class SlimCsrfProvider implements CsrfProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public static function registerMiddleware(App $app, Request $request, $guard)
     {

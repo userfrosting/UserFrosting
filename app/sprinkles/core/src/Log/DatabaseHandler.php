@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Log;
 
 use Monolog\Logger;
@@ -31,10 +32,10 @@ class DatabaseHandler extends AbstractProcessingHandler
     /**
      * Create a new DatabaseHandler object.
      *
-     * @param ClassMapper $classMapper Maps the modelIdentifier to the specific Eloquent model.
-     * @param string $modelIdentifier
-     * @param int    $level  The minimum logging level at which this handler will be triggered
-     * @param bool   $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param ClassMapper $classMapper     Maps the modelIdentifier to the specific Eloquent model.
+     * @param string      $modelIdentifier
+     * @param int         $level           The minimum logging level at which this handler will be triggered
+     * @param bool        $bubble          Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(ClassMapper $classMapper, $modelIdentifier, $level = Logger::DEBUG, $bubble = true)
     {

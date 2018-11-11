@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error;
 
 use Interop\Container\ContainerInterface;
@@ -37,21 +38,21 @@ class ExceptionHandlerManager
     /**
      * Constructor
      *
-     * @param ContainerInterface $ci The global container object, which holds all your services.
-     * @param bool $displayErrorDetails Set to true to display full details
+     * @param ContainerInterface $ci                  The global container object, which holds all your services.
+     * @param bool               $displayErrorDetails Set to true to display full details
      */
     public function __construct(ContainerInterface $ci, $displayErrorDetails = false)
     {
         $this->ci = $ci;
-        $this->displayErrorDetails = (bool)$displayErrorDetails;
+        $this->displayErrorDetails = (bool) $displayErrorDetails;
     }
 
     /**
      * Invoke error handler
      *
-     * @param ServerRequestInterface $request   The most recent Request object
-     * @param ResponseInterface      $response  The most recent Response object
-     * @param \Throwable             $exception The caught Exception object
+     * @param  ServerRequestInterface $request   The most recent Request object
+     * @param  ResponseInterface      $response  The most recent Response object
+     * @param  \Throwable             $exception The caught Exception object
      * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $exception)
@@ -76,14 +77,14 @@ class ExceptionHandlerManager
      *
      * The exception handler must implement \UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface.
      *
-     * @param string $exceptionClass The fully qualified class name of the exception to handle.
-     * @param string $handlerClass The fully qualified class name of the assigned handler.
+     * @param  string                    $exceptionClass The fully qualified class name of the exception to handle.
+     * @param  string                    $handlerClass   The fully qualified class name of the assigned handler.
      * @throws \InvalidArgumentException If the registered handler fails to implement ExceptionHandlerInterface
      */
     public function registerHandler($exceptionClass, $handlerClass)
     {
         if (!is_a($handlerClass, '\UserFrosting\Sprinkle\Core\Error\Handler\ExceptionHandlerInterface', true)) {
-            throw new \InvalidArgumentException("Registered exception handler must implement ExceptionHandlerInterface!");
+            throw new \InvalidArgumentException('Registered exception handler must implement ExceptionHandlerInterface!');
         }
 
         $this->exceptionHandlers[$exceptionClass] = $handlerClass;

@@ -1,4 +1,10 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
 namespace UserFrosting\Tests\Integration\Seeder;
 
@@ -26,7 +32,7 @@ class DatabaseTests extends TestCase
         parent::setUp();
 
         // We must create our own CI with a custom locator for theses tests
-        $this->fakeCi = new Container;
+        $this->fakeCi = new Container();
 
         // Register services stub
         $serviceProvider = new ServicesProviderStub();
@@ -46,11 +52,12 @@ class DatabaseTests extends TestCase
     {
         $seeder = new Seeder($this->fakeCi);
         $this->assertInstanceOf(Seeder::class, $seeder);
+
         return $seeder;
     }
 
     /**
-     * @param  Seeder $seeder
+     * @param Seeder $seeder
      * @depends testSeeder
      */
     public function testgetSeeds(Seeder $seeder)
@@ -60,25 +67,25 @@ class DatabaseTests extends TestCase
         $this->assertCount(3, $seeds);
         $this->assertEquals([
             [
-                'name' => 'Seed1',
-                'class' => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',
+                'name'     => 'Seed1',
+                'class'    => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',
                 'sprinkle' => 'Core'
             ],
             [
-                'name' => 'Seed2',
-                'class' => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed2',
+                'name'     => 'Seed2',
+                'class'    => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed2',
                 'sprinkle' => 'Core'
             ],
             [
-                'name' => 'Test/Seed',
-                'class' => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Test\\Seed',
+                'name'     => 'Test/Seed',
+                'class'    => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Test\\Seed',
                 'sprinkle' => 'Core'
             ]
         ], $seeds);
     }
 
     /**
-     * @param  Seeder $seeder
+     * @param Seeder $seeder
      * @depends testSeeder
      */
     public function testGetSeed(Seeder $seeder)
@@ -86,14 +93,14 @@ class DatabaseTests extends TestCase
         $seed = $seeder->getSeed('Seed1');
         $this->assertInternalType('array', $seed);
         $this->assertEquals([
-            'name' => 'Seed1',
-            'class' => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',
+            'name'     => 'Seed1',
+            'class'    => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',
             'sprinkle' => 'Core'
         ], $seed);
     }
 
     /**
-     * @param  Seeder $seeder
+     * @param Seeder $seeder
      * @depends testSeeder
      * @expectedException \Exception
      */
@@ -103,7 +110,7 @@ class DatabaseTests extends TestCase
     }
 
     /**
-     * @param  Seeder $seeder
+     * @param Seeder $seeder
      * @depends testSeeder
      */
     public function testGetSeedClass(Seeder $seeder)
@@ -113,7 +120,7 @@ class DatabaseTests extends TestCase
     }
 
     /**
-     * @param  Seeder $seeder
+     * @param Seeder $seeder
      * @depends testSeeder
      * @expectedException \Exception
      */
@@ -124,7 +131,7 @@ class DatabaseTests extends TestCase
     }
 
     /**
-     * @param  Seeder $seeder
+     * @param Seeder $seeder
      * @depends testSeeder
      * @expectedException \Exception
      */
@@ -135,7 +142,7 @@ class DatabaseTests extends TestCase
     }
 
     /**
-     * @param  Seeder $seeder
+     * @param Seeder $seeder
      * @depends testSeeder
      */
     public function testExecuteSeed(Seeder $seeder)
@@ -165,6 +172,7 @@ class ServicesProviderStub
             $locator = new ResourceLocator(\UserFrosting\SPRINKLES_DIR);
             $locator->registerStream('seeds', '', 'Seeder/Seeds/');
             $locator->registerLocation('Core', 'core/tests/Integration/');
+
             return $locator;
         };
     }

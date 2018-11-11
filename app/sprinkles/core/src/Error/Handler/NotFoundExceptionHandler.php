@@ -5,10 +5,10 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
 use Psr\Http\Message\ResponseInterface;
-use UserFrosting\Sprinkle\Core\Error\Handler\HttpExceptionHandler;
 
 /**
  * Handler for NotFoundExceptions.

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Tests\Integration;
 
 use Mockery as m;
@@ -96,8 +97,8 @@ class BakeryMigrateStatusCommandTest extends TestCase
     protected function getInstalledMigrationStub()
     {
         return collect([
-            (object)['migration' => 'foo', 'batch' => 1, 'sprinkle' => 'foo'],
-            (object)['migration' => 'bar', 'batch' => 2, 'sprinkle' => 'bar']
+            (object) ['migration' => 'foo', 'batch' => 1, 'sprinkle' => 'foo'],
+            (object) ['migration' => 'bar', 'batch' => 2, 'sprinkle' => 'bar']
         ]);
     }
 }

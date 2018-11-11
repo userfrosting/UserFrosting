@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Throttle;
 
 use Carbon\Carbon;
@@ -25,17 +26,17 @@ class ThrottleRule
 
     /**
      * @var int[] A mapping of minimum observation counts (x) to delays (y), in seconds.
-     * Any throttleable event that has occurred more than x times in this rule's interval,
-     * must wait y seconds after the last occurrence before another attempt is permitted.
+     *            Any throttleable event that has occurred more than x times in this rule's interval,
+     *            must wait y seconds after the last occurrence before another attempt is permitted.
      */
     protected $delays;
 
     /**
      * Create a new ThrottleRule object.
      *
-     * @param string $method Set to 'ip' for ip-based throttling, 'data' for request-data-based throttling.
-     * @param int $interval The amount of time, in seconds, to look back in determining attempts to consider.
-     * @param int[] $delays A mapping of minimum observation counts (x) to delays (y), in seconds.
+     * @param string $method   Set to 'ip' for ip-based throttling, 'data' for request-data-based throttling.
+     * @param int    $interval The amount of time, in seconds, to look back in determining attempts to consider.
+     * @param int[]  $delays   A mapping of minimum observation counts (x) to delays (y), in seconds.
      */
     public function __construct($method, $interval, $delays)
     {
@@ -48,7 +49,7 @@ class ThrottleRule
      * Get the current delay on this rule for a particular number of event counts.
      *
      * @param Carbon $lastEventTime The timestamp for the last countable event.
-     * @param int $count The total number of events which have occurred in an interval.
+     * @param int    $count         The total number of events which have occurred in an interval.
      */
     public function getDelay(Carbon $lastEventTime, $count)
     {

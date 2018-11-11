@@ -5,12 +5,12 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use UserFrosting\System\UserFrosting;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
-use UserFrosting\Tests\DatabaseTransactions;
 
 /**
  * Class to handle Test
@@ -120,7 +120,7 @@ class TestCase extends BaseTestCase
     /**
      * Register a callback to be run after the application is created.
      *
-     * @param  callable  $callback
+     * @param callable $callback
      */
     public function afterApplicationCreated(callable $callback)
     {
@@ -134,10 +134,10 @@ class TestCase extends BaseTestCase
     /**
      * Asserts that collections are equivalent.
      *
-     * @param  array $expected
-     * @param  array $actual
-     * @param  string $key [description]
-     * @param  string $message [description]
+     * @param  array                                   $expected
+     * @param  array                                   $actual
+     * @param  string                                  $key      [description]
+     * @param  string                                  $message  [description]
      * @throws \PHPUnit_Framework_AssertionFailedError
      */
     public static function assertCollectionsSame($expected, $actual, $key = 'id', $message = '')
@@ -168,12 +168,12 @@ class TestCase extends BaseTestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object    Instantiated object that we will run method on.
-     * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
-     * @return mixed Method return.
+     * @param  object &$object    Instantiated object that we will run method on.
+     * @param  string $methodName Method name to call
+     * @param  array  $parameters Array of parameters to pass into method.
+     * @return mixed  Method return.
      */
-    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    public function invokeMethod(&$object, $methodName, array $parameters = [])
     {
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
@@ -185,7 +185,7 @@ class TestCase extends BaseTestCase
     /**
      * Register a callback to be run before the application is destroyed.
      *
-     * @param  callable  $callback
+     * @param callable $callback
      */
     protected function beforeApplicationDestroyed(callable $callback)
     {
@@ -210,7 +210,7 @@ class TestCase extends BaseTestCase
     /**
      * Remove all relations on a collection of models.
      *
-     * @param  array $models
+     * @param array $models
      */
     protected static function ignoreRelations($models)
     {

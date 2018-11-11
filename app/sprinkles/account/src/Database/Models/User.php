@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Carbon\Carbon;
@@ -112,8 +113,8 @@ class User extends Model implements UserInterface
      * See http://stackoverflow.com/questions/29514081/cannot-access-eloquent-attributes-on-twig/35908957#35908957
      * Every property in __get must also be implemented here for Twig to recognize it.
      *
-     * @param string $name the name of the property to check.
-     * @return bool true if the property is defined, false otherwise.
+     * @param  string $name the name of the property to check.
+     * @return bool   true if the property is defined, false otherwise.
      */
     public function __isset($name)
     {
@@ -131,9 +132,9 @@ class User extends Model implements UserInterface
     /**
      * Get a property for this object.
      *
+     * @param  string     $name the name of the property to retrieve.
      * @throws \Exception the property does not exist for this object.
-     * @param string $name the name of the property to retrieve.
-     * @return string the associated property.
+     * @return string     the associated property.
      */
     public function __get($name)
     {
@@ -142,6 +143,7 @@ class User extends Model implements UserInterface
         } elseif ($name == 'avatar') {
             // Use Gravatar as the user avatar
             $hash = md5(strtolower(trim($this->email)));
+
             return 'https://www.gravatar.com/avatar/' . $hash . '?d=mm';
         } else {
             return parent::__get($name);
@@ -164,7 +166,7 @@ class User extends Model implements UserInterface
     /**
      * Delete this user from the database, along with any linked roles and activities.
      *
-     * @param bool $hardDelete Set to true to completely remove the user and all associated objects.
+     * @param  bool $hardDelete Set to true to completely remove the user and all associated objects.
      * @return bool true if the deletion was successful, false otherwise.
      */
     public function delete($hardDelete = false)
@@ -199,9 +201,9 @@ class User extends Model implements UserInterface
      * Determines whether a user exists, including checking soft-deleted records
      *
      * @deprecated since 4.1.7 This method conflicts with and overrides the Builder::exists() method.  Use Model::findUnique instead.
-     * @param mixed $value
-     * @param string $identifier
-     * @param bool $checkDeleted set to true to include soft-deleted records
+     * @param  mixed     $value
+     * @param  string    $identifier
+     * @param  bool      $checkDeleted set to true to include soft-deleted records
      * @return User|null
      */
     public static function exists($value, $identifier = 'user_name', $checkDeleted = true)
@@ -258,7 +260,7 @@ class User extends Model implements UserInterface
     /**
      * Get the amount of time, in seconds, that has elapsed since the last activity of a certain time for this user.
      *
-     * @param string $type The type of activity to search for.
+     * @param  string $type The type of activity to search for.
      * @return int
      */
     public function getSecondsSinceLastActivity($type)
@@ -293,7 +295,7 @@ class User extends Model implements UserInterface
         $masterId = static::$ci->config['reserved_user_ids.master'];
 
         // Need to use loose comparison for now, because some DBs return `id` as a string
-        return ($this->id == $masterId);
+        return $this->id == $masterId;
     }
 
     /**
@@ -312,7 +314,7 @@ class User extends Model implements UserInterface
     /**
      * Find the most recent activity for this user of a particular type.
      *
-     * @param  string $type
+     * @param  string                                $type
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function lastActivityOfType($type = null)
@@ -332,7 +334,7 @@ class User extends Model implements UserInterface
     /**
      * Get the most recent time for a specified activity type for this user.
      *
-     * @param  string $type
+     * @param  string      $type
      * @return string|null The last activity time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an activity of this type doesn't exist.
      */
     public function lastActivityTime($type)
@@ -340,6 +342,7 @@ class User extends Model implements UserInterface
         $result = $this->activities()
             ->where('type', $type)
             ->max('occurred_at');
+
         return $result ? $result : null;
     }
 
@@ -448,8 +451,8 @@ class User extends Model implements UserInterface
     /**
      * Query scope to get all users who have a specific role.
      *
-     * @param Builder $query
-     * @param int $roleId
+     * @param  Builder $query
+     * @param  int     $roleId
      * @return Builder
      */
     public function scopeForRole($query, $roleId)
@@ -463,7 +466,7 @@ class User extends Model implements UserInterface
     /**
      * Joins the user's most recent activity directly, so we can do things like sort, search, paginate, etc.
      *
-     * @param Builder $query
+     * @param  Builder $query
      * @return Builder
      */
     public function scopeJoinLastActivity($query)

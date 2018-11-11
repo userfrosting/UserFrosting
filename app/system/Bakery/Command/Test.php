@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,10 +31,10 @@ class Test extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName("test")
-             ->addOption("coverage", "c", InputOption::VALUE_NONE, "Generate code coverage report in HTML format. Will be saved in _meta/coverage")
-             ->setDescription("Run tests")
-             ->setHelp("Run php unit tests");
+        $this->setName('test')
+             ->addOption('coverage', 'c', InputOption::VALUE_NONE, 'Generate code coverage report in HTML format. Will be saved in _meta/coverage')
+             ->setDescription('Run tests')
+             ->setHelp('Run php unit tests');
     }
 
     /**
@@ -44,14 +45,14 @@ class Test extends BaseCommand
         $this->io->title("UserFrosting's Tester");
 
         // Get command
-        $command = \UserFrosting\VENDOR_DIR . "/bin/phpunit --colors=always";
+        $command = \UserFrosting\VENDOR_DIR . '/bin/phpunit --colors=always';
         if ($output->isVerbose() || $output->isVeryVerbose()) {
-            $command .= " -v";
+            $command .= ' -v';
         }
 
         // Add coverage report
         if ($input->getOption('coverage')) {
-            $command .= " --coverage-html _meta/coverage";
+            $command .= ' --coverage-html _meta/coverage';
         }
 
         // Execute

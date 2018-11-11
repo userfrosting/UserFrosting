@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Model;
 
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
@@ -20,7 +21,7 @@ abstract class UFModel extends Model
 {
     public function __construct(array $attributes = [])
     {
-        Debug::warning("UFModel has been deprecated and will be removed in future versions.  Please move your model " . static::class . " to Database/Models/ and have it extend the base Database/Models/Model class.");
+        Debug::warning('UFModel has been deprecated and will be removed in future versions.  Please move your model ' . static::class . ' to Database/Models/ and have it extend the base Database/Models/Model class.');
 
         parent::__construct($attributes);
     }

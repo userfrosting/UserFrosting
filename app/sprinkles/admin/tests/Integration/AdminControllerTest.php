@@ -1,4 +1,10 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
 namespace UserFrosting\Sprinkle\Admin\Tests;
 
@@ -20,6 +26,7 @@ class AdminControllerTest extends ControllerTestCase
     {
         $controller = $this->getController();
         $this->assertInstanceOf(AdminController::class, $controller);
+
         return $controller;
     }
 
@@ -76,7 +83,7 @@ class AdminControllerTest extends ControllerTestCase
         $controller = $this->getController();
 
         // First, store something in cache
-        /** @var \Illuminate\Cache\Repository $cache **/
+        /** @var \Illuminate\Cache\Repository $cache */
         $cache = $this->ci->cache;
         $value = rand(1, 100);
         $cache->put('foo', $value, 20);
@@ -94,7 +101,7 @@ class AdminControllerTest extends ControllerTestCase
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
-        $expectedMessage = end($messages)["message"];
+        $expectedMessage = end($messages)['message'];
 
         $actualMessage = $this->ci->translator->translate('CACHE.CLEARED');
         $this->assertSame($expectedMessage, $actualMessage);

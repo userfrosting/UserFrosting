@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Sprinkle;
 
 use Illuminate\Support\Str;
@@ -78,8 +79,8 @@ class SprinkleManager
      *
      * Creates an object of a subclass of UserFrosting\System\Sprinkle\Sprinkle if defined for the sprinkle (converting to StudlyCase).
      * Otherwise, returns null.
-     * @param string $name The name of the Sprinkle to initialize.
-     * @return mixed Sprinkle class instance or null if no such class exist
+     * @param  string $name The name of the Sprinkle to initialize.
+     * @return mixed  Sprinkle class instance or null if no such class exist
      */
     public function bootSprinkle($name)
     {
@@ -89,9 +90,10 @@ class SprinkleManager
         // Check that class exists.  If not, set to null
         if (class_exists($fullClassName)) {
             $sprinkle = new $fullClassName($this->ci);
+
             return $sprinkle;
         } else {
-            return null;
+            return;
         }
     }
 
@@ -150,14 +152,13 @@ class SprinkleManager
      * Return if a Sprinkle is available
      * Can be used by other Sprinkles to test if their dependencies are met
      *
-     * @param string $name The name of the Sprinkle
+     * @param  string $name The name of the Sprinkle
      * @return bool
      */
     public function isAvailable($name)
     {
         return in_array($name, $this->getSprinkleNames());
     }
-
 
     /**
      * Interate through the list of loaded Sprinkles, and invoke their ServiceProvider classes.
@@ -190,7 +191,7 @@ class SprinkleManager
     /**
      * Load list of Sprinkles from a JSON schema file (e.g. 'sprinkles.json').
      *
-     * @param string $schemaPath
+     * @param  string   $schemaPath
      * @return string[]
      */
     protected function loadSchema($schemaPath)

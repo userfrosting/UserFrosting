@@ -1,15 +1,20 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
-    /**
-     * Core configuration file for UserFrosting.  You must override/extend this in your site's configuration file.
-     *
-     * Sensitive credentials should be stored in an environment variable or your .env file.
-     * Database password: DB_PASSWORD
-     * SMTP server password: SMTP_PASSWORD
-     */
-
-    return [
-        /**
+/*
+ * Core configuration file for UserFrosting.  You must override/extend this in your site's configuration file.
+ *
+ * Sensitive credentials should be stored in an environment variable or your .env file.
+ * Database password: DB_PASSWORD
+ * SMTP server password: SMTP_PASSWORD
+ */
+return [
+        /*
         * ----------------------------------------------------------------------
         * Address Book
         * ----------------------------------------------------------------------
@@ -23,7 +28,7 @@
             ]
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Alert Service Config
         * ----------------------------------------------------------------------
@@ -35,7 +40,7 @@
             'key'       => 'site.alerts',   // the key to use to store flash messages
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Assets Service Config
         * ----------------------------------------------------------------------
@@ -54,7 +59,7 @@
             'use_raw'  => true
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Cache Service Config
         * ----------------------------------------------------------------------
@@ -66,8 +71,8 @@
         */
         'cache' => [
             'driver'     => 'file', // Supported drivers : `file`, `memcached`, `redis`
-            'prefix'    => 'userfrosting',
-            'memcached' => [
+            'prefix'     => 'userfrosting',
+            'memcached'  => [
                 'host'   => '127.0.0.1',
                 'port'   => 11211,
                 'weight' => 100
@@ -82,7 +87,7 @@
             'twig' => false
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * CSRF middleware settings
         * ----------------------------------------------------------------------
@@ -105,7 +110,7 @@
             ]
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Database Config
         * ----------------------------------------------------------------------
@@ -115,7 +120,7 @@
         * Multiple connections can also be used.
         * See Laravel docs : https://laravel.com/docs/5.4/database
         */
-        'db' =>  [
+        'db' => [
             'default' => [
                 'driver'    => getenv('DB_DRIVER') ?: 'mysql',
                 'host'      => getenv('DB_HOST') ?: null,
@@ -129,7 +134,7 @@
             ]
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Debug Configuration
         * ----------------------------------------------------------------------
@@ -142,7 +147,7 @@
             'twig'          => false
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         *  Filesystem Configuration
         * ----------------------------------------------------------------------
@@ -154,10 +159,10 @@
         */
         'filesystems' => [
             'default' => getenv('FILESYSTEM_DRIVER') ?: 'local',
-            'cloud' => getenv('FILESYSTEM_CLOUD') ?: 's3',
+            'cloud'   => getenv('FILESYSTEM_CLOUD') ?: 's3',
 
             'disks' => [
-                /**
+                /*
                  * Default storage disk. Default path is `app/storage/`. All
                  * files are accessible throught the FilesystemManager, but not
                  * publicly accessible throught an URL. Can still be downloaded
@@ -165,9 +170,9 @@
                  */
                 'local' => [
                     'driver' => 'local',
-                    'root' => \UserFrosting\STORAGE_DIR
+                    'root'   => \UserFrosting\STORAGE_DIR
                 ],
-                /**
+                /*
                 * Public files are directly accessible throught the webserver for
                 * better performances, but at the expanse of all files being public.
                 * Direct access from http://{url}/files/, physically located in `/public/files`
@@ -175,39 +180,39 @@
                 */
                 'public' => [
                     'driver' => 'local',
-                    'root' => \UserFrosting\STORAGE_PUBLIC_DIR,
-                    'url' => 'files/'
+                    'root'   => \UserFrosting\STORAGE_PUBLIC_DIR,
+                    'url'    => 'files/'
                 ],
-                /**
+                /*
                  * Amazon S3 Bucket Config. Config should go in .env file. For help, see :
                  * https://aws.amazon.com/en/blogs/security/wheres-my-secret-access-key/
                  */
                 's3' => [
                     'driver' => 's3',
-                    'key' => getenv('AWS_ACCESS_KEY_ID') ?: '',
+                    'key'    => getenv('AWS_ACCESS_KEY_ID') ?: '',
                     'secret' => getenv('AWS_SECRET_ACCESS_KEY') ?: '',
                     'region' => getenv('AWS_DEFAULT_REGION') ?: '', // See : http://docs.aws.amazon.com/general/latest/gr/rande.html
                     'bucket' => getenv('AWS_BUCKET') ?: '',
-                    'url' => getenv('AWS_URL') ?: '',
+                    'url'    => getenv('AWS_URL') ?: '',
                 ],
            ],
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Mail Service Config
         * ----------------------------------------------------------------------
         * See https://learn.userfrosting.com/mail/the-mailer-service
         */
         'mail'    => [
-            'mailer'     => 'smtp', // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
-            'host'       => getenv('SMTP_HOST') ?: null,
-            'port'       => 587,
-            'auth'       => true,
-            'secure'     => 'tls',
-            'username'   => getenv('SMTP_USER') ?: null,
-            'password'   => getenv('SMTP_PASSWORD') ?: null,
-            'smtp_debug' => 4,
+            'mailer'          => 'smtp', // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
+            'host'            => getenv('SMTP_HOST') ?: null,
+            'port'            => 587,
+            'auth'            => true,
+            'secure'          => 'tls',
+            'username'        => getenv('SMTP_USER') ?: null,
+            'password'        => getenv('SMTP_PASSWORD') ?: null,
+            'smtp_debug'      => 4,
             'message_options' => [
                 'CharSet'   => 'UTF-8',
                 'isHtml'    => true,
@@ -215,7 +220,7 @@
             ]
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Migration Service Config
         * ----------------------------------------------------------------------
@@ -225,7 +230,7 @@
             'repository_table' => 'migrations'
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Filesystem paths
         * ----------------------------------------------------------------------
@@ -235,7 +240,7 @@
             'public_relative'   => dirname($_SERVER['SCRIPT_NAME']) // The location of `index.php` relative to the document root.  Use for sites installed in subdirectories of your web server's document root.
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Session Config
         * ----------------------------------------------------------------------
@@ -257,7 +262,7 @@
             ]
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Slim settings
         * ----------------------------------------------------------------------
@@ -268,7 +273,7 @@
             'displayErrorDetails' => true
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * Site Settings
         * ----------------------------------------------------------------------
@@ -276,23 +281,23 @@
         */
         'site' => [
             // AdminLTE Settings
-            'AdminLTE' =>  [
+            'AdminLTE' => [
                 'skin' => 'blue'
             ],
             // Google Analytics Settings
             'analytics' => [
                 'google' => [
-                    'code' => '',
+                    'code'    => '',
                     'enabled' => false
                 ]
             ],
-            'author'    =>  'Author', // Site author
+            'author'    => 'Author', // Site author
             'csrf'      => null,      // Do not set this variable. The core Twig extension will override it with values from the CSRF service.
             'debug'     => [
                 'ajax' => false,
                 'info' => true
             ],
-            'locales' =>  [
+            'locales' => [
                 // Should be ordered according to https://en.wikipedia.org/wiki/List_of_languages_by_total_number_of_speakers,
                 // with the exception of English, which as the default language comes first.
                 'available' => [
@@ -335,7 +340,7 @@
             ]
         ],
 
-        /**
+        /*
         * ----------------------------------------------------------------------
         * PHP global settings
         * ----------------------------------------------------------------------

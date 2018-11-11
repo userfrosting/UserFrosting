@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Relations\Concerns;
 
 /**
@@ -18,9 +19,9 @@ trait Syncable
      * Synchronizes an array of data for related models with a parent model.
      *
      * @param mixed[] $data
-     * @param bool $deleting          Delete models from the database that are not represented in the input data.
-     * @param bool $forceCreate       Ignore mass assignment restrictions on child models.
-     * @param string $relatedKeyName  The primary key used to determine which child models are new, updated, or deleted.
+     * @param bool    $deleting       Delete models from the database that are not represented in the input data.
+     * @param bool    $forceCreate    Ignore mass assignment restrictions on child models.
+     * @param string  $relatedKeyName The primary key used to determine which child models are new, updated, or deleted.
      */
     public function sync($data, $deleting = true, $forceCreate = false, $relatedKeyName = null)
     {
@@ -104,7 +105,7 @@ trait Syncable
     /**
      * Cast the given keys to integers if they are numeric and string otherwise.
      *
-     * @param  array  $keys
+     * @param  array $keys
      * @return array
      */
     protected function castKeys(array $keys)
@@ -117,7 +118,7 @@ trait Syncable
     /**
      * Cast the given key to an integer if it is numeric.
      *
-     * @param  mixed  $key
+     * @param  mixed $key
      * @return mixed
      */
     protected function castKey($key)

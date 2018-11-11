@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery;
 
 use Illuminate\Database\Schema\Builder;
@@ -24,8 +25,8 @@ abstract class Migration extends NewMigration
     /**
      * Constructor
      *
-     * @param Builder|null $schema The schema builder
-     * @param SymfonyStyle|null $io The SymfonyStyle instance
+     * @param Builder|null      $schema The schema builder
+     * @param SymfonyStyle|null $io     The SymfonyStyle instance
      */
     public function __construct(Builder $schema = null, SymfonyStyle $io = null)
     {

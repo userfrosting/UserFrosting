@@ -5,13 +5,12 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 use Illuminate\Support\Arr;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Database\MigrationInterface;
-use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocatorInterface;
-use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRepositoryInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationDependencyAnalyser as Analyser;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRollbackDependencyAnalyser as RollbackAnalyser;
 use UserFrosting\Sprinkle\Core\Facades\Config;
@@ -55,9 +54,9 @@ class Migrator
     /**
      * Constructor
      *
-     * @param Capsule $db The database instance
+     * @param Capsule                      $db         The database instance
      * @param MigrationRepositoryInterface $repository The migration repository
-     * @param MigrationLocatorInterface $locator The Migration locator
+     * @param MigrationLocatorInterface    $locator    The Migration locator
      */
     public function __construct(Capsule $db, MigrationRepositoryInterface $repository, MigrationLocatorInterface $locator)
     {
@@ -100,7 +99,7 @@ class Migrator
 
         // Any migration without a fulfilled dependency will cause this script to throw an exception
         if ($unfulfillable = $analyser->getUnfulfillable()) {
-            $messages = ["Unfulfillable migrations found :: "];
+            $messages = ['Unfulfillable migrations found :: '];
             foreach ($unfulfillable as $migration => $dependency) {
                 $messages[] = "=> $migration (Missing dependency : $dependency)";
             }
@@ -115,7 +114,7 @@ class Migrator
      * Get the migration classes that have not yet run.
      *
      * @param  array $available The available migrations returned by the migration locator
-     * @param  array $ran The list of already ran migrations returned by the migration repository
+     * @param  array $ran       The list of already ran migrations returned by the migration repository
      * @return array The list of pending migrations, ie the available migrations not ran yet
      */
     public function pendingMigrations(array $available, array $ran)
@@ -128,8 +127,8 @@ class Migrator
     /**
      * Run an array of migrations.
      *
-     * @param  array $migrations An array of migrations classes names to be run (unsorted, unvalidated)
-     * @param  array $options The options for the current operation [step, pretend]
+     * @param array $migrations An array of migrations classes names to be run (unsorted, unvalidated)
+     * @param array $options    The options for the current operation [step, pretend]
      */
     protected function runPending(array $migrations, array $options = [])
     {
@@ -159,9 +158,9 @@ class Migrator
     /**
      * Run "up" a migration class
      *
-     * @param  string $migrationClassName The migration class name
-     * @param  int $batch The current bacth number
-     * @param  bool $pretend If this operation should be pretended / faked
+     * @param string $migrationClassName The migration class name
+     * @param int    $batch              The current bacth number
+     * @param bool   $pretend            If this operation should be pretended / faked
      */
     protected function runUp($migrationClassName, $batch, $pretend)
     {
@@ -185,13 +184,13 @@ class Migrator
 
         $this->note("<info>Migrated:</info>  {$migrationClassName}");
 
-        /**
+        /*
          * If the migration has a `seed` method, run it
          * @deprecated Since 4.2.0. Use a seeder instead
          */
         if (method_exists($migration, 'seed')) {
             if (Config::get('debug.deprecation')) {
-                Debug::warning("Migration `seed` method has been deprecated and will be removed in future versions. Please use a Seeder instead.");
+                Debug::warning('Migration `seed` method has been deprecated and will be removed in future versions. Please use a Seeder instead.');
             }
             $this->runMigration($migration, 'seed');
             $this->note("<info>Seeded:</info>  {$migrationClassName}");
@@ -247,8 +246,8 @@ class Migrator
     /**
      * Get the migrations for a rollback operation.
      *
-     * @param  array  $options The options for the current operation
-     * @return array  An ordered array of migrations to rollback
+     * @param  array $options The options for the current operation
+     * @return array An ordered array of migrations to rollback
      */
     protected function getMigrationsForRollback(array $options)
     {
@@ -264,7 +263,7 @@ class Migrator
      * Rollback the given migrations.
      *
      * @param  array $migrations An array of migrations to rollback formated as an eloquent collection
-     * @param  array $options The options for the current operation
+     * @param  array $options    The options for the current operation
      * @return array The list of rolledback migration classes
      */
     protected function rollbackMigrations(array $migrations, array $options)
@@ -309,7 +308,7 @@ class Migrator
     /**
      * Check if migrations can be rolledback.
      *
-     * @param  array $migrations The migrations classes to rollback
+     * @param  array      $migrations The migrations classes to rollback
      * @throws \Exception If rollback can't be performed
      */
     protected function checkRollbackDependencies(array $migrations)
@@ -333,7 +332,7 @@ class Migrator
     /**
      * Rolls all of the currently applied migrations back.
      *
-     * @param bool $pretend Should this operation be pretended
+     * @param  bool  $pretend Should this operation be pretended
      * @return array An array of all the rolledback migration classes
      */
     public function reset($pretend = false)
@@ -358,8 +357,8 @@ class Migrator
     /**
      * Run "down" a migration instance.
      *
-     * @param  string $migrationClassName The migration class name
-     * @param  bool $pretend Is the operation should be pretended
+     * @param string $migrationClassName The migration class name
+     * @param bool   $pretend            Is the operation should be pretended
      */
     protected function runDown($migrationClassName, $pretend)
     {
@@ -385,8 +384,8 @@ class Migrator
      * Run a migration inside a transaction if the database supports it.
      * Note : As of Laravel 5.4, only PostgresGrammar supports it
      *
-     * @param  MigrationInterface $migration The migration instance
-     * @param  string $method The method used [up, down]
+     * @param MigrationInterface $migration The migration instance
+     * @param string             $method    The method used [up, down]
      */
     protected function runMigration(MigrationInterface $migration, $method)
     {
@@ -407,8 +406,8 @@ class Migrator
     /**
      * Pretend to run the migrations.
      *
-     * @param  MigrationInterface $migration The migration instance
-     * @param  string $method The method used [up, down]
+     * @param MigrationInterface $migration The migration instance
+     * @param string             $method    The method used [up, down]
      */
     protected function pretendToRun(MigrationInterface $migration, $method)
     {
@@ -424,8 +423,8 @@ class Migrator
      * Get all of the queries that would be run for a migration.
      *
      * @param  MigrationInterface $migration The migration instance
-     * @param  string $method The method used [up, down]
-     * @return array The queries executed by the processed schema
+     * @param  string             $method    The method used [up, down]
+     * @return array              The queries executed by the processed schema
      */
     protected function getQueries(MigrationInterface $migration, $method)
     {
@@ -440,7 +439,7 @@ class Migrator
     /**
      * Resolve a migration instance from it's class name.
      *
-     * @param  string $migrationClassName The class name
+     * @param  string             $migrationClassName The class name
      * @return MigrationInterface The migration class instance
      */
     public function resolve($migrationClassName)
@@ -561,7 +560,7 @@ class Migrator
     /**
      * Raise a note event for the migrator.
      *
-     * @param  string  $message The message
+     * @param string $message The message
      */
     protected function note($message)
     {

@@ -28,7 +28,7 @@ class ClassMapper
      * Creates an instance for a requested class identifier.
      *
      * @param string $identifier The identifier for the class, e.g. 'user'
-     * @param mixed ...$arg Whatever needs to be passed to the constructor.
+     * @param mixed  ...$arg     Whatever needs to be passed to the constructor.
      */
     public function createInstance($identifier)
     {
@@ -45,7 +45,7 @@ class ClassMapper
     /**
      * Gets the fully qualified class name for a specified class identifier.
      *
-     * @param string $identifier
+     * @param  string $identifier
      * @return string
      */
     public function getClassMapping($identifier)
@@ -60,8 +60,8 @@ class ClassMapper
     /**
      * Assigns a fully qualified class name to a specified class identifier.
      *
-     * @param string $identifier
-     * @param string $className
+     * @param  string      $identifier
+     * @param  string      $className
      * @return ClassMapper
      */
     public function setClassMapping($identifier, $className)
@@ -81,7 +81,7 @@ class ClassMapper
      *
      * @param string $identifier The identifier for the class, e.g. 'user'
      * @param string $methodName The method to be invoked.
-     * @param mixed ...$arg Whatever needs to be passed to the method.
+     * @param mixed  ...$arg     Whatever needs to be passed to the method.
      */
     public function staticMethod($identifier, $methodName)
     {

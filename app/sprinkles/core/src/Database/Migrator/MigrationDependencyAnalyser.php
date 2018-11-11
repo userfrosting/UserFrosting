@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 use ReflectionClass;
@@ -51,7 +52,7 @@ class MigrationDependencyAnalyser
     /**
      * Constructor
      *
-     * @param array $pending The pending migrations
+     * @param array $pending   The pending migrations
      * @param array $installed The installed migrations
      */
     public function __construct(array $pending = [], array $installed = [])
@@ -88,7 +89,7 @@ class MigrationDependencyAnalyser
      * in the `fullfillable` property.
      *
      * @param  string $migrationName The migration classname
-     * @return bool True/False if the migration is fulfillable
+     * @return bool   True/False if the migration is fulfillable
      */
     protected function validateClassDependencies($migrationName)
     {
@@ -164,28 +165,30 @@ class MigrationDependencyAnalyser
      * Mark a dependency as fulfillable. Removes it from the pending list and add it to the fulfillable list
      *
      * @param  string $migration The migration classname
-     * @return bool True, it's fulfillable
+     * @return bool   True, it's fulfillable
      */
     protected function markAsFulfillable($migration)
     {
         $this->fulfillable->push($migration);
+
         return true;
     }
 
     /**
      * Mark a dependency as unfulfillable. Removes it from the pending list and add it to the unfulfillable list
      *
-     * @param  string $migration The migration classname
+     * @param  string       $migration  The migration classname
      * @param  string|array $dependency The problematic dependecy
-     * @return bool False, it's not fullfillable
+     * @return bool         False, it's not fullfillable
      */
     protected function markAsUnfulfillable($migration, $dependency)
     {
         if (is_array($dependency)) {
-            $dependency = implode(", ", $dependency);
+            $dependency = implode(', ', $dependency);
         }
 
         $this->unfulfillable->put($migration, $dependency);
+
         return false;
     }
 
@@ -194,7 +197,7 @@ class MigrationDependencyAnalyser
      * Also handles the old deprecated behaviour where dependencies where not in a static property
      *
      * @param  string $migration The migration class
-     * @return array The dependency list
+     * @return array  The dependency list
      */
     protected function getMigrationDependencies($migration)
     {
@@ -215,6 +218,7 @@ class MigrationDependencyAnalyser
                 Debug::warning("`$migration` uses a non static `dependencies` property. Please change the `dependencies` property to a static property.");
             }
             $instance = new $migration();
+
             return $instance->dependencies;
         } else {
             return [];

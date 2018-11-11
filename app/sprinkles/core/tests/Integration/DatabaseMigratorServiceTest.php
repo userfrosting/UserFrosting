@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Tests\Integration;
 
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
@@ -20,7 +21,7 @@ class DatabaseMigratorServiceTest extends TestCase
     use TestDatabase;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setUp()
     {

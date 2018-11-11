@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Throttle;
 
 use Carbon\Carbon;
@@ -42,7 +43,7 @@ class Throttler
     /**
      * Add a throttling rule for a particular throttle event type.
      *
-     * @param string $type The type of throttle event to check against.
+     * @param string            $type The type of throttle event to check against.
      * @param ThrottleRule|null $rule The rule to use when throttling this type of event.
      */
     public function addThrottleRule($type, ThrottleRule $rule = null)
@@ -59,8 +60,8 @@ class Throttler
     /**
      * Check the current request against a specified throttle rule.
      *
-     * @param string $type The type of throttle event to check against.
-     * @param mixed[] $requestData Any additional request parameters to use in checking the throttle.
+     * @param  string  $type        The type of throttle event to check against.
+     * @param  mixed[] $requestData Any additional request parameters to use in checking the throttle.
      * @return bool
      */
     public function getDelay($type, $requestData = [])
@@ -109,7 +110,7 @@ class Throttler
     /**
      * Get a registered rule of a particular type.
      *
-     * @param string $type
+     * @param  string             $type
      * @throws ThrottlerException
      * @return ThrottleRule[]
      */
@@ -135,7 +136,7 @@ class Throttler
     /**
      * Log a throttleable event to the database.
      *
-     * @param string $type the type of event
+     * @param string   $type        the type of event
      * @param string[] $requestData an array of field names => values that are relevant to throttling for this event (e.g. username, email, etc).
      */
     public function logEvent($type, $requestData = [])
@@ -148,8 +149,8 @@ class Throttler
         }
 
         $event = $this->classMapper->createInstance('throttle', [
-            'type' => $type,
-            'ip' => $_SERVER['REMOTE_ADDR'],
+            'type'         => $type,
+            'ip'           => $_SERVER['REMOTE_ADDR'],
             'request_data' => json_encode($requestData)
         ]);
 
@@ -161,9 +162,9 @@ class Throttler
     /**
      * Returns the current delay for a specified throttle rule.
      *
-     * @param  Collection $events a Collection of throttle events.
+     * @param  Collection   $events       a Collection of throttle events.
      * @param  ThrottleRule $throttleRule a rule representing the strategy to use for throttling a particular type of event.
-     * @return int seconds remaining until a particular event is permitted to be attempted again.
+     * @return int          seconds remaining until a particular event is permitted to be attempted again.
      */
     protected function computeDelay(Collection $events, ThrottleRule $throttleRule)
     {
@@ -174,6 +175,7 @@ class Throttler
 
         // Great, now we compare our delay against the most recent attempt
         $lastEvent = $events->last();
+
         return $throttleRule->getDelay($lastEvent->created_at, $events->count());
     }
 }

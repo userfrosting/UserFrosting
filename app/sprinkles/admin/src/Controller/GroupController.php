@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -38,10 +39,10 @@ class GroupController extends SimpleController
      *
      * Request type: POST
      * @see getModalCreateGroup
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function create(Request $request, Response $response, $args)
     {
@@ -110,7 +111,7 @@ class GroupController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} created group {$group->name}.", [
-                'type' => 'group_create',
+                'type'    => 'group_create',
                 'user_id' => $currentUser->id
             ]);
 
@@ -132,12 +133,12 @@ class GroupController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: DELETE
-     * @throws NotFoundException If group is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @param  Request             $request
+     * @param  Response            $response
+     * @param  array               $args
+     * @throws NotFoundException   If group is not found
+     * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function delete(Request $request, Response $response, $args)
     {
@@ -192,7 +193,7 @@ class GroupController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted group {$groupName}.", [
-                'type' => 'group_delete',
+                'type'    => 'group_delete',
                 'user_id' => $currentUser->id
             ]);
         });
@@ -213,11 +214,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @throws NotFoundException If group is not found
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @throws NotFoundException  If group is not found
      */
     public function getInfo(Request $request, Response $response, $args)
     {
@@ -259,10 +260,10 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getList(Request $request, Response $response, $args)
     {
@@ -293,12 +294,12 @@ class GroupController extends SimpleController
     /**
      * Get deletetion confirmation modal
      *
-     * @throws NotFoundException If group is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @param  Request             $request
+     * @param  Response            $response
+     * @param  array               $args
+     * @throws NotFoundException   If group is not found
+     * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getModalConfirmDelete(Request $request, Response $response, $args)
     {
@@ -338,7 +339,7 @@ class GroupController extends SimpleController
 
         return $this->ci->view->render($response, 'modals/confirm-delete-group.html.twig', [
             'group' => $group,
-            'form' => [
+            'form'  => [
                 'action' => "api/groups/g/{$group->slug}",
             ]
         ]);
@@ -351,10 +352,10 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getModalCreate(Request $request, Response $response, $args)
     {
@@ -385,7 +386,7 @@ class GroupController extends SimpleController
 
         $fieldNames = ['name', 'slug', 'icon', 'description'];
         $fields = [
-            'hidden' => [],
+            'hidden'   => [],
             'disabled' => []
         ];
 
@@ -395,10 +396,10 @@ class GroupController extends SimpleController
 
         return $this->ci->view->render($response, 'modals/group.html.twig', [
             'group' => $group,
-            'form' => [
-                'action' => 'api/groups',
-                'method' => 'POST',
-                'fields' => $fields,
+            'form'  => [
+                'action'      => 'api/groups',
+                'method'      => 'POST',
+                'fields'      => $fields,
                 'submit_text' => $translator->translate('CREATE')
             ],
             'page' => [
@@ -414,11 +415,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @throws NotFoundException If group is not found
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
+     * @throws NotFoundException  If group is not found
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getModalEdit(Request $request, Response $response, $args)
     {
@@ -455,7 +456,7 @@ class GroupController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => [],
+            'hidden'   => [],
             'disabled' => []
         ];
 
@@ -465,10 +466,10 @@ class GroupController extends SimpleController
 
         return $this->ci->view->render($response, 'modals/group.html.twig', [
             'group' => $group,
-            'form' => [
-                'action' => "api/groups/g/{$group->slug}",
-                'method' => 'PUT',
-                'fields' => $fields,
+            'form'  => [
+                'action'      => "api/groups/g/{$group->slug}",
+                'method'      => 'PUT',
+                'fields'      => $fields,
                 'submit_text' => $translator->translate('UPDATE')
             ],
             'page' => [
@@ -480,11 +481,11 @@ class GroupController extends SimpleController
     /**
      * Users List API
      *
-     * @throws NotFoundException If group is not found
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
+     * @throws NotFoundException  If group is not found
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getUsers(Request $request, Response $response, $args)
     {
@@ -534,10 +535,10 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function pageInfo(Request $request, Response $response, $args)
     {
@@ -546,6 +547,7 @@ class GroupController extends SimpleController
         // If the group no longer exists, forward to main group listing page
         if (!$group) {
             $redirectPage = $this->ci->router->pathFor('uri_groups');
+
             return $response->withRedirect($redirectPage);
         }
 
@@ -598,9 +600,9 @@ class GroupController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'pages/group.html.twig', [
-            'group' => $group,
+            'group'  => $group,
             'fields' => $fields,
-            'tools' => $editButtons
+            'tools'  => $editButtons
         ]);
     }
 
@@ -612,10 +614,10 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function pageList(Request $request, Response $response, $args)
     {
@@ -644,11 +646,11 @@ class GroupController extends SimpleController
      *
      * Request type: PUT
      * @see getModalGroupEdit
-     * @throws NotFoundException If group is not found
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
+     * @throws NotFoundException  If group is not found
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function updateInfo(Request $request, Response $response, $args)
     {
@@ -743,7 +745,7 @@ class GroupController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated details for group {$group->name}.", [
-                'type' => 'group_update_info',
+                'type'    => 'group_update_info',
                 'user_id' => $currentUser->id
             ]);
         });
@@ -758,8 +760,8 @@ class GroupController extends SimpleController
     /**
      * Get group from params
      *
+     * @param  array               $params
      * @throws BadRequestException
-     * @param  array $params
      * @return Group
      */
     protected function getGroupFromParams($params)

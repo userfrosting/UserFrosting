@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System;
 
 use RocketTheme\Toolbox\Event\EventDispatcher;
@@ -12,7 +13,6 @@ use RocketTheme\Toolbox\Event\Event;
 use Slim\App;
 use Slim\Container;
 use UserFrosting\Support\Exception\FileNotFoundException;
-use UserFrosting\System\Facade;
 
 /**
  * UserFrosting Main Class
@@ -42,7 +42,7 @@ class UserFrosting
     public function __construct($cli = false)
     {
         // First, we create our DI container
-        $this->ci = new Container;
+        $this->ci = new Container();
 
         // Assign vars
         $this->isCli = $cli;
@@ -57,8 +57,8 @@ class UserFrosting
     /**
      * Fires an event with optional parameters.
      *
-     * @param  string $eventName
-     * @param  Event|null  $event
+     * @param  string     $eventName
+     * @param  Event|null $event
      * @return Event
      */
     public function fireEvent($eventName, Event $event = null)
@@ -160,18 +160,18 @@ class UserFrosting
      *
      * @param string $errorMessage Message to display [Default ""]
      */
-    protected function renderSprinkleErrorPage($errorMessage = "")
+    protected function renderSprinkleErrorPage($errorMessage = '')
     {
         ob_clean();
-        $title = "UserFrosting Application Error";
-        $errorMessage = "Unable to start site. Contact owner.<br/><br/>" .
-            "Version: UserFrosting ".\UserFrosting\VERSION."<br/>" .
+        $title = 'UserFrosting Application Error';
+        $errorMessage = 'Unable to start site. Contact owner.<br/><br/>' .
+            'Version: UserFrosting '.\UserFrosting\VERSION.'<br/>' .
             $errorMessage;
         $output = sprintf(
             "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
-            "<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana," .
-            "sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{" .
-            "display:inline-block;width:65px;}</style></head><body><h1>%s</h1>%s</body></html>",
+            '<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,' .
+            'sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{' .
+            'display:inline-block;width:65px;}</style></head><body><h1>%s</h1>%s</body></html>',
             $title,
             $title,
             $errorMessage
@@ -184,7 +184,7 @@ class UserFrosting
      *
      * @param string $errorMessage Message to display [Default ""]
      */
-    protected function renderSprinkleErrorCli($errorMessage = "")
+    protected function renderSprinkleErrorCli($errorMessage = '')
     {
         exit($errorMessage . PHP_EOL);
     }

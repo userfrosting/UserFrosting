@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,9 +25,9 @@ class SetupCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName("setup")
-             ->setDescription("UserFrosting Configuration Wizard")
-             ->setHelp("This command combine the <info>setup:env</info>, <info>setup:db</info> and <info>setup:smtp</info> commands.");
+        $this->setName('setup')
+             ->setDescription('UserFrosting Configuration Wizard')
+             ->setHelp('This command combine the <info>setup:env</info>, <info>setup:db</info> and <info>setup:smtp</info> commands.');
     }
 
     /**

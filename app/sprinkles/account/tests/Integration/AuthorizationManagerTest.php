@@ -1,4 +1,10 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
 namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
@@ -43,20 +49,23 @@ class AuthorizationManagerTest extends TestCase
     {
         $manager = $this->getManager();
         $this->assertInstanceOf(AuthorizationManager::class, $manager);
+
         return $manager;
     }
 
     /**
      * @depends testConstructor
-     * @param  AuthorizationManager $manager
+     * @param AuthorizationManager $manager
      */
     public function testAddCallback(AuthorizationManager $manager)
     {
         $this->assertEmpty($manager->getCallbacks());
-        $this->assertInstanceOf(AuthorizationManager::class, $manager->addCallback('foo', function () {}));
+        $this->assertInstanceOf(AuthorizationManager::class, $manager->addCallback('foo', function () {
+        }));
         $callbacks = $manager->getCallbacks();
         $this->assertNotEmpty($callbacks);
-        $this->assertEquals(['foo' => function () {}], $callbacks);
+        $this->assertEquals(['foo' => function () {
+        }], $callbacks);
     }
 
     /**
@@ -70,8 +79,8 @@ class AuthorizationManagerTest extends TestCase
     /**
      * @depends testConstructor
      * @expectedException \ArgumentCountError
-     * @param  AuthorizationManager $manager
-     * REQUIRES PHP 7.1 or better
+     * @param AuthorizationManager $manager
+     *                                      REQUIRES PHP 7.1 or better
      */
     /*public function testCheckAccess_withOutUser(AuthorizationManager $manager)
     {
@@ -83,7 +92,7 @@ class AuthorizationManagerTest extends TestCase
      */
     public function testCheckAccess_withNullUser()
     {
-        $this->getMockAuthLogger()->shouldReceive('debug')->once()->with("No user defined. Access denied.");
+        $this->getMockAuthLogger()->shouldReceive('debug')->once()->with('No user defined. Access denied.');
         $this->assertFalse($this->getManager()->checkAccess(null, 'foo'));
     }
 
@@ -92,18 +101,18 @@ class AuthorizationManagerTest extends TestCase
      */
     public function testCheckAccess_withBadUserType()
     {
-        $this->getMockAuthLogger()->shouldReceive('debug')->once()->with("No user defined. Access denied.");
+        $this->getMockAuthLogger()->shouldReceive('debug')->once()->with('No user defined. Access denied.');
         $this->assertFalse($this->getManager()->checkAccess(123, 'foo'));
     }
 
     /**
      * By default, `checkAccess` is null. Test to make sure we don't break the
-     * "current user is guest" thing 
+     * "current user is guest" thing
      * @depends testCheckAccess_withNullUser
      */
     public function testCheckAccess_withNullCurrentUser()
     {
-        $this->getMockAuthLogger()->shouldReceive('debug')->once()->with("No user defined. Access denied.");
+        $this->getMockAuthLogger()->shouldReceive('debug')->once()->with('No user defined. Access denied.');
         $user = $this->ci->currentUser;
         $this->assertNull($user);
         $this->assertFalse($this->getManager()->checkAccess($user, 'foo'));
@@ -118,7 +127,7 @@ class AuthorizationManagerTest extends TestCase
 
         // Setup authLogger expectations
         $authLogger = $this->getMockAuthLogger();
-        $authLogger->shouldReceive('debug')->once()->with("No matching permissions found. Access denied.");
+        $authLogger->shouldReceive('debug')->once()->with('No matching permissions found. Access denied.');
         $authLogger->shouldReceive('debug')->times(2);
 
         $this->assertFalse($this->getManager()->checkAccess($user, 'foo'));
@@ -136,7 +145,7 @@ class AuthorizationManagerTest extends TestCase
 
         // Setup authLogger expectations
         $authLogger = $this->getMockAuthLogger();
-        $authLogger->shouldReceive('debug')->once()->with("No matching permissions found. Access denied.");
+        $authLogger->shouldReceive('debug')->once()->with('No matching permissions found. Access denied.');
         $authLogger->shouldReceive('debug')->times(2);
 
         $this->assertFalse($this->getManager()->checkAccess($this->ci->currentUser, 'foo'));
@@ -152,7 +161,7 @@ class AuthorizationManagerTest extends TestCase
 
         // Setup authLogger expectations
         $authLogger = $this->getMockAuthLogger();
-        $authLogger->shouldReceive('debug')->once()->with("User is the master (root) user. Access granted.");
+        $authLogger->shouldReceive('debug')->once()->with('User is the master (root) user. Access granted.');
         $authLogger->shouldReceive('debug')->times(2);
 
         $this->assertTrue($this->getManager()->checkAccess($user, 'foo'));
@@ -187,7 +196,7 @@ class AuthorizationManagerTest extends TestCase
 
         // Setup authLogger expectations
         $authLogger = $this->getMockAuthLogger();
-        $authLogger->shouldReceive('debug')->once()->with("User failed to pass any of the matched permissions. Access denied.");
+        $authLogger->shouldReceive('debug')->once()->with('User failed to pass any of the matched permissions. Access denied.');
         $authLogger->shouldReceive('debug')->times(7);
 
         $this->assertFalse($this->ci->authorizer->checkAccess($user, 'foo'));
@@ -210,6 +219,7 @@ class AuthorizationManagerTest extends TestCase
     {
         $this->ci->config['debug.auth'] = true;
         $this->ci->authLogger = m::mock('\Monolog\Logger');
+
         return $this->ci->authLogger;
     }
 }

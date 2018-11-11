@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core;
 
 use Illuminate\Filesystem\Filesystem;
@@ -21,7 +22,6 @@ use Slim\Interfaces\RouteInterface;
  */
 class Router extends \Slim\Router implements RouterInterface
 {
-
     /**
      * @var string[] a reverse lookup of route identifiers, indexed by route signature
      */
@@ -30,13 +30,12 @@ class Router extends \Slim\Router implements RouterInterface
     /**
      * Add route
      *
-     * @param  string[] $methods Array of HTTP methods
-     * @param  string   $pattern The route pattern
-     * @param  callable $handler The route callable
-     *
-     * @return RouteInterface
+     * @param string[] $methods Array of HTTP methods
+     * @param string   $pattern The route pattern
+     * @param callable $handler The route callable
      *
      * @throws InvalidArgumentException if the route pattern isn't a string
+     * @return RouteInterface
      */
     public function map($methods, $pattern, $handler)
     {
@@ -50,7 +49,7 @@ class Router extends \Slim\Router implements RouterInterface
         }
 
         // According to RFC methods are defined in uppercase (See RFC 7231)
-        $methods = array_map("strtoupper", $methods);
+        $methods = array_map('strtoupper', $methods);
 
         // Determine route signature
         $signature = implode('-', $methods) . '-' . $pattern;
@@ -80,7 +79,7 @@ class Router extends \Slim\Router implements RouterInterface
     public function clearCache()
     {
         // Get Filesystem instance
-        $fs = new Filesystem;
+        $fs = new Filesystem();
 
         // Make sure file exist and delete it
         if ($fs->exists($this->cacheFile)) {
@@ -94,7 +93,7 @@ class Router extends \Slim\Router implements RouterInterface
     /**
      * Load all avaialbe routes
      *
-     * @param  App    $slimApp
+     * @param App $slimApp
      */
     public function loadRoutes(App $slimApp)
     {

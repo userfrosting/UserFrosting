@@ -5,12 +5,12 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use UserFrosting\Sprinkle\Core\Bakery\MigrateCommand;
 
 /**
  * migrate:refresh Bakery Command.
@@ -25,8 +25,8 @@ class MigrateRefreshCommand extends MigrateCommand
      */
     protected function configure()
     {
-        $this->setName("migrate:refresh")
-             ->setDescription("Rollback the last migration operation and run it up again")
+        $this->setName('migrate:refresh')
+             ->setDescription('Rollback the last migration operation and run it up again')
              ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the operation to run when in production.')
              ->addOption('database', 'd', InputOption::VALUE_REQUIRED, 'The database connection to use.')
              ->addOption('steps', 's', InputOption::VALUE_REQUIRED, 'Number of batch to rollback', 1);
@@ -37,7 +37,7 @@ class MigrateRefreshCommand extends MigrateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->io->title("Migration refresh");
+        $this->io->title('Migration refresh');
 
         // Get options
         $steps = $input->getOption('steps');
@@ -59,7 +59,8 @@ class MigrateRefreshCommand extends MigrateCommand
 
         // Stop if nothing was rolledback
         if (empty($rolledback)) {
-            $this->io->success("Nothing to refresh");
+            $this->io->success('Nothing to refresh');
+
             return;
         }
 
@@ -70,9 +71,9 @@ class MigrateRefreshCommand extends MigrateCommand
         // If all went well, there's no fatal errors and we have migrated
         // something, show some success
         if (empty($migrated)) {
-            $this->io->success("Nothing to refresh");
+            $this->io->success('Nothing to refresh');
         } else {
-            $this->io->success("Refresh successful !");
+            $this->io->success('Refresh successful !');
         }
     }
 }

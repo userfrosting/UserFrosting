@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 /**
@@ -17,16 +18,16 @@ interface MigrationRepositoryInterface
     /**
      * Get the list of ran migrations
      *
-     * @param  int $steps Number of batch to return
+     * @param  int    $steps Number of batch to return
      * @param  string $order asc|desc
-     * @return array An array of migration class names in the order they where ran
+     * @return array  An array of migration class names in the order they where ran
      */
     public function getMigrationsList($steps = -1, $order = 'asc');
 
     /**
      * Get list of migrations.
      *
-     * @param  int  $steps Number of batch to return
+     * @param  int    $steps Number of batch to return
      * @param  string $order asc|desc
      * @return array
      */
@@ -42,15 +43,15 @@ interface MigrationRepositoryInterface
     /**
      * Log that a migration was run.
      *
-     * @param  string  $file
-     * @param  int     $batch
+     * @param string $file
+     * @param int    $batch
      */
     public function log($file, $batch);
 
     /**
      * Remove a migration from the log.
      *
-     * @param  string  $migration
+     * @param string $migration
      */
     public function delete($migration);
 

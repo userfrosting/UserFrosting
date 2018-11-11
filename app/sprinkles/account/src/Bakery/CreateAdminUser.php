@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -136,20 +137,22 @@ class CreateAdminUser extends BaseCommand
         while (!isset($username) || !$this->validateUsername($username)) {
             $username = $this->io->ask('Choose a root username (1-50 characters, no leading or trailing whitespace)');
         }
+
         return $username;
     }
 
     /**
      * Validate the username.
      *
-     * @param string $username The input
-     * @return bool Is the username validated ?
+     * @param  string $username The input
+     * @return bool   Is the username validated ?
      */
     protected function validateUsername($username)
     {
         // Validate length
         if (strlen($username) < 1 || strlen($username) > 50) {
             $this->io->error('Username must be between 1-50 characters');
+
             return false;
         }
 
@@ -162,6 +165,7 @@ class CreateAdminUser extends BaseCommand
         $validate = filter_var($username, FILTER_VALIDATE_REGEXP, $options);
         if (!$validate) {
             $this->io->error("Username can't have any leading or trailing whitespace");
+
             return false;
         }
 
@@ -179,26 +183,29 @@ class CreateAdminUser extends BaseCommand
         while (!isset($email) || !$this->validateEmail($email)) {
             $email = $this->io->ask('Enter a valid email address (1-254 characters, must be compatible with FILTER_VALIDATE_EMAIL)');
         }
+
         return $email;
     }
 
     /**
      * Validate the email.
      *
-     * @param string $email The input
-     * @return bool Is the email validated ?
+     * @param  string $email The input
+     * @return bool   Is the email validated ?
      */
     protected function validateEmail($email)
     {
         // Validate length
         if (strlen($email) < 1 || strlen($email) > 254) {
             $this->io->error('Email must be between 1-254 characters');
+
             return false;
         }
 
         // Validate format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->io->error('Email must be compatible with FILTER_VALIDATE_EMAIL');
+
             return false;
         }
 
@@ -216,20 +223,22 @@ class CreateAdminUser extends BaseCommand
         while (!isset($firstName) || !$this->validateFirstName($firstName)) {
             $firstName = $this->io->ask('Enter the user first name (1-20 characters)');
         }
+
         return $firstName;
     }
 
     /**
      * Validate the first name
      *
-     * @param string $firstName The input
-     * @return bool Is the input validated ?
+     * @param  string $firstName The input
+     * @return bool   Is the input validated ?
      */
     protected function validateFirstName($firstName)
     {
         // Validate length
         if (strlen($firstName) < 1 || strlen($firstName) > 20) {
             $this->io->error('First name must be between 1-20 characters');
+
             return false;
         }
 
@@ -247,20 +256,22 @@ class CreateAdminUser extends BaseCommand
         while (!isset($lastName) || !$this->validateLastName($lastName)) {
             $lastName = $this->io->ask('Enter the user last name (1-30 characters)');
         }
+
         return $lastName;
     }
 
     /**
      * Validate the last name entered is valid
      *
-     * @param string $lastName The lastname
-     * @return bool Input is valid or not
+     * @param  string $lastName The lastname
+     * @return bool   Input is valid or not
      */
     protected function validateLastName($lastName)
     {
         // Validate length
         if (strlen($lastName) < 1 || strlen($lastName) > 30) {
             $this->io->error('Last name must be between 1-30 characters');
+
             return false;
         }
 
@@ -270,8 +281,8 @@ class CreateAdminUser extends BaseCommand
     /**
      * Ask for the password and return a valid one
      *
-     * @param  string $password The base/default password
-     * @param bool $requireConfirmation (default true)
+     * @param  string $password            The base/default password
+     * @param  bool   $requireConfirmation (default true)
      * @return string The validated password
      */
     protected function askPassword($password = '', $requireConfirmation = true)
@@ -279,20 +290,22 @@ class CreateAdminUser extends BaseCommand
         while (!isset($password) || !$this->validatePassword($password) || !$this->confirmPassword($password, $requireConfirmation)) {
             $password = $this->io->askHidden('Enter password (12-255 characters)');
         }
+
         return $password;
     }
 
     /**
      * Validate password input
      *
-     * @param string $password The input
-     * @return bool Is the password valid or not
+     * @param  string $password The input
+     * @return bool   Is the password valid or not
      */
     protected function validatePassword($password)
     {
         //TODO Config for this ??
         if (strlen($password) < 12 || strlen($password) > 255) {
             $this->io->error('Password must be between 12-255 characters');
+
             return false;
         }
 
@@ -302,9 +315,9 @@ class CreateAdminUser extends BaseCommand
     /**
      * Ask for password confirmation
      *
-     * @param string $passwordToConfirm
-     * @param bool $requireConfirmation (default true)
-     * @return bool Is the password confirmed or not
+     * @param  string $passwordToConfirm
+     * @param  bool   $requireConfirmation (default true)
+     * @return bool   Is the password confirmed or not
      */
     protected function confirmPassword($passwordToConfirm, $requireConfirmation = true)
     {
@@ -315,20 +328,22 @@ class CreateAdminUser extends BaseCommand
         while (!isset($password)) {
             $password = $this->io->askHidden('Please re-enter the chosen password');
         }
+
         return $this->validatePasswordConfirmation($password, $passwordToConfirm);
     }
 
     /**
      * Validate the confirmation password
      *
-     * @param string $password   The confirmation
-     * @param string $passwordToConfirm The password to confirm
-     * @return bool Is the confirmation password valid or not
+     * @param  string $password          The confirmation
+     * @param  string $passwordToConfirm The password to confirm
+     * @return bool   Is the confirmation password valid or not
      */
     protected function validatePasswordConfirmation($password, $passwordToConfirm)
     {
         if ($password != $passwordToConfirm) {
             $this->io->error('Passwords do not match, please try again.');
+
             return false;
         }
 

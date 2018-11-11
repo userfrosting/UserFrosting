@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Util;
 
 use UserFrosting\Session\Session;
@@ -44,7 +45,7 @@ class Captcha
      * Create a new captcha.
      *
      * @param Session $session
-     * @param string $key
+     * @param string  $key
      */
     public function __construct(Session $session, $key)
     {
@@ -52,7 +53,7 @@ class Captcha
         $this->key = $key;
 
         if (!$this->session->has($key)) {
-            $this->session[$key] = array();
+            $this->session[$key] = [];
         }
     }
 
@@ -98,12 +99,12 @@ class Captcha
      * Check that the specified code, when hashed, matches the code in the session.
      * Also, stores the specified code in the session with an md5 hash.
      *
-     * @param string $code
+     * @param  string $code
      * @return bool
      */
     public function verifyCode($code)
     {
-        return (md5($code) == $this->session[$this->key]);
+        return md5($code) == $this->session[$this->key];
     }
 
     /**
@@ -131,10 +132,10 @@ class Captcha
         imagefilledrectangle($image, 0, 0, 150, 30, $white);
 
         //add some lines
-        for ($i=0;$i<2;$i++) {
-            imageline($image, 0, rand()%10, 10, rand()%30, $dark_grey);
-            imageline($image, 0, rand()%30, 150, rand()%30, $red);
-            imageline($image, 0, rand()%30, 150, rand()%30, $yellow);
+        for ($i = 0; $i < 2; $i++) {
+            imageline($image, 0, rand() % 10, 10, rand() % 30, $dark_grey);
+            imageline($image, 0, rand() % 30, 150, rand() % 30, $red);
+            imageline($image, 0, rand() % 30, 150, rand() % 30, $yellow);
         }
 
         // RandTab color pallette
@@ -145,8 +146,8 @@ class Captcha
         $randc[4] = imagecolorallocate($image, 0, 0, 255);
 
         //add some dots
-        for ($i=0;$i<1000;$i++) {
-            imagesetpixel($image, rand()%200, rand()%50, $randc[rand()%5]);
+        for ($i = 0; $i < 1000; $i++) {
+            imagesetpixel($image, rand() % 200, rand() % 50, $randc[rand() % 5]);
         }
 
         //calculate center of text

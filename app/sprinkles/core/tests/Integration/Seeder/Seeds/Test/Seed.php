@@ -1,4 +1,10 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
 namespace UserFrosting\Sprinkle\Core\Database\Seeds;
 
@@ -10,7 +16,7 @@ use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 class Seed extends BaseSeed
 {
     /**
-     *    @inheritDoc
+     *    {@inheritdoc}
      */
     public function run()
     {

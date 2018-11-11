@@ -5,7 +5,6 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-
 global $app;
 $config = $app->getContainer()->get('config');
 

@@ -5,9 +5,8 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
-use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationDependencyAnalyser;
+namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 /**
  * MigrationRollbackDependencyAnalyser Class
@@ -23,7 +22,7 @@ class MigrationRollbackDependencyAnalyser extends MigrationDependencyAnalyser
      * Constructor
      *
      * @param array $installed The installed migrations
-     * @param array $rollback The migrations to rollback
+     * @param array $rollback  The migrations to rollback
      */
     public function __construct(array $installed = [], array $rollback = [])
     {
@@ -39,7 +38,7 @@ class MigrationRollbackDependencyAnalyser extends MigrationDependencyAnalyser
      * rolledback, unfulfillable cannot.
      *
      * @param  string $migrationName The migration classname
-     * @return bool True/False if the migration is fulfillable
+     * @return bool   True/False if the migration is fulfillable
      */
     protected function validateClassDependencies($migrationName)
     {

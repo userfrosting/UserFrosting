@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -24,12 +25,12 @@ class Role extends Model
     /**
      * @var string The name of the table for the current model.
      */
-    protected $table = "roles";
+    protected $table = 'roles';
 
     protected $fillable = [
-        "slug",
-        "name",
-        "description"
+        'slug',
+        'name',
+        'description'
     ];
 
     /**
@@ -39,7 +40,6 @@ class Role extends Model
 
     /**
      * Delete this role from the database, removing associations with permissions and users.
-     *
      */
     public function delete()
     {
@@ -80,8 +80,8 @@ class Role extends Model
     /**
      * Query scope to get all roles assigned to a specific user.
      *
-     * @param Builder $query
-     * @param int $userId
+     * @param  Builder $query
+     * @param  int     $userId
      * @return Builder
      */
     public function scopeForUser($query, $userId)

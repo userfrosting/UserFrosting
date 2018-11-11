@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Tests\Unit;
 
 use UserFrosting\Sprinkle\Account\Authenticate\Hasher;
@@ -40,7 +41,7 @@ class HasherTest extends TestCase
      */
     public function testGetHashType()
     {
-        $hasher = new Hasher;
+        $hasher = new Hasher();
 
         $type = $hasher->getHashType($this->modernHash);
 
@@ -60,7 +61,7 @@ class HasherTest extends TestCase
      */
     public function testVerify()
     {
-        $hasher = new Hasher;
+        $hasher = new Hasher();
 
         $this->assertTrue($hasher->verify($this->plainText, $this->modernHash));
         $this->assertTrue($hasher->verify($this->plainText, $this->legacyHash));
@@ -72,7 +73,7 @@ class HasherTest extends TestCase
      */
     public function testVerifyReject()
     {
-        $hasher = new Hasher;
+        $hasher = new Hasher();
 
         $this->assertFalse($hasher->verify('selleth', $this->modernHash));
         $this->assertFalse($hasher->verify('selleth', $this->legacyHash));

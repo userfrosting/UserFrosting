@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Schema\Builder;
@@ -47,8 +48,8 @@ class PermissionSprunje extends Sprunje
     /**
      * Filter LIKE the slug, conditions, or description.
      *
-     * @param Builder $query
-     * @param mixed $value
+     * @param  Builder $query
+     * @param  mixed   $value
      * @return self
      */
     protected function filterInfo($query, $value)
@@ -59,8 +60,8 @@ class PermissionSprunje extends Sprunje
     /**
      * Filter LIKE the slug, conditions, or description.
      *
-     * @param Builder $query
-     * @param mixed $value
+     * @param  Builder $query
+     * @param  mixed   $value
      * @return self
      */
     protected function filterProperties($query, $value)
@@ -74,19 +75,21 @@ class PermissionSprunje extends Sprunje
                         ->orLike('description', $value);
             }
         });
+
         return $this;
     }
 
     /**
      * Sort based on slug.
      *
-     * @param Builder $query
-     * @param string $direction
+     * @param  Builder $query
+     * @param  string  $direction
      * @return self
      */
     protected function sortProperties($query, $direction)
     {
         $query->orderBy('slug', $direction);
+
         return $this;
     }
 }

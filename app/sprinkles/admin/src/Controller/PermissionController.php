@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -26,11 +27,11 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @throws NotFoundException If permission is not found
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @throws NotFoundException  If permission is not found
      */
     public function getInfo(Request $request, Response $response, $args)
     {
@@ -72,10 +73,10 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getList(Request $request, Response $response, $args)
     {
@@ -110,10 +111,10 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getUsers(Request $request, Response $response, $args)
     {
@@ -154,11 +155,11 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @throws NotFoundException If permission is not found
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @throws NotFoundException  If permission is not found
      */
     public function pageInfo(Request $request, Response $response, $args)
     {
@@ -198,10 +199,10 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function pageList(Request $request, Response $response, $args)
     {

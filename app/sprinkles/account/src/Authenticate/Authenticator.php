@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 use Birke\Rememberme\Authenticator as RememberMe;
@@ -83,9 +84,9 @@ class Authenticator
      * Create a new Authenticator object.
      *
      * @param ClassMapper $classMapper Maps generic class identifiers to specific class names.
-     * @param Session $session The session wrapper object that will store the user's id.
-     * @param Config $config Config object that contains authentication settings.
-     * @param Cache $cache Cache service instance
+     * @param Session     $session     The session wrapper object that will store the user's id.
+     * @param Config      $config      Config object that contains authentication settings.
+     * @param Cache       $cache       Cache service instance
      */
     public function __construct(ClassMapper $classMapper, Session $session, Config $config, Cache $cache)
     {
@@ -126,13 +127,13 @@ class Authenticator
      *
      * If successful, the user's id is stored in session.
      *
+     * @param  string                      $identityColumn
+     * @param  string                      $identityValue
+     * @param  string                      $password
+     * @param  bool                        $rememberMe
      * @throws InvalidCredentialsException
      * @throws AccountDisabledException
      * @throws AccountNotVerifiedException
-     * @param  string  $identityColumn
-     * @param  string  $identityValue
-     * @param  string  $password
-     * @param  bool    $rememberMe
      * @return UserInterface
      */
     public function attempt($identityColumn, $identityValue, $password, $rememberMe = false)
@@ -162,6 +163,7 @@ class Authenticator
         // Here is my password.  May I please assume the identify of this user now?
         if (Password::verify($password, $user->password)) {
             $this->login($user, $rememberMe);
+
             return $user;
         } else {
             // We know the password is at fault here (as opposed to the identity), but lets not give away the combination in case of someone bruteforcing
@@ -193,8 +195,8 @@ class Authenticator
      * Process an account login request.
      *
      * This method logs in the specified user, allowing the client to assume the user's identity for the duration of the session.
-     * @param UserInterface $user The user to log in.
-     * @param bool $rememberMe Set to true to make this a "persistent session", i.e. one that will re-login even after the session expires.
+     * @param UserInterface $user       The user to log in.
+     * @param bool          $rememberMe Set to true to make this a "persistent session", i.e. one that will re-login even after the session expires.
      * @todo Figure out a way to update the currentUser service to reflect the logged-in user *immediately* in the service provider.
      * As it stands, the currentUser service will still reflect a "guest user" for the remainder of the request.
      */
@@ -272,11 +274,11 @@ class Authenticator
      * Try to get the currently authenticated user, returning a guest user if none was found.
      *
      * Tries to re-establish a session for "remember-me" users who have been logged out due to an expired session.
-     * @return UserInterface|null
      * @throws AuthExpiredException
      * @throws AuthCompromisedException
      * @throws AccountInvalidException
      * @throws AccountDisabledException
+     * @return UserInterface|null
      */
     public function user()
     {
@@ -323,7 +325,7 @@ class Authenticator
      * Attempt to log in the client from their rememberMe token (in their cookie).
      *
      * @throws AuthCompromisedException The client attempted to log in with an invalid rememberMe token.
-     * @return UserInterface|bool If successful, the User object of the remembered user.  Otherwise, return false.
+     * @return UserInterface|bool       If successful, the User object of the remembered user.  Otherwise, return false.
      */
     protected function loginRememberedUser()
     {
@@ -350,7 +352,7 @@ class Authenticator
      * Attempt to log in the client from the session.
      *
      * @throws AuthExpiredException The client attempted to use an expired rememberMe token.
-     * @return UserInterface|null If successful, the User object of the user in session.  Otherwise, return null.
+     * @return UserInterface|null   If successful, the User object of the user in session.  Otherwise, return null.
      */
     protected function loginSessionUser()
     {
@@ -391,10 +393,10 @@ class Authenticator
      * Tries to load the specified user by id from the database.
      *
      * Checks that the account is valid and enabled, throwing an exception if not.
-     * @param int $userId
-     * @return UserInterface|null
+     * @param  int                      $userId
      * @throws AccountInvalidException
      * @throws AccountDisabledException
+     * @return UserInterface|null
      */
     protected function validateUserAccount($userId)
     {
@@ -413,7 +415,7 @@ class Authenticator
 
             return $user;
         } else {
-            return null;
+            return;
         }
     }
 

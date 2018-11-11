@@ -1,9 +1,14 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
 namespace UserFrosting\Sprinkle\Core\Tests;
 
 use UserFrosting\Sprinkle\Core\Controller\CoreController;
-use UserFrosting\Sprinkle\Core\Tests\ControllerTestCase;
 
 /**
  * Tests CoreController
@@ -17,6 +22,7 @@ class CoreControllerTest extends ControllerTestCase
     {
         $controller = new CoreController($this->ci);
         $this->assertInstanceOf(CoreController::class, $controller);
+
         return $controller;
     }
 
@@ -28,7 +34,7 @@ class CoreControllerTest extends ControllerTestCase
     {
         $result = $controller->pageIndex($this->getRequest(), $this->getResponse(), []);
         $this->assertSame($result->getStatusCode(), 200);
-        $this->assertTrue(!!preg_match('/<\/html>/', (string) $result->getBody()));
+        $this->assertTrue((bool) preg_match('/<\/html>/', (string) $result->getBody()));
     }
 
     /**
@@ -59,7 +65,7 @@ class CoreControllerTest extends ControllerTestCase
      */
     public function testGetAsset_ExceptionBadUrl(CoreController $controller)
     {
-        $url = "/" . rand(0, 99999);
+        $url = '/' . rand(0, 99999);
         $controller->getAsset($this->getRequest(), $this->getResponse(), ['url' => $url]);
     }
 

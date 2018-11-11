@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Interop\Container\ContainerInterface;
@@ -17,7 +18,6 @@ use Illuminate\Filesystem\Filesystem;
  */
 class CacheHelper
 {
-
     /**
      * @var ContainerInterface The global container object, which holds all your services.
      */
@@ -44,7 +44,7 @@ class CacheHelper
         $path = $this->ci->locator->findResource('cache://twig', true, true);
 
         // Get Filesystem instance
-        $fs = new Filesystem;
+        $fs = new Filesystem();
 
         // Make sure directory exist and delete it
         if ($fs->exists($path)) {

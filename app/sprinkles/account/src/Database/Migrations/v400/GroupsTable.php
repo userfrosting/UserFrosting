@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
@@ -45,22 +46,22 @@ class GroupsTable extends Migration
             // Add default groups
             $groups = [
                 'terran' => new Group([
-                    'slug' => 'terran',
-                    'name' => 'Terran',
+                    'slug'        => 'terran',
+                    'name'        => 'Terran',
                     'description' => 'The terrans are a young species with psionic potential. The terrans of the Koprulu sector descend from the survivors of a disastrous 23rd century colonization mission from Earth.',
-                    'icon' => 'sc sc-terran'
+                    'icon'        => 'sc sc-terran'
                 ]),
                 'zerg' => new Group([
-                    'slug' => 'zerg',
-                    'name' => 'Zerg',
+                    'slug'        => 'zerg',
+                    'name'        => 'Zerg',
                     'description' => 'Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.',
-                    'icon' => 'sc sc-zerg'
+                    'icon'        => 'sc sc-zerg'
                 ]),
                 'protoss' => new Group([
-                    'slug' => 'protoss',
-                    'name' => 'Protoss',
+                    'slug'        => 'protoss',
+                    'name'        => 'Protoss',
                     'description' => 'The protoss, a.k.a. the Firstborn, are a sapient humanoid race native to Aiur. Their advanced technology complements and enhances their psionic mastery.',
-                    'icon' => 'sc sc-protoss'
+                    'icon'        => 'sc sc-protoss'
                 ])
             ];
 

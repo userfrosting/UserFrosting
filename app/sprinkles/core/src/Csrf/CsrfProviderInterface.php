@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Csrf;
 
 use Interop\Container\ContainerInterface;
@@ -23,7 +24,7 @@ interface CsrfProviderInterface
      * Returns the CSRF Guard which will be added to the app later
      *
      * @param  ContainerInterface $ci
-     * @return mixed The csrf guard
+     * @return mixed              The csrf guard
      */
     public static function setupService(ContainerInterface $ci);
 
@@ -31,9 +32,9 @@ interface CsrfProviderInterface
      * Register middleware.
      * Add the guard to the app as a middleware
      *
-     * @param  App     $app
-     * @param  Request $request
-     * @param  mixed   $guard
+     * @param App     $app
+     * @param Request $request
+     * @param mixed   $guard
      */
     public static function registerMiddleware(App $app, Request $request, $guard);
 }

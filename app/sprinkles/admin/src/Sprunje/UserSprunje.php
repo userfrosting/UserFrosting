@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Schema\Builder;
@@ -56,8 +57,8 @@ class UserSprunje extends Sprunje
     /**
      * Filter LIKE the last activity description.
      *
-     * @param Builder $query
-     * @param mixed $value
+     * @param  Builder $query
+     * @param  mixed   $value
      * @return self
      */
     protected function filterLastActivity($query, $value)
@@ -69,14 +70,15 @@ class UserSprunje extends Sprunje
                 $query->orLike('activities.description', $value);
             }
         });
+
         return $this;
     }
 
     /**
      * Filter LIKE the first name, last name, or email.
      *
-     * @param Builder $query
-     * @param mixed $value
+     * @param  Builder $query
+     * @param  mixed   $value
      * @return self
      */
     protected function filterName($query, $value)
@@ -90,14 +92,15 @@ class UserSprunje extends Sprunje
                         ->orLike('email', $value);
             }
         });
+
         return $this;
     }
 
     /**
      * Filter by status (active, disabled, unactivated)
      *
-     * @param Builder $query
-     * @param mixed $value
+     * @param  Builder $query
+     * @param  mixed   $value
      * @return self
      */
     protected function filterStatus($query, $value)
@@ -117,6 +120,7 @@ class UserSprunje extends Sprunje
                 }
             }
         });
+
         return $this;
     }
 
@@ -130,15 +134,15 @@ class UserSprunje extends Sprunje
         return [
             [
                 'value' => 'active',
-                'text' => Translator::translate('ACTIVE')
+                'text'  => Translator::translate('ACTIVE')
             ],
             [
                 'value' => 'unactivated',
-                'text' => Translator::translate('UNACTIVATED')
+                'text'  => Translator::translate('UNACTIVATED')
             ],
             [
                 'value' => 'disabled',
-                'text' => Translator::translate('DISABLED')
+                'text'  => Translator::translate('DISABLED')
             ]
         ];
     }
@@ -146,39 +150,42 @@ class UserSprunje extends Sprunje
     /**
      * Sort based on last activity time.
      *
-     * @param Builder $query
-     * @param string $direction
+     * @param  Builder $query
+     * @param  string  $direction
      * @return self
      */
     protected function sortLastActivity($query, $direction)
     {
         $query->orderBy('activities.occurred_at', $direction);
+
         return $this;
     }
 
     /**
      * Sort based on last name.
      *
-     * @param Builder $query
-     * @param string $direction
+     * @param  Builder $query
+     * @param  string  $direction
      * @return self
      */
     protected function sortName($query, $direction)
     {
         $query->orderBy('last_name', $direction);
+
         return $this;
     }
 
     /**
      * Sort active, unactivated, disabled
      *
-     * @param Builder $query
-     * @param string $direction
+     * @param  Builder $query
+     * @param  string  $direction
      * @return self
      */
     protected function sortStatus($query, $direction)
     {
         $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
+
         return $this;
     }
 }

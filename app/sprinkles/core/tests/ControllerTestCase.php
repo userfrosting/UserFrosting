@@ -5,13 +5,12 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Tests;
 
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
-use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -36,12 +35,13 @@ class ControllerTestCase extends TestCase
     }
 
     /**
-     * @param  array $args Request arguments
+     * @param  array   $args Request arguments
      * @return Request
      */
     protected function getRequest($args = [])
     {
         $env = Environment::mock($args);
+
         return Request::createFromEnvironment($env);
     }
 

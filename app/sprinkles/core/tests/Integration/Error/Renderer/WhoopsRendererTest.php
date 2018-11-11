@@ -1,4 +1,10 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
 namespace UserFrosting\Tests\Integration\Error\Renderer;
 
@@ -15,11 +21,11 @@ class WhoopsRendererTest extends TestCase
      */
     public function testGetPreviousExceptionMessages()
     {
-        $exception1        = $this->getException('My first exception');
-        $exception2        = $this->getException('My second exception', 0, $exception1);
-        $exception3        = $this->getException('And the third one', 0, $exception2);
+        $exception1 = $this->getException('My first exception');
+        $exception2 = $this->getException('My second exception', 0, $exception1);
+        $exception3 = $this->getException('And the third one', 0, $exception2);
 
-        $inspector         = new Inspector($exception3);
+        $inspector = new Inspector($exception3);
 
         $previousExceptions = $inspector->getPreviousExceptionMessages();
 
@@ -48,8 +54,8 @@ class WhoopsRendererTest extends TestCase
         $whoopsRenderer->handleUnconditionally(true);
 
         $renderBody = $whoopsRenderer->render();
-        $this->assertTrue(!!preg_match('/RuntimeException: This is my exception in file /', $renderBody));
-        $this->assertTrue(!!preg_match('/<span>This is my exception<\/span>/', $renderBody));
+        $this->assertTrue((bool) preg_match('/RuntimeException: This is my exception in file /', $renderBody));
+        $this->assertTrue((bool) preg_match('/<span>This is my exception<\/span>/', $renderBody));
     }
 
     /**

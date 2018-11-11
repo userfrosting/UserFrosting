@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,9 +43,9 @@ class BakeCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName("bake")
-             ->setDescription("UserFrosting installation command")
-             ->setHelp("This command combine the <info>debug</info>, <info>migrate</info> and <info>build-assets</info> commands.");
+        $this->setName('bake')
+             ->setDescription('UserFrosting installation command')
+             ->setHelp('This command combine the <info>debug</info>, <info>migrate</info> and <info>build-assets</info> commands.');
     }
 
     /**

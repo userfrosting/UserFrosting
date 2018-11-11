@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
@@ -44,18 +45,18 @@ class RolesTable extends Migration
             // Add default roles
             $roles = [
                 'user' => new Role([
-                    'slug' => 'user',
-                    'name' => 'User',
+                    'slug'        => 'user',
+                    'name'        => 'User',
                     'description' => 'This role provides basic user functionality.'
                 ]),
                 'site-admin' => new Role([
-                    'slug' => 'site-admin',
-                    'name' => 'Site Administrator',
+                    'slug'        => 'site-admin',
+                    'name'        => 'Site Administrator',
                     'description' => 'This role is meant for "site administrators", who can basically do anything except create, edit, or delete other administrators.'
                 ]),
                 'group-admin' => new Role([
-                    'slug' => 'group-admin',
-                    'name' => 'Group Administrator',
+                    'slug'        => 'group-admin',
+                    'name'        => 'Group Administrator',
                     'description' => 'This role is meant for "group administrators", who can basically do anything with users in their own group, except other administrators of that group.'
                 ])
             ];

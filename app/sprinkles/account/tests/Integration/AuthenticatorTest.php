@@ -1,11 +1,16 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
 namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Tests\TestCase;
@@ -40,6 +45,7 @@ class AuthenticatorTest extends TestCase
     {
         $authenticator = $this->getAuthenticator();
         $this->assertInstanceOf(Authenticator::class, $authenticator);
+
         return $authenticator;
     }
 
@@ -263,7 +269,7 @@ class AuthenticatorTest extends TestCase
     {
         $password = 'FooBar';
         $testUser = $this->createTestUser(false, false, [
-            'password' => Password::hash($password),
+            'password'     => Password::hash($password),
             'flag_enabled' => 0
         ]);
 
@@ -280,7 +286,7 @@ class AuthenticatorTest extends TestCase
     {
         $password = 'FooBar';
         $testUser = $this->createTestUser(false, false, [
-            'password' => Password::hash($password),
+            'password'      => Password::hash($password),
             'flag_verified' => 0
         ]);
 
@@ -302,7 +308,7 @@ class AuthenticatorTest extends TestCase
 
         $password = 'FooBar';
         $testUser = $this->createTestUser(false, false, [
-            'password' => Password::hash($password),
+            'password'      => Password::hash($password),
             'flag_verified' => 0
         ]);
 

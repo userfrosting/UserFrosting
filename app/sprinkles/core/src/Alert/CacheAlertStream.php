@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Alert;
 
 use Illuminate\Cache\Repository as Cache;
@@ -35,10 +36,10 @@ class CacheAlertStream extends AlertStream
     /**
      * Create a new message stream.
      *
-     * @param string $messagesKey Store the messages under this key
+     * @param string                 $messagesKey Store the messages under this key
      * @param MessageTranslator|null $translator
-     * @param Cache $cache
-     * @param Repository $config
+     * @param Cache                  $cache
+     * @param Repository             $config
      */
     public function __construct($messagesKey, MessageTranslator $translator = null, Cache $cache, Repository $config)
     {
@@ -72,7 +73,7 @@ class CacheAlertStream extends AlertStream
     /**
      * Save messages to the stream
      *
-     * @param  string $messages The message
+     * @param string $messages The message
      */
     protected function saveMessages($messages)
     {

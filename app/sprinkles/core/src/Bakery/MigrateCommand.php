@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,9 +29,9 @@ class MigrateCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName("migrate")
-             ->setDescription("Perform database migration")
-             ->setHelp("This command runs all the pending database migrations.")
+        $this->setName('migrate')
+             ->setDescription('Perform database migration')
+             ->setHelp('This command runs all the pending database migrations.')
              ->addOption('pretend', 'p', InputOption::VALUE_NONE, 'Run migrations in "dry run" mode.')
              ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the operation to run when in production.')
              ->addOption('database', 'd', InputOption::VALUE_REQUIRED, 'The database connection to use.')
@@ -66,16 +67,16 @@ class MigrateCommand extends BaseCommand
         // If all went well, there's no fatal errors and we have migrated
         // something, show some success
         if (empty($migrated)) {
-            $this->io->success("Nothing to migrate");
+            $this->io->success('Nothing to migrate');
         } else {
-            $this->io->success("Migration successful !");
+            $this->io->success('Migration successful !');
         }
     }
 
     /**
      * Setup migrator and the shared options between other command
      *
-     * @param  InputInterface $input
+     * @param  InputInterface                                         $input
      * @return \UserFrosting\Sprinkle\Core\Database\Migrator\Migrator The migrator instance
      */
     protected function setupMigrator(InputInterface $input)
@@ -90,7 +91,7 @@ class MigrateCommand extends BaseCommand
 
         // Set connection to the selected database
         $database = $input->getOption('database');
-        if ($database != "") {
+        if ($database != '') {
             $this->io->note("Running {$this->getName()} with `$database` database connection");
             $this->ci->db->getDatabaseManager()->setDefaultConnection($database);
         }

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery;
 
 /**
@@ -18,9 +19,9 @@ trait ConfirmableTrait
      * Confirm before proceeding with the action.
      * This method only asks for confirmation in production.
      *
-     * @param  bool $force
-     * @param  string  $warning
-     * @param  \Closure|bool|null  $callback
+     * @param  bool               $force
+     * @param  string             $warning
+     * @param  \Closure|bool|null $callback
      * @return bool
      */
     public function confirmToProceed($force = false, $warning = 'Application In Production Mode!', $callback = null)
@@ -39,8 +40,9 @@ trait ConfirmableTrait
             // Ask confirmation
             $confirmed = $this->io->confirm('Do you really wish to run this command?', false);
 
-            if (! $confirmed) {
+            if (!$confirmed) {
                 $this->io->comment('Command Cancelled!');
+
                 return false;
             }
         }

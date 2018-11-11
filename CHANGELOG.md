@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `withTestUser` trait for helper methods when running tests requiring a user
 - Added `ControllerTestCase` special test case to help testing controllers
 - Improved overall test coverage and added coverage config to `phpunit.xml`
+- Added code style config (`.php_cs`) and instructions for PHP-CS-Fixer in Readme
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle

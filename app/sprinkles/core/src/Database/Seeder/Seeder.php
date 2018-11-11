@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Seeder;
 
 use Interop\Container\ContainerInterface;
@@ -53,14 +54,14 @@ class Seeder
     /**
      * Get a single seed info
      *
-     * @param  string $name The seed name
-     * @return array The details about a seed file [name, class, sprinkle]
+     * @param  string     $name The seed name
      * @throws \Exception If seed not found
+     * @return array      The details about a seed file [name, class, sprinkle]
      */
     public function getSeed($name)
     {
         // Get seed resource
-        $seedResource = $this->ci->locator->getResource($this->scheme . $name . ".php");
+        $seedResource = $this->ci->locator->getResource($this->scheme . $name . '.php');
 
         // Make sure we found something
         if (!$seedResource) {
@@ -74,9 +75,9 @@ class Seeder
     /**
      * Return the class instance of a seed
      *
-     * @param  string $name The seed name
+     * @param  string        $name The seed name
+     * @throws \Exception    If class doesn't exist or is not right interface
      * @return SeedInterface The seed class instance
-     * @throws \Exception If class doesn't exist or is not right interface
      */
     public function getSeedClass($name)
     {
@@ -103,7 +104,7 @@ class Seeder
     /**
      * Execute a seed class
      *
-     * @param  SeedInterface $seed The seed to execute
+     * @param SeedInterface $seed The seed to execute
      */
     public function executeSeed(SeedInterface $seed)
     {
@@ -122,14 +123,15 @@ class Seeder
         foreach ($seedFiles as $seedFile) {
             $seeds[] = $this->getSeedDetails($seedFile);
         }
+
         return $seeds;
     }
 
     /**
      * Return an array of seed details inclusing the classname and the sprinkle name
      *
-     * @param  Resource $file The seed file
-     * @return array The details about a seed file [name, class, sprinkle]
+     * @param  resource $file The seed file
+     * @return array    The details about a seed file [name, class, sprinkle]
      */
     protected function getSeedDetails(Resource $file)
     {
@@ -144,8 +146,8 @@ class Seeder
 
         // Build the class name and namespace
         return [
-            'name' => $name,
-            'class' => "\\UserFrosting\\Sprinkle\\$sprinkleName\\Database\\Seeds\\$className",
+            'name'     => $name,
+            'class'    => "\\UserFrosting\\Sprinkle\\$sprinkleName\\Database\\Seeds\\$className",
             'sprinkle' => $sprinkleName
         ];
     }

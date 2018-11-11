@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Models;
 
 /**
@@ -21,12 +22,12 @@ class Throttle extends Model
     /**
      * @var string The name of the table for the current model.
      */
-    protected $table = "throttles";
+    protected $table = 'throttles';
 
     protected $fillable = [
-        "type",
-        "ip",
-        "request_data"
+        'type',
+        'ip',
+        'request_data'
     ];
 
     /**

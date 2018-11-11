@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Tests\Unit;
 
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -21,10 +22,10 @@ use UserFrosting\Tests\TestCase;
  */
 class FilesystemTest extends TestCase
 {
-    /** @var string Testing storage path **/
+    /** @var string Testing storage path */
     private $testDir;
 
-    /** @var string Test disk name **/
+    /** @var string Test disk name */
     private $testDisk = 'testing';
 
     /**
@@ -70,7 +71,7 @@ class FilesystemTest extends TestCase
     }
 
     /**
-     * @param  FilesystemAdapter $files
+     * @param FilesystemAdapter $files
      * @depends testService
      */
     public function testAdapter(FilesystemAdapter $files)
@@ -90,7 +91,7 @@ class FilesystemTest extends TestCase
     }
 
     /**
-     * @param  FilesystemAdapter $files
+     * @param FilesystemAdapter $files
      * @depends testService
      * NOTE : The `download` method was introduced in Laravel 5.5.
      * We'll need to enable this once we can upgrade to newer version of Laravel
@@ -104,7 +105,7 @@ class FilesystemTest extends TestCase
     }*/
 
     /**
-     * @param  FilesystemAdapter $files
+     * @param FilesystemAdapter $files
      * @depends testService
      */
     public function testUrl(FilesystemAdapter $files)
@@ -125,7 +126,7 @@ class FilesystemTest extends TestCase
         $filesystemManager = $this->ci->filesystem;
 
         // InvalidArgumentException
-        $this->expectException("InvalidArgumentException");
+        $this->expectException('InvalidArgumentException');
         $filesystemManager->disk('testingDriver');
     }
 

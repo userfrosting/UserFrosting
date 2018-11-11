@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Models\Concerns;
 
 use Illuminate\Support\Arr;
@@ -34,10 +35,10 @@ trait HasRelationships
     /**
      * Overrides the default Eloquent hasMany relationship to return a HasManySyncable.
      *
-     * @param  string  $related
-     * @param  string  $foreignKey
-     * @param  string  $localKey
-     * @return \UserFrosting\Sprinkle\Core\Database\Relations\HasManySyncable
+     * @param  string          $related
+     * @param  string          $foreignKey
+     * @param  string          $localKey
+     * @return HasManySyncable
      */
     public function hasMany($related, $foreignKey = null, $localKey = null)
     {
@@ -58,12 +59,12 @@ trait HasRelationships
     /**
      * Overrides the default Eloquent morphMany relationship to return a MorphManySyncable.
      *
-     * @param  string  $related
-     * @param  string  $name
-     * @param  string  $type
-     * @param  string  $id
-     * @param  string  $localKey
-     * @return \UserFrosting\Sprinkle\Core\Database\Relations\MorphManySyncable
+     * @param  string            $related
+     * @param  string            $name
+     * @param  string            $type
+     * @param  string            $id
+     * @param  string            $localKey
+     * @return MorphManySyncable
      */
     public function morphMany($related, $name, $type = null, $id = null, $localKey = null)
     {
@@ -83,17 +84,17 @@ trait HasRelationships
      * Define a many-to-many 'through' relationship.
      * This is basically hasManyThrough for many-to-many relationships.
      *
-     * @param  string  $related
-     * @param  string  $through
-     * @param  string  $firstJoiningTable
-     * @param  string  $firstForeignKey
-     * @param  string  $firstRelatedKey
-     * @param  string  $secondJoiningTable
-     * @param  string  $secondForeignKey
-     * @param  string  $secondRelatedKey
-     * @param  string  $throughRelation
-     * @param  string  $relation
-     * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough
+     * @param  string               $related
+     * @param  string               $through
+     * @param  string               $firstJoiningTable
+     * @param  string               $firstForeignKey
+     * @param  string               $firstRelatedKey
+     * @param  string               $secondJoiningTable
+     * @param  string               $secondForeignKey
+     * @param  string               $secondRelatedKey
+     * @param  string               $throughRelation
+     * @param  string               $relation
+     * @return BelongsToManyThrough
      */
     public function belongsToManyThrough(
         $related,
@@ -115,7 +116,7 @@ trait HasRelationships
         }
 
         // Create models for through and related
-        $through = new $through;
+        $through = new $through();
         $related = $this->newRelatedInstance($related);
 
         if (is_null($throughRelation)) {
@@ -160,12 +161,12 @@ trait HasRelationships
      * Define a unique many-to-many relationship.  Similar to a regular many-to-many relationship, but removes duplicate child objects.
      * Can also be used to implement ternary relationships.
      *
-     * @param  string $related
-     * @param  string $table
-     * @param  string $foreignKey
-     * @param  string $relatedKey
-     * @param  string $relation
-     * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyUnique
+     * @param  string              $related
+     * @param  string              $table
+     * @param  string              $foreignKey
+     * @param  string              $relatedKey
+     * @param  string              $relation
+     * @return BelongsToManyUnique
      */
     public function belongsToManyUnique($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
     {
@@ -205,13 +206,13 @@ trait HasRelationships
     /**
      * Define a unique morphs-to-many relationship.  Similar to a regular morphs-to-many relationship, but removes duplicate child objects.
      *
-     * @param  string  $related
-     * @param  string  $name
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $otherKey
-     * @param  bool $inverse
-     * @return \UserFrosting\Sprinkle\Core\Database\Relations\MorphToManyUnique
+     * @param  string            $related
+     * @param  string            $name
+     * @param  string            $table
+     * @param  string            $foreignKey
+     * @param  string            $otherKey
+     * @param  bool              $inverse
+     * @return MorphToManyUnique
      */
     public function morphToManyUnique($related, $name, $table = null, $foreignKey = null, $otherKey = null, $inverse = false)
     {
@@ -222,7 +223,7 @@ trait HasRelationships
         // instances, as well as the relationship instances we need for these.
         $foreignKey = $foreignKey ?: $name.'_id';
 
-        $instance = new $related;
+        $instance = new $related();
 
         $otherKey = $otherKey ?: $instance->getForeignKey();
 
@@ -251,13 +252,13 @@ trait HasRelationships
      * This has been superseded by the belongsToManyUnique relationship's `withTernary` method since 4.1.7.
      *
      * @deprecated since 4.1.6
-     * @param  string  $related
-     * @param  string  $constraintKey
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $relatedKey
-     * @param  string  $relation
-     * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyConstrained
+     * @param  string                   $related
+     * @param  string                   $constraintKey
+     * @param  string                   $table
+     * @param  string                   $foreignKey
+     * @param  string                   $relatedKey
+     * @param  string                   $relation
+     * @return BelongsToManyConstrained
      */
     public function belongsToManyConstrained($related, $constraintKey, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
     {
@@ -306,9 +307,10 @@ trait HasRelationships
 
         $caller = Arr::first(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), function ($key, $trace) use ($self) {
             $caller = $trace['function'];
-            return ! in_array($caller, HasRelationships::$manyMethodsExtended) && $caller != $self;
+
+            return !in_array($caller, HasRelationships::$manyMethodsExtended) && $caller != $self;
         });
 
-        return ! is_null($caller) ? $caller['function'] : null;
+        return !is_null($caller) ? $caller['function'] : null;
     }
 }

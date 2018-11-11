@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\ServicesProvider;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -67,6 +68,7 @@ class ServicesProvider
             $classMapper->setClassMapping('activity', 'UserFrosting\Sprinkle\Account\Database\Models\Activity');
             $classMapper->setClassMapping('password_reset', 'UserFrosting\Sprinkle\Account\Database\Models\PasswordReset');
             $classMapper->setClassMapping('verification', 'UserFrosting\Sprinkle\Account\Database\Models\Verification');
+
             return $classMapper;
         });
 
@@ -84,6 +86,7 @@ class ServicesProvider
             $handler->registerHandler('\UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException', '\UserFrosting\Sprinkle\Account\Error\Handler\AuthExpiredExceptionHandler');
             // Register the AuthCompromisedExceptionHandler.
             $handler->registerHandler('\UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedException', '\UserFrosting\Sprinkle\Account\Error\Handler\AuthCompromisedExceptionHandler');
+
             return $handler;
         });
 
@@ -135,7 +138,7 @@ class ServicesProvider
 
             // Register user theme template with Twig Loader
             if ($authenticator->check()) {
-                $themePath = $c->locator->findResource("templates://", true, false);
+                $themePath = $c->locator->findResource('templates://', true, false);
                 if ($themePath) {
                     $loader = $twig->getLoader();
                     $loader->prependPath($themePath);
@@ -167,6 +170,7 @@ class ServicesProvider
             $config['remember_me.table.tableName'] = Capsule::connection()->getTablePrefix() . $config['remember_me.table.tableName'];
 
             $authenticator = new Authenticator($classMapper, $session, $config, $cache);
+
             return $authenticator;
         };
 
@@ -177,6 +181,7 @@ class ServicesProvider
          */
         $container['authGuard'] = function ($c) {
             $authenticator = $c->authenticator;
+
             return new AuthGuard($authenticator);
         };
 
@@ -224,19 +229,19 @@ class ServicesProvider
 
                 /**
                  * Check if the specified values are identical to one another (strict comparison).
-                 * @param mixed $val1 the first value to compare.
-                 * @param mixed $val2 the second value to compare.
-                 * @return bool true if the values are strictly equal, false otherwise.
+                 * @param  mixed $val1 the first value to compare.
+                 * @param  mixed $val2 the second value to compare.
+                 * @return bool  true if the values are strictly equal, false otherwise.
                  */
                 'equals' => function ($val1, $val2) {
-                    return ($val1 === $val2);
+                    return $val1 === $val2;
                 },
 
                 /**
                  * Check if the specified values are numeric, and if so, if they are equal to each other.
-                 * @param mixed $val1 the first value to compare.
-                 * @param mixed $val2 the second value to compare.
-                 * @return bool true if the values are numeric and equal, false otherwise.
+                 * @param  mixed $val1 the first value to compare.
+                 * @param  mixed $val2 the second value to compare.
+                 * @return bool  true if the values are numeric and equal, false otherwise.
                  */
                 'equals_num' => function ($val1, $val2) {
                     if (!is_numeric($val1)) {
@@ -246,14 +251,14 @@ class ServicesProvider
                         return false;
                     }
 
-                    return ($val1 == $val2);
+                    return $val1 == $val2;
                 },
 
                 /**
                  * Check if the specified user (by user_id) has a particular role.
                  *
-                 * @param int $user_id the id of the user.
-                 * @param int $role_id the id of the role.
+                 * @param  int  $user_id the id of the user.
+                 * @param  int  $role_id the id of the role.
                  * @return bool true if the user has the role, false otherwise.
                  */
                 'has_role' => function ($user_id, $role_id) {
@@ -266,9 +271,9 @@ class ServicesProvider
                 /**
                  * Check if the specified value $needle is in the values of $haystack.
                  *
-                 * @param mixed $needle the value to look for in $haystack
-                 * @param array[mixed] $haystack the array of values to search.
-                 * @return bool true if $needle is present in the values of $haystack, false otherwise.
+                 * @param  mixed        $needle   the value to look for in $haystack
+                 * @param  array[mixed] $haystack the array of values to search.
+                 * @return bool         true if $needle is present in the values of $haystack, false otherwise.
                  */
                 'in' => function ($needle, $haystack) {
                     return in_array($needle, $haystack);
@@ -277,32 +282,33 @@ class ServicesProvider
                 /**
                  * Check if the specified user (by user_id) is in a particular group.
                  *
-                 * @param int $user_id the id of the user.
-                 * @param int $group_id the id of the group.
+                 * @param  int  $user_id  the id of the user.
+                 * @param  int  $group_id the id of the group.
                  * @return bool true if the user is in the group, false otherwise.
                  */
                 'in_group' => function ($user_id, $group_id) {
                     $user = User::find($user_id);
-                    return ($user->group_id == $group_id);
+
+                    return $user->group_id == $group_id;
                 },
 
                 /**
                  * Check if the specified user (by user_id) is the master user.
                  *
-                 * @param int $user_id the id of the user.
+                 * @param  int  $user_id the id of the user.
                  * @return bool true if the user id is equal to the id of the master account, false otherwise.
                  */
                 'is_master' => function ($user_id) use ($config) {
                     // Need to use loose comparison for now, because some DBs return `id` as a string
-                    return ($user_id == $config['reserved_user_ids.master']);
+                    return $user_id == $config['reserved_user_ids.master'];
                 },
 
                 /**
                  * Check if all values in the array $needle are present in the values of $haystack.
                  *
-                 * @param array[mixed] $needle the array whose values we should look for in $haystack
-                 * @param array[mixed] $haystack the array of values to search.
-                 * @return bool true if every value in $needle is present in the values of $haystack, false otherwise.
+                 * @param  array[mixed] $needle   the array whose values we should look for in $haystack
+                 * @param  array[mixed] $haystack the array of values to search.
+                 * @return bool         true if every value in $needle is present in the values of $haystack, false otherwise.
                  */
                 'subset' => function ($needle, $haystack) {
                     return count($needle) == count(array_intersect($needle, $haystack));
@@ -312,9 +318,9 @@ class ServicesProvider
                  * Check if all keys of the array $needle are present in the values of $haystack.
                  *
                  * This function is useful for whitelisting an array of key-value parameters.
-                 * @param array[mixed] $needle the array whose keys we should look for in $haystack
-                 * @param array[mixed] $haystack the array of values to search.
-                 * @return bool true if every key in $needle is present in the values of $haystack, false otherwise.
+                 * @param  array[mixed] $needle   the array whose keys we should look for in $haystack
+                 * @param  array[mixed] $haystack the array of values to search.
+                 * @return bool         true if every key in $needle is present in the values of $haystack, false otherwise.
                  */
                 'subset_keys' => function ($needle, $haystack) {
                     return count($needle) == count(array_intersect(array_keys($needle), $haystack));
@@ -322,6 +328,7 @@ class ServicesProvider
             ];
 
             $authorizer = new AuthorizationManager($c, $callbacks);
+
             return $authorizer;
         };
 
@@ -349,6 +356,7 @@ class ServicesProvider
          */
         $container['passwordHasher'] = function ($c) {
             $hasher = new Hasher();
+
             return $hasher;
         };
 
@@ -362,9 +370,9 @@ class ServicesProvider
              * This method is invoked when a user attempts to perform certain public actions when they are already logged in.
              *
              * @todo Forward to user's landing page or last visited page
-             * @param \Psr\Http\Message\ServerRequestInterface $request
-             * @param \Psr\Http\Message\ResponseInterface      $response
-             * @param array $args
+             * @param  \Psr\Http\Message\ServerRequestInterface $request
+             * @param  \Psr\Http\Message\ResponseInterface      $response
+             * @param  array                                    $args
              * @return \Psr\Http\Message\ResponseInterface
              */
             return function (Request $request, Response $response, array $args) use ($c) {
@@ -384,9 +392,9 @@ class ServicesProvider
              * This method is invoked when a user completes the login process.
              *
              * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
-             * @param \Psr\Http\Message\ServerRequestInterface $request
-             * @param \Psr\Http\Message\ResponseInterface      $response
-             * @param array $args
+             * @param  \Psr\Http\Message\ServerRequestInterface $request
+             * @param  \Psr\Http\Message\ResponseInterface      $response
+             * @param  array                                    $args
              * @return \Psr\Http\Message\ResponseInterface
              */
             return function (Request $request, Response $response, array $args) use ($c) {
@@ -420,6 +428,7 @@ class ServicesProvider
             $config = $c->config;
 
             $repo = new PasswordResetRepository($classMapper, $config['password_reset.algorithm']);
+
             return $repo;
         };
 
@@ -433,6 +442,7 @@ class ServicesProvider
             $config = $c->config;
 
             $repo = new VerificationRepository($classMapper, $config['verification.algorithm']);
+
             return $repo;
         };
 

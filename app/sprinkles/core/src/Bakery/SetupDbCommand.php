@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -33,16 +34,16 @@ class SetupDbCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName("setup:db")
-             ->setDescription("UserFrosting Database Configuration Wizard")
-             ->setHelp("Helper command to setup the database configuration. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.")
-             ->addOption('force', null, InputOption::VALUE_NONE, "Force setup if db is already configured")
+        $this->setName('setup:db')
+             ->setDescription('UserFrosting Database Configuration Wizard')
+             ->setHelp('Helper command to setup the database configuration. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.')
+             ->addOption('force', null, InputOption::VALUE_NONE, 'Force setup if db is already configured')
              ->addOption('db_driver', null, InputOption::VALUE_OPTIONAL, "The database driver {$this->getDatabaseDriversList()}")
-             ->addOption('db_name', null, InputOption::VALUE_OPTIONAL, "The database name")
-             ->addOption('db_host', null, InputOption::VALUE_OPTIONAL, "The database hostname")
-             ->addOption('db_port', null, InputOption::VALUE_OPTIONAL, "The database port")
-             ->addOption('db_user', null, InputOption::VALUE_OPTIONAL, "The database user")
-             ->addOption('db_password', null, InputOption::VALUE_OPTIONAL, "The database password");
+             ->addOption('db_name', null, InputOption::VALUE_OPTIONAL, 'The database name')
+             ->addOption('db_host', null, InputOption::VALUE_OPTIONAL, 'The database hostname')
+             ->addOption('db_port', null, InputOption::VALUE_OPTIONAL, 'The database port')
+             ->addOption('db_user', null, InputOption::VALUE_OPTIONAL, 'The database user')
+             ->addOption('db_password', null, InputOption::VALUE_OPTIONAL, 'The database password');
     }
 
     /**
@@ -59,8 +60,9 @@ class SetupDbCommand extends BaseCommand
         $this->io->title("UserFrosting's Database Setup Wizard");
 
         // Check if db is already setup
-        if (!$input->getOption('force') && $this->testDatabase($config["db.default"], false)) {
-            $this->io->note("Database already setup. Use the `php bakery setup:db --force` command to run db setup again.");
+        if (!$input->getOption('force') && $this->testDatabase($config['db.default'], false)) {
+            $this->io->note('Database already setup. Use the `php bakery setup:db --force` command to run db setup again.');
+
             return;
         }
 
@@ -73,18 +75,18 @@ class SetupDbCommand extends BaseCommand
 
         // Get keys
         $keys = [
-            'DB_HOST' => ($dotenvEditor->keyExists('DB_HOST')) ? $dotenvEditor->getValue('DB_HOST') : '',
-            'DB_NAME' => ($dotenvEditor->keyExists('DB_NAME')) ? $dotenvEditor->getValue('DB_NAME') : '',
-            'DB_USER' => ($dotenvEditor->keyExists('DB_USER')) ? $dotenvEditor->getValue('DB_USER') : '',
+            'DB_HOST'     => ($dotenvEditor->keyExists('DB_HOST')) ? $dotenvEditor->getValue('DB_HOST') : '',
+            'DB_NAME'     => ($dotenvEditor->keyExists('DB_NAME')) ? $dotenvEditor->getValue('DB_NAME') : '',
+            'DB_USER'     => ($dotenvEditor->keyExists('DB_USER')) ? $dotenvEditor->getValue('DB_USER') : '',
             'DB_PASSWORD' => ($dotenvEditor->keyExists('DB_PASSWORD')) ? $dotenvEditor->getValue('DB_PASSWORD') : ''
         ];
 
         // There may be some custom config or global env values defined on the server.
         // We'll check for that and ask for confirmation in this case.
-        if ($config["db.default.host"] != $keys['DB_HOST'] ||
-            $config["db.default.database"] != $keys['DB_NAME'] ||
-            $config["db.default.username"] != $keys['DB_USER'] ||
-            $config["db.default.password"] != $keys['DB_PASSWORD']) {
+        if ($config['db.default.host'] != $keys['DB_HOST'] ||
+            $config['db.default.database'] != $keys['DB_NAME'] ||
+            $config['db.default.username'] != $keys['DB_USER'] ||
+            $config['db.default.password'] != $keys['DB_PASSWORD']) {
             $this->io->warning("Current database configuration differ from the configuration defined in `{$this->envPath}`. Global system environment variables might be defined.");
 
             if (!$this->io->confirm('Continue?', false)) {
@@ -99,22 +101,22 @@ class SetupDbCommand extends BaseCommand
         if (!$this->testDatabase($dbParams)) {
             exit(1);
         } else {
-            $this->io->success("Database connection successful");
+            $this->io->success('Database connection successful');
         }
 
         // Time to save
-        $this->io->section("Saving data");
+        $this->io->section('Saving data');
 
         // Prepare file content
         // N.B.: Can't use the `$dbParams` keys directly since they differ from
         // the config one later used to update the config
         $fileContent = [
-            "DB_DRIVER" => $dbParams['driver'],
-            "DB_HOST" => $dbParams['host'],
-            "DB_PORT" => $dbParams['port'],
-            "DB_NAME" => $dbParams['database'],
-            "DB_USER" => $dbParams['username'],
-            "DB_PASSWORD" => $dbParams['password']
+            'DB_DRIVER'   => $dbParams['driver'],
+            'DB_HOST'     => $dbParams['host'],
+            'DB_PORT'     => $dbParams['port'],
+            'DB_NAME'     => $dbParams['database'],
+            'DB_USER'     => $dbParams['username'],
+            'DB_PASSWORD' => $dbParams['password']
         ];
 
         foreach ($fileContent as $key => $value) {
@@ -125,7 +127,7 @@ class SetupDbCommand extends BaseCommand
         // At this point, `$this->uf` is still using the old configs.
         // We need to refresh the `db.default` config values
         $newConfig = array_merge($this->ci->config['db.default'], $dbParams);
-        $this->ci->config->set("db.default", $newConfig);
+        $this->ci->config->set('db.default', $newConfig);
 
         // Success
         $this->io->success("Database config successfully saved in `{$this->envPath}`");
@@ -135,7 +137,7 @@ class SetupDbCommand extends BaseCommand
      * Ask for database crendentials
      *
      * @param  InputInterface $args Command arguments
-     * @return array The databse credentials
+     * @return array          The databse credentials
      */
     protected function askForDatabase(InputInterface $args)
     {
@@ -148,7 +150,7 @@ class SetupDbCommand extends BaseCommand
             $selectedDriver = $args->getOption('db_driver');
             $driver = $drivers->where('driver', $selectedDriver)->first();
         } else {
-            $selectedDriver = $this->io->choice("Database type", $driversList);
+            $selectedDriver = $this->io->choice('Database type', $driversList);
             $driver = $drivers->where('name', $selectedDriver)->first();
         }
 
@@ -160,12 +162,12 @@ class SetupDbCommand extends BaseCommand
 
         // Ask further questions based on driver
         if ($driver['driver'] == 'sqlite') {
-            $name = ($args->getOption('db_name')) ?: $this->io->ask("Database name", $driver['defaultDBName']);
+            $name = ($args->getOption('db_name')) ?: $this->io->ask('Database name', $driver['defaultDBName']);
 
             return [
-                'driver' => $driver['driver'],
-                'host' => '',
-                'port' => '',
+                'driver'   => $driver['driver'],
+                'host'     => '',
+                'port'     => '',
                 'database' => $name,
                 'username' => '',
                 'password' => ''
@@ -173,23 +175,23 @@ class SetupDbCommand extends BaseCommand
         } else {
             $defaultPort = $driver['defaultPort'];
 
-            $host = ($args->getOption('db_host')) ?: $this->io->ask("Hostname", "localhost");
-            $port = ($args->getOption('db_port')) ?: $this->io->ask("Port", $defaultPort);
-            $name = ($args->getOption('db_name')) ?: $this->io->ask("Database name", $driver['defaultDBName']);
-            $user = ($args->getOption('db_user')) ?: $this->io->ask("Username", "userfrosting");
-            $password = ($args->getOption('db_password')) ?: $this->io->askHidden("Password", function ($password) {
+            $host = ($args->getOption('db_host')) ?: $this->io->ask('Hostname', 'localhost');
+            $port = ($args->getOption('db_port')) ?: $this->io->ask('Port', $defaultPort);
+            $name = ($args->getOption('db_name')) ?: $this->io->ask('Database name', $driver['defaultDBName']);
+            $user = ($args->getOption('db_user')) ?: $this->io->ask('Username', 'userfrosting');
+            $password = ($args->getOption('db_password')) ?: $this->io->askHidden('Password', function ($password) {
                 // Use custom validator to accept empty password
                 return $password;
             });
 
             return [
-                'driver' => $driver['driver'],
-                'host' => $host,
-                'port' => $port,
+                'driver'   => $driver['driver'],
+                'host'     => $host,
+                'port'     => $port,
                 'database' => $name,
                 'username' => $user,
                 'password' => $password,
-                'charset' => $this->ci->config['db.default.charset'] // Used when replacing config later
+                'charset'  => $this->ci->config['db.default.charset'] // Used when replacing config later
             ];
         }
     }
@@ -197,14 +199,14 @@ class SetupDbCommand extends BaseCommand
     /**
      * Test new database connecion
      *
-     * @param  array $dbParams Database params
-     * @param  bool $displayMessage Display io message
-     * @return bool Return true if db is successful
+     * @param  array $dbParams       Database params
+     * @param  bool  $displayMessage Display io message
+     * @return bool  Return true if db is successful
      */
     protected function testDatabase($dbParams, $displayMessage = true)
     {
         // Setup a new db connection
-        $capsule = new Capsule;
+        $capsule = new Capsule();
         $capsule->addConnection($dbParams);
 
         // Test the db connexion.
@@ -213,11 +215,12 @@ class SetupDbCommand extends BaseCommand
             $conn->getPdo();
         } catch (\PDOException $e) {
             if ($displayMessage) {
-                $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':".PHP_EOL;
-                $message .= "Exception: " . $e->getMessage() . PHP_EOL.PHP_EOL;
-                $message .= "Please check your database configuration and/or google the exception shown above and run the command again.";
+                $message = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':".PHP_EOL;
+                $message .= 'Exception: ' . $e->getMessage() . PHP_EOL.PHP_EOL;
+                $message .= 'Please check your database configuration and/or google the exception shown above and run the command again.';
                 $this->io->error($message);
             }
+
             return false;
         }
 
@@ -233,28 +236,28 @@ class SetupDbCommand extends BaseCommand
     {
         return collect([
             [
-                "driver" => "mysql",
-                "name" => "MySQL / MariaDB",
-                "defaultDBName" => "userfrosting",
-                "defaultPort" => 3306
+                'driver'        => 'mysql',
+                'name'          => 'MySQL / MariaDB',
+                'defaultDBName' => 'userfrosting',
+                'defaultPort'   => 3306
             ],
             [
-                "driver" => "pgsql",
-                "name" => "ProgreSQL",
-                "defaultDBName" => "userfrosting",
-                "defaultPort" => 5432
+                'driver'        => 'pgsql',
+                'name'          => 'ProgreSQL',
+                'defaultDBName' => 'userfrosting',
+                'defaultPort'   => 5432
             ],
             [
-                "driver" => "sqlsrv",
-                "name" => "SQL Server",
-                "defaultDBName" => "userfrosting",
-                "defaultPort" => 1433
+                'driver'        => 'sqlsrv',
+                'name'          => 'SQL Server',
+                'defaultDBName' => 'userfrosting',
+                'defaultPort'   => 1433
             ],
             [
-                "driver" => "sqlite",
-                "name" => "SQLite",
-                "defaultDBName" => \UserFrosting\DB_DIR . \UserFrosting\DS . 'userfrosting.db',
-                "defaultPort" => null
+                'driver'        => 'sqlite',
+                'name'          => 'SQLite',
+                'defaultDBName' => \UserFrosting\DB_DIR . \UserFrosting\DS . 'userfrosting.db',
+                'defaultPort'   => null
             ]
         ]);
     }
@@ -268,6 +271,7 @@ class SetupDbCommand extends BaseCommand
     {
         $dbDriverList = $this->databaseDrivers();
         $dbDriverList = $dbDriverList->pluck('driver');
+
         return $dbDriverList;
     }
 }

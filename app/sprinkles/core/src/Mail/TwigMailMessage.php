@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 use Slim\Views\Twig;
@@ -36,7 +37,7 @@ class TwigMailMessage extends MailMessage
     /**
      * Create a new TwigMailMessage instance.
      *
-     * @param Twig $view The Twig view object used to render mail templates.
+     * @param Twig   $view     The Twig view object used to render mail templates.
      * @param string $filename optional Set the Twig template to use for this message.
      */
     public function __construct(Twig $view, $filename = null)
@@ -61,6 +62,7 @@ class TwigMailMessage extends MailMessage
     public function addParams($params = [])
     {
         $this->params = array_replace_recursive($this->params, $params);
+
         return $this;
     }
 
@@ -70,6 +72,7 @@ class TwigMailMessage extends MailMessage
     public function renderSubject($params = [])
     {
         $params = array_replace_recursive($this->params, $params);
+
         return $this->template->renderBlock('subject', $params);
     }
 
@@ -79,6 +82,7 @@ class TwigMailMessage extends MailMessage
     public function renderBody($params = [])
     {
         $params = array_replace_recursive($this->params, $params);
+
         return $this->template->renderBlock('body', $params);
     }
 
@@ -90,6 +94,7 @@ class TwigMailMessage extends MailMessage
     public function setTemplate(\Twig_Template $template)
     {
         $this->template = $template;
+
         return $this;
     }
 }

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Relations;
 
 use Illuminate\Database\Eloquent\Model;
@@ -34,13 +35,13 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Create a new belongs to many relationship instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
-     * @param  \Illuminate\Database\Eloquent\Relations\Relation $intermediateRelation
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $relatedKey
-     * @param  string  $relationName
+     * @param \Illuminate\Database\Eloquent\Builder            $query
+     * @param \Illuminate\Database\Eloquent\Model              $parent
+     * @param \Illuminate\Database\Eloquent\Relations\Relation $intermediateRelation
+     * @param string                                           $table
+     * @param string                                           $foreignKey
+     * @param string                                           $relatedKey
+     * @param string                                           $relationName
      */
     public function __construct(Builder $query, Model $parent, Relation $intermediateRelation, $table, $foreignKey, $relatedKey, $relationName = null)
     {
@@ -75,8 +76,8 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Add a "via" query to load the intermediate models through which the child models are related.
      *
-     * @param string   $viaRelationName
-     * @param callable $viaCallback
+     * @param  string   $viaRelationName
+     * @param  callable $viaCallback
      * @return self
      */
     public function withVia($viaRelationName = null, $viaCallback = null)
@@ -100,7 +101,7 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Set the constraints for an eager load of the relation.
      *
-     * @param  array  $models
+     * @param array $models
      */
     public function addEagerConstraints(array $models)
     {
@@ -131,9 +132,9 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Match the eagerly loaded results to their parents
      *
-     * @param  array   $models
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @param  string  $relation
+     * @param  array                                    $models
+     * @param  \Illuminate\Database\Eloquent\Collection $results
+     * @param  string                                   $relation
      * @return array
      */
     public function match(array $models, Collection $results, $relation)
@@ -175,7 +176,7 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Unset tertiary pivots on a collection or array of models.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection $models
+     * @param \Illuminate\Database\Eloquent\Collection $models
      */
     protected function unsetTertiaryPivots(Collection $models)
     {
@@ -187,7 +188,7 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Set the join clause for the relation query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder|null  $query
+     * @param  \Illuminate\Database\Eloquent\Builder|null $query
      * @return self
      */
     protected function performJoin($query = null)

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Relations\Concerns;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -119,8 +120,8 @@ trait Unique
      * Set the limit on the number of intermediate models to load.
      *
      * @deprecated since 4.1.7
-     * @param int $value
-     * @return    $this
+     * @param  int   $value
+     * @return $this
      */
     public function withLimit($value)
     {
@@ -131,8 +132,8 @@ trait Unique
      * Set the offset when loading the intermediate models.
      *
      * @deprecated since 4.1.7
-     * @param int $value
-     * @return    $this
+     * @param  int   $value
+     * @return $this
      */
     public function withOffset($value)
     {
@@ -142,15 +143,15 @@ trait Unique
     /**
      * Add a query to load the nested tertiary models for this relationship.
      *
-     * @param string     $tertiaryRelated
-     * @param string    $tertiaryRelationName
-     * @param string    $tertiaryKey
-     * @param callable  $tertiaryCallback
+     * @param  string   $tertiaryRelated
+     * @param  string   $tertiaryRelationName
+     * @param  string   $tertiaryKey
+     * @param  callable $tertiaryCallback
      * @return self
      */
     public function withTertiary($tertiaryRelated, $tertiaryRelationName = null, $tertiaryKey = null, $tertiaryCallback = null)
     {
-        $this->tertiaryRelated = new $tertiaryRelated;
+        $this->tertiaryRelated = new $tertiaryRelated();
 
         // Try to guess the tertiary related key from the tertiaryRelated model.
         $this->tertiaryKey = $tertiaryKey ?: $this->tertiaryRelated->getForeignKey();
@@ -188,8 +189,8 @@ trait Unique
      * Add the constraints for a relationship count query.
      *
      * @see    \Illuminate\Database\Eloquent\Relations\Relation
-     * @param  Builder  $query
-     * @param  Builder  $parentQuery
+     * @param  Builder $query
+     * @param  Builder $parentQuery
      * @return Builder
      */
     public function getRelationExistenceCountQuery(Builder $query, Builder $parentQuery)
@@ -204,9 +205,9 @@ trait Unique
     /**
      * Match the eagerly loaded results to their parents
      *
-     * @param  array   $models
-     * @param  Collection  $results
-     * @param  string  $relation
+     * @param  array      $models
+     * @param  Collection $results
+     * @param  string     $relation
      * @return array
      */
     public function match(array $models, Collection $results, $relation)
@@ -244,7 +245,7 @@ trait Unique
      * Execute the query as a "select" statement, getting all requested models
      * and matching up any tertiary models.
      *
-     * @param  array  $columns
+     * @param  array      $columns
      * @return Collection
      */
     public function get($columns = ['*'])
@@ -262,9 +263,9 @@ trait Unique
      * If we are applying either a limit or offset, we'll first determine a limited/offset list of model ids
      * to select from in the final query.
      *
-     * @param  Builder  $query
-     * @param  int $limit
-     * @param  int $offset
+     * @param  Builder $query
+     * @param  int     $limit
+     * @param  int     $offset
      * @return Builder
      */
     public function getPaginatedQuery(Builder $query, $limit = null, $offset = null)
@@ -321,8 +322,8 @@ trait Unique
      * Get the hydrated models and eager load their relations, optionally
      * condensing the set of models before performing the eager loads.
      *
-     * @param  array  $columns
-     * @param  bool   $condenseModels
+     * @param  array      $columns
+     * @param  bool       $condenseModels
      * @return Collection
      */
     public function getModels($columns = ['*'], $condenseModels = true)
@@ -396,8 +397,8 @@ trait Unique
      * that maps parent ids to arrays of related ids, which in turn map to arrays
      * of tertiary models corresponding to each relationship.
      *
-     * @param  Collection  $results
-     * @param  string $parentKey
+     * @param  Collection $results
+     * @param  string     $parentKey
      * @return array
      */
     protected function buildDictionary(Collection $results, $parentKey = null)
@@ -459,7 +460,7 @@ trait Unique
     /**
      * Build dictionary of tertiary models keyed by the corresponding related model keys.
      *
-     * @param  array  $models
+     * @param  array $models
      * @return array
      */
     protected function buildTertiaryDictionary(array $models)
@@ -486,8 +487,8 @@ trait Unique
     /**
      * Transfer the pivot to the tertiary model
      *
-     * @param  Model $model
-     * @param  Model $tertiaryModel
+     * @param Model $model
+     * @param Model $tertiaryModel
      */
     protected function transferPivotsToTertiary($model, $tertiaryModel)
     {
@@ -509,7 +510,7 @@ trait Unique
     /**
      * Get the tertiary models for the relationship.
      *
-     * @param  array  $models
+     * @param  array      $models
      * @return Collection
      */
     protected function getTertiaryModels(array $models)
@@ -538,8 +539,8 @@ trait Unique
     /**
      * Match a collection of child models into a collection of parent models using a dictionary.
      *
-     * @param  array $dictionary
-     * @param  Collection  $results
+     * @param array      $dictionary
+     * @param Collection $results
      */
     protected function matchTertiaryModels(array $dictionary, Collection $results)
     {
@@ -559,7 +560,7 @@ trait Unique
     /**
      * Unset tertiary pivots on a collection or array of models.
      *
-     * @param  Collection $models
+     * @param Collection $models
      */
     protected function unsetTertiaryPivots(Collection $models)
     {

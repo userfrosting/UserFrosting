@@ -1,4 +1,10 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
 namespace UserFrosting\Tests\Integration;
 
@@ -159,7 +165,7 @@ class DatabaseTests extends TestCase
             'email' => 'david@owlfancy.com'
         ]);
         $user->emails()->create([
-            'id' => 2,
+            'id'    => 2,
             'label' => 'work',
             'email' => 'david@attenboroughsreef.com'
         ]);
@@ -167,7 +173,7 @@ class DatabaseTests extends TestCase
         // Delete `work`, update `primary`, and add `gmail`
         $user->emails()->sync([
             [
-                'id' => 1,
+                'id'    => 1,
                 'email' => 'david@aol.com'
             ],
             [
@@ -180,16 +186,16 @@ class DatabaseTests extends TestCase
 
         $this->assertEquals([
             [
-                'id' => 1,
+                'id'     => 1,
                 'user_id'=> 1,
-                'label' => 'primary',
-                'email' => 'david@aol.com'
+                'label'  => 'primary',
+                'email'  => 'david@aol.com'
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'user_id' => 1,
-                'label' => 'gmail',
-                'email' => 'davidattenborough@gmail.com'
+                'label'   => 'gmail',
+                'email'   => 'davidattenborough@gmail.com'
             ]
         ], $emails);
     }
@@ -202,24 +208,24 @@ class DatabaseTests extends TestCase
         $user = EloquentTestUser::create(['name' => 'David']);
         // Set up original phones
         $user->phones()->create([
-            'id'    => 1,
-            'label' => 'primary',
+            'id'     => 1,
+            'label'  => 'primary',
             'number' => '5555551212'
         ]);
         $user->phones()->create([
-            'id' => 2,
-            'label' => 'work',
+            'id'     => 2,
+            'label'  => 'work',
             'number' => '2223334444'
         ]);
 
         // Delete `work`, update `primary`, and add `fax`
         $user->phones()->sync([
             [
-                'id' => 1,
+                'id'     => 1,
                 'number' => '8883332222'
             ],
             [
-                'label' => 'fax',
+                'label'  => 'fax',
                 'number' => '5550005555'
             ]
         ]);
@@ -228,18 +234,18 @@ class DatabaseTests extends TestCase
 
         $this->assertEquals([
             [
-                'id' => 1,
-                'phoneable_id'=> 1,
+                'id'             => 1,
+                'phoneable_id'   => 1,
                 'phoneable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser',
-                'label' => 'primary',
-                'number' => '8883332222'
+                'label'          => 'primary',
+                'number'         => '8883332222'
             ],
             [
-                'id' => 3,
-                'phoneable_id'=> 1,
+                'id'             => 3,
+                'phoneable_id'   => 1,
                 'phoneable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser',
-                'label' => 'fax',
-                'number' => '5550005555'
+                'label'          => 'fax',
+                'number'         => '5550005555'
             ]
         ], $phones);
     }
@@ -257,16 +263,16 @@ class DatabaseTests extends TestCase
 
         $expectedRoles = [
             [
-                'id' => 2,
-                'slug' => 'soldier',
+                'id'    => 2,
+                'slug'  => 'soldier',
                 'pivot' => [
                     'user_id' => 1,
                     'role_id' => 2
                 ]
             ],
             [
-                'id' => 3,
-                'slug' => 'egg-layer',
+                'id'    => 3,
+                'slug'  => 'egg-layer',
                 'pivot' => [
                     'user_id' => 1,
                     'role_id' => 3
@@ -296,19 +302,19 @@ class DatabaseTests extends TestCase
 
         $expectedTasks = [
             [
-                'id' => 2,
-                'name' => 'Chopping',
+                'id'    => 2,
+                'name'  => 'Chopping',
                 'pivot' => [
                     'assignable_id' => 1,
-                    'task_id' => 2
+                    'task_id'       => 2
                 ]
             ],
             [
-                'id' => 3,
-                'name' => 'Baleing',
+                'id'    => 3,
+                'name'  => 'Baleing',
                 'pivot' => [
                     'assignable_id' => 1,
-                    'task_id' => 3
+                    'task_id'       => 3
                 ]
             ]
         ];
@@ -335,45 +341,45 @@ class DatabaseTests extends TestCase
 
         $expectedTasks = [
             [
-                'id' => 2,
-                'name' => 'Chopping',
+                'id'    => 2,
+                'name'  => 'Chopping',
                 'pivot' => [
                     'assignable_id' => 1,
-                    'task_id' => 2
+                    'task_id'       => 2
                 ],
                 'locations' => [
                     [
-                        'id' => 1,
-                        'name' => 'Hatchery',
+                        'id'    => 1,
+                        'name'  => 'Hatchery',
                         'pivot' => [
                             'location_id' => 1,
-                            'task_id' => 2
+                            'task_id'     => 2
                         ],
                     ],
                     [
-                        'id' => 2,
-                        'name' => 'Nexus',
+                        'id'    => 2,
+                        'name'  => 'Nexus',
                         'pivot' => [
                             'location_id' => 2,
-                            'task_id' => 2
+                            'task_id'     => 2
                         ],
                     ]
                 ]
             ],
             [
-                'id' => 3,
-                'name' => 'Baleing',
+                'id'    => 3,
+                'name'  => 'Baleing',
                 'pivot' => [
                     'assignable_id' => 1,
-                    'task_id' => 3
+                    'task_id'       => 3
                 ],
                 'locations' => [
                     [
-                        'id' => 2,
-                        'name' => 'Nexus',
+                        'id'    => 2,
+                        'name'  => 'Nexus',
                         'pivot' => [
                             'location_id' => 2,
-                            'task_id' => 3
+                            'task_id'     => 3
                         ],
                     ]
                 ]
@@ -401,48 +407,48 @@ class DatabaseTests extends TestCase
 
         $expectedJobs = [
             [
-                'id' => 2,
-                'slug' => 'soldier',
+                'id'    => 2,
+                'slug'  => 'soldier',
                 'pivot' => [
                     'user_id' => 1,
                     'role_id' => 2
                 ],
                 'locations' => [
                     [
-                        'id' => 1,
-                        'name' => 'Hatchery',
+                        'id'    => 1,
+                        'name'  => 'Hatchery',
                         'pivot' => [
-                            'title' => 'Grunt',
+                            'title'       => 'Grunt',
                             'location_id' => 1,
-                            'role_id' => 2
+                            'role_id'     => 2
                         ]
                     ],
                     [
-                        'id' => 2,
-                        'name' => 'Nexus',
+                        'id'    => 2,
+                        'name'  => 'Nexus',
                         'pivot' => [
-                            'title' => 'Sergeant',
+                            'title'       => 'Sergeant',
                             'location_id' => 2,
-                            'role_id' => 2
+                            'role_id'     => 2
                         ]
                     ]
                 ]
             ],
             [
-                'id' => 3,
-                'slug' => 'egg-layer',
+                'id'    => 3,
+                'slug'  => 'egg-layer',
                 'pivot' => [
                     'user_id' => 1,
                     'role_id' => 3
                 ],
                 'locations' => [
                     [
-                        'id' => 2,
-                        'name' => 'Nexus',
+                        'id'    => 2,
+                        'name'  => 'Nexus',
                         'pivot' => [
-                            'title' => 'Queen',
+                            'title'       => 'Queen',
                             'location_id' => 2,
-                            'role_id' => 3
+                            'role_id'     => 3
                         ]
                     ]
                 ]
@@ -476,49 +482,49 @@ class DatabaseTests extends TestCase
 
         $this->assertEquals([
             [
-                'id' => 1,
+                'id'   => 1,
                 'name' => 'David',
                 'jobs' => [
                     [
-                        'id' => 2,
-                        'slug' => 'soldier',
+                        'id'    => 2,
+                        'slug'  => 'soldier',
                         'pivot' => [
                             'user_id' => 1,
                             'role_id' => 2
                         ],
                         'locations' => [
                             [
-                                'id' => 1,
-                                'name' => 'Hatchery',
+                                'id'    => 1,
+                                'name'  => 'Hatchery',
                                 'pivot' => [
                                     'location_id' => 1,
-                                    'role_id' => 2
+                                    'role_id'     => 2
                                 ]
                             ],
                             [
-                                'id' => 2,
-                                'name' => 'Nexus',
+                                'id'    => 2,
+                                'name'  => 'Nexus',
                                 'pivot' => [
                                     'location_id' => 2,
-                                    'role_id' => 2
+                                    'role_id'     => 2
                                 ]
                             ]
                         ]
                     ],
                     [
-                        'id' => 3,
-                        'slug' => 'egg-layer',
+                        'id'    => 3,
+                        'slug'  => 'egg-layer',
                         'pivot' => [
                             'user_id' => 1,
                             'role_id' => 3
                         ],
                         'locations' => [
                             [
-                                'id' => 2,
-                                'name' => 'Nexus',
+                                'id'    => 2,
+                                'name'  => 'Nexus',
                                 'pivot' => [
                                     'location_id' => 2,
-                                    'role_id' => 3
+                                    'role_id'     => 3
                                 ]
                             ]
                         ]
@@ -526,23 +532,23 @@ class DatabaseTests extends TestCase
                 ]
             ],
             [
-                'id' => 2,
+                'id'   => 2,
                 'name' => 'Alex',
                 'jobs' => [
                     [
-                        'id' => 3,
-                        'slug' => 'egg-layer',
+                        'id'    => 3,
+                        'slug'  => 'egg-layer',
                         'pivot' => [
                             'user_id' => 2,
                             'role_id' => 3
                         ],
                         'locations' => [
                             [
-                                'id' => 1,
-                                'name' => 'Hatchery',
+                                'id'    => 1,
+                                'name'  => 'Hatchery',
                                 'pivot' => [
                                     'location_id' => 1,
-                                    'role_id' => 3
+                                    'role_id'     => 3
                                 ]
                             ],
                         ]
@@ -561,31 +567,31 @@ class DatabaseTests extends TestCase
 
         $user = EloquentTestUser::create(['name' => 'David']);
 
-        $user->roles()->attach([1,2]);
+        $user->roles()->attach([1, 2]);
 
         // Test retrieval of via models as well
         $this->assertEquals([
             [
-                'id' => 1,
-                'slug' => 'uri_harvest',
+                'id'    => 1,
+                'slug'  => 'uri_harvest',
                 'pivot' => [
-                    'user_id' => 1,
+                    'user_id'       => 1,
                     'permission_id' => 1
                 ]
             ],
             [
-                'id' => 2,
-                'slug' => 'uri_spit_acid',
+                'id'    => 2,
+                'slug'  => 'uri_spit_acid',
                 'pivot' => [
-                    'user_id' => 1,
+                    'user_id'       => 1,
                     'permission_id' => 2
                 ]
             ],
             [
-                'id' => 3,
-                'slug' => 'uri_slash',
+                'id'    => 3,
+                'slug'  => 'uri_slash',
                 'pivot' => [
-                    'user_id' => 1,
+                    'user_id'       => 1,
                     'permission_id' => 3
                 ]
             ]
@@ -595,7 +601,7 @@ class DatabaseTests extends TestCase
         $this->assertEquals(3, $user->permissions()->count());
 
         $user2 = EloquentTestUser::create(['name' => 'Alex']);
-        $user2->roles()->attach([2,3]);
+        $user2->roles()->attach([2, 3]);
 
         // Test eager load
         $users = EloquentTestUser::with('permissions')->get();
@@ -603,26 +609,26 @@ class DatabaseTests extends TestCase
 
         $this->assertEquals([
             [
-                'id' => 2,
-                'slug' => 'uri_spit_acid',
+                'id'    => 2,
+                'slug'  => 'uri_spit_acid',
                 'pivot' => [
-                    'user_id' => 2,
+                    'user_id'       => 2,
                     'permission_id' => 2
                 ]
             ],
             [
-                'id' => 3,
-                'slug' => 'uri_slash',
+                'id'    => 3,
+                'slug'  => 'uri_slash',
                 'pivot' => [
-                    'user_id' => 2,
+                    'user_id'       => 2,
                     'permission_id' => 3
                 ]
             ],
             [
-                'id' => 4,
-                'slug' => 'uri_royal_jelly',
+                'id'    => 4,
+                'slug'  => 'uri_royal_jelly',
                 'pivot' => [
-                    'user_id' => 2,
+                    'user_id'       => 2,
                     'permission_id' => 4
                 ]
             ]
@@ -647,24 +653,24 @@ class DatabaseTests extends TestCase
 
         $user = EloquentTestUser::create(['name' => 'David']);
 
-        $user->roles()->attach([1,2]);
+        $user->roles()->attach([1, 2]);
 
         $paginatedPermissions = $user->permissions()->take(2)->offset(1);
 
         $this->assertEquals([
             [
-                'id' => 2,
-                'slug' => 'uri_spit_acid',
+                'id'    => 2,
+                'slug'  => 'uri_spit_acid',
                 'pivot' => [
-                    'user_id' => 1,
+                    'user_id'       => 1,
                     'permission_id' => 2
                 ]
             ],
             [
-                'id' => 3,
-                'slug' => 'uri_slash',
+                'id'    => 3,
+                'slug'  => 'uri_slash',
                 'pivot' => [
-                    'user_id' => 1,
+                    'user_id'       => 1,
                     'permission_id' => 3
                 ]
             ]
@@ -682,7 +688,7 @@ class DatabaseTests extends TestCase
         $this->generateRolesWithPermissions();
 
         $user = EloquentTestUser::create(['name' => 'David']);
-        $user->roles()->attach([1,2]);
+        $user->roles()->attach([1, 2]);
 
         // If the paginated query is being ordered correctly by including the `roles_count` computed column,
         // Then `uri_spit_acid` should appear first. If not, then the results will not be ordered and the `uri_harvest`
@@ -691,11 +697,11 @@ class DatabaseTests extends TestCase
 
         $this->assertEquals([
             [
-                'id' => 2,
-                'slug' => 'uri_spit_acid',
+                'id'          => 2,
+                'slug'        => 'uri_spit_acid',
                 'roles_count' => 3,
-                'pivot' => [
-                    'user_id' => 1,
+                'pivot'       => [
+                    'user_id'       => 1,
                     'permission_id' => 2
                 ]
             ]
@@ -712,13 +718,13 @@ class DatabaseTests extends TestCase
 
         $user = EloquentTestUser::create(['name' => 'David']);
 
-        $user->roles()->attach([1,2]);
+        $user->roles()->attach([1, 2]);
 
         // Test retrieval of via models as well
         $this->assertBelongsToManyThroughForDavid($user->permissions()->withVia('roles_via')->get()->toArray());
 
         $user2 = EloquentTestUser::create(['name' => 'Alex']);
-        $user2->roles()->attach([2,3]);
+        $user2->roles()->attach([2, 3]);
 
         // Test eager loading
         $users = EloquentTestUser::with(['permissions' => function ($query) {
@@ -758,7 +764,7 @@ class DatabaseTests extends TestCase
 
         $user = EloquentTestUser::create(['name' => 'David']);
 
-        $user->roles()->attach([1,2]);
+        $user->roles()->attach([1, 2]);
 
         $users = EloquentTestUser::with(['permissions' => function ($query) {
             $query->exclude('slug');
@@ -766,27 +772,27 @@ class DatabaseTests extends TestCase
 
         $this->assertEquals([
             [
-                'id' => 1,
-                'name' => 'David',
+                'id'          => 1,
+                'name'        => 'David',
                 'permissions' => [
                     [
-                        'id' => 1,
+                        'id'    => 1,
                         'pivot' => [
-                            'user_id' => 1,
+                            'user_id'       => 1,
                             'permission_id' => 1
                         ]
                     ],
                     [
-                        'id' => 2,
+                        'id'    => 2,
                         'pivot' => [
-                            'user_id' => 1,
+                            'user_id'       => 1,
                             'permission_id' => 2
                         ]
                     ],
                     [
-                        'id' => 3,
+                        'id'    => 3,
                         'pivot' => [
-                            'user_id' => 1,
+                            'user_id'       => 1,
                             'permission_id' => 3
                         ]
                     ]
@@ -804,7 +810,7 @@ class DatabaseTests extends TestCase
 
         $user = EloquentTestUser::create(['name' => 'David']);
 
-        $user->roles()->attach([1,2]);
+        $user->roles()->attach([1, 2]);
 
         $users = EloquentTestUser::with(['roles' => function ($query) {
             $query->addSelect('roles.*', 'jobs.*')->leftJoin('jobs', 'jobs.role_id', '=', 'roles.id')
@@ -813,11 +819,11 @@ class DatabaseTests extends TestCase
 
         $this->assertEquals([
             [
-                'id' => 1,
-                'name' => 'David',
+                'id'    => 1,
+                'name'  => 'David',
                 'roles' => [
                     [
-                        'id' => 1,
+                        'id'    => 1,
                         'title' => null,
                         'pivot' => [
                             'user_id' => 1,
@@ -825,7 +831,7 @@ class DatabaseTests extends TestCase
                         ]
                     ],
                     [
-                        'id' => 2,
+                        'id'    => 2,
                         'title' => null,
                         'pivot' => [
                             'user_id' => 1,
@@ -870,7 +876,7 @@ class DatabaseTests extends TestCase
     /**
      * Get a database connection instance.
      *
-     * @param  string $connection [description]
+     * @param  string                          $connection [description]
      * @return \Illuminate\Database\Connection
      */
     protected function connection($connection = 'test_integration')
@@ -881,7 +887,7 @@ class DatabaseTests extends TestCase
     /**
      * Get a schema builder instance.
      *
-     * @param  string $connection
+     * @param  string                              $connection
      * @return \Illuminate\Database\Schema\Builder
      */
     protected function schema($connection = 'test_integration')
@@ -896,17 +902,17 @@ class DatabaseTests extends TestCase
     {
         return [
             EloquentTestRole::create([
-                'id' => 1,
+                'id'   => 1,
                 'slug' => 'forager'
             ]),
 
             EloquentTestRole::create([
-                'id' => 2,
+                'id'   => 2,
                 'slug' => 'soldier'
             ]),
 
             EloquentTestRole::create([
-                'id' => 3,
+                'id'   => 3,
                 'slug' => 'egg-layer'
             ])
         ];
@@ -919,22 +925,22 @@ class DatabaseTests extends TestCase
     {
         return [
             EloquentTestPermission::create([
-                'id' => 1,
+                'id'   => 1,
                 'slug' => 'uri_harvest'
             ]),
 
             EloquentTestPermission::create([
-                'id' => 2,
+                'id'   => 2,
                 'slug' => 'uri_spit_acid'
             ]),
 
             EloquentTestPermission::create([
-                'id' => 3,
+                'id'   => 3,
                 'slug' => 'uri_slash'
             ]),
 
             EloquentTestPermission::create([
-                'id' => 4,
+                'id'   => 4,
                 'slug' => 'uri_royal_jelly'
             ])
         ];
@@ -949,10 +955,10 @@ class DatabaseTests extends TestCase
 
         $this->generatePermissions();
 
-        $roles[0]->permissions()->attach([1,2]);
+        $roles[0]->permissions()->attach([1, 2]);
         // We purposefully want a permission that belongs to more than one role
-        $roles[1]->permissions()->attach([2,3]);
-        $roles[2]->permissions()->attach([2,4]);
+        $roles[1]->permissions()->attach([2, 3]);
+        $roles[2]->permissions()->attach([2, 4]);
 
         return $roles;
     }
@@ -963,7 +969,7 @@ class DatabaseTests extends TestCase
     protected function generateJobs()
     {
 
-        /**
+        /*
          * Sample data
 
         | user_id | role_id | location_id |
@@ -976,28 +982,28 @@ class DatabaseTests extends TestCase
 
         return [
             EloquentTestJob::create([
-                'role_id' => 2,
+                'role_id'     => 2,
                 'location_id' => 1,
-                'user_id' => 1,
-                'title' => 'Grunt'
+                'user_id'     => 1,
+                'title'       => 'Grunt'
             ]),
             EloquentTestJob::create([
-                'role_id' => 2,
+                'role_id'     => 2,
                 'location_id' => 2,
-                'user_id' => 1,
-                'title' => 'Sergeant'
+                'user_id'     => 1,
+                'title'       => 'Sergeant'
             ]),
             EloquentTestJob::create([
-                'role_id' => 3,
+                'role_id'     => 3,
                 'location_id' => 2,
-                'user_id' => 1,
-                'title' => 'Queen'
+                'user_id'     => 1,
+                'title'       => 'Queen'
             ]),
             EloquentTestJob::create([
-                'role_id' => 3,
+                'role_id'     => 3,
                 'location_id' => 1,
-                'user_id' => 2,
-                'title' => 'Demi-queen'
+                'user_id'     => 2,
+                'title'       => 'Demi-queen'
             ])
         ];
     }
@@ -1009,12 +1015,12 @@ class DatabaseTests extends TestCase
     {
         return [
             EloquentTestLocation::create([
-                'id' => 1,
+                'id'   => 1,
                 'name' => 'Hatchery'
             ]),
 
             EloquentTestLocation::create([
-                'id' => 2,
+                'id'   => 2,
                 'name' => 'Nexus'
             ])
         ];
@@ -1027,17 +1033,17 @@ class DatabaseTests extends TestCase
     {
         return [
             EloquentTestTask::create([
-                'id' => 1,
+                'id'   => 1,
                 'name' => 'Digging'
             ]),
 
             EloquentTestTask::create([
-                'id' => 2,
+                'id'   => 2,
                 'name' => 'Chopping'
             ]),
 
             EloquentTestTask::create([
-                'id' => 3,
+                'id'   => 3,
                 'name' => 'Baleing'
             ])
         ];
@@ -1050,33 +1056,33 @@ class DatabaseTests extends TestCase
     {
         return [
             EloquentTestAssignment::create([
-            'task_id' => 2,
-            'location_id' => 1,
-            'assignable_id' => 1,
+            'task_id'         => 2,
+            'location_id'     => 1,
+            'assignable_id'   => 1,
             'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
             ]),
             EloquentTestAssignment::create([
-                'task_id' => 2,
-                'location_id' => 2,
-                'assignable_id' => 1,
+                'task_id'         => 2,
+                'location_id'     => 2,
+                'assignable_id'   => 1,
                 'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
             ]),
             EloquentTestAssignment::create([
-                'task_id' => 3,
-                'location_id' => 2,
-                'assignable_id' => 1,
+                'task_id'         => 3,
+                'location_id'     => 2,
+                'assignable_id'   => 1,
                 'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
             ]),
             EloquentTestAssignment::create([
-                'task_id' => 3,
-                'location_id' => 3,
-                'assignable_id' => 1,
+                'task_id'         => 3,
+                'location_id'     => 3,
+                'assignable_id'   => 1,
                 'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestNonExistant'
             ]),
             EloquentTestAssignment::create([
-                'task_id' => 3,
-                'location_id' => 1,
-                'assignable_id' => 2,
+                'task_id'         => 3,
+                'location_id'     => 1,
+                'assignable_id'   => 2,
                 'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
             ])
         ];
@@ -1084,7 +1090,7 @@ class DatabaseTests extends TestCase
 
     /**
      * assertBelongsToManyThroughForDavid
-     * @param  array $permissions
+     * @param array $permissions
      */
     protected function assertBelongsToManyThroughForDavid($permissions)
     {
@@ -1093,41 +1099,41 @@ class DatabaseTests extends TestCase
         $this->assertEquals('uri_harvest', $permissions[0]['slug']);
         $this->assertEquals([
             [
-                'id' => 1,
-                'slug' => 'forager',
+                'id'    => 1,
+                'slug'  => 'forager',
                 'pivot' => [
                     'permission_id' => 1,
-                    'role_id' => 1
+                    'role_id'       => 1
                 ]
             ]
         ], $permissions[0]['roles_via']);
         $this->assertEquals('uri_spit_acid', $permissions[1]['slug']);
         $this->assertEquals([
             [
-                'id' => 1,
-                'slug' => 'forager',
+                'id'    => 1,
+                'slug'  => 'forager',
                 'pivot' => [
                     'permission_id' => 2,
-                    'role_id' => 1
+                    'role_id'       => 1
                 ]
             ],
             [
-                'id' => 2,
-                'slug' => 'soldier',
+                'id'    => 2,
+                'slug'  => 'soldier',
                 'pivot' => [
                     'permission_id' => 2,
-                    'role_id' => 2
+                    'role_id'       => 2
                 ]
             ]
         ], $permissions[1]['roles_via']);
         $this->assertEquals('uri_slash', $permissions[2]['slug']);
         $this->assertEquals([
             [
-                'id' => 2,
-                'slug' => 'soldier',
+                'id'    => 2,
+                'slug'  => 'soldier',
                 'pivot' => [
                     'permission_id' => 3,
-                    'role_id' => 2
+                    'role_id'       => 2
                 ]
             ]
         ], $permissions[2]['roles_via']);
@@ -1135,7 +1141,7 @@ class DatabaseTests extends TestCase
 
     /**
      * assertBelongsToManyThroughForAlex
-     * @param  array $permissions
+     * @param array $permissions
      */
     protected function assertBelongsToManyThroughForAlex($permissions)
     {
@@ -1144,41 +1150,41 @@ class DatabaseTests extends TestCase
         $this->assertEquals('uri_spit_acid', $permissions[0]['slug']);
         $this->assertEquals([
             [
-                'id' => 2,
-                'slug' => 'soldier',
+                'id'    => 2,
+                'slug'  => 'soldier',
                 'pivot' => [
                     'permission_id' => 2,
-                    'role_id' => 2
+                    'role_id'       => 2
                 ]
             ],
             [
-                'id' => 3,
-                'slug' => 'egg-layer',
+                'id'    => 3,
+                'slug'  => 'egg-layer',
                 'pivot' => [
                     'permission_id' => 2,
-                    'role_id' => 3
+                    'role_id'       => 3
                 ]
             ]
         ], $permissions[0]['roles_via']);
         $this->assertEquals('uri_slash', $permissions[1]['slug']);
         $this->assertEquals([
             [
-                'id' => 2,
-                'slug' => 'soldier',
+                'id'    => 2,
+                'slug'  => 'soldier',
                 'pivot' => [
                     'permission_id' => 3,
-                    'role_id' => 2
+                    'role_id'       => 2
                 ]
             ]
         ], $permissions[1]['roles_via']);
         $this->assertEquals('uri_royal_jelly', $permissions[2]['slug']);
         $this->assertEquals([
             [
-                'id' => 3,
-                'slug' => 'egg-layer',
+                'id'    => 3,
+                'slug'  => 'egg-layer',
                 'pivot' => [
                     'permission_id' => 4,
-                    'role_id' => 3
+                    'role_id'       => 3
                 ]
             ]
         ], $permissions[2]['roles_via']);
@@ -1198,17 +1204,11 @@ class EloquentTestUser extends EloquentTestModel
     protected $table = 'users';
     protected $guarded = [];
 
-    /**
-     *
-     */
     public function emails()
     {
         return $this->hasMany('UserFrosting\Tests\Integration\EloquentTestEmail', 'user_id');
     }
 
-    /**
-     *
-     */
     public function phones()
     {
         return $this->morphMany('UserFrosting\Tests\Integration\EloquentTestPhone', 'phoneable');
@@ -1311,9 +1311,6 @@ class EloquentTestEmail extends EloquentTestModel
     protected $table = 'emails';
     protected $guarded = [];
 
-    /**
-     *
-     */
     public function user()
     {
         return $this->belongsTo('UserFrosting\Tests\Integration\EloquentTestUser', 'user_id');
@@ -1325,9 +1322,6 @@ class EloquentTestPhone extends EloquentTestModel
     protected $table = 'phones';
     protected $guarded = [];
 
-    /**
-     *
-     */
     public function phoneable()
     {
         return $this->morphTo();
@@ -1367,9 +1361,6 @@ class EloquentTestTask extends EloquentTestModel
     protected $table = 'tasks';
     protected $guarded = [];
 
-    /**
-     *
-     */
     public function locations()
     {
         return $this->belongsToMany(

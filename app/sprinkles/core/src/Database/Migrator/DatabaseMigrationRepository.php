@@ -5,11 +5,11 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Schema\Blueprint;
-use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRepositoryInterface;
 
 /**
  * MigrationRepository Class
@@ -38,10 +38,10 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     /**
      * Create a new database migration repository instance.
      *
-     * @param  Capsule  $db
-     * @param  string  $table
+     * @param Capsule $db
+     * @param string  $table
      */
-    public function __construct(Capsule $db, $table = "migrations")
+    public function __construct(Capsule $db, $table = 'migrations')
     {
         $this->table = $table;
         $this->db = $db;
@@ -50,9 +50,9 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     /**
      * Get the list of ran migrations
      *
-     * @param  int $steps Number of batch to return
+     * @param  int    $steps Number of batch to return
      * @param  string $order asc|desc
-     * @return array An array of migration class names in the order they where ran
+     * @return array  An array of migration class names in the order they where ran
      */
     public function getMigrationsList($steps = -1, $order = 'asc')
     {
@@ -62,7 +62,7 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     /**
      * Get list of migrations.
      *
-     * @param  int  $steps Number of batch to return
+     * @param  int    $steps Number of batch to return
      * @param  string $order asc|desc
      * @return array
      */
@@ -81,7 +81,7 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     /**
      * Get details about a specific migration
      *
-     * @param  string $migration The migration class
+     * @param  string    $migration The migration class
      * @return \stdClass The migration info
      */
     public function getMigration($migration)
@@ -104,11 +104,11 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     /**
      * Log that a migration was run.
      *
-     * @param  string  $file
-     * @param  int     $batch
-     * @param  string  $sprinkle
+     * @param string $file
+     * @param int    $batch
+     * @param string $sprinkle
      */
-    public function log($file, $batch, $sprinkle = "")
+    public function log($file, $batch, $sprinkle = '')
     {
         $record = ['migration' => $file, 'batch' => $batch, 'sprinkle' => $sprinkle];
 
@@ -118,7 +118,7 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     /**
      * Remove a migration from the log.
      *
-     * @param  string  $migration
+     * @param string $migration
      */
     public function delete($migration)
     {

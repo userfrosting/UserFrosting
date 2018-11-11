@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Log;
 
 use Monolog\Formatter\LineFormatter;
@@ -19,13 +20,12 @@ use Monolog\Formatter\LineFormatter;
  */
 class MixedFormatter extends LineFormatter
 {
-
     /**
      * Return the JSON representation of a value
      *
-     * @throws \RuntimeException if encoding fails and errors are not ignored
      * @param  mixed             $data
      * @param  bool              $ignoreErrors
+     * @throws \RuntimeException if encoding fails and errors are not ignored
      * @return string
      */
     protected function toJson($data, $ignoreErrors = false)

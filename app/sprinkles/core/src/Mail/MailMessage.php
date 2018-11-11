@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 /**
@@ -19,7 +20,7 @@ abstract class MailMessage
     /**
      * @var string The current sender email address.
      */
-    protected $fromEmail = "";
+    protected $fromEmail = '';
 
     /**
      * @var string The current sender name.
@@ -44,7 +45,7 @@ abstract class MailMessage
     /**
      * Gets the fully rendered text of the message body.
      *
-     * @param array $params
+     * @param  array  $params
      * @return string
      */
     abstract public function renderBody($params = []);
@@ -52,7 +53,7 @@ abstract class MailMessage
     /**
      * Gets the fully rendered text of the message subject.
      *
-     * @param array $params
+     * @param  array  $params
      * @return string
      */
     abstract public function renderSubject($params = []);
@@ -65,6 +66,7 @@ abstract class MailMessage
     public function addEmailRecipient(EmailRecipient $recipient)
     {
         $this->recipients[] = $recipient;
+
         return $this;
     }
 
@@ -73,7 +75,7 @@ abstract class MailMessage
      */
     public function clearRecipients()
     {
-        $this->recipients = array();
+        $this->recipients = [];
     }
 
     /**
@@ -84,7 +86,7 @@ abstract class MailMessage
      */
     public function from($fromInfo = [])
     {
-        $this->setFromEmail(isset($fromInfo['email']) ? $fromInfo['email'] : "");
+        $this->setFromEmail(isset($fromInfo['email']) ? $fromInfo['email'] : '');
         $this->setFromName(isset($fromInfo['name']) ? $fromInfo['name'] : null);
         $this->setReplyEmail(isset($fromInfo['reply_email']) ? $fromInfo['reply_email'] : null);
         $this->setReplyName(isset($fromInfo['reply_name']) ? $fromInfo['reply_name'] : null);
@@ -150,6 +152,7 @@ abstract class MailMessage
     public function setFromEmail($fromEmail)
     {
         $this->fromEmail = $fromEmail;
+
         return $this;
     }
 
@@ -161,6 +164,7 @@ abstract class MailMessage
     public function setFromName($fromName)
     {
         $this->fromName = $fromName;
+
         return $this;
     }
 
@@ -172,6 +176,7 @@ abstract class MailMessage
     public function setReplyEmail($replyEmail)
     {
         $this->replyEmail = $replyEmail;
+
         return $this;
     }
 
@@ -183,6 +188,7 @@ abstract class MailMessage
     public function setReplyName($replyName)
     {
         $this->replyName = $replyName;
+
         return $this;
     }
 }

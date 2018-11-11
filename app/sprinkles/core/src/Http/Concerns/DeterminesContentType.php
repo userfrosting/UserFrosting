@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Http\Concerns;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -36,8 +37,8 @@ trait DeterminesContentType
      * Slim's error handling requirements. Consider a fully-feature solution such
      * as willdurand/negotiation for any other situation.
      *
-     * @param ServerRequestInterface $request
-     * @param bool $ajaxDebug
+     * @param  ServerRequestInterface $request
+     * @param  bool                   $ajaxDebug
      * @return string
      */
     protected function determineContentType(ServerRequestInterface $request, $ajaxDebug = false)
@@ -54,7 +55,7 @@ trait DeterminesContentType
         if ($count) {
             $current = current($selectedContentTypes);
 
-            /**
+            /*
              * Ensure other supported content types take precedence over text/plain
              * when multiple content types are provided via Accept header.
              */

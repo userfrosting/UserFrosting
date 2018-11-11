@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
@@ -25,14 +26,14 @@ class PasswordReset extends Model
     /**
      * @var string The name of the table for the current model.
      */
-    protected $table = "password_resets";
+    protected $table = 'password_resets';
 
     protected $fillable = [
-        "user_id",
-        "hash",
-        "completed",
-        "expires_at",
-        "completed_at"
+        'user_id',
+        'hash',
+        'completed',
+        'expires_at',
+        'completed_at'
     ];
 
     /**
@@ -54,12 +55,13 @@ class PasswordReset extends Model
     }
 
     /**
-     * @param string $value
+     * @param  string $value
      * @return self
      */
     public function setToken($value)
     {
         $this->token = $value;
+
         return $this;
     }
 

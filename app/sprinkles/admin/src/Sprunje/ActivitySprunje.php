@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Schema\Builder;
@@ -46,8 +47,8 @@ class ActivitySprunje extends Sprunje
     /**
      * Filter LIKE the user info.
      *
-     * @param Builder $query
-     * @param mixed $value
+     * @param  Builder $query
+     * @param  mixed   $value
      * @return self
      */
     protected function filterUser($query, $value)
@@ -61,19 +62,21 @@ class ActivitySprunje extends Sprunje
                     ->orLike('users.email', $value);
             }
         });
+
         return $this;
     }
 
     /**
      * Sort based on user last name.
      *
-     * @param Builder $query
-     * @param string $direction
+     * @param  Builder $query
+     * @param  string  $direction
      * @return self
      */
     protected function sortUser($query, $direction)
     {
         $query->orderBy('users.last_name', $direction);
+
         return $this;
     }
 }

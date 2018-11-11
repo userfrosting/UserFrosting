@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System\Bakery;
 
 use Illuminate\Support\Str;
@@ -48,7 +49,7 @@ class Bakery
         }
 
         // Create Symfony Console App
-        $this->app = new Application("UserFrosting Bakery", \UserFrosting\VERSION);
+        $this->app = new Application('UserFrosting Bakery', \UserFrosting\VERSION);
 
         // Setup the sprinkles
         $uf = new UserFrosting(true);
@@ -74,8 +75,8 @@ class Bakery
     protected function loadCommands()
     {
         /**
-        * @var ResourceLocator $locator
-        */
+         * @var ResourceLocator $locator
+         */
         $locator = $this->ci->locator;
 
         // Get Bakery command resources
@@ -92,20 +93,20 @@ class Bakery
 
             // Class must be an instance of symfony command
             if (!$instance instanceof Command) {
-                throw new \Exception("Bakery command class must be an instance of `" . Command::class . "`");
+                throw new \Exception('Bakery command class must be an instance of `' . Command::class . '`');
             }
 
             // Add command to the Console app
             $instance->setContainer($this->ci);
             $this->app->add($instance);
-        };
+        }
     }
 
     /**
      * Transform a Bakery Command Resource into a classpath
      *
-     * @param  Resource $file The command resource
-     * @return string The command class path
+     * @param  \UserFrosting\UniformResourceLocator\Resource $file The command resource
+     * @return string                                        The command class path
      */
     protected function getResourceClass(Resource $file)
     {

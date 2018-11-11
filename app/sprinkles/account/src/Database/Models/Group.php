@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
@@ -14,7 +15,6 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  *
  * Represents a group object as stored in the database.
  *
- * @package UserFrosting
  * @author Alex Weissman
  * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  *
@@ -28,13 +28,13 @@ class Group extends Model
     /**
      * @var string The name of the table for the current model.
      */
-    protected $table = "groups";
+    protected $table = 'groups';
 
     protected $fillable = [
-        "slug",
-        "name",
-        "description",
-        "icon"
+        'slug',
+        'name',
+        'description',
+        'icon'
     ];
 
     /**

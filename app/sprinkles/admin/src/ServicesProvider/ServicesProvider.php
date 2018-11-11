@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\ServicesProvider;
 
 use Interop\Container\ContainerInterface;
@@ -40,6 +41,7 @@ class ServicesProvider
             $classMapper->setClassMapping('role_sprunje', 'UserFrosting\Sprinkle\Admin\Sprunje\RoleSprunje');
             $classMapper->setClassMapping('user_sprunje', 'UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje');
             $classMapper->setClassMapping('user_permission_sprunje', 'UserFrosting\Sprinkle\Admin\Sprunje\UserPermissionSprunje');
+
             return $classMapper;
         });
 
@@ -55,9 +57,9 @@ class ServicesProvider
              * This method is invoked when a user completes the login process.
              *
              * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
-             * @param \Psr\Http\Message\ServerRequestInterface $request
-             * @param \Psr\Http\Message\ResponseInterface      $response
-             * @param array $args
+             * @param  \Psr\Http\Message\ServerRequestInterface $request
+             * @param  \Psr\Http\Message\ResponseInterface      $response
+             * @param  array                                    $args
              * @return \Psr\Http\Message\ResponseInterface
              */
             return function (Request $request, Response $response, array $args) use ($c) {

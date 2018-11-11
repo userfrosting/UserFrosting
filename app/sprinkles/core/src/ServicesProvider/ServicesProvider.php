@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\ServicesProvider;
 
 use Dotenv\Dotenv;
@@ -78,7 +79,7 @@ class ServicesProvider
          *
          * Persists error/success messages between requests in the session.
          *
-         * @throws \Exception If alert storage handler is not supported
+         * @throws \Exception                                    If alert storage handler is not supported
          * @return \UserFrosting\Sprinkle\Core\Alert\AlertStream
          */
         $container['alerts'] = function ($c) {
@@ -145,7 +146,7 @@ class ServicesProvider
                 $assets = new Assets($locator, 'assets', $baseUrl);
 
                 // Load compiled asset bundle.
-                $assets->addAssetBundles(new CompiledAssetBundles($locator("build://" . $config['assets.compiled.schema'], true, true)));
+                $assets->addAssetBundles(new CompiledAssetBundles($locator('build://' . $config['assets.compiled.schema'], true, true)));
             }
 
             return $assets;
@@ -154,7 +155,7 @@ class ServicesProvider
         /**
          * Cache service.
          *
-         * @throws \Exception If cache handler is not supported
+         * @throws \Exception                   If cache handler is not supported
          * @return \Illuminate\Cache\Repository
          */
         $container['cache'] = function ($c) {
@@ -201,6 +202,7 @@ class ServicesProvider
             $classMapper->setClassMapping('query_builder', 'UserFrosting\Sprinkle\Core\Database\Builder');
             $classMapper->setClassMapping('eloquent_builder', 'UserFrosting\Sprinkle\Core\Database\EloquentBuilder');
             $classMapper->setClassMapping('throttle', 'UserFrosting\Sprinkle\Core\Database\Models\Throttle');
+
             return $classMapper;
         };
 
@@ -274,13 +276,13 @@ class ServicesProvider
         $container['db'] = function ($c) {
             $config = $c->config;
 
-            $capsule = new Capsule;
+            $capsule = new Capsule();
 
             foreach ($config['db'] as $name => $dbConfig) {
                 $capsule->addConnection($dbConfig, $name);
             }
 
-            $queryEventDispatcher = new Dispatcher(new Container);
+            $queryEventDispatcher = new Dispatcher(new Container());
 
             $capsule->setEventDispatcher($queryEventDispatcher);
 
@@ -446,7 +448,7 @@ class ServicesProvider
                             if (array_key_exists(1, $parts)) {
                                 $parts[1] = str_replace('q=', '', $parts[1]);
                                 // Sanitize with int cast (bad values go to 0)
-                                $parts[1] = (int)$parts[1];
+                                $parts[1] = (int) $parts[1];
                             } else {
                                 $parts[1] = 1;
                             }
@@ -535,8 +537,9 @@ class ServicesProvider
          */
         $container['notFoundHandler'] = function ($c) {
             return function ($request, $response) use ($c) {
-                $exception = new NotFoundException;
+                $exception = new NotFoundException();
                 $handler = new NotFoundExceptionHandler($c, $request, $response, $exception, $c->settings['displayErrorDetails']);
+
                 return $handler->handle();
             };
         };
@@ -584,7 +587,7 @@ class ServicesProvider
                 $routerCacheFile = $c->config['settings.routerCacheFile'];
             }
 
-            return (new Router)->setCacheFile($routerCacheFile);
+            return (new Router())->setCacheFile($routerCacheFile);
         };
 
         /**
@@ -598,14 +601,14 @@ class ServicesProvider
 
             // Create appropriate handler based on config
             if ($config['session.handler'] == 'file') {
-                $fs = new Filesystem;
+                $fs = new Filesystem();
                 $handler = new FileSessionHandler($fs, $c->locator->findResource('session://'), $config['session.minutes']);
             } elseif ($config['session.handler'] == 'database') {
                 $connection = $c->db->connection();
                 // Table must exist, otherwise an exception will be thrown
                 $handler = new DatabaseSessionHandler($connection, $config['session.database.table'], $config['session.minutes']);
             } elseif ($config['session.handler'] == 'array') {
-                $handler = new NullSessionHandler;
+                $handler = new NullSessionHandler();
             } else {
                 throw new \Exception("Bad session handler type '{$config['session.handler']}' specified in configuration file.");
             }

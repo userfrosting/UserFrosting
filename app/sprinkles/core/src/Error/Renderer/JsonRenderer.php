@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 /**
@@ -18,11 +19,12 @@ class JsonRenderer extends ErrorRenderer
     public function render()
     {
         $message = $this->exception->getMessage();
+
         return $this->formatExceptionPayload($message);
     }
 
     /**
-     * @param string $message
+     * @param  string $message
      * @return string
      */
     public function formatExceptionPayload($message)
@@ -41,17 +43,17 @@ class JsonRenderer extends ErrorRenderer
     }
 
     /**
-     * @param \Exception|\Throwable $e
+     * @param  \Exception|\Throwable $e
      * @return array
      */
     public function formatExceptionFragment($e)
     {
         return [
-            'type' => get_class($e),
-            'code' => $e->getCode(),
+            'type'    => get_class($e),
+            'code'    => $e->getCode(),
             'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
+            'file'    => $e->getFile(),
+            'line'    => $e->getLine(),
         ];
     }
 }

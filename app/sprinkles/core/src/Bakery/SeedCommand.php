@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -70,7 +71,7 @@ class SeedCommand extends BaseCommand
             }
 
             // Display the class we are going to use as info
-            $this->io->writeln("<info>Seeding class `".get_class($seedClass)."`</>");
+            $this->io->writeln('<info>Seeding class `'.get_class($seedClass).'`</>');
 
             // Add seed class to list
             $seeds[] = $seedClass;

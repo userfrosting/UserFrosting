@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Schema\Builder;
@@ -47,8 +48,8 @@ class RoleSprunje extends Sprunje
     /**
      * Filter LIKE name OR description.
      *
-     * @param Builder $query
-     * @param mixed $value
+     * @param  Builder $query
+     * @param  mixed   $value
      * @return self
      */
     protected function filterInfo($query, $value)
@@ -61,6 +62,7 @@ class RoleSprunje extends Sprunje
                         ->orLike('description', $value);
             }
         });
+
         return $this;
     }
 }

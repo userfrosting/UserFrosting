@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Account;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -118,7 +119,7 @@ class Registration
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$user->user_name} registered for a new account.", [
-                'type' => 'sign_up',
+                'type'    => 'sign_up',
                 'user_id' => $user->id
             ]);
 
@@ -144,7 +145,7 @@ class Registration
      * Validate the user name and email is unique
      *
      * @throws HttpException If data doesn't validate
-     * @return bool Returns true if the data is valid
+     * @return bool          Returns true if the data is valid
      */
     public function validate()
     {
@@ -182,7 +183,7 @@ class Registration
      * Make sure the username is not already in use
      *
      * @param  string $username
-     * @return bool Return true if username is unique
+     * @return bool   Return true if username is unique
      */
     public function usernameIsUnique($username)
     {
@@ -194,7 +195,7 @@ class Registration
      * Make sure the email is not already in use
      *
      * @param  string $email
-     * @return bool Return true if email is unique
+     * @return bool   Return true if email is unique
      */
     public function emailIsUnique($email)
     {
@@ -223,7 +224,7 @@ class Registration
     /**
      * Send verification email for specified user
      *
-     * @param  UserInterface $user The user to send the email for
+     * @param UserInterface $user The user to send the email for
      */
     protected function sendVerificationEmail(UserInterface $user)
     {
@@ -236,7 +237,7 @@ class Registration
         $message->from($this->ci->config['address_book.admin'])
                 ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                 ->addParams([
-                    'user' => $user,
+                    'user'  => $user,
                     'token' => $verification->getToken()
                 ]);
 
@@ -252,12 +253,13 @@ class Registration
     }
 
     /**
-     * @param bool $requireEmailVerification
+     * @param  bool   $requireEmailVerification
      * @return static
      */
     public function setRequireEmailVerification($requireEmailVerification)
     {
         $this->requireEmailVerification = $requireEmailVerification;
+
         return $this;
     }
 
@@ -270,12 +272,13 @@ class Registration
     }
 
     /**
-     * @param string $defaultGroup
+     * @param  string $defaultGroup
      * @return static
      */
     public function setDefaultGroup($defaultGroup)
     {
         $this->defaultGroup = $defaultGroup;
+
         return $this;
     }
 
@@ -288,12 +291,13 @@ class Registration
     }
 
     /**
-     * @param array $defaultRoles
+     * @param  array  $defaultRoles
      * @return static
      */
     public function setDefaultRoles($defaultRoles)
     {
         $this->defaultRoles = $defaultRoles;
+
         return $this;
     }
 
@@ -313,6 +317,7 @@ class Registration
     public function setUserdata($userdata)
     {
         $this->userdata = $userdata;
+
         return $this;
     }
 
@@ -320,7 +325,7 @@ class Registration
      * Define a user property
      *
      * @param string $property The property to set
-     * @param mixed $value The property value
+     * @param mixed  $value    The property value
      */
     public function setUserProperty($property, $value)
     {

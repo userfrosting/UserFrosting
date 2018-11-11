@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Carbon\Carbon;
@@ -25,9 +26,9 @@ class AdminController extends SimpleController
 {
     /**
      * Renders the admin panel dashboard
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageDashboard(Request $request, Response $response, $args)
     {
@@ -53,6 +54,7 @@ class AdminController extends SimpleController
         // Transform the `create_at` date in "x days ago" type of string
         $users->transform(function ($item, $key) {
             $item->registered = Carbon::parse($item->created_at)->diffForHumans();
+
             return $item;
         });
 
@@ -67,26 +69,26 @@ class AdminController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/dashboard.html.twig', [
             'counter' => [
-                'users' => $classMapper->staticMethod('user', 'count'),
-                'roles' => $classMapper->staticMethod('role', 'count'),
+                'users'  => $classMapper->staticMethod('user', 'count'),
+                'roles'  => $classMapper->staticMethod('role', 'count'),
                 'groups' => $classMapper->staticMethod('group', 'count')
             ],
             'info' => [
                 'version' => [
-                    'UF' => \UserFrosting\VERSION,
-                    'php' => phpversion(),
+                    'UF'       => \UserFrosting\VERSION,
+                    'php'      => phpversion(),
                     'database' => EnvironmentInfo::database()
                 ],
                 'database' => [
                     'name' => $config['db.default.database']
                 ],
                 'environment' => $this->ci->environment,
-                'path' => [
+                'path'        => [
                     'project' => \UserFrosting\ROOT_DIR
                 ]
             ],
             'sprinkles' => $sprinkles,
-            'users' => $users
+            'users'     => $users
         ]);
     }
 
@@ -95,9 +97,9 @@ class AdminController extends SimpleController
      *
      * This route requires authentication.
      * Request type: POST
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function clearCache(Request $request, Response $response, $args)
     {
@@ -129,9 +131,9 @@ class AdminController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function getModalConfirmClearCache(Request $request, Response $response, $args)
     {

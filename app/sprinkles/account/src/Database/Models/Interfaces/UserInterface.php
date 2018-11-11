@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models\Interfaces;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -26,7 +27,7 @@ interface UserInterface
     /**
      * Delete this user from the database, along with any linked roles and activities.
      *
-     * @param bool $hardDelete Set to true to completely remove the user and all associated objects.
+     * @param  bool $hardDelete Set to true to completely remove the user and all associated objects.
      * @return bool true if the deletion was successful, false otherwise.
      */
     public function delete($hardDelete = false);
@@ -55,14 +56,14 @@ interface UserInterface
     /**
      * Retrieve the cached permissions dictionary for this user.
      *
-     * @return User
+     * @return $this
      */
     public function reloadCachedPermissions();
 
     /**
      * Get the amount of time, in seconds, that has elapsed since the last activity of a certain time for this user.
      *
-     * @param string $type The type of activity to search for.
+     * @param  string $type The type of activity to search for.
      * @return int
      */
     public function getSecondsSinceLastActivity($type);
@@ -91,7 +92,7 @@ interface UserInterface
     /**
      * Find the most recent activity for this user of a particular type.
      *
-     * @param  string $type
+     * @param  string                                $type
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function lastActivityOfType($type = null);
@@ -99,7 +100,7 @@ interface UserInterface
     /**
      * Get the most recent time for a specified activity type for this user.
      *
-     * @param  string $type
+     * @param  string      $type
      * @return string|null The last activity time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an activity of this type doesn't exist.
      */
     public function lastActivityTime($type);
@@ -146,8 +147,8 @@ interface UserInterface
     /**
      * Query scope to get all users who have a specific role.
      *
-     * @param Builder $query
-     * @param int $roleId
+     * @param  Builder $query
+     * @param  int     $roleId
      * @return Builder
      */
     public function scopeForRole($query, $roleId);
@@ -155,7 +156,7 @@ interface UserInterface
     /**
      * Joins the user's most recent activity directly, so we can do things like sort, search, paginate, etc.
      *
-     * @param Builder $query
+     * @param  Builder $query
      * @return Builder
      */
     public function scopeJoinLastActivity($query);

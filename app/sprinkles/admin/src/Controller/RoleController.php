@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -38,10 +39,10 @@ class RoleController extends SimpleController
      *
      * Request type: POST
      * @see getModalCreateRole
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function create(Request $request, Response $response, $args)
     {
@@ -110,7 +111,7 @@ class RoleController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} created role {$role->name}.", [
-                'type' => 'role_create',
+                'type'    => 'role_create',
                 'user_id' => $currentUser->id
             ]);
 
@@ -132,12 +133,12 @@ class RoleController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: DELETE
-     * @throws NotFoundException If role is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @param  Request             $request
+     * @param  Response            $response
+     * @param  array               $args
+     * @throws NotFoundException   If role is not found
+     * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function delete(Request $request, Response $response, $args)
     {
@@ -191,7 +192,7 @@ class RoleController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted role {$roleName}.", [
-                'type' => 'role_delete',
+                'type'    => 'role_delete',
                 'user_id' => $currentUser->id
             ]);
         });
@@ -212,11 +213,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @throws NotFoundException If role is not found
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
+     * @throws NotFoundException  If role is not found
      */
     public function getInfo(Request $request, Response $response, $args)
     {
@@ -258,10 +259,10 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getList(Request $request, Response $response, $args)
     {
@@ -292,12 +293,12 @@ class RoleController extends SimpleController
     /**
      * Display deletion confirmation modal
      *
-     * @throws NotFoundException If role is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @param  Request             $request
+     * @param  Response            $response
+     * @param  array               $args
+     * @throws NotFoundException   If role is not found
+     * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getModalConfirmDelete(Request $request, Response $response, $args)
     {
@@ -360,10 +361,10 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getModalCreate(Request $request, Response $response, $args)
     {
@@ -392,7 +393,7 @@ class RoleController extends SimpleController
 
         $fieldNames = ['name', 'slug', 'description'];
         $fields = [
-            'hidden' => [],
+            'hidden'   => [],
             'disabled' => []
         ];
 
@@ -403,9 +404,9 @@ class RoleController extends SimpleController
         return $this->ci->view->render($response, 'modals/role.html.twig', [
             'role' => $role,
             'form' => [
-                'action' => 'api/roles',
-                'method' => 'POST',
-                'fields' => $fields,
+                'action'      => 'api/roles',
+                'method'      => 'POST',
+                'fields'      => $fields,
                 'submit_text' => $translator->translate('CREATE')
             ],
             'page' => [
@@ -421,11 +422,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @throws NotFoundException If role is not found
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
+     * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getModalEdit(Request $request, Response $response, $args)
     {
@@ -462,7 +463,7 @@ class RoleController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => [],
+            'hidden'   => [],
             'disabled' => []
         ];
 
@@ -473,9 +474,9 @@ class RoleController extends SimpleController
         return $this->ci->view->render($response, 'modals/role.html.twig', [
             'role' => $role,
             'form' => [
-                'action' => "api/roles/r/{$role->slug}",
-                'method' => 'PUT',
-                'fields' => $fields,
+                'action'      => "api/roles/r/{$role->slug}",
+                'method'      => 'PUT',
+                'fields'      => $fields,
                 'submit_text' => $translator->translate('UPDATE')
             ],
             'page' => [
@@ -491,11 +492,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @throws NotFoundException If role is not found
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
+     * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getModalEditPermissions(Request $request, Response $response, $args)
     {
@@ -535,11 +536,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @throws NotFoundException If role is not found
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
+     * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getPermissions(Request $request, Response $response, $args)
     {
@@ -586,11 +587,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @throws NotFoundException If role is not found
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
+     * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function getUsers(Request $request, Response $response, $args)
     {
@@ -640,10 +641,10 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function pageInfo(Request $request, Response $response, $args)
     {
@@ -652,6 +653,7 @@ class RoleController extends SimpleController
         // If the role no longer exists, forward to main role listing page
         if (!$role) {
             $redirectPage = $this->ci->router->pathFor('uri_roles');
+
             return $response->withRedirect($redirectPage);
         }
 
@@ -704,9 +706,9 @@ class RoleController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'pages/role.html.twig', [
-            'role' => $role,
+            'role'   => $role,
             'fields' => $fields,
-            'tools' => $editButtons
+            'tools'  => $editButtons
         ]);
     }
 
@@ -718,10 +720,10 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function pageList(Request $request, Response $response, $args)
     {
@@ -750,11 +752,11 @@ class RoleController extends SimpleController
      *
      * Request type: PUT
      * @see getModalRoleEdit
-     * @throws NotFoundException If role is not found
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
+     * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function updateInfo(Request $request, Response $response, $args)
     {
@@ -849,7 +851,7 @@ class RoleController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated details for role {$role->name}.", [
-                'type' => 'role_update_info',
+                'type'    => 'role_update_info',
                 'user_id' => $currentUser->id
             ]);
         });
@@ -870,12 +872,12 @@ class RoleController extends SimpleController
      * This route requires authentication.
      *
      * Request type: PUT
-     * @throws NotFoundException If role is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @param  Request             $request
+     * @param  Response            $response
+     * @param  array               $args
+     * @throws NotFoundException   If role is not found
+     * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
      */
     public function updateField(Request $request, Response $response, $args)
     {
@@ -957,7 +959,7 @@ class RoleController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for role {$role->name}.", [
-                'type' => 'role_update_field',
+                'type'    => 'role_update_field',
                 'user_id' => $currentUser->id
             ]);
         });
@@ -979,8 +981,8 @@ class RoleController extends SimpleController
     /**
      * Get role instance from params
      *
+     * @param  array               $params
      * @throws BadRequestException
-     * @param  array $params
      * @return Role
      */
     protected function getRoleFromParams($params)

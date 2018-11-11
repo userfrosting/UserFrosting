@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Alert;
 
 use UserFrosting\Fortress\ServerSideValidator;
@@ -33,7 +34,7 @@ abstract class AlertStream
     /**
      * Create a new message stream.
      *
-     * @param string $messagesKey
+     * @param string                                    $messagesKey
      * @param \UserFrosting\I18n\MessageTranslator|null $translator
      */
     public function __construct($messagesKey, MessageTranslator $translator = null)
@@ -45,49 +46,52 @@ abstract class AlertStream
     /**
      * Set the translator to be used for all message streams.  Must be done before `addMessageTranslated` can be used.
      *
-     * @param \UserFrosting\I18n\MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
+     * @param  \UserFrosting\I18n\MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
      * @return self
      */
     public function setTranslator(MessageTranslator $translator)
     {
         $this->messageTranslator = $translator;
+
         return $this;
     }
 
     /**
      * Adds a raw text message to the cache message stream.
      *
-     * @param string $type The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
-     * @param string $message The message to be added to the message stream.
-     * @return self this MessageStream object.
+     * @param  string $type    The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
+     * @param  string $message The message to be added to the message stream.
+     * @return self   this MessageStream object.
      */
     public function addMessage($type, $message)
     {
         $messages = $this->messages();
-        $messages[] = array(
-            "type" => $type,
-            "message" => $message
-        );
+        $messages[] = [
+            'type'    => $type,
+            'message' => $message
+        ];
         $this->saveMessages($messages);
+
         return $this;
     }
 
     /**
      * Adds a text message to the cache message stream, translated into the currently selected language.
      *
-     * @param string $type The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
-     * @param string $messageId The message id for the message to be added to the message stream.
-     * @param array[string] $placeholders An optional hash of placeholder names => placeholder values to substitute into the translated message.
+     * @param  string            $type         The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
+     * @param  string            $messageId    The message id for the message to be added to the message stream.
+     * @param  array[string]     $placeholders An optional hash of placeholder names => placeholder values to substitute into the translated message.
      * @throws \RuntimeException
-     * @return self this MessageStream object.
+     * @return self              this MessageStream object.
      */
-    public function addMessageTranslated($type, $messageId, $placeholders = array())
+    public function addMessageTranslated($type, $messageId, $placeholders = [])
     {
         if (!$this->messageTranslator) {
-            throw new \RuntimeException("No translator has been set!  Please call MessageStream::setTranslator first.");
+            throw new \RuntimeException('No translator has been set!  Please call MessageStream::setTranslator first.');
         }
 
         $message = $this->messageTranslator->translate($messageId, $placeholders);
+
         return $this->addMessage($type, $message);
     }
 
@@ -102,6 +106,7 @@ abstract class AlertStream
     {
         $messages = $this->messages();
         $this->resetMessageStream();
+
         return $messages;
     }
 
@@ -114,7 +119,7 @@ abstract class AlertStream
     {
         foreach ($validator->errors() as $idx => $field) {
             foreach ($field as $eidx => $error) {
-                $this->addMessage("danger", $error);
+                $this->addMessage('danger', $error);
             }
         }
     }

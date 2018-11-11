@@ -72,7 +72,6 @@ $rules = [
     'phpdoc_order'                                => true,
     'phpdoc_scalar'                               => true,
     'phpdoc_single_line_var_spacing'              => true,
-    'phpdoc_to_comment'                           => true,
     'phpdoc_trim'                                 => true,
     'phpdoc_types'                                => true,
     'psr4'                                        => true,

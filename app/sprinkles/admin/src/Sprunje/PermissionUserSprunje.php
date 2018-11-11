@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use UserFrosting\Support\Exception\BadRequestException;
@@ -35,7 +36,7 @@ class PermissionUserSprunje extends UserSprunje
 
         // If the permission doesn't exist, return 404
         if (!$permission) {
-            throw new NotFoundException;
+            throw new NotFoundException();
         }
 
         // Get permission users

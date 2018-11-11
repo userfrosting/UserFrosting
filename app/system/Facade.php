@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\System;
 
 use Mockery;
@@ -74,7 +75,7 @@ abstract class Facade
     /**
      * Create a fresh mock instance for the given class.
      *
-     * @param string $name
+     * @param  string               $name
      * @return \Mockery\Expectation
      */
     protected static function createFreshMockInstance($name)
@@ -93,7 +94,7 @@ abstract class Facade
     /**
      * Create a fresh mock instance for the given class.
      *
-     * @param  string  $name
+     * @param  string               $name
      * @return \Mockery\Expectation
      */
     protected static function createMockByName($name)
@@ -150,7 +151,7 @@ abstract class Facade
     /**
      * Resolve the facade root instance from the container.
      *
-     * @param string|object $name
+     * @param  string|object $name
      * @return mixed
      */
     protected static function resolveFacadeInstance($name)
@@ -169,7 +170,7 @@ abstract class Facade
     /**
      * Clear a resolved facade instance.
      *
-     * @param  string  $name
+     * @param string $name
      */
     public static function clearResolvedInstance($name)
     {
@@ -197,7 +198,7 @@ abstract class Facade
     /**
      * Set the container instance.
      *
-     * @param  ContainerInterface $container
+     * @param ContainerInterface $container
      */
     public static function setFacadeContainer(ContainerInterface $container)
     {
@@ -207,16 +208,16 @@ abstract class Facade
     /**
      * Handle dynamic, static calls to the object.
      *
+     * @param  string            $method
+     * @param  array             $args
      * @throws \RuntimeException
-     * @param  string  $method
-     * @param  array   $args
      * @return mixed
      */
     public static function __callStatic($method, $args)
     {
         $instance = static::getFacadeRoot();
 
-        if (! $instance) {
+        if (!$instance) {
             throw new RuntimeException('A facade root has not been set.');
         }
 

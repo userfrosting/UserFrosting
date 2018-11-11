@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Tests\Integration;
 
 use Mockery as m;
@@ -13,7 +14,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use UserFrosting\Sprinkle\Core\Bakery\MigrateCommand;
 use UserFrosting\Tests\TestCase;
 
-class DatabaseMigrationMigrateCommandTest extends TestCase
+class BakeryMigrateCommandTest extends TestCase
 {
     public function tearDown()
     {

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
 use Interop\Container\ContainerInterface;
@@ -73,9 +74,9 @@ class ExceptionHandler implements ExceptionHandlerInterface
      * Create a new ExceptionHandler object.
      *
      * @param ContainerInterface     $ci
-     * @param ServerRequestInterface $request   The most recent Request object
-     * @param ResponseInterface      $response  The most recent Response object
-     * @param \Throwable             $exception The caught Exception object
+     * @param ServerRequestInterface $request             The most recent Request object
+     * @param ResponseInterface      $response            The most recent Response object
+     * @param \Throwable             $exception           The caught Exception object
      * @param bool                   $displayErrorDetails
      */
     public function __construct(
@@ -151,7 +152,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
         try {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/$httpCode.html.twig");
         } catch (\Twig_Error_Loader $e) {
-            $template = $this->ci->view->getEnvironment()->loadTemplate("pages/abstract/error.html.twig");
+            $template = $this->ci->view->getEnvironment()->loadTemplate('pages/abstract/error.html.twig');
         }
 
         return $this->response
@@ -241,6 +242,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
         if ($this->request->getMethod() === 'OPTIONS') {
             return 200;
         }
+
         return 500;
     }
 
@@ -252,7 +254,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
     protected function determineUserMessages()
     {
         return [
-            new UserMessage("ERROR.SERVER")
+            new UserMessage('ERROR.SERVER')
         ];
     }
 

@@ -5,6 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,8 +27,8 @@ class DebugCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName("debug")
-             ->setDescription("Test the UserFrosting installation and setup the database")
+        $this->setName('debug')
+             ->setDescription('Test the UserFrosting installation and setup the database')
              ->setHelp("This command is used to check if the various dependencies of UserFrosting are met and display useful debugging information. \nIf any error occurs, check out the online documentation for more info about that error. \nThis command also provide the necessary tools to setup the database credentials");
     }
 
@@ -37,14 +38,14 @@ class DebugCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Display header,
-        $this->io->title("UserFrosting");
-        $this->io->writeln("UserFrosing version : " . \UserFrosting\VERSION);
-        $this->io->writeln("OS Name : " . php_uname('s'));
-        $this->io->writeln("Project Root : " . \UserFrosting\ROOT_DIR);
+        $this->io->title('UserFrosting');
+        $this->io->writeln('UserFrosing version : ' . \UserFrosting\VERSION);
+        $this->io->writeln('OS Name : ' . php_uname('s'));
+        $this->io->writeln('Project Root : ' . \UserFrosting\ROOT_DIR);
 
         // Need to touch the config service first to load dotenv values
         $config = $this->ci->config;
-        $this->io->writeln("Environment mode : " . getenv("UF_MODE"));
+        $this->io->writeln('Environment mode : ' . getenv('UF_MODE'));
 
         // Perform tasks
         $this->checkPhpVersion();
@@ -55,7 +56,7 @@ class DebugCommand extends BaseCommand
         $this->checkDatabase();
 
         // If all went well and there's no fatal errors, we are ready to bake
-        $this->io->success("Ready to bake !");
+        $this->io->success('Ready to bake !');
     }
 
     /**
@@ -64,15 +65,15 @@ class DebugCommand extends BaseCommand
      */
     protected function checkPhpVersion()
     {
-        $this->io->writeln("PHP Version : " . phpversion());
+        $this->io->writeln('PHP Version : ' . phpversion());
         if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
-            $this->io->error("UserFrosting requires php version ".\UserFrosting\PHP_MIN_VERSION." or above. You'll need to update you PHP version before you can continue.");
+            $this->io->error('UserFrosting requires php version '.\UserFrosting\PHP_MIN_VERSION." or above. You'll need to update you PHP version before you can continue.");
             exit(1);
         }
 
         // Check for deprecated versions
         if (version_compare(phpversion(), \UserFrosting\PHP_RECOMMENDED_VERSION, '<')) {
-            $this->io->warning("While your PHP version is still supported by UserFrosting, we recommends version ".\UserFrosting\PHP_RECOMMENDED_VERSION." or above as ".phpversion()." will soon be unsupported. See http://php.net/supported-versions.php for more info.");
+            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommends version '.\UserFrosting\PHP_RECOMMENDED_VERSION.' or above as '.phpversion().' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
         }
     }
 
@@ -85,7 +86,7 @@ class DebugCommand extends BaseCommand
         $this->io->writeln("Node Version : $npmVersion");
 
         if (version_compare($npmVersion, 'v4', '<')) {
-            $this->io->error("UserFrosting requires Node version 4.x or above. Check the documentation for more details.");
+            $this->io->error('UserFrosting requires Node version 4.x or above. Check the documentation for more details.');
             exit(1);
         }
     }
@@ -99,7 +100,7 @@ class DebugCommand extends BaseCommand
         $this->io->writeln("NPM Version : $npmVersion");
 
         if (version_compare($npmVersion, '3', '<')) {
-            $this->io->error("UserFrosting requires npm version 3.x or above. Check the documentation for more details.");
+            $this->io->error('UserFrosting requires npm version 3.x or above. Check the documentation for more details.');
             exit(1);
         }
     }
@@ -119,11 +120,11 @@ class DebugCommand extends BaseCommand
 
         // List installed sprinkles
         $sprinkles = json_decode($sprinklesFile)->base;
-        $this->io->section("Loaded sprinkles");
+        $this->io->section('Loaded sprinkles');
         $this->io->listing($sprinkles);
 
         // Throw fatal error if the `core` sprinkle is missing
-        if (!in_array("core", $sprinkles)) {
+        if (!in_array('core', $sprinkles)) {
             $this->io->error("The `core` sprinkle is missing from the 'sprinkles.json' file.");
             exit(1);
         }
@@ -135,11 +136,12 @@ class DebugCommand extends BaseCommand
      */
     protected function checkDatabase()
     {
-        $this->io->section("Testing database connection...");
+        $this->io->section('Testing database connection...');
 
         try {
             $this->testDB();
-            $this->io->writeln("Database connection successful");
+            $this->io->writeln('Database connection successful');
+
             return;
         } catch (\Exception $e) {
             $error = $e->getMessage();
@@ -157,14 +159,14 @@ class DebugCommand extends BaseCommand
         $config = $this->ci->config;
 
         // Display database info
-        $this->io->section("Database config");
+        $this->io->section('Database config');
         $this->io->writeln([
-            "DRIVER : " . $config['db.default.driver'],
-            "HOST : " . $config['db.default.host'],
-            "PORT : " . $config['db.default.port'],
-            "DATABASE : " . $config['db.default.database'],
-            "USERNAME : " . $config['db.default.username'],
-            "PASSWORD : " . ($config['db.default.password'] ? "*********" : "")
+            'DRIVER : ' . $config['db.default.driver'],
+            'HOST : ' . $config['db.default.host'],
+            'PORT : ' . $config['db.default.port'],
+            'DATABASE : ' . $config['db.default.database'],
+            'USERNAME : ' . $config['db.default.username'],
+            'PASSWORD : ' . ($config['db.default.password'] ? '*********' : '')
         ]);
     }
 }

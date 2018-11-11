@@ -1,10 +1,14 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
 namespace UserFrosting\Sprinkle\Core\Session;
 
 use SessionHandlerInterface;
-
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 
 /**
  * Temp class until we update to Laravel 5.5, so we can use theirs
