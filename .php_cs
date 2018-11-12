@@ -110,4 +110,5 @@ return PhpCsFixer\Config::create()
     ->setRules($rules)
     ->setFinder($finder)
     ->setUsingCache(true)
+    ->setCacheFile(__DIR__.'/.php_cs.cache')
     ->setRiskyAllowed(true);
