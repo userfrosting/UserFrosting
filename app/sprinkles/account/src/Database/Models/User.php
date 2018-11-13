@@ -93,6 +93,15 @@ class User extends Model implements UserInterface
     ];
 
     /**
+     * Events used to handle the user object cache on update and deletion
+     * @var array
+     */
+    protected $events = [
+        'saved'   => Events\DeleteUserCacheEvent::class,
+        'deleted' => Events\DeleteUserCacheEvent::class
+    ];
+
+    /**
      * Cached dictionary of permissions for the user.
      *
      * @var array

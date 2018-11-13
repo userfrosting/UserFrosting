@@ -12,6 +12,20 @@
 return [
     /*
     * ----------------------------------------------------------------------
+    * User Cache Config
+    * ----------------------------------------------------------------------
+    * Cache current user info for a given time to speed up process.
+    * Set to zero to disable.
+    */
+    'cache' => [
+        'user' => [
+            'delay' => 120, // In minutes
+            'key'   => '_user',
+        ],
+    ],
+
+    /*
+    * ----------------------------------------------------------------------
     * AuthorizationManager Debug
     * ----------------------------------------------------------------------
     * Turn this on to send AuthorizationManager::checkAccess process details

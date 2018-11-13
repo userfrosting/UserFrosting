@@ -92,7 +92,7 @@ class Authenticator
      * @param Session     $session     The session wrapper object that will store the user's id.
      * @param Config      $config      Config object that contains authentication settings.
      * @param Cache       $cache       Cache service instance
-     * @param Capsule     $capsule     Database service instance
+     * @param Capsule     $db          Database service instance
      */
     public function __construct(ClassMapper $classMapper, Session $session, Config $config, Cache $cache, Capsule $db)
     {
@@ -255,6 +255,9 @@ class Authenticator
             if ($currentUser) {
                 $currentUser->onLogout();
             }
+
+            // Delete user object cache
+            $this->cache->forget($this->config['cache.user.key'] . $currentUserId);
         }
 
         $this->user = null;
@@ -403,7 +406,12 @@ class Authenticator
     protected function validateUserAccount($userId)
     {
         if ($userId) {
-            $user = $this->classMapper->staticMethod('user', 'find', (int) $userId);
+
+            // Load user from db, cache the result
+            $key = $this->config['cache.user.key'] . $userId;
+            $user = $this->cache->remember($key, $this->config['cache.user.delay'], function () use ($userId) {
+                return $this->classMapper->staticMethod('user', 'find', (int) $userId);
+            });
 
             // If the user doesn't exist any more, throw an exception.
             if (!$user) {
