@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `ControllerTestCase` special test case to help testing controllers
 - Improved overall test coverage and added coverage config to `phpunit.xml`
 - Added code style config (`.php_cs`) and instructions for PHP-CS-Fixer in Readme
+- Add cache facade (Ref [#838](https://github.com/userfrosting/UserFrosting/issues/838))
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle
