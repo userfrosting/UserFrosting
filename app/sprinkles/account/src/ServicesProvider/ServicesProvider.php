@@ -164,12 +164,9 @@ class ServicesProvider
             $cache = $c->cache;
 
             // Force database connection to boot up
-            $c->db;
+            $db = $c->db;
 
-            // Fix RememberMe table name
-            $config['remember_me.table.tableName'] = Capsule::connection()->getTablePrefix() . $config['remember_me.table.tableName'];
-
-            $authenticator = new Authenticator($classMapper, $session, $config, $cache);
+            $authenticator = new Authenticator($classMapper, $session, $config, $cache, $db);
 
             return $authenticator;
         };

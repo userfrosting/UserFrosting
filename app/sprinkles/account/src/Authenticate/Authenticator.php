@@ -9,7 +9,6 @@
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 use Birke\Rememberme\Authenticator as RememberMe;
-use Birke\Rememberme\Storage\PDOStorage as RememberMePDO;
 use Birke\Rememberme\Triplet as RememberMeTriplet;
 use Illuminate\Cache\Repository as Cache;
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -22,6 +21,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Facades\Password;
+use UserFrosting\Sprinkle\Account\Rememberme\PDOStorage as RememberMePDO;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Support\Repository\Repository as Config;
 
@@ -52,6 +52,11 @@ class Authenticator
      * @var Cache
      */
     protected $cache;
+
+    /**
+     * @var Capsule
+     */
+    protected $db;
 
     /**
      * @var bool
@@ -87,24 +92,22 @@ class Authenticator
      * @param Session     $session     The session wrapper object that will store the user's id.
      * @param Config      $config      Config object that contains authentication settings.
      * @param Cache       $cache       Cache service instance
+     * @param Capsule     $capsule     Database service instance
      */
-    public function __construct(ClassMapper $classMapper, Session $session, Config $config, Cache $cache)
+    public function __construct(ClassMapper $classMapper, Session $session, Config $config, Cache $cache, Capsule $db)
     {
         $this->classMapper = $classMapper;
         $this->session = $session;
         $this->config = $config;
         $this->cache = $cache;
+        $this->db = $db;
 
         // Initialize RememberMe storage
-        $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
-
-        // Get the actual PDO instance from Eloquent
-        $pdo = Capsule::connection()->getPdo();
-
-        $this->rememberMeStorage->setConnection($pdo);
+        $this->rememberMeStorage = new RememberMePDO($this->db);
 
         // Set up RememberMe
         $this->rememberMe = new RememberMe($this->rememberMeStorage);
+
         // Set cookie name
         $cookieName = $this->config['session.name'] . '-' . $this->config['remember_me.cookie.name'];
         $this->rememberMe->getCookie()->setName($cookieName);
@@ -118,7 +121,6 @@ class Authenticator
         }
 
         $this->user = null;
-
         $this->viaRemember = false;
     }
 

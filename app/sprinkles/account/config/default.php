@@ -47,13 +47,6 @@ return [
         'expire_time' => 604800,
         'session'     => [
             'path' => '/'
-        ],
-        'table' => [
-            'tableName'             => 'persistences',
-            'credentialColumn'      => 'user_id',
-            'tokenColumn'           => 'token',
-            'persistentTokenColumn' => 'persistent_token',
-            'expiresColumn'         => 'expires_at'
         ]
     ],
 

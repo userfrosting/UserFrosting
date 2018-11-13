@@ -71,9 +71,7 @@ class AuthenticatorTest extends TestCase
         $this->assertSame($testUser->id, $this->ci->session[$key]);
 
         // Must logout to avoid test issue
-        $authenticator->logout();
-        // $authenticator->logout(true); //<-- Doesn't work with SQLite. Doctrine\DBAL\Driver\PDOException: SQLSTATE[HY000]: General error: 5 database is locked
-        // Is required to test the `cleanAllTriplets` thing
+        $authenticator->logout(true);
 
         // We'll test the logout system works too while we're at it (and depend on it)
         $key = $this->ci->config['session.keys.current_user_id'];
@@ -136,23 +134,10 @@ class AuthenticatorTest extends TestCase
     }
 
     /**
-     * The next test doesn't work with SQLite, as birke/rememberme doesn't look
-     * compatible with SQLite
-     *
-     * Exception :
-     * Doctrine\DBAL\Driver\PDOException: SQLSTATE[HY000]: General error: 1 no such function: NOW
-     * app/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:82
-     * app/vendor/birke/rememberme/src/Storage/PDOStorage.php:28
-     * app/vendor/birke/rememberme/src/Authenticator.php:107
-     * app/sprinkles/account/src/Authenticate/Authenticator.php:332
-     * app/tests/TestCase.php:182
-     * app/sprinkles/account/tests/Integration/AuthenticatorTest.php:161
-     */
-    /**
      * @depends testConstructor
      * @param Authenticator $authenticator
      */
-    /*public function testLoginWithRememberMe(Authenticator $authenticator)
+    public function testLoginWithRememberMe(Authenticator $authenticator)
     {
         // Create a test user
         $testUser = $this->createTestUser();
@@ -176,19 +161,17 @@ class AuthenticatorTest extends TestCase
         // Go througt the loginRememberedUser process
         // First, we'll simulate a page refresh by creating a new authenticator
         $authenticator = $this->getAuthenticator();
-
         $user = $authenticator->user();
-        //$user = $this->invokeMethod($authenticator, 'loginRememberedUser'); //<-- Use this to see the PDOException
 
         // If loginRememberedUser returns a PDOException, `user` will return a null user
         $this->assertNotNull($user);
-        $this->assertSame($testUser->id, $user->id);
-        $this->assertSame($testUser->id, $this->ci->session[$key]);
+        $this->assertEquals($testUser->id, $user->id);
+        $this->assertEquals($testUser->id, $this->ci->session[$key]);
         $this->assertTrue($authenticator->viaRemember());
 
         // Must logout to avoid test issue
         $authenticator->logout();
-    }*/
+    }
 
     /**
      * @depends testConstructor
@@ -365,6 +348,6 @@ class AuthenticatorTest extends TestCase
      */
     protected function getAuthenticator()
     {
-        return new Authenticator($this->ci->classMapper, $this->ci->session, $this->ci->config, $this->ci->cache);
+        return new Authenticator($this->ci->classMapper, $this->ci->session, $this->ci->config, $this->ci->cache, $this->ci->db);
     }
 }
