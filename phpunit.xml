@@ -13,6 +13,8 @@
         <testsuite name="Unit Tests">
             <directory suffix="Test.php">app/tests/Unit</directory>
             <directory suffix="Test.php">app/sprinkles/*/tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration Tests">
             <directory suffix=".php">app/sprinkles/*/tests/Integration</directory>
         </testsuite>
     </testsuites>
