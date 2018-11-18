@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Rewritten the `locator` service so it's better suited for sprinkle system ([#853](https://github.com/userfrosting/UserFrosting/issues/853))
 - `dev` environment changed to `debug`  ([#653](https://github.com/userfrosting/UserFrosting/issues/653))
 - Changed deprecations to `warning`, and suppressed them in tests
+- Uncomment foreign keys in core migrations ([#833])
 
 ### Fix
 - Sprinkle without a `template/` folder won't cause error anymore
@@ -640,3 +641,5 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Added 404 error page
 - Standardized JSON interface for backend scripts
 - Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
+
+[#833]: https://github.com/userfrosting/UserFrosting/issues/833
