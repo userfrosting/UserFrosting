@@ -9,8 +9,8 @@
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
-use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Core\Database\Migration;
+use UserFrosting\Sprinkle\Core\Facades\Seeder;
 
 /**
  * Groups table migration
@@ -44,30 +44,7 @@ class GroupsTable extends Migration
             });
 
             // Add default groups
-            $groups = [
-                'terran' => new Group([
-                    'slug'        => 'terran',
-                    'name'        => 'Terran',
-                    'description' => 'The terrans are a young species with psionic potential. The terrans of the Koprulu sector descend from the survivors of a disastrous 23rd century colonization mission from Earth.',
-                    'icon'        => 'sc sc-terran'
-                ]),
-                'zerg' => new Group([
-                    'slug'        => 'zerg',
-                    'name'        => 'Zerg',
-                    'description' => 'Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.',
-                    'icon'        => 'sc sc-zerg'
-                ]),
-                'protoss' => new Group([
-                    'slug'        => 'protoss',
-                    'name'        => 'Protoss',
-                    'description' => 'The protoss, a.k.a. the Firstborn, are a sapient humanoid race native to Aiur. Their advanced technology complements and enhances their psionic mastery.',
-                    'icon'        => 'sc sc-protoss'
-                ])
-            ];
-
-            foreach ($groups as $slug => $group) {
-                $group->save();
-            }
+            Seeder::execute('DefaultGroups');
         }
     }
 

@@ -10,7 +10,7 @@ namespace UserFrosting\Sprinkle\Core\Database\Seeder;
 
 use Interop\Container\ContainerInterface;
 use Illuminate\Support\Str;
-use UserFrosting\UniformResourceLocator\Resource;
+use UserFrosting\UniformResourceLocator\Resource as ResourceInstance;
 
 /**
  * Seeder Class
@@ -112,6 +112,17 @@ class Seeder
     }
 
     /**
+     * Execute a seed based on it's name
+     *
+     * @param string $seedName
+     */
+    public function execute($seedName)
+    {
+        $seed = $this->getSeedClass($seedName);
+        $this->executeSeed($seed);
+    }
+
+    /**
      * Process seeder Resource into info
      *
      * @param  array $seedFiles List of seeds file
@@ -130,10 +141,10 @@ class Seeder
     /**
      * Return an array of seed details inclusing the classname and the sprinkle name
      *
-     * @param  resource $file The seed file
+     * @param  ResourceInstance $file The seed file
      * @return array    The details about a seed file [name, class, sprinkle]
      */
-    protected function getSeedDetails(Resource $file)
+    protected function getSeedDetails(ResourceInstance $file)
     {
         // Format the sprinkle name for the namespace
         $sprinkleName = $file->getLocation()->getName();

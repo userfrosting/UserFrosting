@@ -10,7 +10,6 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -37,8 +36,7 @@ class SeedListCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io->title('Database Seeds List');
-        $seeder = new Seeder($this->ci);
-        $seeds = $seeder->getSeeds();
+        $seeds = $this->ci->seeder->getSeeds();
         $this->io->table(['Name', 'Namespace', 'Sprinkle'], $seeds);
     }
 }

@@ -51,7 +51,7 @@ class SeedCommand extends BaseCommand
         $this->io->title("UserFrosting's Seeder");
 
         // Prepare seed locator
-        $this->seeder = new Seeder($this->ci);
+        $this->seeder = $this->ci->seeder;
 
         // Get options
         $classes = $input->getArgument('class');
@@ -71,7 +71,7 @@ class SeedCommand extends BaseCommand
             }
 
             // Display the class we are going to use as info
-            $this->io->writeln('<info>Seeding class `'.get_class($seedClass).'`</>');
+            $this->io->writeln('<info>Seeding database using class `'.get_class($seedClass).'`</>');
 
             // Add seed class to list
             $seeds[] = $seedClass;
