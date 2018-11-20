@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added code style config (`.php_cs`) and instructions for PHP-CS-Fixer in Readme
 - Add cache facade (Ref [#838])
 - Added `test:mail` Bakery Command
+- Add support for other config['mailer'] options ([#872]; Thanks @apple314159 !)
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle
@@ -656,4 +657,5 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#853]: https://github.com/userfrosting/UserFrosting/issues/853
 [#854]: https://github.com/userfrosting/UserFrosting/issues/854
 [#869]: https://github.com/userfrosting/UserFrosting/issues/869
+[#872]: https://github.com/userfrosting/UserFrosting/issues/872
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
