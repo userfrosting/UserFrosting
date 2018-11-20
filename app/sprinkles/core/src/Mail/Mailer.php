@@ -44,8 +44,7 @@ class Mailer
         $this->phpMailer = new \PHPMailer(true);
 
         // Configuration options
-        if (isset($config['mailer'])) {
-            switch ($config['mailer']) {
+        switch ($config['mailer']) {
             case 'mail':
                 $this->phpMailer->isMail();
                 break;
@@ -71,13 +70,12 @@ class Mailer
                 break;
             default:
                 throw new \phpmailerException("'mailer' must be one of 'smtp', 'mail', 'qmail', or 'sendmail'.");
-            }
+        }
 
-            // Set any additional message-specific options
-            // TODO: enforce which options can be set through this subarray
-            if (isset($config['message_options'])) {
-                $this->setOptions($config['message_options']);
-            }
+        // Set any additional message-specific options
+        // TODO: enforce which options can be set through this subarray
+        if (isset($config['message_options'])) {
+            $this->setOptions($config['message_options']);
         }
 
         // Pass logger into phpMailer object
