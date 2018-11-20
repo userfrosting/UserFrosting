@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved overall test coverage and added coverage config to `phpunit.xml`
 - Added code style config (`.php_cs`) and instructions for PHP-CS-Fixer in Readme
 - Add cache facade (Ref [#838])
+- Added `test:mail` Bakery Command
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle
