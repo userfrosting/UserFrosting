@@ -45,11 +45,17 @@ class Mailer
 
         // Configuration options
         if (isset($config['mailer'])) {
-            if (!in_array($config['mailer'], ['smtp', 'mail', 'qmail', 'sendmail'])) {
-                throw new \phpmailerException("'mailer' must be one of 'smtp', 'mail', 'qmail', or 'sendmail'.");
-            }
-
-            if ($config['mailer'] == 'smtp') {
+            switch ($config['mailer']) {
+            case 'mail':
+                $this->phpMailer->isMail();
+                break;
+            case 'qmail':
+                $this->phpMailer->isQmail();
+                break;
+            case 'sendmail':
+                $this->phpMailer->isSendmail();
+                break;
+            case 'smtp':
                 $this->phpMailer->isSMTP(true);
                 $this->phpMailer->Host = $config['host'];
                 $this->phpMailer->Port = $config['port'];
@@ -62,6 +68,9 @@ class Mailer
                 if (isset($config['smtp_options'])) {
                     $this->phpMailer->SMTPOptions = $config['smtp_options'];
                 }
+                break;
+            default:
+                throw new \phpmailerException("'mailer' must be one of 'smtp', 'mail', 'qmail', or 'sendmail'.");
             }
 
             // Set any additional message-specific options
