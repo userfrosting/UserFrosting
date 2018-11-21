@@ -248,7 +248,8 @@ class ServicesProvider
 
             $config->set('csrf.blacklist', $csrfBlacklist);
 
-            // Reset 'assets' scheme in locator if specified in config. (must be done here thanks to prevent circular dependency)
+            // Reset 'assets' scheme in locator to use raw assets if specified in config.
+            // Must be done here to prevent circular dependency as config is not loaded in system and locator can't be extended here.
             if (!$config['assets.use_raw']) {
                 $c->locator->removeStream('assets');
                 $c->locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
