@@ -61,6 +61,26 @@ class MigrateResetCommand extends MigrateCommand
         // Get migrator
         $migrator = $this->setupMigrator($input);
 
+        // Get pending migrations
+        $ran = $migrator->getRanMigrations();
+
+        // Don't go further if no migration is ran
+        if (empty($ran)) {
+            $this->io->success('Nothing to reset');
+            exit(1);
+        }
+
+        // Show migrations about to be reset when in production mode
+        if ($this->isProduction()) {
+            $this->io->section('Migrations to rollback');
+            $this->io->listing($ran);
+
+            // Confirm action when in production mode
+            if (!$this->confirmToProceed($input->getOption('force'))) {
+                exit(1);
+            }
+        }
+
         // Reset migrator
         try {
             $resetted = $migrator->reset($pretend);
@@ -82,7 +102,7 @@ class MigrateResetCommand extends MigrateCommand
         // If all went well, there's no fatal errors and we have migrated
         // something, show some success
         if (empty($resetted)) {
-            $this->io->success('Nothing to reset');
+            $this->io->warning('Nothing was reseted !');
         } else {
             $this->io->success('Reset successful !');
         }

@@ -31,6 +31,7 @@ class BakeryMigrateResetCommandTest extends TestCase
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
         $migrator->shouldReceive('repositoryExists')->twice()->andReturn(true);
+        $migrator->shouldReceive('getRanMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('reset')->once()->with(false)->andReturn(['foo']);
         $migrator->shouldReceive('getNotes');
         $migrator->shouldReceive('getRepository')->once()->andReturn($repository);
@@ -48,6 +49,7 @@ class BakeryMigrateResetCommandTest extends TestCase
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
         $migrator->shouldReceive('repositoryExists')->twice()->andReturn(true);
+        $migrator->shouldReceive('getRanMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('reset')->once()->with(false)->andReturn([]);
         $migrator->shouldReceive('getNotes');
         $migrator->shouldReceive('getRepository')->once()->andReturn($repository);
@@ -61,6 +63,7 @@ class BakeryMigrateResetCommandTest extends TestCase
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
+        $migrator->shouldReceive('getRanMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('reset')->once()->with(true)->andReturn(['foo']);
         $migrator->shouldReceive('getNotes');
         $migrator->shouldNotReceive('getRepository');

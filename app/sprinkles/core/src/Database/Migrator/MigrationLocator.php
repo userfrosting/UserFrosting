@@ -9,7 +9,7 @@
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 use Illuminate\Support\Str;
-use UserFrosting\UniformResourceLocator\Resource;
+use UserFrosting\UniformResourceLocator\Resource as ResourceInstance;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
@@ -61,10 +61,10 @@ class MigrationLocator implements MigrationLocatorInterface
     /**
      * Return an array of migration details inclusing the classname and the sprinkle name
      *
-     * @param  resource $file The migration file
+     * @param  ResourceInstance $file The migration file
      * @return string   The migration full class path
      */
-    protected function getMigrationDetails(Resource $file)
+    protected function getMigrationDetails(ResourceInstance $file)
     {
         // Format the sprinkle name for the namespace
         $sprinkleName = $file->getLocation()->getName();

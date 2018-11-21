@@ -49,6 +49,26 @@ class MigrateRollbackCommand extends MigrateCommand
         // Get migrator
         $migrator = $this->setupMigrator($input);
 
+        // Get pending migrations
+        $ran = $migration ? [$migration]: $migrator->getRanMigrations($steps);
+
+        // Don't go further if no migration is ran
+        if (empty($ran)) {
+            $this->io->success('Nothing to rollback');
+            exit(1);
+        }
+
+        // Show migrations about to be reset when in production mode
+        if ($this->isProduction()) {
+            $this->io->section('Migrations to rollback');
+            $this->io->listing($ran);
+
+            // Confirm action when in production mode
+            if (!$this->confirmToProceed($input->getOption('force'))) {
+                exit(1);
+            }
+        }
+
         // Rollback migrations
         try {
             // If we have a specific to rollback, do this. Otherwise, do a normal rollback
@@ -69,7 +89,7 @@ class MigrateRollbackCommand extends MigrateCommand
         // If all went well, there's no fatal errors and we have migrated
         // something, show some success
         if (empty($migrated)) {
-            $this->io->success('Nothing to rollback');
+            $this->io->warning('Nothing was rollbacked !');
         } else {
             $this->io->success('Rollback successful !');
         }

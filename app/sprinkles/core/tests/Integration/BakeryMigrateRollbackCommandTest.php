@@ -27,6 +27,7 @@ class BakeryMigrateRollbackCommandTest extends TestCase
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
+        $migrator->shouldReceive('getRanMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('rollback')->once()->with(['pretend' => false, 'steps' => 1])->andReturn([]);
         $migrator->shouldReceive('getNotes');
 
@@ -40,6 +41,7 @@ class BakeryMigrateRollbackCommandTest extends TestCase
         $repository = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository');
 
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(false);
+        $migrator->shouldReceive('getRanMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('getRepository')->once()->andReturn($repository);
         $migrator->shouldReceive('rollback')->once()->with(['pretend' => false, 'steps' => 1])->andReturn([]);
         $migrator->shouldReceive('getNotes');
@@ -55,6 +57,7 @@ class BakeryMigrateRollbackCommandTest extends TestCase
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
+        $migrator->shouldReceive('getRanMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('rollback')->once()->with(['pretend' => true, 'steps' => 1])->andReturn([]);
         $migrator->shouldReceive('getNotes');
 
@@ -67,6 +70,7 @@ class BakeryMigrateRollbackCommandTest extends TestCase
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
+        $migrator->shouldReceive('getRanMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('rollback')->once()->with(['pretend' => false, 'steps' => 3])->andReturn([]);
         $migrator->shouldReceive('getNotes');
 

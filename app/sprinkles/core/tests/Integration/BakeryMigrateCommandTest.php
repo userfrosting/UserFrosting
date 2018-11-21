@@ -27,6 +27,7 @@ class BakeryMigrateCommandTest extends TestCase
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
+        $migrator->shouldReceive('getPendingMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('run')->once()->with(['pretend' => false, 'step' => false])->andReturn([]);
         $migrator->shouldReceive('getNotes');
 
@@ -41,6 +42,7 @@ class BakeryMigrateCommandTest extends TestCase
 
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(false);
         $migrator->shouldReceive('getRepository')->once()->andReturn($repository);
+        $migrator->shouldReceive('getPendingMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('run')->once()->with(['pretend' => false, 'step' => false])->andReturn([]);
         $migrator->shouldReceive('getNotes');
 
@@ -55,6 +57,7 @@ class BakeryMigrateCommandTest extends TestCase
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
+        $migrator->shouldReceive('getPendingMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('run')->once()->with(['pretend' => true, 'step' => false])->andReturn([]);
         $migrator->shouldReceive('getNotes');
 
@@ -67,6 +70,7 @@ class BakeryMigrateCommandTest extends TestCase
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
+        $migrator->shouldReceive('getPendingMigrations')->once()->andReturn(['foo']);
         $migrator->shouldReceive('run')->once()->with(['pretend' => false, 'step' => true])->andReturn([]);
         $migrator->shouldReceive('getNotes');
 

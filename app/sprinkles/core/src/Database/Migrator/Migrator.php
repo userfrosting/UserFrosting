@@ -75,14 +75,8 @@ class Migrator
     {
         $this->notes = [];
 
-        // Get the list of available migration classes in the the Filesystem
-        $availableMigrations = $this->getAvailableMigrations();
-
-        // Get ran migrations
-        $ranMigrations = $this->repository->getMigrationsList();
-
         // Get outstanding migrations classes that requires to be run up
-        $pendingMigrations = $this->pendingMigrations($availableMigrations, $ranMigrations);
+        $pendingMigrations = $this->getPendingMigrations();
 
         // First we will just make sure that there are any migrations to run. If there
         // aren't, we will just make a note of it to the developer so they're aware
@@ -95,7 +89,7 @@ class Migrator
         // This operation is important as it's the one that place the outstanding migrations
         // in the correct order, making sure a migration script won't fail because the table
         // it depends on has not been created yet (for example).
-        $analyser = new Analyser($pendingMigrations, $ranMigrations);
+        $analyser = new Analyser($pendingMigrations, $this->getRanMigrations());
 
         // Any migration without a fulfilled dependency will cause this script to throw an exception
         if ($unfulfillable = $analyser->getUnfulfillable()) {
@@ -117,7 +111,7 @@ class Migrator
      * @param  array $ran       The list of already ran migrations returned by the migration repository
      * @return array The list of pending migrations, ie the available migrations not ran yet
      */
-    public function pendingMigrations(array $available, array $ran)
+    protected function pendingMigrations(array $available, array $ran)
     {
         return collect($available)->reject(function ($migration) use ($ran) {
             return collect($ran)->contains($migration);
@@ -314,7 +308,7 @@ class Migrator
     protected function checkRollbackDependencies(array $migrations)
     {
         // Get ran migrations
-        $ranMigrations = $this->repository->getMigrationsList();
+        $ranMigrations = $this->getRanMigrations();
 
         // Setup rollback analyser
         $analyser = new RollbackAnalyser($ranMigrations, $migrations);
@@ -345,7 +339,7 @@ class Migrator
         // "empty" state and ready to be migrated "up" again.
         //
         // !TODO :: Should compare to the install list to make sure no outstanding migration (ran, but with no migraiton class anymore) still exist in the db
-        $migrations = array_reverse($this->repository->getMigrationsList());
+        $migrations = array_reverse($this->getRanMigrations());
 
         if (count($migrations) === 0) {
             return [];
@@ -465,6 +459,30 @@ class Migrator
     public function getAvailableMigrations()
     {
         return $this->locator->getMigrations();
+    }
+
+    /**
+     * Get a list of all ran migrations
+     *
+     * @param  int    $steps Number of batch to return
+     * @param  string $order asc|desc
+     * @return array
+     */
+    public function getRanMigrations($steps = -1, $order = 'asc')
+    {
+        return $this->repository->getMigrationsList($steps, $order);
+    }
+
+    /**
+     * Get a list of pending migrations
+     *
+     * @return array
+     */
+    public function getPendingMigrations()
+    {
+        $available = $this->getAvailableMigrations();
+        $ran = $this->getRanMigrations();
+        return $this->pendingMigrations($available, $ran);
     }
 
     /**
