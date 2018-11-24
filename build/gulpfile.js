@@ -13,6 +13,7 @@ const { ValidateRawConfig, MergeRawConfigs, default: Bundler } = require("gulp-u
 const rev = require("gulp-rev");
 const prune = require("gulp-prune");
 const { resolve: resolvePath } = require("path");
+const sourcemaps = require("gulp-sourcemaps");
 
 // Load environment variables
 envConfig({ path: "../app/.env" });
@@ -187,9 +188,11 @@ task("bundle", () => {
     const bundleBuilder = {
         Scripts: (src, name) => {
             return src
+                .pipe(sourcemaps.init())
                 .pipe(concatJs(name + ".js"))
                 .pipe(minifyJs())
-                .pipe(rev());
+                .pipe(rev())
+                .pipe(sourcemaps.write("./"));
         },
         Styles: (src, name) => {
             return src
@@ -277,16 +280,24 @@ task("bundle", () => {
 
         const resultsObject = {};
         for (const [name, files] of results) {
-            if (files.length !== 1)
+            // Filter to compatible files (permits sourcemaps)
+            const filteredFiles = [];
+            for (const file of files) {
+                if (file.extname === ".js" || file.extname === ".css") {
+                    filteredFiles.push(file);
+                }
+            }
+
+            if (filteredFiles.length !== 1)
                 throw new Error(`The bundle ${name} has not generated exactly one file.`);
             else {
                 if (!resultsObject[name]) {
                     resultsObject[name] = {};
                 }
-                if (files[0].extname === ".js")
-                    resultsObject[name].scripts = resolveToAssetPath(files[0].path);
+                if (filteredFiles[0].extname === ".js")
+                    resultsObject[name].scripts = resolveToAssetPath(filteredFiles[0].path);
                 else
-                    resultsObject[name].styles = resolveToAssetPath(files[0].path);
+                    resultsObject[name].styles = resolveToAssetPath(filteredFiles[0].path);
             }
         }
         // Write file
