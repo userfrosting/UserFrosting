@@ -1,6 +1,6 @@
 "use strict";
 const { config: envConfig } = require("dotenv");
-const { task, src, dest, parallel, series } = require("gulp");
+const { src, dest, series } = require("gulp");
 const { readFileSync, existsSync, writeFileSync } = require("fs");
 const { bower: mergeBowerDeps, yarn: mergeYarnDeps, yarnIsFlat } = require("@userfrosting/merge-package-dependencies");
 const { sync: deleteSync } = require("del");
@@ -50,8 +50,9 @@ catch (error) {
 
 /**
  * Installs vendor assets. Mapped to npm script "uf-assets-install".
+ * @param {() => {}} done Used to mark task completion.
  */
-task("assets-install", done => {
+function assetsInstall(done) {
     try {
         // This script requires the npm environment, and therefore cannot be run directly with the gulp CLI.
         if (!process.env.npm_lifecycle_event) throw new Error("Assets installation must be run via 'npm run uf-assets-install'");
@@ -170,12 +171,12 @@ Alternatively, resolutions can be used as an override, as documented at https://
     catch (error) {
         done(error);
     }
-});
+};
 
 /**
  * Compiles frontend assets. Mapped to npm script "uf-bundle".
  */
-task("bundle", () => {
+function bundle() {
     // Build sources list
     const sources = [];
     for (const sprinkle of sprinkles) {
@@ -312,17 +313,18 @@ task("bundle", () => {
         .pipe(new Bundler(rawConfig, bundleBuilder, bundleResults))
         .pipe(prune(publicAssetsDir))
         .pipe(dest(publicAssetsDir));
-});
+};
 
 /**
  * Run all frontend tasks.
  */
-task("frontend", series("assets-install", "bundle"));
+const frontend = series(assetsInstall, bundle);
 
 /**
- * 
+ * Clean vendor and public asset folders.
+ * @param {() => {}} done Used to mark task completion.
  */
-task("clean", (done) => {
+function clean(done) {
     try {
         Logger("Cleaning vendor assets...");
         deleteSync(vendorAssetsDir, { force: true });
@@ -337,4 +339,10 @@ task("clean", (done) => {
     catch (error) {
         done(error);
     }
-});
+};
+
+// Export public tasks
+exports.frontend = frontend;
+exports.assetsInstall = assetsInstall;
+exports.bundle = bundle;
+exports.clean = clean;

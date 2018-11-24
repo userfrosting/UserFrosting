@@ -18,7 +18,7 @@
   },
   "scripts": {
     "uf-bundle": "gulp bundle",
-    "uf-assets-install": "gulp assets-install",
+    "uf-assets-install": "gulp assetsInstall",
     "uf-frontend": "gulp frontend",
     "uf-clean": "gulp clean"
   },
