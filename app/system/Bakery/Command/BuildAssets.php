@@ -124,31 +124,12 @@ class BuildAssets extends BaseCommand
 
         $exitCode = 0;
 
-        $this->io->writeln('> <comment>npm run uf-bundle-build</comment>');
-        passthru('npm run uf-bundle-build', $exitCode);
-
-        if ($exitCode !== 0) {
-            $this->io->error('bundling preparation has failed');
-            exit(1);
-        }
-
         $this->io->writeln('> <comment>npm run uf-bundle</comment>');
         passthru('npm run uf-bundle');
 
         if ($exitCode !== 0) {
             $this->io->error('bundling has failed');
             exit(1);
-        }
-
-        if ($exitCode !== 0) {
-            $this->io->warning('bundling may have failed, check output');
-        }
-
-        $this->io->writeln('> <comment>npm run uf-bundle-clean</comment>');
-        passthru('npm run uf-bundle-clean');
-
-        if ($exitCode !== 0) {
-            $this->io->warning("bundling cleanup has failed, which while unusual shouldn't cause any problems");
         }
 
         chdir($wd);

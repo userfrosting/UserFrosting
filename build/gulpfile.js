@@ -1,280 +1,329 @@
-'use strict';
+"use strict";
+const { config: envConfig } = require("dotenv");
+const { task, src, dest, parallel, series } = require("gulp");
+const { readFileSync, existsSync, writeFileSync } = require("fs");
+const { bower: mergeBowerDeps, yarn: mergeYarnDeps, yarnIsFlat } = require("@userfrosting/merge-package-dependencies");
+const { sync: deleteSync } = require("del");
+const { execSync } = require("child_process");
+const concatJs = require("gulp-concat");
+const { default: minifyJs } = require("gulp-uglify-es");
+const concatCss = require("gulp-concat-css");
+const minifyCss = require("gulp-clean-css");
+const { ValidateRawConfig, MergeRawConfigs, default: Bundler } = require("gulp-uf-bundle-assets");
+const rev = require("gulp-rev");
+const prune = require("gulp-prune");
+const { resolve: resolvePath } = require("path");
 
 // Load environment variables
-require('dotenv').config({path: '../app/.env'});
-
-/**
- * Global dependencies
- */
-const gulp = require('gulp');
-const fs = require('fs-extra');
-const del = require('del');
-const plugins = require('gulp-load-plugins')();
+envConfig({ path: "../app/.env" });
 
 // Set up logging
-let doILog = (process.env.UF_MODE == 'dev');
-let logger = (message) => {
-    if (doILog) {
-        console.log(message);
-    }
-};
-
-const sprinklesDir = '../app/sprinkles';
-const sprinklesSchemaPath = '../app/sprinkles.json';
-
-// The Sprinkle load order from sprinkles.json
-const sprinkles = require(`${sprinklesSchemaPath}`)['base'];
-
-// The directory where the bundle task should place compiled assets. 
-// The names of assets in bundle.result.json will be located relative to this path.
-const publicAssetsDir = '../public/assets/';
-
-// name of the bundle file
-const sprinkleBundleFile = 'asset-bundles.json';
-
-// Merged bundle config file with relative dir
-const bundleConfigFile = './bundle.config.json';
+const doILog = (process.env.UF_MODE === "dev");
 
 /**
- * Vendor asset task
- * NOTE: This task cannot be run directly from the gulp cli. Use the npm run script instead.
+ * Prints to stdout with newline when UF_MODE is dev.
+ * @param {any} message Message to log.
  */
-gulp.task('assets-install', () => {
-    'use strict';
+function Logger(message) {
+    if (doILog) console.log(message);
+}
 
-    // Legacy clean up
-    let legacyVendorAssets = '../app/sprinkles/*/assets/vendor/**';
-    if (del.sync(legacyVendorAssets, { dryRun: true, force: true }).length > 0) {
-        logger('Frontend vendor assets are now located at "app/assets".\nStarting clean up of legacy vendor assets...');
-        del.sync(legacyVendorAssets, { force: true });
-        logger('Complete.')
-    }
+// Path constants
+const rootDir = "../";
+const sprinklesDir = rootDir + "app/sprinkles/";
+const sprinklesSchemaPath = rootDir + "app/sprinkles.json";
+const publicAssetsDir = rootDir + "public/assets/";
+const legacyVendorAssetsGlob = rootDir + "sprinkles/*/assets/vendor/**";
+const sprinkleBundleFile = "asset-bundles.json";
+const vendorAssetsDir = rootDir + "app/assets/";
 
-    let mergePkg = require('@userfrosting/merge-package-dependencies');
+// Load sprinkles
+let sprinkles;
+try {
+    sprinkles = JSON.parse(readFileSync(sprinklesSchemaPath)).base;
+}
+catch (error) {
+    Logger(sprinklesSchemaPath + " could not be loaded, does it exist?");
+    throw error;
+}
 
-    // See if there are any yarn packages.
-    let yarnPaths = [];
-    for (let sprinkle of sprinkles) {
-        if (fs.existsSync(`../app/sprinkles/${sprinkle}/package.json`)) {
-            yarnPaths.push(`../app/sprinkles/${sprinkle}/package.json`);
+/**
+ * Installs vendor assets. Mapped to npm script "uf-assets-install".
+ */
+task("assets-install", done => {
+    try {
+        // This script requires the npm environment, and therefore cannot be run directly with the gulp CLI.
+        if (!process.env.npm_lifecycle_event) throw new Error("Assets installation must be run via 'npm run uf-assets-install'");
+
+        // Clean up any legacy assets
+        if (deleteSync(legacyVendorAssetsGlob, { force: true }))
+            Logger("Legacy frontend vendor assets were deleted. Frontend vendor assets are now installed to 'app/assets'.");
+
+        // See if there are any yarn packages
+        // TODO Would be better to read in file here then hand it off since we can avoid redundant `existsSync` calls
+        const yarnPaths = [];
+        for (const sprinkle of sprinkles) {
+            const path = sprinklesDir + sprinkle + "/package.json";
+            if (existsSync(path)) yarnPaths.push(path);
         }
-    }
-    if (yarnPaths.length > 0) {
-        // Yes there are!
 
-        // Delete old package.json and yarn.lock
-        del.sync(['../app/assets/package.json', '../app/assets/yarn.lock'], { force: true });
+        if (yarnPaths.length > 0) {
+            // Install yarn dependencies
+            Logger("Installing vendor assets with Yarn...")
 
-        // Generate package.json
-        let yarnTemplate = {// Private makes sure it isn't published, and cuts out a lot of unnecessary fields.
-            private: true
-        };
-        logger('\nMerging packages...\n');
-        mergePkg.yarn(yarnTemplate, yarnPaths, '../app/assets/', doILog);
-        logger('\nMerge complete.\n');
+            // TODO I think we might be able to get away with removing this, since yarn.lock is synced with package.json
+            deleteSync([vendorAssetsDir + "package.json", vendorAssetsDir + "yarn.lock"], { force: true });
 
-        // Yarn automatically removes extraneous packages.
+            // Generate package.json
+            const yarnTemplate = {
+                // Private makes sure it isn't published, and cuts out a lot of unnecessary fields.
+                private: true
+            };
+            Logger("Collating dependencies...");
+            mergeYarnDeps(yarnTemplate, yarnPaths, vendorAssetsDir, doILog);
+            Logger("Dependency collation complete.");
 
-        // Perform installation.
-        // --flat switch cannot be used due to spotty support of --non-interactive switch
-        // Thankfully, "resolutions" works outside flat mode.
-        logger('Installing npm/yarn assets...');
-        require('child_process').execSync('yarn install --non-interactive', {
-            cwd: '../app/assets',
-            stdio: doILog ? 'inherit' : ''
-        });
+            // Perform installation
+            // Yarn will automatically remove extraneous packages (barring algorithm failure)
+            // --flat switch cannot be used currently due to https://github.com/yarnpkg/yarn/issues/1658 however "resolutions" thankfully will still work
+            Logger("Running yarn install --non-interactive");
+            execSync("yarn install --non-interactive", {
+                cwd: vendorAssetsDir,
+                stdio: doILog ? "inherit" : ""
+            });
 
-        // Ensure dependency tree is flat manually because Yarn errors out with a TTY error.
-        logger('\nInspecting dependency tree...\n')
-
-        if (!mergePkg.yarnIsFlat('../app/assets/', doILog)) {
-            logger(`
-Dependency tree is not flat! Dependencies must be flat to prevent abnormal behavior.
+            // Ensure dependency tree is flat
+            Logger("Inspecting dependency tree...");
+            if (!yarnIsFlat(vendorAssetsDir, doILog)) {
+                Logger(`
+Dependency tree is not flat! Dependencies must be flat to prevent abnormal behavior of frontend dependencies.
 Recommended solution is to adjust dependency versions until issue is resolved to ensure 100% compatibility.
 Alternatively, resolutions can be used as an override, as documented at https://yarnpkg.com/en/docs/selective-version-resolutions
 `);
-            throw 'Dependency tree is not flat!';
-        } else {
-            logger('\nDependency tree is flat and usable.\n')
-        }
-    }
-    else del.sync([
-        '../app/assets/package.json',
-        '../app/assets/node_modules/',
-        '../app/assets/yarn.lock'
-    ], { force: true });
-
-    // See if there are any bower packages.
-    let bowerPaths = [];
-    for (let sprinkle of sprinkles) {
-        // bower
-        if (fs.existsSync(`../app/sprinkles/${sprinkle}/bower.json`)) {
-            console.warn(`DEPRECATED: Detected bower.json in ${sprinkle} Sprinkle. Support for bower (bower.json) will be removed in the future, please use npm/yarn (package.json) instead.`);
-            bowerPaths.push(`../app/sprinkles/${sprinkle}/bower.json`);
-        }
-    }
-    if (bowerPaths.length > 0) {
-        // Yes there are!
-
-        // Delete old bower.json
-        del.sync('../app/assets/bower.json', { force: true });
-
-        // Generate bower.json
-        let bowerTemplate = {
-            name: 'uf-vendor-assets'
-        };
-        logger('\nMerging packages...\n');
-        mergePkg.bower(bowerTemplate, bowerPaths, '../app/assets/', doILog);
-        logger('\nMerge complete.\n');
-
-        let childProcess = require('child_process');
-
-        // Remove extraneous packages
-        childProcess.execSync('bower prune', {
-            cwd: '../app/assets',
-            stdio: doILog ? 'inherit' : ''
-        });
-
-        // Perform installation
-        childProcess.execSync('bower install -q --allow-root', { // --allow-root stops bower from complaining about being in 'sudo'.
-            cwd: '../app/assets',
-            stdio: doILog ? 'inherit' : ''
-        });
-        // Yarn is able to output its completion. Bower... not so much.
-        logger('Done.\n');
-    }
-    else del.sync([
-        '../app/assets/bower.json',
-        '../app/assets/bower_components/**'
-    ], { force: true });
-});
-
-
-/**
- * Bundling tasks
- */
-
-// Executes bundling tasks according to bundle.config.json files in each Sprinkle, as per Sprinkle load order.
-// Respects bundle collision rules.
-gulp.task('bundle-build', () => {
-    'use strict';
-    let copy = require('recursive-copy');
-    let merge = require('merge-array-object');
-    let cleanup = (e) => {
-        'use strict';
-        // Delete temporary directory if exists
-        fs.rmdirSync('./temp');
-        // Delete created bundle.config.json file
-        fs.unlinkSync(bundleConfigFile);
-        // Propagate error
-        throw e;
-    };
-    let config = {
-        bundle: {},
-        copy: []
-    };
-    sprinkles.forEach((sprinkle) => {
-        'use strict';
-        let location = `${sprinklesDir}/${sprinkle}/`;
-        if (fs.existsSync(`${location}${sprinkleBundleFile}`)) {
-            // Require shouldn't be used here.
-            let currentConfig = require(`${location}${sprinkleBundleFile}`);
-            // Add bundles to config, respecting collision rules.
-            for (let bundleName in currentConfig.bundle) {
-                // If bundle already defined, handle as per collision rules.
-                if (bundleName in config.bundle) {
-                    let onCollision = 'replace';
-                    try {
-                        onCollision = (typeof currentConfig.bundle[bundleName].options.sprinkle.onCollision !== 'undefined' ? currentConfig.bundle[bundleName].options.sprinkle.onCollision : 'replace');
-                    }
-                    catch (e) {
-
-                    }
-                    switch (onCollision) {
-                        case 'replace':
-                            config.bundle[bundleName] = currentConfig.bundle[bundleName];
-                            break;
-                        case 'merge':
-                            // If using this collision rule, keep in mind any bundling options will also be merged.
-                            // Inspect the produced 'bundle.config.json' file in the 'build' folder to ensure options are correct.
-                            config.bundle[bundleName] = merge(config.bundle[bundleName], currentConfig.bundle[bundleName]);
-                            break;
-                        case 'ignore':
-                            // Do nothing. This simply exists to prevent falling through to error catchment.
-                            break;
-                        case 'error':
-                            cleanup(`The bundle '${bundleName}' in the Sprinkle '${sprinkle}' has been previously defined, and the bundle's 'onCollision' property is set to 'error'.`);
-                        default:
-                            cleanup(`Unexpected input '${onCollision}' for 'onCollision' for the bundle '${bundleName}' in the Sprinkle '${sprinkle}'.`);
-                    }
-                }
-                // Otherwise, just add.
-                else {
-                    config.bundle[bundleName] = currentConfig.bundle[bundleName];
-                }
+                throw new Error("Dependency tree is not flat.");
             }
-            // Add/merge copy files to config
-            if ('copy' in currentConfig) {
-                config.copy = new Set(config.copy, currentConfig.copy);
+            else Logger("Dependency tree is flat and therefore usable.");
+        }
+        else {
+            // Delete yarn artefacts
+            deleteSync([
+                vendorAssetsDir + "package.json",
+                vendorAssetsDir + "node_modules/",
+                vendorAssetsDir + "yarn.lock"
+            ], { force: true });
+        }
+
+        // See if there are any Bower packages
+        // TODO Would be better to read in file here then hand it off since we can avoid redundant `existsSync` calls
+        const bowerPaths = [];
+        for (const sprinkle of sprinkles) {
+            const path = sprinklesDir + sprinkle + "/bower.json";
+            if (existsSync(path)) {
+                // TODO: We should really have a link to docs in the message
+                console.warn(`DEPRECATED: Detected bower.json in ${sprinkle} Sprinkle. Support for bower (bower.json) will be removed in the future, please use npm/yarn (package.json) instead.`);
+                bowerPaths.push(path);
             }
         }
-    });
-    // Save bundle rules to bundle.config.json
-    fs.writeFileSync(bundleConfigFile, JSON.stringify(config));
 
-    // Copy vendor assets (bower, then npm)
-    /** @todo Should really keep the garbage files out. A filter function can be passed to the copySync settings object. */
-    let paths = [
-        '../app/assets/bower_components/',
-        '../app/assets/node_modules/'
-    ];
-    for (let path of paths) {
-        if (fs.pathExistsSync(path)) fs.copySync(path, `${publicAssetsDir}vendor/`, { overwrite: true });
+        if (bowerPaths.length > 0) {
+            // Install yarn dependencies
+            Logger("Installing vendor assets with Bower...")
+
+            // TODO I think we might be able to get away with removing this
+            deleteSync(vendorAssetsDir + "bower.json", { force: true });
+
+            // Generate package.json
+            const bowerTemplate = {
+                name: "uf-vendor-assets"
+            };
+            Logger("Collating dependencies...");
+            mergeBowerDeps(bowerTemplate, bowerPaths, vendorAssetsDir, doILog);
+            Logger("Dependency collation complete.");
+
+            // Perform installation
+            Logger("Running bower install -q --allow-root");
+            // --allow-root stops bower from complaining about being in 'sudo' in various situations
+            execSync("bower install -q --allow-root", {
+                cwd: vendorAssetsDir,
+                stdio: doILog ? "inherit" : ""
+            });
+
+            // Prune any unnecessary dependencies
+            Logger("Running bower prune -q --allow-root");
+            // --allow-root stops bower from complaining about being in 'sudo' in various situations
+            execSync("bower prune -q --allow-root", {
+                cwd: vendorAssetsDir,
+                stdio: doILog ? "inherit" : ""
+            });
+        }
+        else {
+            // Remove bower artefacts
+            deleteSync([
+                vendorAssetsDir + "bower.json",
+                vendorAssetsDir + "bower_components/"
+            ], { force: true });
+        }
+
+        done();
     }
-    // Copy sprinkle assets
-    paths = [];
-    for (let sprinkle of sprinkles) {
-        let path = `../app/sprinkles/${sprinkle}/assets/`;
-        if (fs.pathExistsSync(path)) fs.copySync(path, publicAssetsDir, { overwrite: true });
+    catch (error) {
+        done(error);
     }
-    return;
 });
-
-// Execute gulp-bundle-assets
-gulp.task('bundle', () => {
-    'use strict';
-    return gulp.src(bundleConfigFile)
-        .pipe(plugins.ufBundleAssets({
-            base: publicAssetsDir
-        }))
-        .pipe(plugins.ufBundleAssets.results({
-            dest: './'
-        }))
-        .pipe(gulp.dest(publicAssetsDir));
-});
-
-
 
 /**
- * Clean up tasks
+ * Compiles frontend assets. Mapped to npm script "uf-bundle".
  */
+task("bundle", () => {
+    // Build sources list
+    const sources = [];
+    for (const sprinkle of sprinkles) {
+        sources.push(sprinklesDir + sprinkle + "/assets/**");
+    }
+    sources.push(vendorAssetsDir + "node_modules/**");
+    sources.push(vendorAssetsDir + "bower_components/**");
 
-gulp.task('public-clean', () => {
-    'use strict';
-    return del(publicAssetsDir, { force: true });
+    // Create bundle stream factories object
+    const bundleBuilder = {
+        Scripts: (src, name) => {
+            return src
+                .pipe(concatJs(name + ".js"))
+                .pipe(minifyJs())
+                .pipe(rev());
+        },
+        Styles: (src, name) => {
+            return src
+                .pipe(concatCss(name + ".css"))
+                .pipe(minifyCss())
+                .pipe(rev());
+        }
+    };
+
+    // Load up bundle configurations
+    const rawConfigs = [];
+    for (const sprinkle of sprinkles) {
+        Logger("Looking for asset bundles in sprinkle " + sprinkle);
+
+        // Try to read file
+        let fileContent;
+        try {
+            fileContent = readFileSync(sprinklesDir + sprinkle + "/" + sprinkleBundleFile);
+            Logger(`   Read '${sprinkleBundleFile}'.`);
+        }
+        catch (error) {
+            Logger(`   No '${sprinkleBundleFile}' detected, or can't be read.`);
+            continue;
+        }
+
+        // Validate (JSON and content)
+        let rawConfig;
+        try {
+            rawConfig = JSON.parse(fileContent);
+            ValidateRawConfig(rawConfig);
+            rawConfigs.push(rawConfig);
+            Logger("   Asset bundles validated and loaded.");
+        }
+        catch (error) {
+            Logger("   Asset bundle is invalid.");
+            throw error;
+        }
+    }
+
+    // Merge bundles
+    Logger("Merging asset bundles...");
+    const rawConfig = MergeRawConfigs(rawConfigs);
+
+    // Set up virtual path rules
+    rawConfig.VirtualPathRules = [
+        ["../app/assets/node_modules", "./assets/vendor"],
+        ["../app/assets/bower_components", "./assets/vendor"]];
+    for (const sprinkle of sprinkles) {
+        rawConfig.VirtualPathRules.push([
+            sprinklesDir + sprinkle + "/assets", "./assets"
+        ]);
+    }
+
+    // Set base path for bundle resources to align with virtual paths
+    rawConfig.BundlesVirtualBasePath = "./assets/";
+
+    // Bundle results callback
+    function bundleResults(results) {
+        /**
+         * Resolves absolute path to gulp-uf-bundle-assets v2 style path
+         * @param {string} path Absolute path to resolve.
+         */
+        function resolveToAssetPath(path) {
+            if (path.startsWith(resolvePath(sprinklesDir))) {
+                // Handle sprinkle path
+                for (const sprinkle of sprinkles) {
+                    const sprinklePath = resolvePath(sprinklesDir, sprinkle, "assets");
+                    if (path.startsWith(sprinklePath)) {
+                        return path.replace(sprinklePath, "").replace(/\\/g, "/").replace("/", "");
+                    }
+                }
+            }
+            else {
+                // Handle vendor path
+                if (path.startsWith(resolvePath(vendorAssetsDir, "bower_components"))) {
+                    return path.replace(resolvePath(vendorAssetsDir, "bower_components"), "").replace(/\\/g, "/").replace("/", "");
+                }
+                else if (path.startsWith(resolvePath(vendorAssetsDir, "node_modules"))) {
+                    return path.replace(resolvePath(vendorAssetsDir, "node_modules"), "").replace(/\\/g, "/").replace("/", "");
+                }
+            }
+
+            throw new Error(`Unable to resolve path '${path}' to relative asset path.`);
+        }
+
+        const resultsObject = {};
+        for (const [name, files] of results) {
+            if (files.length !== 1)
+                throw new Error(`The bundle ${name} has not generated exactly one file.`);
+            else {
+                if (!resultsObject[name]) {
+                    resultsObject[name] = {};
+                }
+                if (files[0].extname === ".js")
+                    resultsObject[name].scripts = resolveToAssetPath(files[0].path);
+                else
+                    resultsObject[name].styles = resolveToAssetPath(files[0].path);
+            }
+        }
+        // Write file
+        Logger("Rriting results file...");
+        writeFileSync("./bundle.result.json", JSON.stringify(resultsObject));
+        Logger("Done.")
+    };
+
+    // Open stream
+    Logger("Starting bundle process proper...");
+    return src(sources)
+        .pipe(new Bundler(rawConfig, bundleBuilder, bundleResults))
+        .pipe(prune(publicAssetsDir))
+        .pipe(dest(publicAssetsDir));
 });
 
-// Clean up temporary bundling files
-gulp.task('bundle-clean', () => {
-    'use strict';
-    return del(bundleConfigFile, { force: true });
-});
+/**
+ * Run all frontend tasks.
+ */
+task("frontend", series("assets-install", "bundle"));
 
-// Deletes assets fetched by assets-install
-gulp.task('assets-clean', () => {
-    'use strict';
-    return del('../app/assets/*', { force: true });
-});
+/**
+ * 
+ */
+task("clean", (done) => {
+    try {
+        Logger("Cleaning vendor assets...");
+        deleteSync(vendorAssetsDir, { force: true });
+        Logger("Done.");
 
-// Deletes all generated, or acquired files.
-gulp.task('clean', ['public-clean', 'bundle-clean', 'assets-clean']);
+        Logger("Cleaning public assets...");
+        deleteSync(publicAssetsDir, { force: true })
+        Logger("Done.");
+
+        done();
+    }
+    catch (error) {
+        done(error);
+    }
+});
