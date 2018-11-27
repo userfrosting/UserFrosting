@@ -9,7 +9,7 @@ const concatJs = require("gulp-concat");
 const { default: minifyJs } = require("gulp-uglify-es");
 const concatCss = require("gulp-concat-css");
 const minifyCss = require("gulp-clean-css");
-const { ValidateRawConfig, MergeRawConfigs, default: Bundler } = require("gulp-uf-bundle-assets");
+const { ValidateRawConfig, MergeRawConfigs, default: Bundler } = require("@userfrosting/gulp-bundle-assets");
 const rev = require("gulp-rev");
 const prune = require("gulp-prune");
 const { resolve: resolvePath } = require("path");
@@ -26,7 +26,7 @@ const doILog = (process.env.UF_MODE === "dev");
  * @param {any} message Message to log.
  */
 function Logger(message) {
-    if (doILog) console.log(message);
+    if (!doILog) console.log(message);
 }
 
 // Path constants
@@ -302,10 +302,19 @@ function bundle() {
             }
         }
         // Write file
-        Logger("Rriting results file...");
+        Logger("Writing results file...");
         writeFileSync("./bundle.result.json", JSON.stringify(resultsObject));
         Logger("Done.")
     };
+
+    // Logger adapter
+    function LoggerAdapter(message, loglevel) {
+        // Normal level and above
+        if (loglevel > 0) {
+            Logger(message);
+        }
+    }
+    rawConfig.Logger = LoggerAdapter;
 
     // Open stream
     Logger("Starting bundle process proper...");

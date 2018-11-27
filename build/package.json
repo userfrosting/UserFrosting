@@ -12,7 +12,7 @@
     "gulp-prune": "^0.2.0",
     "gulp-rev": "^9.0.0",
     "gulp-sourcemaps": "^2.6.4",
-    "gulp-uf-bundle-assets": "^3.0.0-alpha.5",
+    "@userfrosting/gulp-bundle-assets": "^3.0.0-alpha.6",
     "gulp-uglify-es": "^1.0.4",
     "yarn": "^1.12.3"
   },
