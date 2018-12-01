@@ -14,6 +14,7 @@ services:
       - .:/app
     links:
       - mysql
+
   nginx:
     build:
       context: ./docker/nginx
@@ -23,6 +24,7 @@ services:
       - .:/app
     links:
       - php
+
   mysql:
     image: mysql:5.7
     environment:
@@ -34,13 +36,6 @@ services:
       - 8571:3306
     volumes:
       - userfrosting-db:/var/lib/mysql
-
-  composer:
-    image: composer/composer
-    volumes_from:
-      - php
-    working_dir: /app
-    command: -V
 
   node:
     image: node:alpine
