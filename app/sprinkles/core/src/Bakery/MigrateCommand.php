@@ -58,7 +58,7 @@ class MigrateCommand extends BaseCommand
         // Don't go further if no migration is pending
         if (empty($pending)) {
             $this->io->success('Nothing to migrate');
-            exit(1);
+            return;
         }
 
         // Show migrations about to be ran when in production mode
