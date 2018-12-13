@@ -1,19 +1,19 @@
 "use strict";
-const { config: envConfig } = require("dotenv");
-const { src, dest, series } = require("gulp");
-const { readFileSync, existsSync, writeFileSync } = require("fs");
 const { bower: mergeBowerDeps, yarn: mergeYarnDeps, yarnIsFlat } = require("@userfrosting/merge-package-dependencies");
-const { sync: deleteSync } = require("del");
-const { execSync } = require("child_process");
-const concatJs = require("gulp-concat");
+const { config: envConfig } = require("dotenv");
+const { default: Bundler, ValidateRawConfig, MergeRawConfigs } = require("@userfrosting/gulp-bundle-assets");
 const { default: minifyJs } = require("gulp-uglify-es");
-const concatCss = require("gulp-concat-css");
-const minifyCss = require("gulp-clean-css");
-const { ValidateRawConfig, MergeRawConfigs, default: Bundler } = require("@userfrosting/gulp-bundle-assets");
-const rev = require("gulp-rev");
-const prune = require("gulp-prune");
+const { execSync } = require("child_process");
+const { readFileSync, existsSync, writeFileSync } = require("fs");
 const { resolve: resolvePath } = require("path");
-const sourcemaps = require("gulp-sourcemaps");
+const { src, dest, series } = require("gulp");
+const { sync: deleteSync } = require("del");
+const concatCss = require("gulp-concat-css");
+const concatJs = require("gulp-concat");
+const log = require("gulplog");
+const minifyCss = require("gulp-clean-css");
+const prune = require("gulp-prune");
+const rev = require("gulp-rev");
 
 // Load environment variables
 envConfig({ path: "../app/.env" });
@@ -25,8 +25,13 @@ const doILog = (process.env.UF_MODE === "dev");
  * Prints to stdout with newline when UF_MODE is dev.
  * @param {any} message Message to log.
  */
-function Logger(message) {
-    if (!doILog) console.log(message);
+function Logger(message, source) {
+    if (!doILog) {
+        if (source)
+            log.info(`${source}: ${message}`);
+        else
+            log.info(message);
+    }
 }
 
 // Path constants
@@ -189,11 +194,9 @@ function bundle() {
     const bundleBuilder = {
         Scripts: (src, name) => {
             return src
-                .pipe(sourcemaps.init())
                 .pipe(concatJs(name + ".js"))
                 .pipe(minifyJs())
-                .pipe(rev())
-                .pipe(sourcemaps.write("./"));
+                .pipe(rev());
         },
         Styles: (src, name) => {
             return src
@@ -311,17 +314,17 @@ function bundle() {
     function LoggerAdapter(message, loglevel) {
         // Normal level and above
         if (loglevel > 0) {
-            Logger(message);
+            Logger(message, "gulp-bundle-assets");
         }
     }
     rawConfig.Logger = LoggerAdapter;
 
     // Open stream
     Logger("Starting bundle process proper...");
-    return src(sources)
+    return src(sources, { sourcemaps: true })
         .pipe(new Bundler(rawConfig, bundleBuilder, bundleResults))
         .pipe(prune(publicAssetsDir))
-        .pipe(dest(publicAssetsDir));
+        .pipe(dest(publicAssetsDir, { sourcemaps: "." }));
 };
 
 /**
