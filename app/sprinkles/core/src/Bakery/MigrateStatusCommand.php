@@ -48,19 +48,18 @@ class MigrateStatusCommand extends BaseCommand
 
         // Get ran migrations. If repository doesn't exist, there's no ran
         if (!$migrator->repositoryExists()) {
-            $ranArray = [];
+            $ran = collect();
         } else {
             $ran = $migrator->getRepository()->getMigrations();
-            $ranArray = $ran->pluck('migration')->all();
         }
 
         // Get available migrations and calculate pending one
         $available = $migrator->getAvailableMigrations();
-        $pending = $migrator->pendingMigrations($available, $ranArray);
+        $pending = $migrator->getPendingMigrations();
 
         // Display ran migrations
         $this->io->section('Installed migrations');
-        if (count($ranArray) > 0) {
+        if ($ran->count() > 0) {
             $this->io->table(
                 ['Migration', 'Available?', 'Batch'],
                 $this->getStatusFor($ran, $available)

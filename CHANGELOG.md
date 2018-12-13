@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
-- Use locale requested by browser when possible for guests ([#718](https://github.com/userfrosting/UserFrosting/issues/718))
-- Add locale drop down to registration page, with the currently applied locale selected ([#718](https://github.com/userfrosting/UserFrosting/issues/718))
+- Use locale requested by browser when possible for guests ([#718])
+- Add locale drop down to registration page, with the currently applied locale selected ([#718])
 - Integrated improvements from [v4.0.25-Alpha](#v4025-alpha)
 - Added `database` option for `migrate` and `migrate:*` Bakery commands
 - New `isProduction` method for Bakery command to test if app is in production mode
@@ -18,34 +18,38 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `RefreshDatabase` test Trait to use a fresh database for a test
 - Added `TestDatabase` test Trait to use the in memory database for a test
 - Implement `withRaw`, `withSum`, `withAvg`, `withMin`, `withMax` (see https://github.com/laravel/framework/pull/16815)
-- Include Vagrant integration directly inside UF ([#829](https://github.com/userfrosting/UserFrosting/issues/829))
-- Added arguments to the `create-admin` and `setup` Bakery commands so it can be used in a non-interactive way ([#808](https://github.com/userfrosting/UserFrosting/issues/808))
+- Include Vagrant integration directly inside UF ([#829])
+- Added arguments to the `create-admin` and `setup` Bakery commands so it can be used in a non-interactive way ([#808])
 - Added tests for migrator and it's components
 - Added tests for `migrate` Bakery command and sub-commands
-- Added new `filesystem` service ([#869](https://github.com/userfrosting/UserFrosting/issues/869))
+- Added new `filesystem` service ([#869])
 - Added new `Seeder` and `seed` Bakery command
 - Added `withTestUser` trait for helper methods when running tests requiring a user
 - Added `ControllerTestCase` special test case to help testing controllers
 - Improved overall test coverage and added coverage config to `phpunit.xml`
 - Added code style config (`.php_cs`) and instructions for PHP-CS-Fixer in Readme
-- Add cache facade (Ref [#838](https://github.com/userfrosting/UserFrosting/issues/838))
+- Add cache facade (Ref [#838])
+- Added `test:mail` Bakery Command
+- Add support for other config['mailer'] options ([#872]; Thanks @apple314159 !)
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle
-- Re-written the migrator. It is now detached from the console and Bakery and is now included in the Core Sprinkle ServicesProvider ([#795](https://github.com/userfrosting/UserFrosting/issues/795))
+- Re-written the migrator. It is now detached from the console and Bakery and is now included in the Core Sprinkle ServicesProvider ([#795])
 - Makes the `semantic versioning` part of a migration class optional. Migrations classes can now have the `UserFrosting\Sprinkle\{sprinkleName}\Database\Migrations` namespace, or any other sub-namespace
-- Move User registration out of the `AccountController` ([#793](https://github.com/userfrosting/UserFrosting/issues/793))
+- Move User registration out of the `AccountController` ([#793])
 - Temporarily undeprecate `AssetLoader` until the new asset system can be refactored (https://github.com/userfrosting/assets/issues/4)
 - Rewrite `AssetLoader` to act as a wrapper for `Assets`
 - Improved `route:list` Bakery command from [v4.1.20](#v4.1.20)
-- Rewritten the `locator` service so it's better suited for sprinkle system ([#853](https://github.com/userfrosting/UserFrosting/issues/853))
-- `dev` environment changed to `debug`  ([#653](https://github.com/userfrosting/UserFrosting/issues/653))
+- Rewritten the `locator` service so it's better suited for sprinkle system ([#853])
+- `dev` environment changed to `debug`  ([#653])
 - Changed deprecations to `warning`, and suppressed them in tests
+- Uncomment foreign keys in core migrations ([#833])
+- Move default groups, roles & permissions creation to seeds
 
 ### Fix
 - Sprinkle without a `template/` folder won't cause error anymore
-- Fixed routes not available in Tests [and Bakery] ([#854](https://github.com/userfrosting/UserFrosting/issues/854))
-- redirect failing in UserController::pageInfo when user not found ([#888](https://github.com/userfrosting/UserFrosting/issues/888))
+- Fixed routes not available in Tests [and Bakery] ([#854])
+- redirect failing in UserController::pageInfo when user not found ([#888])
 - Fix WhoopsRenderer integration, resolving a temp fix in [v4.1.21](#v4.1.21).
 - Fix Travis not running tests with the env database
 
@@ -53,7 +57,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Migrations should now extends `UserFrosting\Sprinkle\Core\Database\Migration` instead of `UserFrosting\System\Bakery\Migration`
 - Migrations dependencies property should now be a static property
 - Deprecated migration `seed` method. Database seeding should now be done using the new Seeder
-- Trait `\UserFrosting\Tests\DatabaseTransactions` has been deprecated. Tests should now use the `\UserFrosting\Sprinkle\Core\Tests\DatabaseTransactions` trait instead. ([#826](https://github.com/userfrosting/UserFrosting/issues/826))
+- Trait `\UserFrosting\Tests\DatabaseTransactions` has been deprecated. Tests should now use the `\UserFrosting\Sprinkle\Core\Tests\DatabaseTransactions` trait instead. ([#826])
 
 ### Removed
 - The console IO instance is not available anymore in migrations
@@ -640,3 +644,18 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Added 404 error page
 - Standardized JSON interface for backend scripts
 - Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
+
+[#653]: https://github.com/userfrosting/UserFrosting/issues/653
+[#718]: https://github.com/userfrosting/UserFrosting/issues/718
+[#793]: https://github.com/userfrosting/UserFrosting/issues/793
+[#795]: https://github.com/userfrosting/UserFrosting/issues/795
+[#808]: https://github.com/userfrosting/UserFrosting/issues/808
+[#826]: https://github.com/userfrosting/UserFrosting/issues/826
+[#829]: https://github.com/userfrosting/UserFrosting/issues/829
+[#833]: https://github.com/userfrosting/UserFrosting/issues/833
+[#838]: https://github.com/userfrosting/UserFrosting/issues/838
+[#853]: https://github.com/userfrosting/UserFrosting/issues/853
+[#854]: https://github.com/userfrosting/UserFrosting/issues/854
+[#869]: https://github.com/userfrosting/UserFrosting/issues/869
+[#872]: https://github.com/userfrosting/UserFrosting/issues/872
+[#888]: https://github.com/userfrosting/UserFrosting/issues/888

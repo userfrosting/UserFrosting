@@ -38,7 +38,7 @@ class BakeryMigrateStatusCommandTest extends TestCase
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
         $migrator->shouldReceive('getRepository')->once()->andReturn($repository);
         $migrator->shouldReceive('getAvailableMigrations')->once()->andReturn($available);
-        $migrator->shouldReceive('pendingMigrations')->once()->with($available, $installed)->andReturn($pending);
+        $migrator->shouldReceive('getPendingMigrations')->once()->andReturn($pending);
 
         $repository->shouldReceive('getMigrations')->once()->andReturn($this->getInstalledMigrationStub());
 
@@ -62,7 +62,7 @@ class BakeryMigrateStatusCommandTest extends TestCase
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
         $migrator->shouldReceive('getRepository')->once()->andReturn($repository);
         $migrator->shouldReceive('getAvailableMigrations')->once()->andReturn($available);
-        $migrator->shouldReceive('pendingMigrations')->once()->with($available, $installed)->andReturn($pending);
+        $migrator->shouldReceive('getPendingMigrations')->once()->andReturn($pending);
 
         $repository->shouldReceive('getMigrations')->once()->andReturn($this->getInstalledMigrationStub());
 

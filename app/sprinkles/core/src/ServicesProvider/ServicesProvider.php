@@ -46,6 +46,7 @@ use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
 use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocator;
 use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
+use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
 use UserFrosting\Sprinkle\Core\Router;
 use UserFrosting\Sprinkle\Core\Session\NullSessionHandler;
@@ -247,7 +248,8 @@ class ServicesProvider
 
             $config->set('csrf.blacklist', $csrfBlacklist);
 
-            // Reset 'assets' scheme in locator if specified in config. (must be done here thanks to prevent circular dependency)
+            // Reset 'assets' scheme in locator to use raw assets if specified in config.
+            // Must be done here to prevent circular dependency as config is not loaded in system and locator can't be extended here.
             if (!$config['assets.use_raw']) {
                 $c->locator->removeStream('assets');
                 $c->locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
@@ -588,6 +590,15 @@ class ServicesProvider
             }
 
             return (new Router())->setCacheFile($routerCacheFile);
+        };
+
+        /**
+         * Return an instance of the database seeder
+         *
+         * @return \UserFrosting\Sprinkle\Core\Database\Seeder\Seeder
+         */
+        $container['seeder'] = function ($c) {
+            return new Seeder($c);
         };
 
         /**

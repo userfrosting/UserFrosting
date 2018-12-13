@@ -52,6 +52,26 @@ class MigrateCommand extends BaseCommand
         // Get migrator
         $migrator = $this->setupMigrator($input);
 
+        // Get pending migrations
+        $pending = $migrator->getPendingMigrations();
+
+        // Don't go further if no migration is pending
+        if (empty($pending)) {
+            $this->io->success('Nothing to migrate');
+            exit(1);
+        }
+
+        // Show migrations about to be ran when in production mode
+        if ($this->isProduction()) {
+            $this->io->section('Pending migrations');
+            $this->io->listing($pending);
+
+            // Confirm action when in production mode
+            if (!$this->confirmToProceed($input->getOption('force'))) {
+                exit(1);
+            }
+        }
+
         // Run migration
         try {
             $migrated = $migrator->run(['pretend' => $pretend, 'step' => $step]);
@@ -67,7 +87,7 @@ class MigrateCommand extends BaseCommand
         // If all went well, there's no fatal errors and we have migrated
         // something, show some success
         if (empty($migrated)) {
-            $this->io->success('Nothing to migrate');
+            $this->io->warning('Nothing migrated !');
         } else {
             $this->io->success('Migration successful !');
         }
@@ -81,11 +101,6 @@ class MigrateCommand extends BaseCommand
      */
     protected function setupMigrator(InputInterface $input)
     {
-        // Confirm action when in production mode
-        if (!$this->confirmToProceed($input->getOption('force'))) {
-            exit(1);
-        }
-
         /** @var \UserFrosting\Sprinkle\Core\Database\Migrator\Migrator */
         $migrator = $this->ci->migrator;
 
