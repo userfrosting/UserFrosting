@@ -5,13 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Changed
+## v4.1.22
 - Updated Docker `README.md`.
-
-### Fixed
 - Replaced `libpng12-dev` which has been dropped since Ubuntu 16.04 with `libpng-dev` in PHP `Dockerfile`.
+- Avoid twig deprecation warning ([#911](https://github.com/userfrosting/UserFrosting/pull/911); Thanks @silvioq !)
 
 ## v4.1.21
 - Locked Whoops to version 2.2.1 until they fix that [`[internal]` issue](https://github.com/filp/whoops/issues/598).
