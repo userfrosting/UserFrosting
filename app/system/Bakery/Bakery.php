@@ -11,6 +11,7 @@ namespace UserFrosting\System\Bakery;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use UserFrosting\System\UserFrosting;
 use UserFrosting\UniformResourceLocator\Resource;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
@@ -42,14 +43,19 @@ class Bakery
      */
     public function __construct()
     {
+        // Create Symfony Console App
+        $this->app = new Application('UserFrosting Bakery', \UserFrosting\VERSION);
+
         // Check for Sprinkles schema file
         $sprinklesFile = @file_get_contents(\UserFrosting\SPRINKLES_SCHEMA_FILE);
         if ($sprinklesFile === false) {
-            $sprinklesFile = $this->setupBaseSprinkleList();
+            try {
+                $sprinklesFile = $this->setupBaseSprinkleList();
+            } catch (\Exception $e) {
+                $this->app->renderException($e, new ConsoleOutput());
+                exit(1);
+            }
         }
-
-        // Create Symfony Console App
-        $this->app = new Application('UserFrosting Bakery', \UserFrosting\VERSION);
 
         // Setup the sprinkles
         $uf = new UserFrosting(true);
@@ -58,7 +64,12 @@ class Bakery
         $this->ci = $uf->getContainer();
 
         // Add each commands to the Console App
-        $this->loadCommands();
+        try {
+            $this->loadCommands();
+        } catch (\Exception $e) {
+            $this->app->renderException($e, new ConsoleOutput());
+            exit(1);
+        }
     }
 
     /**
@@ -93,7 +104,7 @@ class Bakery
 
             // Class must be an instance of symfony command
             if (!$instance instanceof Command) {
-                throw new \Exception('Bakery command class must be an instance of `' . Command::class . '`');
+                throw new \Exception("Bakery `$command` must be an instance of `" . Command::class . "`");
             }
 
             // Add command to the Console app
@@ -116,16 +127,9 @@ class Bakery
             // Format the sprinkle name for the namespace
             $sprinkleName = $file->getLocation()->getName();
             $sprinkleName = Str::studly($sprinkleName);
-
-            // Getting the classpath
-            $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
-            $className = str_replace('/', '\\', $basePath) . $file->getFilename();
-            $classPath = "\\UserFrosting\\Sprinkle\\$sprinkleName\\Bakery\\$className";
+            $classPath = "\\UserFrosting\\Sprinkle\\$sprinkleName\\Bakery\\{$this->getClassNameFromFile($file)}";
         } else {
-            // Getting the classpath
-            $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
-            $className = str_replace('/', '\\', $basePath) . $file->getFilename();
-            $classPath = "\\UserFrosting\\System\\Bakery\\Command\\$className";
+            $classPath = "\\UserFrosting\\System\\Bakery\\Command\\{$this->getClassNameFromFile($file)}";
         }
 
         // Make sure class exist
@@ -134,6 +138,20 @@ class Bakery
         }
 
         return $classPath;
+    }
+
+    /**
+     * Return the classname from the file instance
+     *
+     * @param  \UserFrosting\UniformResourceLocator\Resource $file The command resource
+     * @return string
+     */
+    protected function getClassNameFromFile(Resource $file)
+    {
+        $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
+        $className = str_replace('/', '\\', $basePath) . $file->getFilename();
+
+        return $className;
     }
 
     /**
@@ -147,8 +165,7 @@ class Bakery
         $destination = \UserFrosting\SPRINKLES_SCHEMA_FILE;
         $sprinklesModelFile = @file_get_contents($model);
         if ($sprinklesModelFile === false) {
-            $this->io->error("File `$sprinklesModelFile` not found. Please create '$destination' manually and try again.");
-            exit(1);
+            throw new \Exception("File `$model` not found. Please create '$destination' manually and try again.");
         }
 
         file_put_contents($destination, $sprinklesModelFile);

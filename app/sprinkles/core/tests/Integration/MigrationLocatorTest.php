@@ -70,20 +70,21 @@ class MigrationLocatorTest extends TestCase
         $resourceCoreLocation = m::mock(ResourceLocation::class);
         $resourceCoreLocation->shouldReceive('getName')->andReturn('Core');
         $resourceCoreLocation->shouldReceive('getPath')->andReturn('app/sprinkles/Core');
+
         $resourceAccountLocation = m::mock(ResourceLocation::class);
         $resourceAccountLocation->shouldReceive('getName')->andReturn('account');
         $resourceAccountLocation->shouldReceive('getPath')->andReturn('app/sprinkles/Account');
 
         // When `MigrationLocator` will ask the resource locator to `listResources`, we simulate returning Resources
         $resourceLocator->shouldReceive('listResources')->once()->andReturn([
-            new Resource($resourceStream, $resourceCoreLocation, '', 'one/CreateUsersTable.php'),
-            new Resource($resourceStream, $resourceCoreLocation, '', 'one/CreatePasswordResetsTable.php'),
-            new Resource($resourceStream, $resourceCoreLocation, '', 'two/CreateFlightsTable.php'),
-            new Resource($resourceStream, $resourceCoreLocation, '', 'CreateMainTable.php'),
-            new Resource($resourceStream, $resourceAccountLocation, '', 'one/CreateUsersTable.php'),
-            new Resource($resourceStream, $resourceAccountLocation, '', 'one/CreatePasswordResetsTable.php'),
-            new Resource($resourceStream, $resourceAccountLocation, '', 'two/CreateFlightsTable.php'),
-            new Resource($resourceStream, $resourceAccountLocation, '', 'CreateMainTable.php')
+            new Resource($resourceStream, $resourceCoreLocation, 'one/CreateUsersTable.php'),
+            new Resource($resourceStream, $resourceCoreLocation, 'one/CreatePasswordResetsTable.php'),
+            new Resource($resourceStream, $resourceCoreLocation, 'two/CreateFlightsTable.php'),
+            new Resource($resourceStream, $resourceCoreLocation, 'CreateMainTable.php'),
+            new Resource($resourceStream, $resourceAccountLocation, 'one/CreateUsersTable.php'),
+            new Resource($resourceStream, $resourceAccountLocation, 'one/CreatePasswordResetsTable.php'),
+            new Resource($resourceStream, $resourceAccountLocation, 'two/CreateFlightsTable.php'),
+            new Resource($resourceStream, $resourceAccountLocation, 'CreateMainTable.php')
         ]);
 
         // Create a new MigrationLocator instance with our simulated ResourceLocation

@@ -41,9 +41,9 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     *    Setup the global container object
+     * Setup the global container object
      *
-     *    @param ContainerInterface $ci
+     * @param ContainerInterface $ci
      */
     public function setContainer(ContainerInterface $ci)
     {
