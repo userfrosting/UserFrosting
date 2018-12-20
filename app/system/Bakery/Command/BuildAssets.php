@@ -55,7 +55,7 @@ class BuildAssets extends BaseCommand
         }
 
         // Perform tasks
-        $this->npmInstall();
+        $this->npmInstall($input->getOption('force'));
         $this->assetsInstall();
 
         // Compile if requested
@@ -69,10 +69,19 @@ class BuildAssets extends BaseCommand
 
     /**
      * Install npm package
+     * 
+     * @param bool $force Force `npm install` to be run, ignoring evidence of a previous run.
      */
-    protected function npmInstall()
+    protected function npmInstall($force)
     {
         $this->io->section('<info>Installing npm dependencies</info>');
+
+        // Skip install if lockfile is newer
+        if (!$force || filemtime("package.json") > filemtime("package-lock.json") + 1000) {
+            $this->io->writeln('> <comment>Skipping npm install which has been previously run</comment>');
+            return;
+        }
+
         $this->io->writeln('> <comment>npm install</comment>');
 
         // Temporarily change the working directory so we can install npm dependencies
