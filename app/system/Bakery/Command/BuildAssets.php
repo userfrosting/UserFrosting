@@ -75,20 +75,25 @@ class BuildAssets extends BaseCommand
     protected function npmInstall($force)
     {
         $this->io->section('<info>Installing npm dependencies</info>');
-
-        // Skip install if lockfile is newer
-        if (!$force || filemtime("package.json") > filemtime("package-lock.json") + 1000) {
-            $this->io->writeln('> <comment>Skipping npm install which has been previously run</comment>');
-            return;
-        }
-
         $this->io->writeln('> <comment>npm install</comment>');
 
         // Temporarily change the working directory so we can install npm dependencies
         $wd = getcwd();
         chdir($this->buildPath);
+
+        // Skip if lockfile indicates previous run
+        if (!$force && file_exists('package-lock.json') && filemtime('package.json') < filemtime('package-lock.json') - 1) {
+            $this->io->writeln('> <comment>Skipping as package-lock.json age indicates dependencies are already installed</comment>');
+            chdir($wd);
+            return;
+        }
+
         $exitCode = 0;
         passthru('npm install', $exitCode);
+
+        // Ensure lockfile last-modified date is updated
+        touch('package-lock.json');
+
         chdir($wd);
 
         if ($exitCode !== 0) {
