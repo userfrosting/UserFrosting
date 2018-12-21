@@ -71,3 +71,6 @@ app/assets/*
 # Ignore Vagrant & Homestead VM
 vagrant/Homestead/
 .vagrant/*
+
+# Igore npm lockfile
+build/package-lock.json
