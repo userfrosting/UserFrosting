@@ -35,9 +35,9 @@ class Test extends BaseCommand
     {
         $this->setName('test')
             ->addOption('coverage', 'c', InputOption::VALUE_NONE, 'Generate code coverage report in HTML format. Will be saved in _meta/coverage')
-            ->addArgument('sprinkle', InputArgument::OPTIONAL, 'Sprinkle Name (Optional): ')
-            ->setDescription('Run tests, Optionally Specify Sprinkle name')
-            ->setHelp('Run php unit tests, Optionally Specify Sprinkle name');
+            ->addArgument('testscope', InputArgument::OPTIONAL, 'Test Scope :Sprinkle, Class and Medhod  Name (Optional): ')
+            ->setDescription('Run tests, Optionally sprcific Sprinkle, Class and Medhod ')
+            ->setHelp('Run php unit tests, Optionally specif Sprinkle, Class and Medhod name');
     }
 
     /**
@@ -46,8 +46,6 @@ class Test extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io->title("UserFrosting's Tester");
-        $this->io->text("Optionally Specify Sprinkle name as an argument");
-        $this->io->newLine();
 
         // Get command
         $command = \UserFrosting\VENDOR_DIR . '/bin/phpunit --colors=always';
@@ -55,10 +53,17 @@ class Test extends BaseCommand
             $command .= ' -v';
         }
 
-        $sprinkle = $input->getArgument('sprinkle');
-        if ($sprinkle) {
+        $testscope = $input->getArgument('testscope');
+        if ($testscope) {
             $slashes = " \\\\ ";
-            $command .= " --filter='UserFrosting" . trim($slashes) . "Sprinkle" . trim($slashes) . $sprinkle . trim($slashes) . "Tests" . trim($slashes) . "' ";
+            if (strpos($testscope, "\\") !== false) {
+                $this->io->writeln("> <comment>Executing Specified Test Scope $testscope</comment>");
+                $testscope1 = str_replace("\\", trim($slashes), $testscope);
+                $command .= " --filter='UserFrosting" . trim($slashes) . "Sprinkle" . trim($slashes) . $testscope1 . "'";
+            } else {
+                $this->io->writeln("> <comment>Executing all tests in Sprinkle $testscope</comment>");
+                $command .= " --filter='UserFrosting" . trim($slashes) . "Sprinkle" . trim($slashes) . $testscope . trim($slashes) . "Tests" . trim($slashes) . "' ";
+            }
         }
 
         // Add coverage report
