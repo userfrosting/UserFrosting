@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -6,7 +7,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\Tests\Unit;
+namespace UserFrosting\Sprinkle\Account\Tests\Unit;
 
 use Mockery as m;
 use UserFrosting\Tests\TestCase;
@@ -57,11 +58,11 @@ class RegistrationTest extends TestCase
 
         // Genereate user data
         $fakeUserData = [
-            'user_name'     => 'FooBar',
-            'first_name'    => 'Foo',
-            'last_name'     => 'Bar',
-            'email'         => 'Foo@Bar.com',
-            'password'      => 'FooBarFooBar123'
+            'user_name' => 'FooBar',
+            'first_name' => 'Foo',
+            'last_name' => 'Bar',
+            'email' => 'Foo@Bar.com',
+            'password' => 'FooBarFooBar123'
         ];
 
         // Get class
@@ -96,11 +97,11 @@ class RegistrationTest extends TestCase
         $this->refreshDatabase();
 
         $registration = new Registration($this->ci, [
-            'user_name'     => 'FooBar',
-            'first_name'    => 'Foo',
-            'last_name'     => 'Bar',
-            'email'         => 'Foo@Bar.com',
-            'password'      => 'FooBarFooBar123'
+            'user_name' => 'FooBar',
+            'first_name' => 'Foo',
+            'last_name' => 'Bar',
+            'email' => 'Foo@Bar.com',
+            'password' => 'FooBarFooBar123'
         ]);
 
         // Validate user. Shouldn't tell us the username is already in use since we reset the database
@@ -117,11 +118,11 @@ class RegistrationTest extends TestCase
         $this->refreshDatabase();
 
         $registration = new Registration($this->ci, [
-            'user_name'     => 'FooBar',
+            'user_name' => 'FooBar',
             //'first_name'    => 'Foo',
-            'last_name'     => 'Bar',
-            'email'         => 'Foo@Bar.com',
-            'password'      => 'FooBarFooBar123'
+            'last_name' => 'Bar',
+            'email' => 'Foo@Bar.com',
+            'password' => 'FooBarFooBar123'
         ]);
 
         // Validate user. Shouldn't tell us the username is already in use since we reset the database

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -6,7 +7,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\Tests\Unit;
+namespace UserFrosting\Sprinkle\Account\Tests\Unit;
 
 use Birke\Rememberme\Storage\StorageInterface;
 use Carbon\Carbon;
@@ -99,10 +100,10 @@ class PDOStorageTest extends TestCase
     {
         $this->insertTestData();
         $persistence = new Persistence([
-            'user_id'          => $this->testUser->id,
-            'token'            => 'dummy',
+            'user_id' => $this->testUser->id,
+            'token' => 'dummy',
             'persistent_token' => 'dummy',
-            'expires_at'       => null
+            'expires_at' => null
         ]);
         $persistence->save();
         $this->storage->cleanAllTriplets($this->testUser->id);
@@ -122,10 +123,10 @@ class PDOStorageTest extends TestCase
     {
         $this->insertTestData();
         $persistence = new Persistence([
-            'user_id'          => $this->testUser->id,
-            'token'            => 'dummy',
+            'user_id' => $this->testUser->id,
+            'token' => 'dummy',
             'persistent_token' => 'dummy',
-            'expires_at'       => Carbon::now()->subHour(1)
+            'expires_at' => Carbon::now()->subHour(1)
         ]);
         $persistence->save();
         $this->assertEquals(2, Persistence::count());
@@ -140,10 +141,10 @@ class PDOStorageTest extends TestCase
     protected function insertTestData()
     {
         $persistence = new Persistence([
-            'user_id'          => $this->testUser->id,
-            'token'            => $this->validDBToken,
+            'user_id' => $this->testUser->id,
+            'token' => $this->validDBToken,
             'persistent_token' => $this->validDBPersistentToken,
-            'expires_at'       => $this->expire
+            'expires_at' => $this->expire
         ]);
         $persistence->save();
 

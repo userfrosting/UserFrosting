@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -11,12 +12,12 @@ use League\FactoryMuffin\Faker\Facade as Faker;
  * General factory for the User Model
  */
 $fm->define('UserFrosting\Sprinkle\Account\Database\Models\User')->setDefinitions([
-    'user_name'     => Faker::unique()->firstNameMale(),
-    'first_name'    => Faker::firstNameMale(),
-    'last_name'     => Faker::firstNameMale(),
-    'email'         => Faker::unique()->email(),
-    'locale'        => 'en_US',
+    'user_name' => Faker::unique()->userName(),
+    'first_name' => Faker::firstName(),
+    'last_name' => Faker::lastName(),
+    'email' => Faker::unique()->email(),
+    'locale' => 'en_US',
     'flag_verified' => 1,
-    'flag_enabled'  => 1,
-    'password'      => Faker::password()
+    'flag_enabled' => 1,
+    'password' => Faker::password()
 ]);

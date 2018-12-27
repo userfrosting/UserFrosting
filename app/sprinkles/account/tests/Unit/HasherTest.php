@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -6,7 +7,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\Tests\Unit;
+namespace UserFrosting\Sprinkle\Account\Tests\Unit;
 
 use UserFrosting\Sprinkle\Account\Authenticate\Hasher;
 use UserFrosting\Tests\TestCase;
