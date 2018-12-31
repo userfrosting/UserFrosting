@@ -78,14 +78,29 @@ class RegistrationTest extends TestCase
 
         // We try to register the same user again. Should throw an error
         $registration = new Registration($this->ci, $fakeUserData);
-        $this->expectException(HttpException::class);
-        $validation = $registration->validate();
+//        $this->expectException(HttpException::class);
+// Commenting expectExcaption as this causes a failure, even though the exception is raised.
+        $exception_thrown = false;
+        try {
+            $validation = $registration->validate();
+        } catch (HttpException $e) {
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
 
         // Should throw email error if we change the username
         $fakeUserData['user_name'] = 'BarFoo';
         $registration = new Registration($this->ci, $fakeUserData);
-        $this->expectException(HttpException::class);
-        $validation = $registration->validate();
+//        $this->expectException(HttpException::class);
+// Commenting expectExcaption as this causes a failure, even though the exception is raised.
+        $exception_thrown = false;
+        try {
+            $validation = $registration->validate();
+        } catch (HttpException $e) {
+//            $this->expectException(HttpException::class);
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
     }
 
     /**
@@ -126,7 +141,15 @@ class RegistrationTest extends TestCase
         ]);
 
         // Validate user. Shouldn't tell us the username is already in use since we reset the database
-        $this->expectException(HttpException::class);
-        $validation = $registration->validate();
+//        $this->expectException(HttpException::class);
+// Commenting expectExcaption as this causes a failure, even though the exception is raised.
+        $exception_thrown = false;
+        try {
+            $validation = $registration->validate();
+        } catch (HttpException $e) {
+//            $this->expectException(HttpException::class);
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
     }
 }
