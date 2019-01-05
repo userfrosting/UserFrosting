@@ -1,0 +1,95 @@
+version: "3.2"
+services:
+  php:
+    image: regsevak.com/php
+    restart: unless-stopped
+    tty: true
+    build:
+      context: ./docker/php
+    environment:
+      - DB_DRIVER=mysql
+      - DB_HOST=mysqlprod
+      - DB_PORT=3306
+      - DB_NAME=uf42chinmaya_dbdocker
+      - DB_USER=docker
+      - DB_PASSWORD=secret
+      - DB_TEST_DRIVER=mysql
+      - DB_TEST_HOST=mysqltest
+      - DB_TEST_PORT=3306
+      - DB_TEST_NAME=uf42chinmaya_test_dbdocker
+      - DB_TEST_USER=docker
+      - DB_TEST_PASSWORD=secret
+      - TEST_DB=test_chinmaya
+    volumes:
+      - .:/app
+    networks:
+      - backend
+  nginx:
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8580:80"
+      - "8581:443"
+    build:
+      context: ./docker/nginx
+    volumes:
+      - .:/app
+    depends_on:
+      - php
+      - mysqlprod
+      - mysqltest
+    networks:
+      - frontend
+      - backend
+  mysqlprod:
+    image: mysql:5.7
+    networks:
+      - backend
+    environment:
+      - MYSQL_DATABASE=uf42chinmaya_dbdocker
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_USER=docker
+      - MYSQL_PASSWORD=secret
+    ports:
+      - 8571:3306
+    volumes:
+      - uf42chinmaya-db:/var/lib/mysql
+  mysqltest:
+    image: mysql:5.7
+    networks:
+      - backend
+    environment:
+      - MYSQL_DATABASE=uf42chinmaya_test_dbdocker
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_USER=docker
+      - MYSQL_PASSWORD=secret
+    ports:
+      - 8572:3306
+    volumes:
+      - uf42chinmaya-testdb:/var/lib/mysql
+
+  composer:
+    image: composer/composer
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: -V
+
+  node:
+    image: node:alpine
+    build:
+      context: ./docker/node
+    volumes:
+      - .:/app
+    working_dir: /app/build
+    command: npm run uf-assets-install
+
+volumes:
+  uf42chinmaya-db:
+    driver: local
+  uf42chinmaya-testdb:
+    driver: local
+
+networks:
+  frontend:
+  backend:
