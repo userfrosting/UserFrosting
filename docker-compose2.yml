@@ -1,68 +1,56 @@
-version: "3.2"
+version: '2'
 services:
   php:
-    image: userforsting.local/php
-    restart: unless-stopped
-    tty: true
     build:
       context: ./docker/php
     environment:
       - DB_DRIVER=mysql
-      - DB_HOST=mysqlprod
+      - DB_HOST=mysql
       - DB_PORT=3306
       - DB_NAME=userfrosting
-      - DB_USER=docker
-      - DB_PASSWORD=secret
+      - DB_USER=userfrosting
+      - DB_PASSWORD=password
     volumes:
       - .:/app
-    networks:
-      - backend
+    links:
+      - mysql
   nginx:
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "8570:80"
-      - "8581:443"
     build:
       context: ./docker/nginx
+    ports:
+      - 8570:80
     volumes:
       - .:/app
-    depends_on:
+    links:
       - php
-      - mysql
-    networks:
-      - frontend
-      - backend
   mysql:
     image: mysql:5.7
-    networks:
-      - backend
     environment:
       - MYSQL_DATABASE=userfrosting
-      - MYSQL_ROOT_PASSWORD=secret
-      - MYSQL_USER=docker
-      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=userfrosting
+      - MYSQL_PASSWORD=password
     ports:
       - 8571:3306
     volumes:
       - userfrosting-db:/var/lib/mysql
+
   composer:
     image: composer/composer
-    volumes:
-      - .:/app
+    volumes_from:
+      - php
     working_dir: /app
     command: -V
+
   node:
     image: node:alpine
     build:
       context: ./docker/node
-    volumes:
-      - .:/app
+    volumes_from:
+      - php
     working_dir: /app/build
     command: npm run uf-assets-install
+
 volumes:
   userfrosting-db:
-    driver: local
-networks:
-  frontend:
-  backend:
+
