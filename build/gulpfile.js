@@ -1,6 +1,7 @@
 "use strict";
-const { bower: mergeBowerDeps, yarn: mergeYarnDeps, yarnIsFlat } = require("@userfrosting/merge-package-dependencies");
+const { bower: mergeBowerDeps, npm: mergeNpmDeps } = require("@userfrosting/merge-package-dependencies");
 const { config: envConfig } = require("dotenv");
+const { default: browserifyDependencies } = require("@userfrosting/browserify-dependencies");
 const { default: Bundler, ValidateRawConfig, MergeRawConfigs } = require("@userfrosting/gulp-bundle-assets");
 const { default: minifyJs } = require("gulp-uglify-es");
 const { execSync } = require("child_process");
@@ -26,7 +27,7 @@ const doILog = (process.env.UF_MODE === "dev");
  * @param {any} message Message to log.
  */
 function Logger(message, source) {
-    if (!doILog) {
+    if (doILog) {
         if (source)
             log.info(`${source}: ${message}`);
         else
@@ -55,126 +56,124 @@ catch (error) {
 
 /**
  * Installs vendor assets. Mapped to npm script "uf-assets-install".
- * @param {() => {}} done Used to mark task completion.
  */
-function assetsInstall(done) {
-    try {
-        // This script requires the npm environment, and therefore cannot be run directly with the gulp CLI.
-        if (!process.env.npm_lifecycle_event) throw new Error("Assets installation must be run via 'npm run uf-assets-install'");
+async function assetsInstall() {
+    // Clean up any legacy assets
+    if (deleteSync(legacyVendorAssetsGlob, { force: true }))
+        Logger("Legacy frontend vendor assets were deleted. Frontend vendor assets are now installed to 'app/assets'.");
 
-        // Clean up any legacy assets
-        if (deleteSync(legacyVendorAssetsGlob, { force: true }))
-            Logger("Legacy frontend vendor assets were deleted. Frontend vendor assets are now installed to 'app/assets'.");
-
-        // See if there are any yarn packages
-        // TODO Would be better to read in file here then hand it off since we can avoid redundant `existsSync` calls
-        const yarnPaths = [];
-        for (const sprinkle of sprinkles) {
-            const path = sprinklesDir + sprinkle + "/package.json";
-            if (existsSync(path)) yarnPaths.push(path);
-        }
-
-        if (yarnPaths.length > 0) {
-            // Install yarn dependencies
-            Logger("Installing vendor assets with Yarn...")
-
-            // TODO I think we might be able to get away with removing this, since yarn.lock is synced with package.json
-            deleteSync([vendorAssetsDir + "package.json", vendorAssetsDir + "yarn.lock"], { force: true });
-
-            // Generate package.json
-            const yarnTemplate = {
-                // Private makes sure it isn't published, and cuts out a lot of unnecessary fields.
-                private: true
-            };
-            Logger("Collating dependencies...");
-            mergeYarnDeps(yarnTemplate, yarnPaths, vendorAssetsDir, doILog);
-            Logger("Dependency collation complete.");
-
-            // Perform installation
-            // Yarn will automatically remove extraneous packages (barring algorithm failure)
-            // --flat switch cannot be used currently due to https://github.com/yarnpkg/yarn/issues/1658 however "resolutions" thankfully will still work
-            Logger("Running yarn install --non-interactive");
-            execSync("yarn install --non-interactive", {
-                cwd: vendorAssetsDir,
-                stdio: doILog ? "inherit" : ""
-            });
-
-            // Ensure dependency tree is flat
-            Logger("Inspecting dependency tree...");
-            if (!yarnIsFlat(vendorAssetsDir, doILog)) {
-                Logger(`
-Dependency tree is not flat! Dependencies must be flat to prevent abnormal behavior of frontend dependencies.
-Recommended solution is to adjust dependency versions until issue is resolved to ensure 100% compatibility.
-Alternatively, resolutions can be used as an override, as documented at https://yarnpkg.com/en/docs/selective-version-resolutions
-`);
-                throw new Error("Dependency tree is not flat.");
-            }
-            else Logger("Dependency tree is flat and therefore usable.");
-        }
-        else {
-            // Delete yarn artefacts
-            deleteSync([
-                vendorAssetsDir + "package.json",
-                vendorAssetsDir + "node_modules/",
-                vendorAssetsDir + "yarn.lock"
-            ], { force: true });
-        }
-
-        // See if there are any Bower packages
-        // TODO Would be better to read in file here then hand it off since we can avoid redundant `existsSync` calls
-        const bowerPaths = [];
-        for (const sprinkle of sprinkles) {
-            const path = sprinklesDir + sprinkle + "/bower.json";
-            if (existsSync(path)) {
-                // TODO: We should really have a link to docs in the message
-                console.warn(`DEPRECATED: Detected bower.json in ${sprinkle} Sprinkle. Support for bower (bower.json) will be removed in the future, please use npm/yarn (package.json) instead.`);
-                bowerPaths.push(path);
-            }
-        }
-
-        if (bowerPaths.length > 0) {
-            // Install yarn dependencies
-            Logger("Installing vendor assets with Bower...")
-
-            // TODO I think we might be able to get away with removing this
-            deleteSync(vendorAssetsDir + "bower.json", { force: true });
-
-            // Generate package.json
-            const bowerTemplate = {
-                name: "uf-vendor-assets"
-            };
-            Logger("Collating dependencies...");
-            mergeBowerDeps(bowerTemplate, bowerPaths, vendorAssetsDir, doILog);
-            Logger("Dependency collation complete.");
-
-            // Perform installation
-            Logger("Running bower install -q --allow-root");
-            // --allow-root stops bower from complaining about being in 'sudo' in various situations
-            execSync("bower install -q --allow-root", {
-                cwd: vendorAssetsDir,
-                stdio: doILog ? "inherit" : ""
-            });
-
-            // Prune any unnecessary dependencies
-            Logger("Running bower prune -q --allow-root");
-            // --allow-root stops bower from complaining about being in 'sudo' in various situations
-            execSync("bower prune -q --allow-root", {
-                cwd: vendorAssetsDir,
-                stdio: doILog ? "inherit" : ""
-            });
-        }
-        else {
-            // Remove bower artefacts
-            deleteSync([
-                vendorAssetsDir + "bower.json",
-                vendorAssetsDir + "bower_components/"
-            ], { force: true });
-        }
-
-        done();
+    // See if there are any npm packages
+    // TODO Would be better to read in file here then hand it off since we can avoid redundant `existsSync` calls
+    const npmPaths = [];
+    for (const sprinkle of sprinkles) {
+        const path = sprinklesDir + sprinkle + "/package.json";
+        if (existsSync(path)) npmPaths.push(path);
     }
-    catch (error) {
-        done(error);
+
+    if (npmPaths.length > 0) {
+        // Install npm dependencies
+        Logger("Installing vendor assets with NPM...")
+
+        // Remove package.json (package-lock.json can be left untouched as dates will invalidate it)
+        deleteSync(vendorAssetsDir + "package.json", { force: true });
+
+        // Generate package.json
+        const npmTemplate = {
+            // Private makes sure it isn't published, and cuts out a lot of unnecessary fields.
+            private: true
+        };
+        Logger("Collating dependencies...");
+        const pkg = mergeNpmDeps(npmTemplate, npmPaths, vendorAssetsDir, doILog);
+        Logger("Dependency collation complete.");
+
+        // Perform installation
+        // NPM will automatically remove extraneous packages (barring algorithm failure) during install
+        Logger("Running npm install");
+        execSync("npm install", {
+            cwd: vendorAssetsDir,
+            stdio: doILog ? "inherit" : ""
+        });
+
+        // Conduct audit
+        Logger("Running npm audit");
+        try {
+            execSync("npm audit", {
+                cwd: vendorAssetsDir,
+                stdio: doILog ? "inherit" : ""
+            });
+        }
+        catch {
+            Logger("There appear to be some vulerabilities within your dependencies. Updating is recommended.");
+        }
+
+        // Browserify dependencies
+        Logger("Running browserify against npm dependencies with a main entrypoint");
+        deleteSync(vendorAssetsDir + "browser_modules/", { force: true });
+        await browserifyDependencies({
+            dependencies: Object.keys(pkg.dependencies),
+            inputDir: vendorAssetsDir + "node_modules/",
+            outputDir: vendorAssetsDir + "browser_modules/"
+        })
+    }
+    else {
+        // Delete npm artefacts
+        deleteSync([
+            vendorAssetsDir + "package.json",
+            vendorAssetsDir + "node_modules/",
+            vendorAssetsDir + "package-lock.json",
+            vendorAssetsDir + "browser_modules/"
+        ], { force: true });
+    }
+
+    // See if there are any Bower packages
+    // TODO Would be better to read in file here then hand it off since we can avoid redundant `existsSync` calls
+    const bowerPaths = [];
+    for (const sprinkle of sprinkles) {
+        const path = sprinklesDir + sprinkle + "/bower.json";
+        if (existsSync(path)) {
+            // TODO: We should really have a link to docs in the message
+            console.warn(`DEPRECATED: Detected bower.json in ${sprinkle} Sprinkle. Support for bower (bower.json) will be removed in the future, please use npm/yarn (package.json) instead.`);
+            bowerPaths.push(path);
+        }
+    }
+
+    if (bowerPaths.length > 0) {
+        // Install bower dependencies
+        Logger("Installing vendor assets with Bower...")
+
+        // TODO I think we might be able to get away with removing this
+        deleteSync(vendorAssetsDir + "bower.json", { force: true });
+
+        // Generate package.json
+        const bowerTemplate = {
+            name: "uf-vendor-assets"
+        };
+        Logger("Collating dependencies...");
+        mergeBowerDeps(bowerTemplate, bowerPaths, vendorAssetsDir, doILog);
+        Logger("Dependency collation complete.");
+
+        // Perform installation
+        Logger("Running bower install -q --allow-root");
+        // --allow-root stops bower from complaining about being in 'sudo' in various situations
+        execSync("bower install -q --allow-root", {
+            cwd: vendorAssetsDir,
+            stdio: doILog ? "inherit" : ""
+        });
+
+        // Prune any unnecessary dependencies
+        Logger("Running bower prune -q --allow-root");
+        // --allow-root stops bower from complaining about being in 'sudo' in various situations
+        execSync("bower prune -q --allow-root", {
+            cwd: vendorAssetsDir,
+            stdio: doILog ? "inherit" : ""
+        });
+    }
+    else {
+        // Remove bower artefacts
+        deleteSync([
+            vendorAssetsDir + "bower.json",
+            vendorAssetsDir + "bower_components/"
+        ], { force: true });
     }
 };
 
@@ -188,6 +187,7 @@ function bundle() {
         sources.push(sprinklesDir + sprinkle + "/assets/**");
     }
     sources.push(vendorAssetsDir + "node_modules/**");
+    sources.push(vendorAssetsDir + "browser_modules/**");
     sources.push(vendorAssetsDir + "bower_components/**");
 
     // Create bundle stream factories object

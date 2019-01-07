@@ -55,6 +55,7 @@ class ServicesProvider
             $locator->registerStream('session', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SESSION_DIR_NAME, true);
             $locator->registerStream('assets', 'vendor', \UserFrosting\BOWER_ASSET_DIR, true);
             $locator->registerStream('assets', 'vendor', \UserFrosting\NPM_ASSET_DIR, true);
+            $locator->registerStream('assets', 'vendor', \UserFrosting\BROWSERIFIED_ASSET_DIR, true);
 
             // Register sprinkles streams
             $locator->registerStream('assets', '', \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME);
