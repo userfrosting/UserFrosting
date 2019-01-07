@@ -23,7 +23,8 @@
     "uf-clean": "gulp clean"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.12.0",
+    "npm": ">=6.0.0"
   },
   "engineStrict": true
 }
