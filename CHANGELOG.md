@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add cache facade (Ref [#838])
 - Added `test:mail` Bakery Command
 - Add support for other config['mailer'] options ([#872]; Thanks @apple314159 !)
+- Added support for npm dependencies on the frontend with auditting for known vulnerabilities
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle
@@ -45,8 +46,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed deprecations to `warning`, and suppressed them in tests
 - Uncomment foreign keys in core migrations ([#833])
 - Move default groups, roles & permissions creation to seeds
+- Rewrote asset processing to minimise file sizes, drastically reduce IO, and improve maintainability
+- Rewrote frontend dependency installation to prevent duplication and detect incompatibilities
 
-### Fix
+### Fixed
 - Sprinkle without a `template/` folder won't cause error anymore
 - Fixed routes not available in Tests [and Bakery] ([#854])
 - redirect failing in UserController::pageInfo when user not found ([#888])
@@ -64,8 +67,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed the `io` property from migration classes
 - Removed Bakery `projectRoot` property. Use the `\UserFrosting\ROOT_DIR` constant instead
 - Removed `pretend` option from Bakery `migrate:refresh` and `migrate:reset` commands
-
-### Fixed
 
 ### Security
 
