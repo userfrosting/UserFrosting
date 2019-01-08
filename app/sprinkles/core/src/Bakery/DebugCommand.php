@@ -85,8 +85,8 @@ class DebugCommand extends BaseCommand
         $npmVersion = trim(exec('node -v'));
         $this->io->writeln("Node Version : $npmVersion");
 
-        if (version_compare($npmVersion, 'v4', '<')) {
-            $this->io->error('UserFrosting requires Node version 4.x or above. Check the documentation for more details.');
+        if (version_compare($npmVersion, \UserFrosting\NODE_MIN_VERSION, '<')) {
+            $this->io->error('UserFrosting requires Node version ' . \UserFrosting\NODE_MIN_VERSION . ' or above. Check the documentation for more details.');
             exit(1);
         }
     }
@@ -99,8 +99,8 @@ class DebugCommand extends BaseCommand
         $npmVersion = trim(exec('npm -v'));
         $this->io->writeln("NPM Version : $npmVersion");
 
-        if (version_compare($npmVersion, '3', '<')) {
-            $this->io->error('UserFrosting requires npm version 3.x or above. Check the documentation for more details.');
+        if (version_compare($npmVersion, \UserFrosting\NPM_MIN_VERSION, '<')) {
+            $this->io->error('UserFrosting requires npm version ' . \UserFrosting\NPM_MIN_VERSION . ' or above. Check the documentation for more details.');
             exit(1);
         }
     }
