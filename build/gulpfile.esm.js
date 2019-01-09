@@ -1,20 +1,19 @@
-"use strict";
-const { bower: mergeBowerDeps, npm: mergeNpmDeps } = require("@userfrosting/merge-package-dependencies");
-const { config: envConfig } = require("dotenv");
-const { default: browserifyDependencies } = require("@userfrosting/browserify-dependencies");
-const { default: Bundler, ValidateRawConfig, MergeRawConfigs } = require("@userfrosting/gulp-bundle-assets");
-const { default: minifyJs } = require("gulp-uglify-es");
-const { execSync } = require("child_process");
-const { readFileSync, existsSync, writeFileSync } = require("fs");
-const { resolve: resolvePath, normalize: normalisePath } = require("path");
-const { src, dest, series } = require("gulp");
-const { sync: deleteSync } = require("del");
-const concatCss = require("gulp-concat-css");
-const concatJs = require("gulp-concat");
-const log = require("gulplog");
-const minifyCss = require("gulp-clean-css");
-const prune = require("gulp-prune");
-const rev = require("gulp-rev");
+import browserifyDependencies from "@userfrosting/browserify-dependencies";
+import Bundler, { MergeRawConfigs, ValidateRawConfig } from "@userfrosting/gulp-bundle-assets";
+import { bower as mergeBowerDeps, npm as mergeNpmDeps } from "@userfrosting/merge-package-dependencies";
+import { execSync } from "child_process";
+import { sync as deleteSync } from "del";
+import { config as envConfig } from "dotenv";
+import { existsSync, readFileSync, writeFileSync } from "fs";
+import gulp from "gulp";
+import minifyCss from "gulp-clean-css";
+import concatJs from "gulp-concat";
+import concatCss from "gulp-concat-css";
+import prune from "gulp-prune";
+import rev from "gulp-rev";
+import minifyJs from "gulp-uglify-es";
+import { info } from "gulplog";
+import { normalize as normalisePath, resolve as resolvePath } from "path";
 
 // Load environment variables
 envConfig({ path: "../app/.env" });
@@ -29,9 +28,9 @@ const doILog = (process.env.UF_MODE === "dev");
 function Logger(message, source) {
     if (doILog) {
         if (source)
-            log.info(`${source}: ${message}`);
+            info(`${source}: ${message}`);
         else
-            log.info(message);
+            info(message);
     }
 }
 
@@ -58,7 +57,7 @@ catch (error) {
 /**
  * Installs vendor assets. Mapped to npm script "uf-assets-install".
  */
-async function assetsInstall() {
+export async function assetsInstall() {
     // Clean up any legacy assets
     if (deleteSync(legacyVendorAssetsGlob, { force: true }))
         Logger("Legacy frontend vendor assets were deleted. Frontend vendor assets are now installed to 'app/assets'.");
@@ -181,7 +180,7 @@ async function assetsInstall() {
 /**
  * Compiles frontend assets. Mapped to npm script "uf-bundle".
  */
-function bundle() {
+export function bundle() {
     // Build sources list
     const sources = [];
     for (const sprinkle of sprinkles) {
@@ -308,7 +307,7 @@ function bundle() {
         // Write file
         Logger("Writing results file...");
         writeFileSync("./bundle.result.json", JSON.stringify(resultsObject));
-        Logger("Done.")
+        Logger("Finished writing results file.")
     };
 
     // Logger adapter
@@ -322,30 +321,30 @@ function bundle() {
 
     // Open stream
     Logger("Starting bundle process proper...");
-    return src(sources, { sourcemaps: true })
+    return gulp.src(sources, { sourcemaps: true })
         .pipe(new Bundler(rawConfig, bundleBuilder, bundleResults))
         .pipe(prune(publicAssetsDir))
-        .pipe(dest(publicAssetsDir, { sourcemaps: "." }));
+        .pipe(gulp.dest(publicAssetsDir, { sourcemaps: "." }));
 };
 
 /**
  * Run all frontend tasks.
  */
-const frontend = series(assetsInstall, bundle);
+export const frontend = gulp.series(assetsInstall, bundle);
 
 /**
  * Clean vendor and public asset folders.
  * @param {() => {}} done Used to mark task completion.
  */
-function clean(done) {
+export function clean(done) {
     try {
         Logger("Cleaning vendor assets...");
         deleteSync(vendorAssetsDir, { force: true });
-        Logger("Done.");
+        Logger("Finished cleaning vendor assets.");
 
         Logger("Cleaning public assets...");
         deleteSync(publicAssetsDir, { force: true })
-        Logger("Done.");
+        Logger("Finsihed cleaning public assets.");
 
         done();
     }
@@ -353,9 +352,3 @@ function clean(done) {
         done(error);
     }
 };
-
-// Export public tasks
-exports.frontend = frontend;
-exports.assetsInstall = assetsInstall;
-exports.bundle = bundle;
-exports.clean = clean;
