@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## 4.2.0
+
+### Changed Requirements
+- Changed minimum Node.js version to **v10.12.0**
+- Changed minimum NPM version to **6.0.0**
 
 ### Added
 - Use locale requested by browser when possible for guests ([#718])
@@ -69,8 +73,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed the `io` property from migration classes
 - Removed Bakery `projectRoot` property. Use the `\UserFrosting\ROOT_DIR` constant instead
 - Removed `pretend` option from Bakery `migrate:refresh` and `migrate:reset` commands
-
-### Security
 
 
 ## v4.1.22
