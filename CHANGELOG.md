@@ -34,7 +34,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support for npm dependencies on the frontend with auditting for known vulnerabilities
 
 ### Changed
-- Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle
+- Moved Bakery commands from `app/System/Bakery` to the `Core` sprinkle and `UserFrosting\Sprinkle\Core\Bakery` namespace.
+    - Moved `UserFrosting\System\Bakery\DatabaseTest` trait to `UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest`.
+    - Moved `UserFrosting\System\Bakery\ConfirmableTrait` trait to `UserFrosting\Sprinkle\Core\Bakery\Helper\ConfirmableTrait`.
 - Re-written the migrator. It is now detached from the console and Bakery and is now included in the Core Sprinkle ServicesProvider ([#795])
 - Makes the `semantic versioning` part of a migration class optional. Migrations classes can now have the `UserFrosting\Sprinkle\{sprinkleName}\Database\Migrations` namespace, or any other sub-namespace
 - Move User registration out of the `AccountController` ([#793])

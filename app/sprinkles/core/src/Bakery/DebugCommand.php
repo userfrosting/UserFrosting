@@ -10,8 +10,9 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
+use UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck;
 use UserFrosting\System\Bakery\BaseCommand;
-use UserFrosting\System\Bakery\DatabaseTest;
 
 /**
  * Debug CLI tool.
@@ -21,6 +22,7 @@ use UserFrosting\System\Bakery\DatabaseTest;
 class DebugCommand extends BaseCommand
 {
     use DatabaseTest;
+    use NodeVersionCheck;
 
     /**
      * {@inheritdoc}
@@ -74,34 +76,6 @@ class DebugCommand extends BaseCommand
         // Check for deprecated versions
         if (version_compare(phpversion(), \UserFrosting\PHP_RECOMMENDED_VERSION, '<')) {
             $this->io->warning('While your PHP version is still supported by UserFrosting, we recommends version '.\UserFrosting\PHP_RECOMMENDED_VERSION.' or above as '.phpversion().' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
-        }
-    }
-
-    /**
-     * Check the minimum version requirement of Node installed
-     */
-    protected function checkNodeVersion()
-    {
-        $npmVersion = trim(exec('node -v'));
-        $this->io->writeln("Node Version : $npmVersion");
-
-        if (version_compare($npmVersion, \UserFrosting\NODE_MIN_VERSION, '<')) {
-            $this->io->error('UserFrosting requires Node version ' . \UserFrosting\NODE_MIN_VERSION . ' or above. Check the documentation for more details.');
-            exit(1);
-        }
-    }
-
-    /**
-     * Check the minimum version requirement for Npm
-     */
-    protected function checkNpmVersion()
-    {
-        $npmVersion = trim(exec('npm -v'));
-        $this->io->writeln("NPM Version : $npmVersion");
-
-        if (version_compare($npmVersion, \UserFrosting\NPM_MIN_VERSION, '<')) {
-            $this->io->error('UserFrosting requires npm version ' . \UserFrosting\NPM_MIN_VERSION . ' or above. Check the documentation for more details.');
-            exit(1);
         }
     }
 

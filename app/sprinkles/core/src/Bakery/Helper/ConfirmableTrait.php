@@ -6,7 +6,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\System\Bakery;
+namespace UserFrosting\Sprinkle\Core\Bakery\Helper;
 
 /**
  * Confirmable Trait. Include method used to confirm action

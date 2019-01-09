@@ -6,11 +6,12 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\System\Bakery\Command;
+namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -21,6 +22,8 @@ use UserFrosting\System\Bakery\BaseCommand;
  */
 class BuildAssets extends BaseCommand
 {
+    use NodeVersionCheck;
+
     /**
      * @var string Path to the build/ directory
      */
@@ -46,6 +49,10 @@ class BuildAssets extends BaseCommand
         // Display header,
         $this->io->title("UserFrosting's Assets Builder");
 
+        // Validate Node and npm version
+        $this->checkNodeVersion(false);
+        $this->checkNpmVersion(false);
+
         // Set $path
         $this->buildPath = \UserFrosting\ROOT_DIR . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME;
 
@@ -69,7 +76,7 @@ class BuildAssets extends BaseCommand
 
     /**
      * Install npm package
-     * 
+     *
      * @param bool $force Force `npm install` to be run, ignoring evidence of a previous run.
      */
     protected function npmInstall($force)
