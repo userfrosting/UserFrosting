@@ -6,7 +6,7 @@ const { default: Bundler, ValidateRawConfig, MergeRawConfigs } = require("@userf
 const { default: minifyJs } = require("gulp-uglify-es");
 const { execSync } = require("child_process");
 const { readFileSync, existsSync, writeFileSync } = require("fs");
-const { resolve: resolvePath } = require("path");
+const { resolve: resolvePath, normalize: normalisePath } = require("path");
 const { src, dest, series } = require("gulp");
 const { sync: deleteSync } = require("del");
 const concatCss = require("gulp-concat-css");
@@ -43,6 +43,7 @@ const publicAssetsDir = rootDir + "public/assets/";
 const legacyVendorAssetsGlob = rootDir + "sprinkles/*/assets/vendor/**";
 const sprinkleBundleFile = "asset-bundles.json";
 const vendorAssetsDir = rootDir + "app/assets/";
+const buildDirFromVendorAssetsDir = "../../build/";
 
 // Load sprinkles
 let sprinkles;
@@ -88,14 +89,14 @@ async function assetsInstall() {
 
         // Perform installation
         // NPM will automatically remove extraneous packages (barring algorithm failure) during install
-        Logger("Running npm install");
+        Logger("Running npm install (using npm from PATH)");
         execSync("npm install", {
             cwd: vendorAssetsDir,
             stdio: doILog ? "inherit" : ""
         });
 
         // Conduct audit
-        Logger("Running npm audit");
+        Logger("Running npm audit (using npm from PATH)");
         try {
             execSync("npm audit", {
                 cwd: vendorAssetsDir,
@@ -107,7 +108,7 @@ async function assetsInstall() {
         }
 
         // Browserify dependencies
-        Logger("Running browserify against npm dependencies with a main entrypoint");
+        Logger("Running browserify against npm dependencies with a compatible main entrypoint");
         deleteSync(vendorAssetsDir + "browser_modules/", { force: true });
         await browserifyDependencies({
             dependencies: Object.keys(pkg.dependencies),
@@ -155,7 +156,7 @@ async function assetsInstall() {
         // Perform installation
         Logger("Running bower install -q --allow-root");
         // --allow-root stops bower from complaining about being in 'sudo' in various situations
-        execSync("bower install -q --allow-root", {
+        execSync(normalisePath(buildDirFromVendorAssetsDir + "node_modules/.bin/bower") + " install -q --allow-root", {
             cwd: vendorAssetsDir,
             stdio: doILog ? "inherit" : ""
         });
