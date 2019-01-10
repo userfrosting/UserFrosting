@@ -6,7 +6,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\Tests\Integration;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration;
 
 use UserFrosting\Tests\TestCase;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -148,8 +148,8 @@ class DatabaseTests extends TestCase
 
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $emails);
         $this->assertEquals(2, $emails->count());
-        $this->assertInstanceOf('UserFrosting\Tests\Integration\EloquentTestEmail', $emails[0]);
-        $this->assertInstanceOf('UserFrosting\Tests\Integration\EloquentTestEmail', $emails[1]);
+        $this->assertInstanceOf(EloquentTestEmail::class, $emails[0]);
+        $this->assertInstanceOf(EloquentTestEmail::class, $emails[1]);
     }
 
     /**
@@ -236,14 +236,14 @@ class DatabaseTests extends TestCase
             [
                 'id'             => 1,
                 'phoneable_id'   => 1,
-                'phoneable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser',
+                'phoneable_type' => EloquentTestUser::class,
                 'label'          => 'primary',
                 'number'         => '8883332222'
             ],
             [
                 'id'             => 3,
                 'phoneable_id'   => 1,
-                'phoneable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser',
+                'phoneable_type' => EloquentTestUser::class,
                 'label'          => 'fax',
                 'number'         => '5550005555'
             ]
@@ -1059,19 +1059,19 @@ class DatabaseTests extends TestCase
             'task_id'         => 2,
             'location_id'     => 1,
             'assignable_id'   => 1,
-            'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+            'assignable_type' => EloquentTestUser::class
             ]),
             EloquentTestAssignment::create([
                 'task_id'         => 2,
                 'location_id'     => 2,
                 'assignable_id'   => 1,
-                'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+                'assignable_type' => EloquentTestUser::class
             ]),
             EloquentTestAssignment::create([
                 'task_id'         => 3,
                 'location_id'     => 2,
                 'assignable_id'   => 1,
-                'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+                'assignable_type' => EloquentTestUser::class
             ]),
             EloquentTestAssignment::create([
                 'task_id'         => 3,
@@ -1083,7 +1083,7 @@ class DatabaseTests extends TestCase
                 'task_id'         => 3,
                 'location_id'     => 1,
                 'assignable_id'   => 2,
-                'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+                'assignable_type' => EloquentTestUser::class
             ])
         ];
     }
@@ -1206,12 +1206,12 @@ class EloquentTestUser extends EloquentTestModel
 
     public function emails()
     {
-        return $this->hasMany('UserFrosting\Tests\Integration\EloquentTestEmail', 'user_id');
+        return $this->hasMany(EloquentTestEmail::class, 'user_id');
     }
 
     public function phones()
     {
-        return $this->morphMany('UserFrosting\Tests\Integration\EloquentTestPhone', 'phoneable');
+        return $this->morphMany(EloquentTestPhone::class, 'phoneable');
     }
 
     /**
@@ -1221,7 +1221,7 @@ class EloquentTestUser extends EloquentTestModel
      */
     public function roles()
     {
-        return $this->belongsToMany('UserFrosting\Tests\Integration\EloquentTestRole', 'role_users', 'user_id', 'role_id');
+        return $this->belongsToMany(EloquentTestRole::class, 'role_users', 'user_id', 'role_id');
     }
 
     /**
@@ -1232,8 +1232,8 @@ class EloquentTestUser extends EloquentTestModel
     public function permissions()
     {
         return $this->belongsToManyThrough(
-            'UserFrosting\Tests\Integration\EloquentTestPermission',
-            'UserFrosting\Tests\Integration\EloquentTestRole',
+            EloquentTestPermission::class,
+            EloquentTestRole::class,
             'role_users',
             'user_id',
             'role_id',
@@ -1249,7 +1249,7 @@ class EloquentTestUser extends EloquentTestModel
     public function assignmentTasks()
     {
         $relation = $this->morphToManyUnique(
-            'UserFrosting\Tests\Integration\EloquentTestTask',
+            EloquentTestTask::class,
             'assignable',
             'assignments',
             null,
@@ -1265,7 +1265,7 @@ class EloquentTestUser extends EloquentTestModel
     public function tasks()
     {
         $relation = $this->morphToManyUnique(
-            'UserFrosting\Tests\Integration\EloquentTestTask',
+            EloquentTestTask::class,
             'assignable',
             'assignments',
             null,
@@ -1281,7 +1281,7 @@ class EloquentTestUser extends EloquentTestModel
     public function jobRoles()
     {
         $relation = $this->belongsToManyUnique(
-            'UserFrosting\Tests\Integration\EloquentTestRole',
+            EloquentTestRole::class,
             'jobs',
             'user_id',
             'role_id'
@@ -1313,7 +1313,7 @@ class EloquentTestEmail extends EloquentTestModel
 
     public function user()
     {
-        return $this->belongsTo('UserFrosting\Tests\Integration\EloquentTestUser', 'user_id');
+        return $this->belongsTo(EloquentTestUser::class, 'user_id');
     }
 }
 
@@ -1338,7 +1338,7 @@ class EloquentTestRole extends EloquentTestModel
      */
     public function permissions()
     {
-        return $this->belongsToMany('UserFrosting\Tests\Integration\EloquentTestPermission', 'permission_roles', 'role_id', 'permission_id');
+        return $this->belongsToMany(EloquentTestPermission::class, 'permission_roles', 'role_id', 'permission_id');
     }
 }
 
@@ -1352,7 +1352,7 @@ class EloquentTestPermission extends EloquentTestModel
      */
     public function roles()
     {
-        return $this->belongsToMany('UserFrosting\Tests\Integration\EloquentTestRole', 'permission_roles', 'permission_id', 'role_id');
+        return $this->belongsToMany(EloquentTestRole::class, 'permission_roles', 'permission_id', 'role_id');
     }
 }
 
@@ -1388,7 +1388,7 @@ class EloquentTestAssignment extends EloquentTestModel
      */
     public function users()
     {
-        return $this->morphedByMany('UserFrosting\Tests\Integration\EloquentTestUser', 'assignable');
+        return $this->morphedByMany(EloquentTestUser::class, 'assignable');
     }
 }
 
@@ -1402,6 +1402,6 @@ class EloquentTestJob extends EloquentTestModel
      */
     public function role()
     {
-        return $this->belongsTo('UserFrosting\Tests\Integration\EloquentTestRole', 'role_id');
+        return $this->belongsTo(EloquentTestRole::class, 'role_id');
     }
 }

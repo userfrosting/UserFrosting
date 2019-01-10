@@ -6,7 +6,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\Tests\Integration;
+namespace UserFrosting\Sprinkle\Admin\Tests\Integration;
 
 use UserFrosting\Sprinkle\Admin\Sprunje\UserPermissionSprunje;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;

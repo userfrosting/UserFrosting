@@ -6,7 +6,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\Tests\Unit;
+namespace UserFrosting\Sprinkle\Account\Tests\Unit;
 
 use Mockery as m;
 use UserFrosting\Tests\TestCase;
