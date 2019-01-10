@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `test:mail` Bakery Command
 - Add support for other config['mailer'] options ([#872]; Thanks @apple314159 !)
 - Added support for npm dependencies on the frontend with auditting for known vulnerabilities
-- Extended `bakery test` to add Test Scope and sprinkle selection argument (Thanks @ssnukala !)
+- Extended `bakery test` to add Test Scope and sprinkle selection argument ([#919], Thanks @ssnukala !)
 
 ### Changed
 - Moved Bakery commands from `app/System/Bakery` to the `Core` sprinkle and `UserFrosting\Sprinkle\Core\Bakery` namespace.
@@ -671,3 +671,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#869]: https://github.com/userfrosting/UserFrosting/issues/869
 [#872]: https://github.com/userfrosting/UserFrosting/issues/872
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
+[#919]: https://github.com/userfrosting/UserFrosting/issues/919
