@@ -3,9 +3,9 @@
 BASE_PATH="/home/vagrant/userfrosting"
 
 # Update nodejs
-sudo npm cache clean -f
-sudo npm install -g n
-sudo n -q lts
+npm cache clean -f
+npm install -g n
+n -q lts
 
 # Ensure composer deps are installed
 cd ${BASE_PATH}
