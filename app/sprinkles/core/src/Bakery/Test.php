@@ -8,9 +8,11 @@
 
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -33,8 +35,9 @@ class Test extends BaseCommand
     {
         $this->setName('test')
              ->addOption('coverage', 'c', InputOption::VALUE_NONE, 'Generate code coverage report in HTML format. Will be saved in _meta/coverage')
-             ->setDescription('Run tests')
-             ->setHelp('Run php unit tests');
+             ->addArgument('testscope', InputArgument::OPTIONAL, "Test Scope can either be a sprinkle name or a class formated as 'SprinkleName\Tests\TestClass` or 'SprinkleName\Tests\TestClass::method` (Optional)")
+             ->setDescription('Runs automated tests')
+             ->setHelp("Run PHP unit tests. Tests from a specific sprinkle can optionally be run using the 'testscope' argument (`php bakery test SprinkleName`). A specific test class can also be be run using the testscope argument (`php bakery test 'SprinkleName\Tests\TestClass'`), as a specific test method (`php bakery test 'SprinkleName\Tests\TestClass::method'`).");
     }
 
     /**
@@ -48,6 +51,19 @@ class Test extends BaseCommand
         $command = \UserFrosting\VENDOR_DIR . '/bin/phpunit --colors=always';
         if ($output->isVerbose() || $output->isVeryVerbose()) {
             $command .= ' -v';
+        }
+
+        $testscope = $input->getArgument('testscope');
+        if ($testscope) {
+            $slashes = '\\\\';
+            if (strpos($testscope, '\\') !== false) {
+                $this->io->note("Executing Specified Test Scope : $testscope");
+                $testscope = str_replace('\\', $slashes, $testscope);
+                $command .= " --filter='UserFrosting" . $slashes . 'Sprinkle' . $slashes . $testscope . "'";
+            } else {
+                $this->io->note("Executing all tests in Sprinkle '".Str::studly($testscope)."'");
+                $command .= " --filter='UserFrosting" . $slashes . 'Sprinkle' . $slashes . Str::studly($testscope) . $slashes . 'Tests' . $slashes . "' ";
+            }
         }
 
         // Add coverage report

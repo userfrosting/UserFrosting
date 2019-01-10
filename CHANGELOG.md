@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `test:mail` Bakery Command
 - Add support for other config['mailer'] options ([#872]; Thanks @apple314159 !)
 - Added support for npm dependencies on the frontend with auditting for known vulnerabilities
+- Extended `bakery test` to add Test Scope and sprinkle selection argument (Thanks @ssnukala !)
 
 ### Changed
 - Moved Bakery commands from `app/System/Bakery` to the `Core` sprinkle and `UserFrosting\Sprinkle\Core\Bakery` namespace.
