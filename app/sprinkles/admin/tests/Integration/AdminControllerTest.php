@@ -6,7 +6,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Admin\Tests;
+namespace UserFrosting\Sprinkle\Admin\Tests\Integration;
 
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\AdminController;

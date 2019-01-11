@@ -11,6 +11,7 @@ php:
   - 7
   - 7.1
   - 7.2
+  - 7.3
 
 env:
   matrix:
@@ -23,6 +24,8 @@ before_install:
   - cp app/sprinkles.example.json app/sprinkles.json
   # set up db
   - bash build/before_install.sh $DB
+  # update node
+  - nvm install 10.12.0
 
 before_script:
   # install deps and UF
@@ -33,7 +36,10 @@ before_script:
 
 script:
   # run unit tests
-  - app/vendor/bin/phpunit
+  - app/vendor/bin/phpunit --coverage-clover=coverage.xml
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 after_failure:
   - cat app/log/userfrosting.log

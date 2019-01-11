@@ -11,10 +11,10 @@ namespace UserFrosting\Sprinkle\Account\Bakery;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use UserFrosting\System\Bakery\BaseCommand;
-use UserFrosting\System\Bakery\DatabaseTest;
+use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
 use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * Create root user CLI command.

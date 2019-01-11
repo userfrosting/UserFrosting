@@ -13,8 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
+use UserFrosting\Sprinkle\Core\Bakery\Helper\ConfirmableTrait;
 use UserFrosting\System\Bakery\BaseCommand;
-use UserFrosting\System\Bakery\ConfirmableTrait;
 
 /**
  * seed Bakery Command

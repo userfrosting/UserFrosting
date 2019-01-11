@@ -7,8 +7,9 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\System\Bakery\Command;
+namespace UserFrosting\Sprinkle\Core\Bakery;
 
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -35,9 +36,9 @@ class Test extends BaseCommand
     {
         $this->setName('test')
             ->addOption('coverage', 'c', InputOption::VALUE_NONE, 'Generate code coverage report in HTML format. Will be saved in _meta/coverage')
-            ->addArgument('testscope', InputArgument::OPTIONAL, 'Test Scope :Sprinkle, Class and Medhod  Name (Optional): ')
-            ->setDescription('Run tests, Optionally sprcific Sprinkle, Class and Medhod ')
-            ->setHelp('Run php unit tests, Optionally specif Sprinkle, Class and Medhod name');
+            ->addArgument('testscope', InputArgument::OPTIONAL, "Test Scope can either be a sprinkle name or a class formated as 'SprinkleName\Tests\TestClass` or 'SprinkleName\Tests\TestClass::method` (Optional)")
+            ->setDescription('Runs automated tests')
+            ->setHelp("Run PHP unit tests. Tests from a specific sprinkle can optionally be run using the 'testscope' argument (`php bakery test SprinkleName`). A specific test class can also be be run using the testscope argument (`php bakery test 'SprinkleName\Tests\TestClass'`), as a specific test method (`php bakery test 'SprinkleName\Tests\TestClass::method'`).");
     }
 
     /**
@@ -55,14 +56,14 @@ class Test extends BaseCommand
 
         $testscope = $input->getArgument('testscope');
         if ($testscope) {
-            $slashes = " \\\\ ";
-            if (strpos($testscope, "\\") !== false) {
-                $this->io->writeln("> <comment>Executing Specified Test Scope $testscope</comment>");
-                $testscope1 = str_replace("\\", trim($slashes), $testscope);
-                $command .= " --filter='UserFrosting" . trim($slashes) . "Sprinkle" . trim($slashes) . $testscope1 . "'";
+            $slashes = '\\\\';
+            if (strpos($testscope, '\\') !== false) {
+                $this->io->note("Executing Specified Test Scope : $testscope");
+                $testscope = str_replace('\\', $slashes, $testscope);
+                $command .= " --filter='UserFrosting" . $slashes . 'Sprinkle' . $slashes . $testscope . "'";
             } else {
-                $this->io->writeln("> <comment>Executing all tests in Sprinkle $testscope</comment>");
-                $command .= " --filter='UserFrosting" . trim($slashes) . "Sprinkle" . trim($slashes) . $testscope . trim($slashes) . "Tests" . trim($slashes) . "' ";
+                $this->io->note("Executing all tests in Sprinkle '" . Str::studly($testscope) . "'");
+                $command .= " --filter='UserFrosting" . $slashes . 'Sprinkle' . $slashes . Str::studly($testscope) . $slashes . 'Tests' . $slashes . "' ";
             }
         }
 

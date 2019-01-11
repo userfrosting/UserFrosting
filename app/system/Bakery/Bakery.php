@@ -96,15 +96,17 @@ class Bakery
         // Add commands to the App
         foreach ($commandResources as $commandResource) {
 
-            // Translate the resource to a class
-            $command = $this->getResourceClass($commandResource);
+            // Translate the resource to a class. Skip if class not found
+            if (!$command = $this->getResourceClass($commandResource)) {
+                continue;
+            }
 
             // Get command instance
             $instance = new $command();
 
             // Class must be an instance of symfony command
             if (!$instance instanceof Command) {
-                throw new \Exception("Bakery `$command` must be an instance of `" . Command::class . "`");
+                continue;
             }
 
             // Add command to the Console app
@@ -134,7 +136,7 @@ class Bakery
 
         // Make sure class exist
         if (!class_exists($classPath)) {
-            throw new \Exception("Bakery command found in `{$file->getAbsolutePath()}`, but class `$classPath` doesn't exist. Make sure the class has the correct namespace.");
+            return false;
         }
 
         return $classPath;

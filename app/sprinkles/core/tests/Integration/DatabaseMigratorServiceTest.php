@@ -6,7 +6,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\Tests\Integration;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration;
 
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Tests\TestCase;

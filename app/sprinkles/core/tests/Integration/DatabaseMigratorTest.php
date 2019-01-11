@@ -6,7 +6,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\Tests\Integration;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration;
 
 use Mockery as m;
 use Illuminate\Database\Capsule\Manager as Capsule;

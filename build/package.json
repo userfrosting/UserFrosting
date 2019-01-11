@@ -1,9 +1,11 @@
 {
   "private": true,
-  "devDependencies": {
-    "@userfrosting/gulp-bundle-assets": "^3.0.0-alpha.6",
+  "dependencies": {
+    "@userfrosting/browserify-dependencies": "^1.0.0-beta.1",
+    "@userfrosting/gulp-bundle-assets": "^3.0.0-rc.1",
     "@userfrosting/merge-package-dependencies": "^1.2.1",
     "bower": "^1.8.4",
+    "esm": "^3.0.84",
     "del": "^3.0.0",
     "dotenv": "^6.2.0",
     "gulp": "^4.0.0",
@@ -13,8 +15,7 @@
     "gulp-prune": "^0.2.0",
     "gulp-rev": "^9.0.0",
     "gulp-uglify-es": "^1.0.4",
-    "gulplog": "^1.0.0",
-    "yarn": "^1.12.3"
+    "gulplog": "^1.0.0"
   },
   "scripts": {
     "uf-bundle": "gulp bundle",
@@ -23,7 +24,8 @@
     "uf-clean": "gulp clean"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.12.0",
+    "npm": ">=6.0.0"
   },
   "engineStrict": true
 }

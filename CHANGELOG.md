@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## 4.2.0
+
+### Changed Requirements
+- Changed minimum Node.js version to **v10.12.0**
+- Changed minimum NPM version to **6.0.0**
 
 ### Added
 - Use locale requested by browser when possible for guests ([#718])
@@ -31,9 +35,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add cache facade (Ref [#838])
 - Added `test:mail` Bakery Command
 - Add support for other config['mailer'] options ([#872]; Thanks @apple314159 !)
+- Added support for npm dependencies on the frontend with auditting for known vulnerabilities
+- Extended `bakery test` to add Test Scope and sprinkle selection argument ([#919], Thanks @ssnukala !)
 
 ### Changed
-- Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle
+- Moved Bakery commands from `app/System/Bakery` to the `Core` sprinkle and `UserFrosting\Sprinkle\Core\Bakery` namespace.
+    - Moved `UserFrosting\System\Bakery\DatabaseTest` trait to `UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest`.
+    - Moved `UserFrosting\System\Bakery\ConfirmableTrait` trait to `UserFrosting\Sprinkle\Core\Bakery\Helper\ConfirmableTrait`.
 - Re-written the migrator. It is now detached from the console and Bakery and is now included in the Core Sprinkle ServicesProvider ([#795])
 - Makes the `semantic versioning` part of a migration class optional. Migrations classes can now have the `UserFrosting\Sprinkle\{sprinkleName}\Database\Migrations` namespace, or any other sub-namespace
 - Move User registration out of the `AccountController` ([#793])
@@ -45,8 +53,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed deprecations to `warning`, and suppressed them in tests
 - Uncomment foreign keys in core migrations ([#833])
 - Move default groups, roles & permissions creation to seeds
+- Rewrote asset processing to minimise file sizes, drastically reduce IO, and improve maintainability
+- Rewrote frontend dependency installation to prevent duplication and detect incompatibilities
 
-### Fix
+### Fixed
 - Sprinkle without a `template/` folder won't cause error anymore
 - Fixed routes not available in Tests [and Bakery] ([#854])
 - redirect failing in UserController::pageInfo when user not found ([#888])
@@ -64,10 +74,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed the `io` property from migration classes
 - Removed Bakery `projectRoot` property. Use the `\UserFrosting\ROOT_DIR` constant instead
 - Removed `pretend` option from Bakery `migrate:refresh` and `migrate:reset` commands
-
-### Fixed
-
-### Security
 
 
 ## v4.1.22
@@ -665,3 +671,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#869]: https://github.com/userfrosting/UserFrosting/issues/869
 [#872]: https://github.com/userfrosting/UserFrosting/issues/872
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
+[#919]: https://github.com/userfrosting/UserFrosting/issues/919

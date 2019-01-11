@@ -17,8 +17,5 @@
     "fastclick": "^1.0.6",
     "ionicons": "^2.0.1",
     "urijs": "^1.18.4"
-  },
-  "resolutions": {
-    "optimist": "0.6.1"
   }
 }

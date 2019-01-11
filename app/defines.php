@@ -9,11 +9,12 @@
 namespace UserFrosting;
 
 // Some standard defines
-define('UserFrosting\VERSION', '4.2.0-alpha.1');
+define('UserFrosting\VERSION', '4.2.0-beta.1');
 define('UserFrosting\DS', '/');
 define('UserFrosting\PHP_MIN_VERSION', '5.6');
 define('UserFrosting\PHP_RECOMMENDED_VERSION', '7.1');
-define('UserFrosting\DEBUG_CONFIG', false);
+define('UserFrosting\NODE_MIN_VERSION', 'v10.12.0');
+define('UserFrosting\NPM_MIN_VERSION', '6.0.0');
 
 // Directories and Paths
 
@@ -69,4 +70,5 @@ define('UserFrosting\BAKERY_SYSTEM_DIR', APP_DIR_NAME . DS . 'system' . DS . 'Ba
 // Full path to frontend vendor asset directories
 define('UserFrosting\ASSET_DIR', APP_DIR_NAME . DS . ASSET_DIR_NAME);
 define('UserFrosting\NPM_ASSET_DIR', ASSET_DIR . DS . 'node_modules');
+define('UserFrosting\BROWSERIFIED_ASSET_DIR', ASSET_DIR . DS . 'browser_modules');
 define('UserFrosting\BOWER_ASSET_DIR', ASSET_DIR . DS . 'bower_components');

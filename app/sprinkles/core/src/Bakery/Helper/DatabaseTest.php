@@ -6,7 +6,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 
-namespace UserFrosting\System\Bakery;
+namespace UserFrosting\Sprinkle\Core\Bakery\Helper;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
