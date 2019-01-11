@@ -36,7 +36,10 @@ before_script:
 
 script:
   # run unit tests
-  - app/vendor/bin/phpunit
+  - app/vendor/bin/phpunit --coverage-clover=coverage.xml
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 after_failure:
   - cat app/log/userfrosting.log
