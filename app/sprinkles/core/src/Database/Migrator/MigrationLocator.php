@@ -3,7 +3,8 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
@@ -62,7 +63,7 @@ class MigrationLocator implements MigrationLocatorInterface
      * Return an array of migration details inclusing the classname and the sprinkle name
      *
      * @param  ResourceInstance $file The migration file
-     * @return string   The migration full class path
+     * @return string           The migration full class path
      */
     protected function getMigrationDetails(ResourceInstance $file)
     {

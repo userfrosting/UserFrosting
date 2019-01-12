@@ -3,7 +3,8 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
 namespace UserFrosting\Sprinkle\Core\Bakery;
@@ -50,7 +51,7 @@ class MigrateRollbackCommand extends MigrateCommand
         $migrator = $this->setupMigrator($input);
 
         // Get pending migrations
-        $ran = $migration ? [$migration]: $migrator->getRanMigrations($steps);
+        $ran = $migration ? [$migration] : $migrator->getRanMigrations($steps);
 
         // Don't go further if no migration is ran
         if (empty($ran)) {

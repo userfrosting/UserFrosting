@@ -3,7 +3,8 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
@@ -482,6 +483,7 @@ class Migrator
     {
         $available = $this->getAvailableMigrations();
         $ran = $this->getRanMigrations();
+
         return $this->pendingMigrations($available, $ran);
     }
 

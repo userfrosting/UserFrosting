@@ -3,7 +3,8 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
 namespace UserFrosting\Sprinkle\Core\Bakery;
@@ -92,6 +93,7 @@ class BuildAssets extends BaseCommand
         if (!$force && file_exists('package-lock.json') && filemtime('package.json') < filemtime('package-lock.json') - 1) {
             $this->io->writeln('> <comment>Skipping as package-lock.json age indicates dependencies are already installed</comment>');
             chdir($wd);
+
             return;
         }
 
