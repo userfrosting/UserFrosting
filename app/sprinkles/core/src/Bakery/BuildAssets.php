@@ -89,26 +89,39 @@ class BuildAssets extends BaseCommand
         $wd = getcwd();
         chdir($this->buildPath);
 
+        // Delete troublesome package-lock.json
+        if (file_exists('package-lock.json')) unlink('package-lock.json');
+
         // Skip if lockfile indicates previous run
-        if (!$force && file_exists('package-lock.json') && filemtime('package.json') < filemtime('package-lock.json') - 1) {
+        if (!$force && file_exists('package.lock') && filemtime('package.json') < filemtime('package.lock') - 1) {
             $this->io->writeln('> <comment>Skipping as package-lock.json age indicates dependencies are already installed</comment>');
             chdir($wd);
 
             return;
         }
 
+        // Ensure extraneous dependencies are cleared out
         $exitCode = 0;
-        passthru('npm install', $exitCode);
-
-        // Ensure lockfile last-modified date is updated
-        touch('package-lock.json');
-
-        chdir($wd);
+        passthru('npm prune');
 
         if ($exitCode !== 0) {
             $this->io->error('npm dependency installation has failed');
             exit(1);
         }
+
+        // Install the new dependencies
+        $exitCode = 0;
+        passthru('npm install', $exitCode);
+
+        if ($exitCode !== 0) {
+            $this->io->error('npm dependency installation has failed');
+            exit(1);
+        }
+
+        // Update lockfile date (for skip logic)
+        touch('package.lock');
+
+        chdir($wd);
     }
 
     /**

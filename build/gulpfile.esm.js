@@ -74,8 +74,9 @@ export async function assetsInstall() {
         // Install npm dependencies
         Logger("Installing vendor assets with NPM...")
 
-        // Remove package.json (package-lock.json can be left untouched as dates will invalidate it)
+        // Remove package.json and package-lock.json (if it happens to exist)
         deleteSync(vendorAssetsDir + "package.json", { force: true });
+        deleteSync(vendorAssetsDir + "package-lock.json", { force: true });
 
         // Generate package.json
         const npmTemplate = {
@@ -86,8 +87,14 @@ export async function assetsInstall() {
         const pkg = mergeNpmDeps(npmTemplate, npmPaths, vendorAssetsDir, doILog);
         Logger("Dependency collation complete.");
 
+        // Remove any existing unneeded dependencies
+        Logger("Running npm prune (using npm from PATH)");
+        execSync("npm prune", {
+            cwd: vendorAssetsDir,
+            stdio: doILog ? "inherit" : ""
+        });
+
         // Perform installation
-        // NPM will automatically remove extraneous packages (barring algorithm failure) during install
         Logger("Running npm install (using npm from PATH)");
         execSync("npm install", {
             cwd: vendorAssetsDir,
