@@ -342,7 +342,8 @@ class UserController extends SimpleController
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $sprunje->toResponse($response);
+		//set cache headers in order to stop specially IE to cache the result
+        return $sprunje->toResponse($response)->withHeader('Cache-Control', 'no-cache')->withHeader('Expires', '-1');
     }
 
     /**
@@ -420,7 +421,8 @@ class UserController extends SimpleController
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $sprunje->toResponse($response);
+		//set cache headers in order to stop specially IE to cache the result
+        return $sprunje->toResponse($response)->withHeader('Cache-Control', 'no-cache')->withHeader('Expires', '-1');
     }
 
     /**
@@ -768,8 +770,9 @@ class UserController extends SimpleController
 
         $params['user_id'] = $user->id;
         $sprunje = $classMapper->createInstance('user_permission_sprunje', $classMapper, $params);
-
-        $response = $sprunje->toResponse($response);
+		
+		//set cache headers in order to stop specially IE to cache the result
+        $response = $sprunje->toResponse($response)->withHeader('Cache-Control', 'no-cache')->withHeader('Expires', '-1');
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
@@ -818,7 +821,8 @@ class UserController extends SimpleController
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $sprunje->toResponse($response);
+		//set cache headers in order to stop specially IE to cache the result
+        return $sprunje->toResponse($response)->withHeader('Cache-Control', 'no-cache')->withHeader('Expires', '-1');
     }
 
     /**
