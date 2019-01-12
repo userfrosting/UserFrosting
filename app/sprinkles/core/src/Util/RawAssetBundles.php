@@ -36,85 +36,78 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles
         }
 
         // Read file
-        $bundlesFile = $this->readSchema($filePath);
+        $schema = $this->readSchema($filePath, true);
+
+        // Abort if no bundle is specified
+        if ($schema['bundle'] === null) {
+            return;
+        }
 
         // Process bundles
-        if (isset($bundlesFile->bundle)) {
-            foreach ($bundlesFile->bundle as $bundleName => $bundle) {
-                // Get collision setting.
-                $collisionRule = isset($bundle->options->sprinkle->onCollision) ? $bundle->options->sprinkle->onCollision : 'replace';
+        foreach ($schema['bundle'] as $bundleName => $_) {
+            
+            // Get collision setting.
+            $collisionRule = $schema["bundle.$bundleName.options.sprinkle.onCollision"] ?: 'replace';
 
-                // Handle CSS bundle if specified.
-                if (isset($bundle->styles)) {
-                    // Attempt to add CSS bundle
-                    try {
-                        $standardisedBundle = $this->standardiseBundle($bundle->styles);
-                        if (!array_key_exists($bundleName, $this->cssBundles)) {
-                            $this->cssBundles[$bundleName] = $standardisedBundle;
-                        } else {
-                            switch ($collisionRule) {
-                                case 'replace':
-                                    // Replaces the existing bundle.
-                                    $this->cssBundles[$bundleName] = $standardisedBundle;
-                                break;
-                                case 'merge':
-                                    // Merge with existing bundle.
-                                    foreach ($standardisedBundle as $assetPath) {
-                                        if (!in_array($assetPath, $this->cssBundles[$bundleName])) {
-                                            $this->cssBundles[$bundleName][] = $assetPath;
-                                        }
-                                    }
-                                break;
-                                case 'ignore':
-                                break;
-                                case 'error':
-                                    throw new \ErrorException("The bundle '$bundleName' is already defined.");
-                                break;
-                                default:
-                                    throw new \OutOfBoundsException("Invalid value '$collisionRule' provided for 'onCollision' key in bundle '$bundleName'.");
-                                break;
-                            }
-                        }
-                    } catch (\Exception $e) {
-                        throw new InvalidBundlesFileException("Encountered issue processing styles property for '$bundleName' for file '$filePath'", 0, $e);
-                    }
+            // Handle CSS bundle
+            $styles = $schema["bundle.$bundleName.styles"];
+            if ($styles !== null) {
+                // Attempt to add CSS bundle
+                try {
+                    $this->addWithCollisionRule($styles, $bundleName, $collisionRule, $this->cssBundles);
+                } catch (\Exception $e) {
+                    throw new InvalidBundlesFileException("Encountered issue processing styles property for '$bundleName' for file '$filePath'", 0, $e);
                 }
+            }
 
-                // Handle JS bundle if specified.
-                if (isset($bundle->scripts)) {
-                    // Attempt to add JS bundle
-                    try {
-                        $standardisedBundle = $this->standardiseBundle($bundle->scripts);
-                        if (!array_key_exists($bundleName, $this->jsBundles)) {
-                            $this->jsBundles[$bundleName] = $standardisedBundle;
-                        } else {
-                            switch ($collisionRule) {
-                                case 'replace':
-                                    // Replaces the existing bundle.
-                                    $this->jsBundles[$bundleName] = $standardisedBundle;
-                                break;
-                                case 'merge':
-                                    // Merge with existing bundle.
-                                    foreach ($standardisedBundle as $assetPath) {
-                                        if (!in_array($assetPath, $this->jsBundles[$bundleName])) {
-                                            $this->jsBundles[$bundleName][] = $assetPath;
-                                        }
-                                    }
-                                break;
-                                case 'ignore':
-                                break;
-                                case 'error':
-                                    throw new \ErrorException("The bundle '$bundleName' is already defined.");
-                                break;
-                                default:
-                                    throw new \OutOfBoundsException("Invalid value '$collisionRule' provided for 'onCollision' key in bundle '$bundleName'.");
-                                break;
-                            }
-                        }
-                    } catch (\Exception $e) {
-                        throw new InvalidBundlesFileException("Encountered issue processing scripts property for '$bundleName' for file '$filePath'", 0, $e);
-                    }
+            // Handle JS bundle
+            $scripts = $schema["bundle.$bundleName.scripts"];
+            if ($scripts !== null) {
+                // Attempt to add JS bundle
+                try {
+                    $this->addWithCollisionRule($scripts, $bundleName, $collisionRule, $this->jsBundles);
+                } catch (\Exception $e) {
+                    throw new InvalidBundlesFileException("Encountered issue processing scripts property for '$bundleName' for file '$filePath'", 0, $e);
                 }
+            }
+        }
+    }
+
+    /**
+     * Adds provided bundle to provided bundle store with collision rule respected.
+     * @param string|string[] $bundle Bundle to add.
+     * @param string $name Name of bundle provided.
+     * @param string $collisionRule Rule to apply if collision is detected.
+     * @param string[string][] $bundleStore Place to add bundles (CSS or JS depending on provided store).
+     * @throws \ErrorException if collision rule is 'error' and bundle is already defined.
+     * @throws \OutOfBoundsException if an invalid collision rule is provided.
+     */
+    protected function addWithCollisionRule(&$bundle, $bundleName, $collisionRule, &$bundleStore) {
+        $standardisedBundle = $this->standardiseBundle($bundle);
+        if (!array_key_exists($bundleName, $bundleStore)) {
+            $bundleStore[$bundleName] = $standardisedBundle;
+        } else {
+            switch ($collisionRule) {
+                case 'replace':
+                    // Replaces the existing bundle.
+                    $bundleStore[$bundleName] = $standardisedBundle;
+                break;
+                case 'merge':
+                    // Merge with existing bundle.
+                    foreach ($standardisedBundle as $assetPath) {
+                        if (!in_array($assetPath, $bundleStore[$bundleName])) {
+                            $bundleStore[$bundleName][] = $assetPath;
+                        }
+                    }
+                break;
+                case 'ignore':
+                break;
+                case 'error':
+                    throw new \ErrorException("The bundle '$bundleName' is already defined.");
+                break;
+                default:
+                    throw new \OutOfBoundsException("Invalid value '$collisionRule' provided for 'onCollision' key in bundle '$bundleName'.");
+                break;
             }
         }
     }

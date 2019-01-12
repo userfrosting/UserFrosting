@@ -45,7 +45,7 @@
         "slim/twig-view": "^1.2",
         "symfony/http-foundation": "*",
         "twig/twig": "^1.18",
-        "userfrosting/assets": "~4.2.0",
+        "userfrosting/assets": "^5.0.0",
         "userfrosting/config": "~4.2.0",
         "userfrosting/cache": "~4.1.0",
         "userfrosting/fortress": "~4.1.1",
