@@ -1,4 +1,7 @@
 <?php
+
+use UserFrosting\Sprinkle\Core\Util\NoCache;
+
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -13,8 +16,8 @@
 $app->group('/activities', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\ActivityController:pageList')
         ->setName('uri_activities');
-})->add('authGuard');
+})->add('authGuard')->add(new NoCache());
 
 $app->group('/api/activities', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\ActivityController:getList');
-})->add('authGuard');
+})->add('authGuard')->add(new NoCache());

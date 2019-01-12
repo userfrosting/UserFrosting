@@ -289,8 +289,7 @@ class GroupController extends SimpleController
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-		//set cache headers in order to stop specially IE to cache the result
-        return $sprunje->toResponse($response)->withHeader('Cache-Control', 'no-cache')->withHeader('Expires', '-1');
+        return $sprunje->toResponse($response);
     }
 
     /**
@@ -525,9 +524,7 @@ class GroupController extends SimpleController
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-		//set cache headers in order to stop specially IE to cache the result
-        return $sprunje->toResponse($response)->withHeader('Cache-Control', 'no-cache')->withHeader('Expires', '-1');
-    }
+        return $sprunje->toResponse($response);    }
 
     /**
      * Renders a page displaying a group's information, in read-only mode.

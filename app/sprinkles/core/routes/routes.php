@@ -1,4 +1,7 @@
 <?php
+
+use UserFrosting\Sprinkle\Core\Util\NoCache;
+
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -16,7 +19,8 @@ $app->get('/', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageIndex')
 
 $app->get('/about', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageAbout')->add('checkEnvironment');
 
-$app->get('/alerts', 'UserFrosting\Sprinkle\Core\Controller\CoreController:jsonAlerts');
+$app->get('/alerts', 'UserFrosting\Sprinkle\Core\Controller\CoreController:jsonAlerts')
+    ->add(new NoCache());
 
 $app->get('/legal', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageLegal');
 

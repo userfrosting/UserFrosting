@@ -1,4 +1,7 @@
 <?php
+
+use UserFrosting\Sprinkle\Core\Util\NoCache;
+
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -15,7 +18,7 @@ $app->group('/permissions', function () {
         ->setName('uri_permissions');
 
     $this->get('/p/{id}', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:pageInfo');
-})->add('authGuard');
+})->add('authGuard')->add(new NoCache());
 
 $app->group('/api/permissions', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:getList');
@@ -23,4 +26,4 @@ $app->group('/api/permissions', function () {
     $this->get('/p/{id}', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:getInfo');
 
     $this->get('/p/{id}/users', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:getUsers');
-})->add('authGuard');
+})->add('authGuard')->add(new NoCache());

@@ -1,4 +1,7 @@
 <?php
+
+use UserFrosting\Sprinkle\Core\Util\NoCache;
+
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -55,6 +58,6 @@ $app->group('/account', function () {
 
     $this->post('/settings/profile', 'UserFrosting\Sprinkle\Account\Controller\AccountController:profile')
         ->add('authGuard');
-});
+})->add(new NoCache());
 
 $app->get('/modals/account/tos', 'UserFrosting\Sprinkle\Account\Controller\AccountController:getModalAccountTos');
