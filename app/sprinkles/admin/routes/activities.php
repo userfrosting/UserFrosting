@@ -1,7 +1,4 @@
 <?php
-
-use UserFrosting\Sprinkle\Core\Util\NoCache;
-
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -9,6 +6,8 @@ use UserFrosting\Sprinkle\Core\Util\NoCache;
  * @copyright Copyright (c) 2019 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
+use UserFrosting\Sprinkle\Core\Util\NoCache;
 
 /**
  * Routes for administrative activity monitoring.
