@@ -3,7 +3,8 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
 namespace UserFrosting\Sprinkle\Core\Database\Seeder;
@@ -142,7 +143,7 @@ class Seeder
      * Return an array of seed details inclusing the classname and the sprinkle name
      *
      * @param  ResourceInstance $file The seed file
-     * @return array    The details about a seed file [name, class, sprinkle]
+     * @return array            The details about a seed file [name, class, sprinkle]
      */
     protected function getSeedDetails(ResourceInstance $file)
     {

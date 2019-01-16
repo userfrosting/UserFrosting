@@ -74,3 +74,4 @@ vagrant/Homestead/
 
 # Igore npm lockfile
 build/package-lock.json
+build/package.lock
