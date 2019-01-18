@@ -104,6 +104,9 @@ class SprinkleManagerTest extends TestCase
      *                  ["Foo", true]
      *                  ["FOO", true]
      *                  ["f0o", false]
+     *                  ["foofoo", false]
+     *                  ["1foo1", false]
+     *                  ["barfoo", false]
      *                  ["blah", false]
      */
     public function testIsAvailable($sprinkleName, $isAvailable, SprinkleManager $sprinkleManager)

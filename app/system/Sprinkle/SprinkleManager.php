@@ -158,7 +158,7 @@ class SprinkleManager
      */
     public function isAvailable($name)
     {
-        return in_array($name, $this->getSprinkleNames());
+        return count(preg_grep('/'.$name .'/i', $this->getSprinkleNames())) > 0;
     }
 
     /**
