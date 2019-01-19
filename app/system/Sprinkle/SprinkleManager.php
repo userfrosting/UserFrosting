@@ -156,7 +156,7 @@ class SprinkleManager
      *
      * @param string[] $sprinkleNames
      */
-    public function init($sprinkleNames)
+    public function init(array $sprinkleNames)
     {
         foreach ($sprinkleNames as $sprinkleName) {
             $sprinkle = $this->bootSprinkle($sprinkleName);
@@ -236,7 +236,7 @@ class SprinkleManager
      * @param  string $sprinklesPath
      * @return static
      */
-    public function setSprinklesPath(string $sprinklesPath)
+    public function setSprinklesPath($sprinklesPath)
     {
         $this->sprinklesPath = $sprinklesPath;
 

@@ -44,8 +44,8 @@ class SprinkleManagerTest extends TestCase
     }
 
     /**
-    * @depends testConstructor
-    * @param  SprinkleManager $sprinkleManager
+     * @depends testConstructor
+     * @param SprinkleManager $sprinkleManager
      */
     public function testGetSetSprinklesPath(SprinkleManager $sprinkleManager)
     {
