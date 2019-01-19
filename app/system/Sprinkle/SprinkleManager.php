@@ -101,7 +101,7 @@ class SprinkleManager
      * @param  string $sprinkleName
      * @return string
      */
-    protected function getSprinkleServiceProvider($sprinkleName)
+    protected function getSprinkleDefaultServiceProvider($sprinkleName)
     {
         $className = Str::studly($sprinkleName);
 
@@ -210,7 +210,7 @@ class SprinkleManager
      */
     public function registerServices($name)
     {
-        $fullClassName = $this->getSprinkleServiceProvider($name);
+        $fullClassName = $this->getSprinkleDefaultServiceProvider($name);
 
         // Check that class exists, and register services
         if (class_exists($fullClassName)) {

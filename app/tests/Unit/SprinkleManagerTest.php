@@ -24,6 +24,11 @@ class SprinkleManagerTest extends TestCase
         // We don't call parent function to cancel CI creation and get accurate test coverage
         // Run only this test for accurage coverage report on SprinkleManager
         $this->fakeCi = m::mock(ContainerInterface::class);
+        $this->fakeCi->eventDispatcher = new eventDispatcherStub();
+        $this->fakeCi->locator = new ResourceLocatorStub();
+
+        // Setup test sprinkle mock class so it can be found by `class_exist`
+        m::mock('UserFrosting\Sprinkle\Test\Test');
     }
 
     public function tearDown()
@@ -82,10 +87,10 @@ class SprinkleManagerTest extends TestCase
     public function testGetSprinkles(SprinkleManager $sprinkleManager)
     {
         $sprinkles = $sprinkleManager->getSprinkles();
-        $this->assertSame([
+        $this->assertEquals([
             'foo'  => null,
             'bar'  => null,
-            'test' => null
+            'test' => new \UserFrosting\Sprinkle\Test\Test()
         ], $sprinkles);
     }
 
@@ -140,6 +145,32 @@ class SprinkleManagerTest extends TestCase
     }
 
     /**
+     * @depends testInitFromSchema
+     * @param SprinkleManager $sprinkleManager
+     */
+    public function testRegisterAllServices(SprinkleManager $sprinkleManager)
+    {
+        // Set Expectations for test sprinkle ServiceProvider
+        // @see https://stackoverflow.com/a/13390001/445757
+        $this->getMockBuilder('nonexistant')
+        ->setMockClassName('foo')
+        ->setMethods(['register'])
+        ->getMock();
+        class_alias('foo', 'UserFrosting\Sprinkle\Test\ServicesProvider\ServicesProvider');
+
+        $sprinkleManager->registerAllServices();
+    }
+
+    /**
+     * @depends testInitFromSchema
+     * @param SprinkleManager $sprinkleManager
+     */
+    public function testAddResources(SprinkleManager $sprinkleManager)
+    {
+        $sprinkleManager->addResources();
+    }
+
+    /**
      * This will work, as long as it contains valid json
      *
      * @depends testConstructor
@@ -170,13 +201,26 @@ class SprinkleManagerTest extends TestCase
     {
         $sprinkleManager = new SprinkleManager($this->fakeCi);
         $sprinkleManager->initFromSchema(__DIR__ . '/data/sprinkles-duplicate.json');
-        $this->assertSame([
+        $this->assertEquals([
             'foo'  => null,
             'FOO'  => null,
             'bar'  => null,
-            'test' => null
         ], $sprinkleManager->getSprinkles());
 
         $this->assertTrue($sprinkleManager->isAvailable('Foo'));
+    }
+}
+
+class eventDispatcherStub
+{
+    public function addSubscriber()
+    {
+    }
+}
+
+class ResourceLocatorStub
+{
+    public function registerLocation()
+    {
     }
 }
