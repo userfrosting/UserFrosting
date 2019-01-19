@@ -12,6 +12,7 @@ namespace UserFrosting\System\Sprinkle;
 use Illuminate\Support\Str;
 use Interop\Container\ContainerInterface;
 use UserFrosting\Support\Exception\FileNotFoundException;
+use UserFrosting\Support\Exception\JsonException;
 
 /**
  * Sprinkle manager class.
@@ -35,12 +36,7 @@ class SprinkleManager
     /**
      * @var string The full absolute base path to the sprinkles directory.
      */
-    protected $sprinklesPath;
-
-    /**
-     * @var string[] Keeps track of a mapping from resource stream names to relative paths.
-     */
-    protected $resourcePaths;
+    protected $sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
 
     /**
      * Create a new SprinkleManager object.
@@ -50,7 +46,6 @@ class SprinkleManager
     public function __construct(ContainerInterface $ci)
     {
         $this->ci = $ci;
-        $this->sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
     }
 
     /**
@@ -72,7 +67,45 @@ class SprinkleManager
     {
         /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
         $locator = $this->ci->locator;
-        $locator->registerLocation($sprinkleName, $this->sprinklesPath . $sprinkleName);
+        $locator->registerLocation($sprinkleName, $this->getSprinklePath($sprinkleName));
+    }
+
+    /**
+     * Returns sprinkle base path from name
+     *
+     * @param  string $sprinkleName
+     * @return string
+     */
+    public function getSprinklePath($sprinkleName)
+    {
+        // todo : Check if path exist? Sprinkle Exist?
+        return $this->getSprinklesPath() . $sprinkleName;
+    }
+
+    /**
+     * Returns the sprinkle class
+     *
+     * @param  string $sprinkleName
+     * @return string
+     */
+    protected function getSprinkleClass($sprinkleName)
+    {
+        $className = Str::studly($sprinkleName);
+
+        return "\\UserFrosting\\Sprinkle\\$className\\$className";
+    }
+
+    /**
+     * Returns the sprinkle service provider class
+     *
+     * @param  string $sprinkleName
+     * @return string
+     */
+    protected function getSprinkleServiceProvider($sprinkleName)
+    {
+        $className = Str::studly($sprinkleName);
+
+        return "\\UserFrosting\\Sprinkle\\$className\\ServicesProvider\\ServicesProvider";
     }
 
     /**
@@ -85,8 +118,7 @@ class SprinkleManager
      */
     public function bootSprinkle($name)
     {
-        $className = Str::studly($name);
-        $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
+        $fullClassName = $this->getSprinkleClass($name);
 
         // Check that class exists.  If not, set to null
         if (class_exists($fullClassName)) {
@@ -178,8 +210,7 @@ class SprinkleManager
      */
     public function registerServices($name)
     {
-        $className = Str::studly($name);
-        $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\ServicesProvider\\ServicesProvider";
+        $fullClassName = $this->getSprinkleServiceProvider($name);
 
         // Check that class exists, and register services
         if (class_exists($fullClassName)) {
@@ -187,6 +218,29 @@ class SprinkleManager
             $serviceProvider = new $fullClassName();
             $serviceProvider->register($this->ci);
         }
+    }
+
+    /**
+     * Returns sprinklePath parameter
+     *
+     * @return string
+     */
+    public function getSprinklesPath()
+    {
+        return $this->sprinklesPath;
+    }
+
+    /**
+     * Sets sprinklePath parameter
+     *
+     * @param  string $sprinklesPath
+     * @return static
+     */
+    public function setSprinklesPath(string $sprinklesPath)
+    {
+        $this->sprinklesPath = $sprinklesPath;
+
+        return $this;
     }
 
     /**
@@ -200,10 +254,16 @@ class SprinkleManager
         $sprinklesFile = @file_get_contents($schemaPath);
 
         if ($sprinklesFile === false) {
-            $errorMessage = "Error: Unable to determine Sprinkle load order.  File '$schemaPath' not found or unable to read. Please create a 'sprinkles.json' file and try again.";
+            $errorMessage = "Error: Unable to determine Sprinkle load order. File '$schemaPath' not found or unable to read. Please create a 'sprinkles.json' file and try again.";
             throw new FileNotFoundException($errorMessage);
         }
 
-        return json_decode($sprinklesFile);
+        // Make sure sprinkle contains valid json
+        if (!$data = json_decode($sprinklesFile)) {
+            $errorMessage = "Error: Unable to determine Sprinkle load order. File '$schemaPath' doesn't contain valid json : " . json_last_error_msg();
+            throw new JsonException($errorMessage);
+        }
+
+        return $data;
     }
 }
