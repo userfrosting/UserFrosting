@@ -92,7 +92,19 @@ class SprinkleManager
     {
         $className = Str::studly($sprinkleName);
 
-        return "\\UserFrosting\\Sprinkle\\$className\\$className";
+        return $this->getSprinkleClassNamespace($sprinkleName) . "\\$className";
+    }
+
+    /**
+     * Returns the claculated sprinkle namespace
+     * @param  string $sprinkleName
+     * @return string The Sprinkle Namespace
+     */
+    public function getSprinkleClassNamespace($sprinkleName)
+    {
+        $className = Str::studly($sprinkleName);
+
+        return "\\UserFrosting\\Sprinkle\\$className";
     }
 
     /**
@@ -103,9 +115,7 @@ class SprinkleManager
      */
     protected function getSprinkleDefaultServiceProvider($sprinkleName)
     {
-        $className = Str::studly($sprinkleName);
-
-        return "\\UserFrosting\\Sprinkle\\$className\\ServicesProvider\\ServicesProvider";
+        return $this->getSprinkleClassNamespace($sprinkleName) . '\\ServicesProvider\\ServicesProvider';
     }
 
     /**

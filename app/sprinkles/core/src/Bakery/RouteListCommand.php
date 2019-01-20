@@ -54,15 +54,15 @@ class RouteListCommand extends BaseCommand
         $this->io->title('Registered Routes');
 
         // Get routes list
-        $this->routes = $this->ci->router->getRoutes();
+        $routes = $this->ci->router->getRoutes();
 
         // If not route, don't go further
-        if (count($this->routes) === 0) {
+        if (count($routes) === 0) {
             return $this->io->error("Your application doesn't have any routes.");
         }
 
         // Compile the routes into a displayable format
-        $routes = collect($this->routes)->map(function ($route) use ($input) {
+        $routes = collect($routes)->map(function ($route) use ($input) {
             return $this->getRouteInformation($route, $input);
         })->all();
 
