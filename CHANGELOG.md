@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added `sprinkle:list` bakery command
+- Changed the sprinkle list in the bakery `debug` command to use the new `sprinkle:list` table
+
+### Fix
+- Fix for `Test` Bakery command
+    - Added `coverage-format` and `coverage-path` options to `test` Bakery command
+    - Sprinkle Testscope is now case insensitive
+    - **Class testscope now relative to `/` instead of `/UserFrosting/Sprinkle/` for more intuitive usage and to enable testing of non sprinkle tests**
+    - Detect and use the sprinkle `phpunit.xml` config when testing a specific sprinkle
+- SprinkleManager Improvements :
+    - Added public `getSprinklePath` method to get path to the sprinkle directory
+    - Added public `getSprinkleClassNamespace` method to get sprinkle base namespace
+    - Added public `getSprinkle` method. Returns the sprinkle name as formatted in `sprinkles.json` file, independent of the case of the search argument.
+    - Public `isAvailable` method now case insensitive.
+    - Added public `getSprinklesPath` & `setSprinklesPath` to return or set the path to the sprinkle dir (`app/sprinkles/`)
+    - Added `JsonException` if `sprinkles.json` doesn't contain valid json.
+    - Added specific tests for sprinkleManager with 100% test coverage
 
 ## 4.2.0-beta.1
 
