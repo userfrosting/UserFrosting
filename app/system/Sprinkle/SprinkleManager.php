@@ -134,12 +134,12 @@ class SprinkleManager
      *
      * Creates an object of a subclass of UserFrosting\System\Sprinkle\Sprinkle if defined for the sprinkle (converting to StudlyCase).
      * Otherwise, returns null.
-     * @param  string $name The name of the Sprinkle to initialize.
+     * @param  string $sprinkleName The name of the Sprinkle to initialize.
      * @return mixed  Sprinkle class instance or null if no such class exist
      */
-    public function bootSprinkle($name)
+    public function bootSprinkle($sprinkleName)
     {
-        $fullClassName = $this->getSprinkleClass($name);
+        $fullClassName = $this->getSprinkleClass($sprinkleName);
 
         // Check that class exists.  If not, set to null
         if (class_exists($fullClassName)) {
@@ -206,23 +206,23 @@ class SprinkleManager
      * Return if a Sprinkle is available
      * Can be used by other Sprinkles to test if their dependencies are met
      *
-     * @param  string $name The name of the Sprinkle
+     * @param  string $sprinkleName The name of the Sprinkle
      * @return bool
      */
-    public function isAvailable($name)
+    public function isAvailable($sprinkleName)
     {
-        return (bool) $this->getSprinkle($name);
+        return (bool) $this->getSprinkle($sprinkleName);
     }
 
     /**
      * Find sprinkle value from the sprinkles.json
      *
-     * @param  string       $name
+     * @param  string       $sprinkleName
      * @return string|false Return sprinkle name or false if sprinkle not found
      */
-    public function getSprinkle($name)
+    public function getSprinkle($sprinkleName)
     {
-        $mathches = preg_grep("/^$name$/i", $this->getSprinkleNames());
+        $mathches = preg_grep("/^$sprinkleName$/i", $this->getSprinkleNames());
 
         if (count($mathches) <= 0) {
             return false;
@@ -244,11 +244,11 @@ class SprinkleManager
     /**
      * Register services for a specified Sprinkle.
      *
-     * @param string $name
+     * @param string $sprinkleName
      */
-    public function registerServices($name)
+    public function registerServices($sprinkleName)
     {
-        $fullClassName = $this->getSprinkleDefaultServiceProvider($name);
+        $fullClassName = $this->getSprinkleDefaultServiceProvider($sprinkleName);
 
         // Check that class exists, and register services
         if (class_exists($fullClassName)) {
