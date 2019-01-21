@@ -211,7 +211,7 @@ class SprinkleManager
      */
     public function getSprinkle($name)
     {
-        $mathches = preg_grep('/'.$name .'/i', $this->getSprinkleNames());
+        $mathches = preg_grep("/^$name$/i", $this->getSprinkleNames());
 
         if (count($mathches) <= 0) {
             return false;
