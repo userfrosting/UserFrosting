@@ -46,7 +46,7 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles
 
         // Process bundles
         foreach ($schema['bundle'] as $bundleName => $_) {
-            
+
             // Get collision setting.
             $collisionRule = $schema["bundle.$bundleName.options.sprinkle.onCollision"] ?: 'replace';
 
@@ -76,14 +76,15 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles
 
     /**
      * Adds provided bundle to provided bundle store with collision rule respected.
-     * @param string|string[] $bundle Bundle to add.
-     * @param string $name Name of bundle provided.
-     * @param string $collisionRule Rule to apply if collision is detected.
-     * @param string[string][] $bundleStore Place to add bundles (CSS or JS depending on provided store).
-     * @throws \ErrorException if collision rule is 'error' and bundle is already defined.
+     * @param  string|string[]       $bundle        Bundle to add.
+     * @param  string                $name          Name of bundle provided.
+     * @param  string                $collisionRule Rule to apply if collision is detected.
+     * @param  string[string][]      $bundleStore   Place to add bundles (CSS or JS depending on provided store).
+     * @throws \ErrorException       if collision rule is 'error' and bundle is already defined.
      * @throws \OutOfBoundsException if an invalid collision rule is provided.
      */
-    protected function addWithCollisionRule(&$bundle, $bundleName, $collisionRule, &$bundleStore) {
+    protected function addWithCollisionRule(&$bundle, $bundleName, $collisionRule, &$bundleStore)
+    {
         $standardisedBundle = $this->standardiseBundle($bundle);
         if (!array_key_exists($bundleName, $bundleStore)) {
             $bundleStore[$bundleName] = $standardisedBundle;

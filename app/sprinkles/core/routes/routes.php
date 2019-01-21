@@ -7,6 +7,8 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
+use UserFrosting\Sprinkle\Core\Util\NoCache;
+
 global $app;
 $config = $app->getContainer()->get('config');
 
@@ -16,7 +18,8 @@ $app->get('/', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageIndex')
 
 $app->get('/about', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageAbout')->add('checkEnvironment');
 
-$app->get('/alerts', 'UserFrosting\Sprinkle\Core\Controller\CoreController:jsonAlerts');
+$app->get('/alerts', 'UserFrosting\Sprinkle\Core\Controller\CoreController:jsonAlerts')
+    ->add(new NoCache());
 
 $app->get('/legal', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageLegal');
 
