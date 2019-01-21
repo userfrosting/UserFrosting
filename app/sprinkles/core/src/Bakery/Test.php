@@ -40,8 +40,10 @@ class Test extends BaseCommand
     protected function configure()
     {
         $this->setName('test')
-             ->addOption('coverage', 'c', InputOption::VALUE_NONE, 'Generate code coverage report in HTML format. Will be saved in _meta/coverage')
-             ->addArgument('testscope', InputArgument::OPTIONAL, "Test Scope can either be a sprinkle name or a test class (optional)")
+             ->addOption('coverage', 'c', InputOption::VALUE_NONE, 'Enable code coverage report.')
+             ->addOption('coverage-format', null, InputOption::VALUE_REQUIRED, 'Select test coverage format. Choose from html, clover, crap4j, php, text, xml, etc. Default to HTML.')
+             ->addOption('coverage-path', null, InputOption::VALUE_REQUIRED, 'Code coverage report saving location. Default to `_meta/coverage`.')
+             ->addArgument('testscope', InputArgument::OPTIONAL, 'Test Scope can either be a sprinkle name or a test class (optional)')
              ->setDescription('Runs automated tests')
              ->setHelp("Run PHP unit tests. Tests from a specific sprinkle can optionally be run using the 'testscope' argument (`php bakery test SprinkleName`). A specific test class can also be be run using the testscope argument (`php bakery test 'UserFrosting\Sprinkle\SprinkleName\Tests\TestClass'`), as a specific test method (`php bakery test 'UserFrosting\Sprinkle\SprinkleName\Tests\TestClass::method'`).");
     }
@@ -70,8 +72,29 @@ class Test extends BaseCommand
         }
 
         // Add coverage report
-        if ($input->getOption('coverage')) {
-            $command .= ' --coverage-html _meta/coverage';
+        if ($input->getOption('coverage') || $input->getOption('coverage-format') || $input->getOption('coverage-path')) {
+            $format = ($input->getOption('coverage-format')) ?: 'html';
+            $path = ($input->getOption('coverage-path')) ?: '_meta/coverage';
+
+            switch ($format) {
+                case 'clover':
+                case 'xml':
+                case 'crap4j':
+                    $path = $path . '/coverage.xml';
+                    break;
+                case 'php':
+                    $path = $path . '/coverage.php';
+                    break;
+                case 'text':
+                    $path = '';
+                    break;
+                case 'html':
+                default:
+                    $file = '';
+                    break;
+            }
+
+            $command .= " --coverage-$format $path";
         }
 
         // Execute
@@ -111,6 +134,7 @@ class Test extends BaseCommand
         // Add command part
         $testClass = $sprinkleManager->getSprinkleClassNamespace($sprinkleName) . "\Tests";
         $testClass = str_replace($this->slashes, $this->slashes . $this->slashes, $testClass);
+
         return " --filter='$testClass' ";
     }
 
