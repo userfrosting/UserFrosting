@@ -104,7 +104,7 @@ class SprinkleManager
     {
         $className = Str::studly($sprinkleName);
 
-        return "\\UserFrosting\\Sprinkle\\$className";
+        return "UserFrosting\\Sprinkle\\$className";
     }
 
     /**
@@ -200,7 +200,24 @@ class SprinkleManager
      */
     public function isAvailable($name)
     {
-        return count(preg_grep('/'.$name .'/i', $this->getSprinkleNames())) > 0;
+        return (bool) $this->getSprinkle($name);
+    }
+
+    /**
+     * Find sprinkle value from the sprinkles.json
+     *
+     * @param  string       $name
+     * @return string|false Return sprinkle name or false if sprinkle not found
+     */
+    public function getSprinkle($name)
+    {
+        $mathches = preg_grep('/'.$name .'/i', $this->getSprinkleNames());
+
+        if (count($mathches) <= 0) {
+            return false;
+        }
+
+        return array_values($mathches)[0];
     }
 
     /**
