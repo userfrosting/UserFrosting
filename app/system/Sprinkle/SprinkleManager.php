@@ -78,8 +78,19 @@ class SprinkleManager
      */
     public function getSprinklePath($sprinkleName)
     {
-        // todo : Check if path exist? Sprinkle Exist?
-        return $this->getSprinklesPath() . $sprinkleName;
+        // Get Sprinkle and make sure it exist
+        $sprinkle = $this->getSprinkle($sprinkleName);
+        if (!$sprinkle) {
+            throw new FileNotFoundException("Sprinkle `$sprinkleName` doesn't exist.");
+        }
+
+        // Get path and make sure it exist
+        $path = $this->getSprinklesPath() . $sprinkle;
+        if (!file_exists($path)) {
+            throw new FileNotFoundException("Sprinkle `$sprinkleName` should be found at `$path`, but that directory doesn't exist.");
+        }
+
+        return $path;
     }
 
     /**

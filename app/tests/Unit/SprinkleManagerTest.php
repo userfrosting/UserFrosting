@@ -136,14 +136,37 @@ class SprinkleManagerTest extends TestCase
      * @param string          $sprinkleName
      * @param bool            $path
      * @param SprinkleManager $sprinkleManager
-     * @testWith        ["foo", "/foo/foo"]
-     *                  ["bar", "/foo/bar"]
-     *                  ["test", "/foo/test"]
+     * @testWith        ["foo", "/data/foo"]
+     *                  ["bar", "/data/bar"]
+     *                  ["test", "/data/test"]
      */
     public function testGetSprinklePath($sprinkleName, $path, SprinkleManager $sprinkleManager)
     {
-        $sprinkleManager->setSprinklesPath('/foo/');
-        $this->assertSame($path, $sprinkleManager->getSprinklePath($sprinkleName));
+        $sprinkleManager->setSprinklesPath(__DIR__ . '/data/');
+        $this->assertSame(__DIR__ . $path, $sprinkleManager->getSprinklePath($sprinkleName));
+    }
+
+    /**
+     * @depends testInitFromSchema
+     * @depends testGetSprinklePath
+     * @expectedException \UserFrosting\Support\Exception\FileNotFoundException
+     * @param SprinkleManager $sprinkleManager
+     */
+    public function testGetSprinklePathWherePathDoesntExist(SprinkleManager $sprinkleManager)
+    {
+        $sprinkleManager->setSprinklesPath(__DIR__ . '/foo/');
+        $sprinkleManager->getSprinklePath('foo');
+    }
+
+    /**
+     * @depends testInitFromSchema
+     * @depends testGetSprinklePath
+     * @expectedException \UserFrosting\Support\Exception\FileNotFoundException
+     * @param SprinkleManager $sprinkleManager
+     */
+    public function testGetSprinklePathWhereSprinkleDoesntExist(SprinkleManager $sprinkleManager)
+    {
+        $sprinkleManager->getSprinklePath('blah');
     }
 
     /**
@@ -165,10 +188,12 @@ class SprinkleManagerTest extends TestCase
 
     /**
      * @depends testInitFromSchema
+     * @depends testGetSprinklePath
      * @param SprinkleManager $sprinkleManager
      */
     public function testAddResources(SprinkleManager $sprinkleManager)
     {
+        $sprinkleManager->setSprinklesPath(__DIR__ . '/data/');
         $sprinkleManager->addResources();
     }
 
