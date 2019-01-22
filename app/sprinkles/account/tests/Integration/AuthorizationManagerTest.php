@@ -131,7 +131,7 @@ class AuthorizationManagerTest extends TestCase
         $authLogger->shouldReceive('debug')->once()->with('No matching permissions found. Access denied.');
         $authLogger->shouldReceive('debug')->times(2);
 
-        $this->assertFalse($this->getManager()->checkAccess($user, 'foo'));
+        $this->assertFalse($this->getManager()->checkAccess($user, 'blah'));
     }
 
     /**
