@@ -7,6 +7,8 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
+use UserFrosting\Sprinkle\Core\Util\NoCache;
+
 /**
  * Routes for administrative user management.
  */
@@ -15,7 +17,7 @@ $app->group('/users', function () {
         ->setName('uri_users');
 
     $this->get('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageInfo');
-})->add('authGuard');
+})->add('authGuard')->add(new NoCache());
 
 $app->group('/api/users', function () {
     $this->delete('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:delete');
@@ -37,7 +39,7 @@ $app->group('/api/users', function () {
     $this->put('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateInfo');
 
     $this->put('/u/{user_name}/{field}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateField');
-})->add('authGuard');
+})->add('authGuard')->add(new NoCache());
 
 $app->group('/modals/users', function () {
     $this->get('/confirm-delete', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalConfirmDelete');
@@ -49,4 +51,4 @@ $app->group('/modals/users', function () {
     $this->get('/password', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditPassword');
 
     $this->get('/roles', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditRoles');
-})->add('authGuard');
+})->add('authGuard')->add(new NoCache());

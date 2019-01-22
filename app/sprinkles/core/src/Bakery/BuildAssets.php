@@ -90,7 +90,9 @@ class BuildAssets extends BaseCommand
         chdir($this->buildPath);
 
         // Delete troublesome package-lock.json
-        if (file_exists('package-lock.json')) unlink('package-lock.json');
+        if (file_exists('package-lock.json')) {
+            unlink('package-lock.json');
+        }
 
         // Skip if lockfile indicates previous run
         if (!$force && file_exists('package.lock') && filemtime('package.json') < filemtime('package.lock') - 1) {

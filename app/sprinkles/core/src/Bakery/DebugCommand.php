@@ -54,7 +54,7 @@ class DebugCommand extends BaseCommand
         $this->checkPhpVersion();
         $this->checkNodeVersion();
         $this->checkNpmVersion();
-        $this->listSprinkles();
+        $this->listSprinkles($input, $output);
         $this->showConfig();
         $this->checkDatabase();
 
@@ -83,23 +83,27 @@ class DebugCommand extends BaseCommand
     /**
      * List all sprinkles defined in the Sprinkles schema file,
      * making sure this file exist at the same time
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      */
-    protected function listSprinkles()
+    protected function listSprinkles(InputInterface $input, OutputInterface $output)
     {
         // Check for Sprinkles schema file
         $path = \UserFrosting\SPRINKLES_SCHEMA_FILE;
-        $sprinklesFile = @file_get_contents($path);
-        if ($sprinklesFile === false) {
+        if (@file_exists($path) === false) {
             $this->io->error("The file `$path` not found.");
         }
 
         // List installed sprinkles
-        $sprinkles = json_decode($sprinklesFile)->base;
-        $this->io->section('Loaded sprinkles');
-        $this->io->listing($sprinkles);
+        $command = $this->getApplication()->find('sprinkle:list');
+        $command->run($input, $output);
+
+        /** @var \UserFrosting\System\Sprinkle\SprinkleManager $sprinkleManager */
+        $sprinkleManager = $this->ci->sprinkleManager;
 
         // Throw fatal error if the `core` sprinkle is missing
-        if (!in_array('core', $sprinkles)) {
+        if (!$sprinkleManager->isAvailable('core')) {
             $this->io->error("The `core` sprinkle is missing from the 'sprinkles.json' file.");
             exit(1);
         }
@@ -111,7 +115,7 @@ class DebugCommand extends BaseCommand
      */
     protected function checkDatabase()
     {
-        $this->io->section('Testing database connection...');
+        $this->io->title('Testing database connection...');
 
         try {
             $this->testDB();
@@ -134,7 +138,7 @@ class DebugCommand extends BaseCommand
         $config = $this->ci->config;
 
         // Display database info
-        $this->io->section('Database config');
+        $this->io->title('Database config');
         $this->io->writeln([
             'DRIVER : ' . $config['db.default.driver'],
             'HOST : ' . $config['db.default.host'],

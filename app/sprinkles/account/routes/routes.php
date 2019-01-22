@@ -7,6 +7,8 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
+use UserFrosting\Sprinkle\Core\Util\NoCache;
+
 $app->group('/account', function () {
     $this->get('/captcha', 'UserFrosting\Sprinkle\Account\Controller\AccountController:imageCaptcha');
 
@@ -55,6 +57,6 @@ $app->group('/account', function () {
 
     $this->post('/settings/profile', 'UserFrosting\Sprinkle\Account\Controller\AccountController:profile')
         ->add('authGuard');
-});
+})->add(new NoCache());
 
 $app->get('/modals/account/tos', 'UserFrosting\Sprinkle\Account\Controller\AccountController:getModalAccountTos');

@@ -12,6 +12,13 @@ services:
       - DB_NAME=userfrosting
       - DB_USER=docker
       - DB_PASSWORD=secret
+      - DB_TEST_DRIVER=mysql
+      - DB_TEST_HOST=mysqltest
+      - DB_TEST_PORT=3306
+      - DB_TEST_NAME=userfrosting_test
+      - DB_TEST_USER=docker
+      - DB_TEST_PASSWORD=secret
+      - TEST_DB=test_ufdb
     volumes:
       - .:/app
       - ./docker/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
@@ -30,6 +37,7 @@ services:
     depends_on:
       - php
       - ufmysql
+      - ufmysqltest
     networks:
       - frontend
       - backend
@@ -46,13 +54,25 @@ services:
       - 8593:3306
     volumes:
       - userfrosting-db:/var/lib/mysql
+  ufmysqltest:
+    image: mysql:5.7
+    networks:
+      - backend
+    environment:
+      - MYSQL_DATABASE=userfrosting_test
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_USER=docker
+      - MYSQL_PASSWORD=secret
+    ports:
+      - 8594:3306
+    volumes:
+      - userfrosting-test-db:/var/lib/mysql
   composer:
     image: "composer"
     volumes:
       - .:/app
     working_dir: /app
     command: -V
-
   node:
     image: node:alpine
     build:
@@ -61,11 +81,11 @@ services:
       - .:/app
     working_dir: /app/build
     command: npm run uf-assets-install
-
 volumes:
   userfrosting-db:
     driver: local
-
+  userfrosting-test-db:
+    driver: local
 networks:
   frontend:
   backend:
