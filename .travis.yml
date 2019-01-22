@@ -19,6 +19,10 @@ env:
     - DB=sqlite
     - DB=pgsql
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+    
 before_install:
   # copy sprinkles.json
   - cp app/sprinkles.example.json app/sprinkles.json
