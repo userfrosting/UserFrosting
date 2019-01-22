@@ -8,8 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 4.2.0-beta.2
 
 ### Added
-- Added `sprinkle:list` bakery command
-- Changed the sprinkle list in the bakery `debug` command to use the new `sprinkle:list` table
+- `sprinkle:list` bakery command
+- `NoCache` middleware to prevent caching of routes with dynamic content
+
+### Changed
+- Sprinkle list in the bakery `debug` command to uses the new `sprinkle:list` table
 
 ### Fix
 - Fix for `Test` Bakery command
