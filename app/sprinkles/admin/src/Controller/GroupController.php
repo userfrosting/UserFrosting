@@ -228,7 +228,8 @@ class GroupController extends SimpleController
 
         // If the group doesn't exist, return 404
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            $redirectPage = $this->ci->router->pathFor('uri_groups');
+            return $response->withRedirect($redirectPage, 301);
         }
 
         // Get group
