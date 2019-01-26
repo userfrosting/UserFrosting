@@ -267,6 +267,7 @@ export function bundle() {
          * @param {string} path Absolute path to resolve.
          */
         function resolveToAssetPath(path) {
+            // TODO There is a significant amount of duplicated code here. We can do better.
             if (path.startsWith(resolvePath(sprinklesDir))) {
                 // Handle sprinkle path
                 for (const sprinkle of sprinkles) {

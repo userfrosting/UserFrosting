@@ -2,12 +2,15 @@
 
 [![Latest Version](https://img.shields.io/github/release/userfrosting/UserFrosting.svg)](https://github.com/userfrosting/UserFrosting/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)](https://travis-ci.org/userfrosting/UserFrosting)
-[![codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting)
 [![Join the chat at https://chat.userfrosting.com/channel/support](https://demo.rocket.chat/images/join-chat.svg)](https://chat.userfrosting.com/channel/support)
 [![Backers on Open Collective](https://opencollective.com/userfrosting/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/userfrosting/sponsors/badge.svg)](#sponsors)
 [![Donate](https://img.shields.io/badge/Open%20Collective-Donate-blue.svg)](https://opencollective.com/userfrosting#backer)
+
+| Branch | Status |
+| ------ | ------ |
+| master | [![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)](https://travis-ci.org/userfrosting/UserFrosting) [![codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting/branch/master) |
+| develop | [![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=develop)](https://travis-ci.org/userfrosting/UserFrosting) [![codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting/branch/develop) |
 
 [https://www.userfrosting.com](https://www.userfrosting.com)
 
@@ -77,7 +80,7 @@ Louis's a civil engineer in Montréal, Québec who also has a passion for coding
 
 ### Jordan Mele
 
-Jordan's a former developer of Mayvin Training and a student studying Computer Science at the University of Wollongong, Australia. His passion is creating software-based solutions to overcomplicated problems, while keeping the user in control.
+Jordan's an Australian PHP Developer at [4mation](https://www.4mation.com.au) in Surry Hills, NSW. His passion is creating simple yet intuitive software-based solutions for problems that would otherwise be tedious and overcomplicated to address, while keeping the user in control.
 
 ### Sarah Baghdadi
 

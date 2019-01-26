@@ -8,8 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 4.2.0-beta.2
 
 ### Added
-- Added `sprinkle:list` bakery command
-- Changed the sprinkle list in the bakery `debug` command to use the new `sprinkle:list` table
+- `sprinkle:list` bakery command
+- `NoCache` middleware to prevent caching of routes with dynamic content
+
+### Changed
+- Sprinkle list in the bakery `debug` command to uses the new `sprinkle:list` table
 
 ### Fix
 - Fix for `Test` Bakery command
@@ -25,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - Added public `getSprinklesPath` & `setSprinklesPath` to return or set the path to the sprinkle dir (`app/sprinkles/`)
     - Added `JsonException` if `sprinkles.json` doesn't contain valid json.
     - Added specific tests for sprinkleManager with 100% test coverage
+- Ignore existing `package-lock.json` which caused incorrect dependencies to be installed when upgrading from older versions of UserFrosting.
 
 ## 4.2.0-beta.1
 
