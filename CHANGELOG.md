@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - Added `JsonException` if `sprinkles.json` doesn't contain valid json.
     - Added specific tests for sprinkleManager with 100% test coverage
 - Ignore existing `package-lock.json` which caused incorrect dependencies to be installed when upgrading from older versions of UserFrosting.
+- Vendor assets not found in production mode
 
 ## 4.2.0-beta.1
 

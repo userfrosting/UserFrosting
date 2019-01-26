@@ -54,12 +54,8 @@ class ServicesProvider
             $locator->registerStream('log', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\LOG_DIR_NAME, true);
             $locator->registerStream('cache', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\CACHE_DIR_NAME, true);
             $locator->registerStream('session', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SESSION_DIR_NAME, true);
-            $locator->registerStream('assets', 'vendor', \UserFrosting\BOWER_ASSET_DIR, true);
-            $locator->registerStream('assets', 'vendor', \UserFrosting\NPM_ASSET_DIR, true);
-            $locator->registerStream('assets', 'vendor', \UserFrosting\BROWSERIFIED_ASSET_DIR, true);
 
             // Register sprinkles streams
-            $locator->registerStream('assets', '', \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME);
             $locator->registerStream('config', '', \UserFrosting\DS . \UserFrosting\CONFIG_DIR_NAME);
             $locator->registerStream('extra', '', \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME);
             $locator->registerStream('factories', '', \UserFrosting\DS . \UserFrosting\FACTORY_DIR_NAME);

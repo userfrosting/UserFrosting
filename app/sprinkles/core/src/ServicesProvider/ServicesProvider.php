@@ -123,6 +123,13 @@ class ServicesProvider
 
             // Load asset schema
             if ($config['assets.use_raw']) {
+
+                // Register sprinkle assets stream, plus vendor assets in shared streams
+                $locator->registerStream('assets', 'vendor', \UserFrosting\BOWER_ASSET_DIR, true);
+                $locator->registerStream('assets', 'vendor', \UserFrosting\NPM_ASSET_DIR, true);
+                $locator->registerStream('assets', 'vendor', \UserFrosting\BROWSERIFIED_ASSET_DIR, true);
+                $locator->registerStream('assets', '', \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME);
+
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
 
                 $assets = new Assets($locator, 'assets', $baseUrl);
@@ -144,6 +151,11 @@ class ServicesProvider
                     $assets->addAssetBundles($bundles);
                 }
             } else {
+
+                // Register compiled assets stream in public folder + alias for vendor ones
+                $c->locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
+                $c->locator->registerStream('assets', 'vendor', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
+
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.compiled.path'];
                 $assets = new Assets($locator, 'assets', $baseUrl);
 
@@ -248,13 +260,6 @@ class ServicesProvider
             ];
 
             $config->set('csrf.blacklist', $csrfBlacklist);
-
-            // Reset 'assets' scheme in locator to use raw assets if specified in config.
-            // Must be done here to prevent circular dependency as config is not loaded in system and locator can't be extended here.
-            if (!$config['assets.use_raw']) {
-                $c->locator->removeStream('assets');
-                $c->locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
-            }
 
             return $config;
         };
