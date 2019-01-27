@@ -82,7 +82,7 @@ class BuildAssets extends BaseCommand
      */
     protected function npmInstall($force)
     {
-        $this->io->section('<info>Installing npm dependencies</info>');
+        $this->io->section('Installing npm dependencies');
         $this->io->writeln('> <comment>npm install</comment>');
 
         // Temporarily change the working directory so we can install npm dependencies
@@ -96,7 +96,7 @@ class BuildAssets extends BaseCommand
 
         // Skip if lockfile indicates previous run
         if (!$force && file_exists('package.lock') && filemtime('package.json') < filemtime('package.lock') - 1) {
-            $this->io->writeln('> <comment>Skipping as package-lock.json age indicates dependencies are already installed</comment>');
+            $this->io->writeln('Skipping as package-lock.json age indicates dependencies are already installed');
             chdir($wd);
 
             return;
