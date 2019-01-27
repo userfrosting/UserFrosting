@@ -48,23 +48,10 @@ class ServicesProvider
         $container['locator'] = function ($c) {
             $locator = new ResourceLocator(\UserFrosting\ROOT_DIR);
 
-            // Register shared streams
+            // Register streams
             $locator->registerStream('bakery', '', \UserFrosting\BAKERY_SYSTEM_DIR, true);
-            $locator->registerStream('build', '', \UserFrosting\BUILD_DIR_NAME, true);
-            $locator->registerStream('log', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\LOG_DIR_NAME, true);
-            $locator->registerStream('cache', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\CACHE_DIR_NAME, true);
-            $locator->registerStream('session', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SESSION_DIR_NAME, true);
-
-            // Register sprinkles streams
-            $locator->registerStream('config', '', \UserFrosting\DS . \UserFrosting\CONFIG_DIR_NAME);
-            $locator->registerStream('extra', '', \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME);
-            $locator->registerStream('factories', '', \UserFrosting\DS . \UserFrosting\FACTORY_DIR_NAME);
-            $locator->registerStream('locale', '', \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME);
-            $locator->registerStream('routes', '', \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME);
-            $locator->registerStream('schema', '', \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME);
-            $locator->registerStream('sprinkles', '', '');
-            $locator->registerStream('templates', '', \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME);
             $locator->registerStream('bakery', '', \UserFrosting\BAKERY_DIR);
+            $locator->registerStream('sprinkles', '', '');
 
             return $locator;
         };
