@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Sprinkle list in the bakery `debug` command to uses the new `sprinkle:list` table
 - `routerCacheFile` config now only contains filename. Locator is used to find the full path
 - Moved some constants from `app/defines.php` to `app/sprinkles/core/defines.php`
+- Move route initialization from system to core sprinkle as router service is located in the core sprinkle
 
 ### Fix
 - Fix for `Test` Bakery command

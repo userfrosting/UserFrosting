@@ -44,7 +44,8 @@ class Core extends Sprinkle
         return [
             'onSprinklesInitialized'      => ['onSprinklesInitialized', 0],
             'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0],
-            'onAddGlobalMiddleware'       => ['onAddGlobalMiddleware', 0]
+            'onAddGlobalMiddleware'       => ['onAddGlobalMiddleware', 0],
+            'onAppInitialize'             => ['onAppInitialize', 0]
         ];
     }
 
@@ -101,6 +102,16 @@ class Core extends Sprinkle
 
         $sh = new ShutdownHandler($this->ci, $displayErrors);
         $sh->register();
+    }
+
+    /**
+     * Register routes
+     *
+     * @param Event $event
+     */
+    public function onAppInitialize(Event $event)
+    {
+        $this->ci->router->loadRoutes($event->getApp());
     }
 
     /**
