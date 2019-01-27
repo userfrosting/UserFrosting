@@ -27,49 +27,21 @@ if (!defined('UserFrosting\APP_DIR')) {
 // The directory containing APP_DIR.  Usually, this will contain the entire website.
 define('UserFrosting\ROOT_DIR', realpath(__DIR__ . '/..'));
 
-// Directory names
-define('UserFrosting\APP_DIR_NAME', basename(__DIR__));
-define('UserFrosting\BUILD_DIR_NAME', 'build');
-define('UserFrosting\CACHE_DIR_NAME', 'cache');
-define('UserFrosting\DB_DIR_NAME', 'database');
-define('UserFrosting\SESSION_DIR_NAME', 'sessions');
+// Names of app directories
+define('UserFrosting\APP_DIR_NAME', basename(__DIR__)); //@deprecated; Use `UserFrosting\APP_DIR` instead
 define('UserFrosting\SPRINKLES_DIR_NAME', 'sprinkles');
+
+// Names of src directories within Sprinkles
+define('UserFrosting\SRC_DIR_NAME', 'src');
 
 // Full path to Sprinkles directory
 define('UserFrosting\SPRINKLES_DIR', APP_DIR . DS . SPRINKLES_DIR_NAME);
 
-// Sprinkles schema file
+// Full path to sprinkles schema file
 define('UserFrosting\SPRINKLES_SCHEMA_FILE', APP_DIR . DS . 'sprinkles.json');
 
-define('UserFrosting\LOG_DIR_NAME', 'logs');
-define('UserFrosting\VENDOR_DIR_NAME', 'vendor');
+// Full path to system Bakery commands
+define('UserFrosting\BAKERY_SYSTEM_DIR', APP_DIR . DS . 'system' . DS . 'Bakery' . DS . 'Command');
 
-// Full path to Composer's vendor directory
-define('UserFrosting\VENDOR_DIR', APP_DIR . DS . VENDOR_DIR_NAME);
-
-// Full path to database directory (SQLite only)
-define('UserFrosting\DB_DIR', APP_DIR . DS . DB_DIR_NAME);
-
-// Names of directories within Sprinkles
-define('UserFrosting\ASSET_DIR_NAME', 'assets');
-define('UserFrosting\EXTRA_DIR_NAME', 'extra');
-define('UserFrosting\CONFIG_DIR_NAME', 'config');
-define('UserFrosting\LOCALE_DIR_NAME', 'locale');
-define('UserFrosting\ROUTE_DIR_NAME', 'routes');
-define('UserFrosting\SCHEMA_DIR_NAME', 'schema');
-define('UserFrosting\SRC_DIR_NAME', 'src');
-define('UserFrosting\TEMPLATE_DIR_NAME', 'templates');
-define('UserFrosting\FACTORY_DIR_NAME', 'factories');
-define('UserFrosting\PUBLIC_DIR_NAME', 'public');
-
-// Paths for the different class sources
+// Relative path from within sprinkle directory
 define('UserFrosting\BAKERY_DIR', SRC_DIR_NAME . DS . 'Bakery');
-
-// Path to system Bakery commands
-define('UserFrosting\BAKERY_SYSTEM_DIR', APP_DIR_NAME . DS . 'system' . DS . 'Bakery' . DS . 'Command');
-
-// Full path to frontend vendor asset directories
-define('UserFrosting\ASSET_DIR', APP_DIR_NAME . DS . ASSET_DIR_NAME);
-define('UserFrosting\NPM_ASSET_DIR', ASSET_DIR . DS . 'node_modules');
-define('UserFrosting\BROWSERIFIED_ASSET_DIR', ASSET_DIR . DS . 'browser_modules');
-define('UserFrosting\BOWER_ASSET_DIR', ASSET_DIR . DS . 'bower_components');
