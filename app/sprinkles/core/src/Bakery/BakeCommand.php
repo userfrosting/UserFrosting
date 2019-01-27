@@ -22,11 +22,6 @@ use UserFrosting\System\Bakery\BaseCommand;
 class BakeCommand extends BaseCommand
 {
     /**
-     * @var string Path to the build/ directory
-     */
-    protected $buildPath;
-
-    /**
      * @var string The UserFrosting ASCII art.
      */
     public $title = "
@@ -46,7 +41,7 @@ class BakeCommand extends BaseCommand
     {
         $this->setName('bake')
              ->setDescription('UserFrosting installation command')
-             ->setHelp('This command combine the <info>debug</info>, <info>migrate</info> and <info>build-assets</info> commands.');
+             ->setHelp('This command combine the <info>setup:db</info>, <info>setup:smtp</info>, <info>debug</info>, <info>migrate</info>, <info>create-admin</info> and <info>build-assets</info> commands.');
     }
 
     /**
