@@ -28,14 +28,14 @@ if (!defined('UserFrosting\APP_DIR')) {
 define('UserFrosting\ROOT_DIR', realpath(__DIR__ . '/..'));
 
 // Names of app directories
-define('UserFrosting\APP_DIR_NAME', basename(__DIR__)); //@deprecated; Use `UserFrosting\APP_DIR` instead
+define('UserFrosting\APP_DIR_NAME', basename(__DIR__));
 define('UserFrosting\SPRINKLES_DIR_NAME', 'sprinkles');
 
 // Names of src directories within Sprinkles
 define('UserFrosting\SRC_DIR_NAME', 'src');
 
 // Full path to Sprinkles directory
-define('UserFrosting\SPRINKLES_DIR', APP_DIR . DS . SPRINKLES_DIR_NAME);
+define('UserFrosting\SPRINKLES_DIR', APP_DIR_NAME . DS . SPRINKLES_DIR_NAME);
 
 // Full path to sprinkles schema file
 define('UserFrosting\SPRINKLES_SCHEMA_FILE', APP_DIR . DS . 'sprinkles.json');

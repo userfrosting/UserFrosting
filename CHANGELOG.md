@@ -33,9 +33,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - Added specific tests for sprinkleManager with 100% test coverage
 - Ignore existing `package-lock.json` which caused incorrect dependencies to be installed when upgrading from older versions of UserFrosting.
 - Vendor assets not found in production mode
-
-### Deprecated
-- `UserFrosting\APP_DIR_NAME` : Use `UserFrosting\APP_DIR` instead.
+- Fix path issue on Windows
 
 ## 4.2.0-beta.1
 

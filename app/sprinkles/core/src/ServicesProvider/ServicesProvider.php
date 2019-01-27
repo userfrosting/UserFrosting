@@ -698,8 +698,9 @@ class ServicesProvider
             $sprinkles = $c->sprinkleManager->getSprinkleNames();
 
             // Add Sprinkles' templates namespaces
+            // TODO : Use locator
             foreach ($sprinkles as $sprinkle) {
-                $path = \UserFrosting\SPRINKLES_DIR . \UserFrosting\DS .
+                $path = \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS .
                     $sprinkle . \UserFrosting\DS .
                     \UserFrosting\TEMPLATE_DIR_NAME . \UserFrosting\DS;
 
