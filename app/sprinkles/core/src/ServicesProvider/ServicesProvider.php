@@ -593,7 +593,8 @@ class ServicesProvider
         $container['router'] = function ($c) {
             $routerCacheFile = false;
             if (isset($c->config['settings.routerCacheFile'])) {
-                $routerCacheFile = $c->config['settings.routerCacheFile'];
+                $filename = $c->config['settings.routerCacheFile'];
+                $routerCacheFile = $c->locator->findResource("cache://$filename", true, true);
             }
 
             return (new Router())->setCacheFile($routerCacheFile);
