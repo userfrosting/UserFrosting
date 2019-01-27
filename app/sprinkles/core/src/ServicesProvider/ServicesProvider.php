@@ -128,7 +128,7 @@ class ServicesProvider
                 $locator->registerStream('assets', 'vendor', \UserFrosting\BOWER_ASSET_DIR, true);
                 $locator->registerStream('assets', 'vendor', \UserFrosting\NPM_ASSET_DIR, true);
                 $locator->registerStream('assets', 'vendor', \UserFrosting\BROWSERIFIED_ASSET_DIR, true);
-                $locator->registerStream('assets', '', \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME);
+                $locator->registerStream('assets', '', \UserFrosting\ASSET_DIR_NAME);
 
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
 
