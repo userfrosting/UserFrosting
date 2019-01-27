@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Sprinkle list in the bakery `debug` command to uses the new `sprinkle:list` table
+- `routerCacheFile` config now only contains filename. Locator is used to find the full path
 
 ### Fix
 - Fix for `Test` Bakery command
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - Added `JsonException` if `sprinkles.json` doesn't contain valid json.
     - Added specific tests for sprinkleManager with 100% test coverage
 - Ignore existing `package-lock.json` which caused incorrect dependencies to be installed when upgrading from older versions of UserFrosting.
+- Vendor assets not found in production mode
 
 ## 4.2.0-beta.1
 

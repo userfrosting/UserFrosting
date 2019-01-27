@@ -36,7 +36,7 @@ class SprinkleManager
     /**
      * @var string The full absolute base path to the sprinkles directory.
      */
-    protected $sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
+    protected $sprinklesPath = \UserFrosting\SPRINKLES_DIR . \UserFrosting\DS;
 
     /**
      * Create a new SprinkleManager object.

@@ -35,7 +35,7 @@ return [
      * Use router cache, disable full error details
      */
     'settings' => [
-        'routerCacheFile'     => \UserFrosting\ROOT_DIR . '/' . \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME . '/' . 'routes.cache',
+        'routerCacheFile'     => 'routes.cache',
         'displayErrorDetails' => false
     ],
     /*
