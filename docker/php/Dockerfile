@@ -8,5 +8,4 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install -j$(nproc) pdo pdo_mysql \
     && docker-php-ext-install -j$(nproc) zip
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 WORKDIR /app

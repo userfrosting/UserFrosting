@@ -1,48 +1,54 @@
 # Docker Development Environment
 
+>This is also documented at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
+
 First, install [Docker Compose](https://docs.docker.com/compose/install/).
 
 Second, initialize a new UserFrosting project:
-1. Clone the repository `git clone https://github.com/userfrosting/UserFrosting.git .` and change into that directory `cd userfrosting`
-1. Run `cp app/sprinkles.example.json app/sprinkles.json` or upload your own (also upload your sprinkles if you have some)
-2. Run `sudo chown -R 33 app/{logs,cache,sessions}` (Changes the user to the www-data user of the image, more information [here](https://serversforhackers.com/c/dckr-file-permissions) )
-2. Run `sudo docker-compose run composer install` to install all composer modules.
-3. Run `sudo docker-compose run node npm install` to install all npm modules.
+
+1. Copy `app/sprinkles.example.json` to `app/sprinkles.json`
+2. Run `chmod 777 app/{logs,cache,sessions}` to fix file permissions for web server. (NOTE: File
+   permissions should be properly secured in a production environment!)
+3. Run `docker-compose run composer install --ignore-platform-reqs --no-scripts` to install all composer modules. (https://hub.docker.com/_/composer) Sometimes dependencies or Composer scripts require the availability of certain PHP extensions. You can work around this as follows: Pass the `--ignore-platform-reqs and --no-scripts` flags to install or update
+4. Run `docker-compose run node npm install` to install all npm modules.
+5. Run `docker-compose run composer update --ignore-platform-reqs --no-scripts` to install remaining composer modules
 
 Now you can start up the entire Nginx + PHP + MySQL stack using docker with:
 
-    $ sudo docker-compose up -d
+    $ docker-compose up -d
 
-On the first run you need to init the database (Be sure to execute this in the same directory, `${PWD##*/}` is a statement to get your current working directorys name. Docker uses it to name your container):
+the `-d` flag will launch this in the background so you can continue to use the terminal window. On the first run you need to init the database (your container name may be different depending on the name of your root directory):
 
-    $ sudo docker exec -it -u www-data ${PWD##*/}_php_1 bash -c 'php bakery migrate'
-    
-You also need to setup the first admin user (again, `${PWD##*/}` is a statement to get your current working directorys name):
+    $ docker exec -it -u www-data userfrosting_php_1 bash -c 'php bakery migrate'
 
-    $ sudo docker exec -it -u www-data ${PWD##*/}_php_1 bash -c 'php bakery create-admin'
+You also need to setup the first admin user (again, your container name may be different depending on the name of your root directory):
 
-Now visit http://localhost:8570/ to see your UserFrosting homepage!
+    $ docker exec -it -u www-data userfrosting_php_1 bash -c 'php bakery create-admin'
 
-**This is not (yet) meant for production!!**
+Now visit `http://localhost:8591/` to see your UserFrosting homepage!
+
+**Paste these into a bash file and execute it!**
+
+```
+chmod 777 app/{logs,cache,sessions}
+docker-compose build --force-rm --no-cache
+docker-compose run composer install --ignore-platform-reqs --no-scripts
+docker-compose run node npm install
+docker-compose run composer update --ignore-platform-reqs --no-scripts
+docker-compose up -d
+echo -n "Enter Docker Container Name --> "
+read docker_container
+docker exec -it -u www-data $docker_container bash -c 'php bakery migrate'
+docker exec -it -u www-data $docker_container bash -c 'php bakery create-admin'
+```
+
+**This is not (yet) meant for production!**
 
 You may be tempted to run with this in production but this setup has not been security-hardened. For example:
 
-- Database is exposed on port 8571 so you can access MySQL using your favorite client at localhost:8571. However,
+- Database is exposed on port 8593 so you can access MySQL using your favorite client at localhost:8593. However,
   the way Docker exposes this actually bypasses common firewalls like `ufw` so this should not be exposed in production.
 - Database credentials are hard-coded so obviously not secure.
 - File permissions may be more open than necessary.
+- HTTPS not implemented fully
 - It just hasn't been thoroughly tested in the capacity of being a production system.
-
-## Updating your code
-As you might guessed you will have to run 
-
-    $ sudo docker exec -it -u www-data userfrosting_php_1 bash -c 'php bakery migrate'
-    
-again if you want to migrate tables.
-You can change `php bakery migrate` to other `bakery` commands as well.
-Be aware that the userfrosting container doesn't know about npm!  
-Similary for composer:
-
-    $ sudo docker-compose run composer update
-   
-See the [Docker](https://docs.docker.com/engine) and [Docker-compose documentation](https://docs.docker.com/compose/) for more details.

@@ -74,7 +74,6 @@ services:
     working_dir: /app
     command: -V
   node:
-    image: node:alpine
     build:
       context: ./docker/node
     volumes:
