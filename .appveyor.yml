@@ -1,7 +1,7 @@
 ## Thanks to Cees-Jan Kiewiet: https://blog.wyrihaximus.net/2016/11/running-php-unit-tests-on-windows-using-appveyor-and-chocolatey/
 
 ## Versioning pattern
-version: '{build}'
+version: '{build}-{branch}'
 
 ## Disable unneeded features
 build: off
