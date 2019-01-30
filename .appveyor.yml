@@ -56,7 +56,7 @@ install:
 before_test:
   - cd c:\projects\userfrosting
   # Copy sprinkle file
-  - xcopy app\sprinkles.example.json app\sprinkles.json /y
+  - echo F | xcopy app\sprinkles.example.json app\sprinkles.json /y
   # Setup SQLite
   - echo "Setting up sqlite ..."
   - echo > userfrosting.db
