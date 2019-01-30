@@ -1,0 +1,73 @@
+## Thanks to Cees-Jan Kiewiet: https://blog.wyrihaximus.net/2016/11/running-php-unit-tests-on-windows-using-appveyor-and-chocolatey/
+
+## Versioning pattern
+version: '{build}'
+
+## Disable unneeded features
+build: off
+deploy: off
+
+## Test against various PHP versions
+environment:
+  fast_finish: true
+  matrix:
+    - php_version: "5.6"
+    - php_version: "7.0"
+    - php_version: "7.1"
+    - php_version: "7.2"
+    - php_version: "7.3"
+
+## Cache composer, chocolatey and php.
+cache:
+  # Composer
+  - '%LOCALAPPDATA%\Composer\files -> composer.lock'
+  - composer.phar
+  # Cache chocolatey packages
+  - C:\ProgramData\chocolatey\bin -> .appveyor.yml
+  - C:\ProgramData\chocolatey\lib -> .appveyor.yml
+  # Cache php install
+  - c:\tools\php -> .appveyor.yml
+
+## Set up environment variables
+init:
+  - SET PATH=C:\Program Files\OpenSSL;c:\tools\php;%PATH%
+  - SET COMPOSER_NO_INTERACTION=1
+  - SET PHP=1 # This var is connected to PHP install cache
+  - SET ANSICON=121x90 (121x90)
+services:
+  - mssql2014
+
+## Install PHP and composer, and run the appropriate composer command
+install:
+  - IF EXIST c:\tools\php (SET PHP=0) # Checks for the PHP install being cached
+  - ps: appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php_version | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
+  - appveyor-retry cinst -y sqlite
+  - ps: Install-Product node 10
+  - cd c:\tools\php
+  - IF %PHP%==1 copy php.ini-production php.ini /Y
+  - IF %PHP%==1 echo date.timezone="UTC" >> php.ini
+  - IF %PHP%==1 echo extension_dir=ext >> php.ini
+  - IF %PHP%==1 echo extension=php_openssl.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_mbstring.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_fileinfo.dll >> php.ini
+  - IF %PHP%==1 echo @php %%~dp0composer.phar %%* > composer.bat
+  - appveyor-retry appveyor DownloadFile https://getcomposer.org/composer.phar
+
+before_test:
+  - cd c:\projects\userfrosting
+  # Copy sprinkle file
+  - xcopy app\sprinkles.example.json app\sprinkles.json /y
+  # Setup SQLite
+  - echo "Setting up sqlite ..."
+  - echo > userfrosting.db
+  - echo UF_MODE="debug"\nDB_DRIVER="sqlite"\nDB_NAME="userfrosting.db"\nTEST_DB="default"\n" > app/.env
+  # Install Dependencies
+  - appveyor-retry composer update --no-progress
+  # Setup UserFrosting
+  - php bakery debug
+  - php bakery build-assets
+  - php bakery migrate
+
+## Run the actual test
+test_script:
+  - vendor/bin/phpunit
