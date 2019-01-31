@@ -78,9 +78,8 @@ install:
             7z x -y php_pdo_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip > $null
           } ElseIf ($env:php_version -eq "5.6") {
             $source = "https://cdn.joomla.org/ci/php-sqlsrv.zip"
-            $destination = "c:\tools\php\php-sqlsrv.zip"
+            $destination = "c:\tools\php\ext\php-sqlsrv.zip"
             Invoke-WebRequest $source -OutFile $destination
-            #appveyor-retry appveyor DownloadFile https://cdn.joomla.org/ci/php-sqlsrv.zip
             7z x php-sqlsrv.zip > $null
             copy SQLSRV\php_sqlsrv_56_nts.dll ext\php_sqlsrv.dll
             copy SQLSRV\php_pdo_sqlsrv_56_nts.dll ext\php_pdo_sqlsrv.dll
@@ -117,7 +116,7 @@ before_test:
   # Database setup for MSSQL
   # https://github.com/joomla-framework/database
   # http://www.drupalonwindows.com/en/blog/continuous-integration-and-testing-drupal-appveyor
-  - ps: sqlcmd -b -E -S "localhost\SQL2014" -Q "CREATE DATABASE userfrosting"
+  - ps: sqlcmd -b -E -S "(local)\SQL2014" -Q "CREATE DATABASE userfrosting"
   # Copy sprinkle file
   - echo F | xcopy app\sprinkles.example.json app\sprinkles.json /y
   # Setup SQLite
@@ -125,7 +124,7 @@ before_test:
   # Setup .env
   - echo UF_MODE="debug" > app/.env
   - echo DB_DRIVER="sqlsrv" >> app/.env
-  - echo DB_HOST="localhost\SQL2014" >> app/.env
+  - echo DB_HOST='(local)\SQL2014' >> app/.env
   - echo DB_PORT="1433" >> app/.env
   - echo DB_NAME="userfrosting" >> app/.env
   - echo DB_USER="sa" >> app/.env
