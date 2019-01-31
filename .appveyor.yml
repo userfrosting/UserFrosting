@@ -61,9 +61,12 @@ before_test:
   # Setup SQLite
   - echo "Setting up sqlite ..."
   - echo > userfrosting.db
-  - echo UF_MODE="debug"\nDB_DRIVER="sqlite"\nDB_NAME="userfrosting.db"\nTEST_DB="default"\n" > app/.env
+  - echo UF_MODE="debug" > app/.env
+  - echo DB_DRIVER="sqlite" >> app/.env
+  - echo DB_NAME="userfrosting.db" >> app/.env
+  - echo TEST_DB="default" >> app/.env
   # Install Dependencies
-  - appveyor-retry composer update --no-progress
+  - appveyor-retry composer update --no-progress --no-interaction
   # Setup UserFrosting
   - php bakery debug
   - php bakery build-assets
