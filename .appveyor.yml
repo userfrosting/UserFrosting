@@ -41,6 +41,7 @@ services:
 
 ## Install PHP and composer, and run the appropriate composer command
 install:
+    - ps: Install-Product node 10
     - ps: |
         # Check if installation is cached
         if (!(Test-Path c:\tools\php)) {
@@ -75,7 +76,7 @@ install:
             $destination = "c:\tools\php\ext\php_pdo_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip"
             Invoke-WebRequest $source -OutFile $destination
             7z x -y php_pdo_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip > $null
-          } ElseIf ($env:php_ver_target -eq "5.6") {
+          } ElseIf ($env:php_version -eq "5.6") {
             $source = "https://cdn.joomla.org/ci/php-sqlsrv.zip"
             $destination = "c:\tools\php\php-sqlsrv.zip"
             Invoke-WebRequest $source -OutFile $destination
