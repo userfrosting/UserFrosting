@@ -41,7 +41,6 @@ services:
 install:
   - IF EXIST c:\tools\php (SET PHP=0) # Checks for the PHP install being cached
   - ps: appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php_version | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
-  - appveyor-retry cinst -y sqlite
   - ps: Install-Product node 10
   - cd c:\tools\php
   - IF %PHP%==1 copy php.ini-production php.ini /Y
@@ -51,22 +50,32 @@ install:
   - IF %PHP%==1 echo extension=php_mbstring.dll >> php.ini
   - IF %PHP%==1 echo extension=php_fileinfo.dll >> php.ini
   - IF %PHP%==1 echo extension=php_gd2.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_sqlsrv.dll >> php.ini
+  - IF %PHP%==1 echo extension=php_pdo_sqlsrv.dll >> php.ini
   - IF %PHP%==1 echo extension=php_sqlite3.dll >> php.ini
   - IF %PHP%==1 echo @php %%~dp0composer.phar %%* > composer.bat
   - appveyor-retry appveyor DownloadFile https://getcomposer.org/composer.phar
 
 before_test:
-  - cd c:\projects\userfrosting
+  # Database setup for MSSQL
+  - ps: $sqlInstance = "(local)\SQL2014"
+  - ps: sqlcmd -b -E -S "$sqlInstance" -Q "CREATE DATABASE userfrosting"
+  # - ps: sqlcmd -S "$sqlInstance" -U "userfrosting" -P "Password12!"
   # Copy sprinkle file
+  - cd c:\projects\userfrosting
   - echo F | xcopy app\sprinkles.example.json app\sprinkles.json /y
   # Setup SQLite
-  - echo "Setting up sqlite ..."
   - echo > userfrosting.db
+  # Setup .env
   - echo UF_MODE="debug" > app/.env
-  - echo DB_DRIVER="sqlite" >> app/.env
-  - echo DB_NAME="userfrosting.db" >> app/.env
+  - echo DB_DRIVER="sqlsrv" >> app/.env
+  - echo DB_HOST="(local)\SQL2014" >> app/.env
+  - echo DB_PORT="" >> app/.env
+  - echo DB_NAME="userfrosting" >> app/.env
+  - echo DB_USER="sa" >> app/.env
+  - echo DB_PASSWORD="Password12!" >> app/.env
   - echo TEST_DB="default" >> app/.env
-  # Install Dependencies
+  # Install Composer dependencies
   - appveyor-retry composer update --no-progress --no-interaction
   # Setup UserFrosting
   - php bakery debug
