@@ -163,4 +163,4 @@ before_test:
 
 ## Run the actual test
 test_script:
-  - ps: vendor\bin\phpunit
+  - php bakery test
