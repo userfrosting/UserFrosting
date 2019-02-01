@@ -75,7 +75,16 @@ install:
           # Get and install the MSSQL DLL's for each PHP version
           $DLLVersion = "5.2.0"
           cd c:\tools\php\ext
-          If ($env:php_version -eq "7.2") {
+          If ($env:php_version -eq "7.3") {
+            $source = "https://windows.php.net/downloads/pecl/releases/sqlsrv/5.5.0preview/php_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip"
+            $destination = "c:\tools\php\ext\php_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip"
+            Invoke-WebRequest $source -OutFile $destination
+            7z x -y php_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip > $null
+            $source = "https://windows.php.net/downloads/pecl/releases/pdo_sqlsrv/5.5.0preview/php_pdo_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip"
+            $destination = "c:\tools\php\ext\php_pdo_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip"
+            Invoke-WebRequest $source -OutFile $destination
+            7z x -y php_pdo_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip > $null
+          } ElseIf ($env:php_version -eq "7.2") {
             $source = "https://windows.php.net/downloads/pecl/releases/sqlsrv/$($DLLVersion)/php_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip"
             $destination = "c:\tools\php\ext\php_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip"
             Invoke-WebRequest $source -OutFile $destination
