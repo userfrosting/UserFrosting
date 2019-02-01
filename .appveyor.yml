@@ -163,4 +163,4 @@ before_test:
 
 ## Run the actual test
 test_script:
-  - vendor/bin/phpunit
+  - ps: vendor\bin\phpunit
