@@ -19,7 +19,7 @@ environment:
     - php_version: "7.0"
     - php_version: "7.1"
     - php_version: "7.2"
-    #- php_version: "7.3"
+    - php_version: "7.3"
 
 ## Cache composer, chocolatey and php.
 cache:
@@ -46,7 +46,14 @@ install:
     - ps: |
         # Check if installation is cached
         if (!(Test-Path c:\tools\php)) {
-          appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php_version | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
+
+          # Install PHP, force 64 bits for PHP 5.6
+          If ($env:php_version -eq "5.6") {
+            appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y --forcex86 php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php_version | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
+          } Else {
+            appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php_version | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
+          }
+
           # install sqlite
           appveyor-retry cinst -y sqlite
           Get-ChildItem -Path c:\tools\php
@@ -65,7 +72,7 @@ install:
           Add-Content php.ini "`n extension=php_curl.dll"
           Add-Content php.ini "`n extension=php_gd2.dll"
 
-          # Get and install the MSSQL DLL's
+          # Get and install the MSSQL DLL's for each PHP version
           $DLLVersion = "5.2.0"
           cd c:\tools\php\ext
           If ($env:php_version -eq "7.2") {
@@ -93,6 +100,7 @@ install:
             7z x -y php_pdo_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc14-x64.zip > $null
           }
           Remove-Item c:\tools\php\* -include .zip
+
           cd c:\tools\php
           If ($env:php_version -eq "5.6") {
               Add-Content php.ini "`nextension=php_sqlsrv_56_nts.dll"
@@ -122,10 +130,10 @@ before_test:
   # https://github.com/joomla-framework/database
   # http://www.drupalonwindows.com/en/blog/continuous-integration-and-testing-drupal-appveyor
   - ps: sqlcmd -b -E -S "(local)\SQL2014" -Q "CREATE DATABASE userfrosting"
+
   # Copy sprinkle file
   - echo F | xcopy app\sprinkles.example.json app\sprinkles.json /y
-  # Setup SQLite
-  # - echo > userfrosting.db
+
   # Setup .env
   - echo UF_MODE="debug" > app/.env
   - echo DB_DRIVER="sqlsrv" >> app/.env
@@ -135,8 +143,10 @@ before_test:
   - echo DB_USER="sa" >> app/.env
   - echo DB_PASSWORD="Password12!" >> app/.env
   - echo TEST_DB="default" >> app/.env
+
   # Install Composer dependencies
   - appveyor-retry composer update --no-progress --no-interaction
+
   # Setup UserFrosting
   - php bakery debug
   - php bakery build-assets
