@@ -1,4 +1,5 @@
 ## Thanks to Cees-Jan Kiewiet: https://blog.wyrihaximus.net/2016/11/running-php-unit-tests-on-windows-using-appveyor-and-chocolatey/
+## & https://github.com/joomla-framework/database/blob/2.0-dev/.appveyor.yml
 
 ## Versioning pattern
 version: '{branch} - Build #{build}'
@@ -81,8 +82,8 @@ install:
             $destination = "c:\tools\php\ext\php-sqlsrv.zip"
             Invoke-WebRequest $source -OutFile $destination
             7z x php-sqlsrv.zip > $null
-            copy SQLSRV\php_sqlsrv_56_nts.dll php_sqlsrv.dll
-            copy SQLSRV\php_pdo_sqlsrv_56_nts.dll php_pdo_sqlsrv.dll
+            copy SQLSRV\php_sqlsrv_56_nts.dll php_sqlsrv_nts.dll
+            copy SQLSRV\php_pdo_sqlsrv_56_nts.dll php_pdo_sqlsrv_nts.dll
           } Else {
             $source = "https://windows.php.net/downloads/pecl/releases/sqlsrv/$($DLLVersion)/php_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc14-x64.zip"
             $destination = "c:\tools\php\ext\php_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc14-x64.zip"
@@ -95,9 +96,15 @@ install:
           }
           Remove-Item c:\tools\php\* -include .zip
           cd c:\tools\php
-          Add-Content php.ini "`nextension=php_sqlsrv.dll"
-          Add-Content php.ini "`nextension=php_pdo_sqlsrv.dll"
-          Add-Content php.ini "`n"
+          If ($env:php_version -eq "5.6") {
+              Add-Content php.ini "`nextension=php_sqlsrv_nts.dll"
+              Add-Content php.ini "`nextension=php_pdo_sqlsrv_nts.dll"
+              Add-Content php.ini "`n"
+          } Else {
+              Add-Content php.ini "`nextension=php_sqlsrv.dll"
+              Add-Content php.ini "`nextension=php_pdo_sqlsrv.dll"
+              Add-Content php.ini "`n"
+          }
 
           # download Composer
           if (!(Test-Path C:\tools\composer)) {
