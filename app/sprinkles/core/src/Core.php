@@ -44,7 +44,8 @@ class Core extends Sprinkle
         return [
             'onSprinklesInitialized'      => ['onSprinklesInitialized', 0],
             'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0],
-            'onAddGlobalMiddleware'       => ['onAddGlobalMiddleware', 0]
+            'onAddGlobalMiddleware'       => ['onAddGlobalMiddleware', 0],
+            'onAppInitialize'             => ['onAppInitialize', 0]
         ];
     }
 
@@ -104,6 +105,16 @@ class Core extends Sprinkle
     }
 
     /**
+     * Register routes
+     *
+     * @param Event $event
+     */
+    public function onAppInitialize(Event $event)
+    {
+        $this->ci->router->loadRoutes($event->getApp());
+    }
+
+    /**
      * Add CSRF middleware.
      *
      * @param Event $event
@@ -122,19 +133,22 @@ class Core extends Sprinkle
         $locator = $this->ci->locator;
 
         // Register core locator shared streams
-        $locator->registerStream('cache', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\CACHE_DIR_NAME, true);
-        $locator->registerStream('config', '', \UserFrosting\DS . \UserFrosting\CONFIG_DIR_NAME);
-        $locator->registerStream('log', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\LOG_DIR_NAME, true);
-        $locator->registerStream('migrations', '', \UserFrosting\MIGRATIONS_DIR);
-        $locator->registerStream('seeds', '', \UserFrosting\SEEDS_DIR);
-        $locator->registerStream('session', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SESSION_DIR_NAME, true);
+        $locator->registerStream('cache', '', \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\CACHE_DIR_NAME, true);
+        $locator->registerStream('log', '', \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\LOG_DIR_NAME, true);
+        $locator->registerStream('session', '', \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SESSION_DIR_NAME, true);
 
         // Register core locator sprinkle streams
-        $locator->registerStream('extra', '', \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME);
-        $locator->registerStream('factories', '', \UserFrosting\DS . \UserFrosting\FACTORY_DIR_NAME);
-        $locator->registerStream('locale', '', \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME);
-        $locator->registerStream('routes', '', \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME);
-        $locator->registerStream('schema', '', \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME);
-        $locator->registerStream('templates', '', \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME);
+        $locator->registerStream('config', '', \UserFrosting\CONFIG_DIR_NAME);
+        $locator->registerStream('extra', '', \UserFrosting\EXTRA_DIR_NAME);
+        $locator->registerStream('factories', '', \UserFrosting\FACTORY_DIR_NAME);
+        $locator->registerStream('locale', '', \UserFrosting\LOCALE_DIR_NAME);
+        $locator->registerStream('routes', '', \UserFrosting\ROUTE_DIR_NAME);
+        $locator->registerStream('schema', '', \UserFrosting\SCHEMA_DIR_NAME);
+        $locator->registerStream('templates', '', \UserFrosting\TEMPLATE_DIR_NAME);
+
+        // Register core sprinkle class streams
+        $locator->registerStream('seeds', '', \UserFrosting\SEEDS_DIR);
+        $locator->registerStream('migrations', '', \UserFrosting\MIGRATIONS_DIR);
+
     }
 }

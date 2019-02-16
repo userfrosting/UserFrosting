@@ -149,9 +149,6 @@ class UserFrosting
 
         $this->fireEvent('onAppInitialize', $slimAppEvent);
 
-        // Set up all routes
-        $this->ci->router->loadRoutes($this->app);
-
         // Add global middleware
         $this->fireEvent('onAddGlobalMiddleware', $slimAppEvent);
     }

@@ -34,7 +34,7 @@ class SprinkleManager
     protected $sprinkles = [];
 
     /**
-     * @var string The full absolute base path to the sprinkles directory.
+     * @var string Relaive path to the sprinkles directory. Will be used to register the location with the ResourceLocator
      */
     protected $sprinklesPath = \UserFrosting\SPRINKLES_DIR . \UserFrosting\DS;
 
@@ -60,7 +60,7 @@ class SprinkleManager
     }
 
     /**
-     * Register a sprinkle as a locator location
+     * Register a sprinkle as a locator location, using relative path to the sprinkle
      * @param string $sprinkleName
      */
     public function addSprinkleResources($sprinkleName)
@@ -85,12 +85,13 @@ class SprinkleManager
         }
 
         // Get path and make sure it exist
-        $path = $this->getSprinklesPath() . $sprinkle;
-        if (!file_exists($path)) {
-            throw new FileNotFoundException("Sprinkle `$sprinkleName` should be found at `$path`, but that directory doesn't exist.");
+        $relPath = $this->getSprinklesPath() . $sprinkle;
+        $fullpath = \UserFrosting\ROOT_DIR . \UserFrosting\DS . $relPath;
+        if (!file_exists($fullpath)) {
+            throw new FileNotFoundException("Sprinkle `$sprinkleName` should be found at `$fullpath`, but that directory doesn't exist.");
         }
 
-        return $path;
+        return $relPath;
     }
 
     /**

@@ -134,16 +134,16 @@ class SprinkleManagerTest extends TestCase
     /**
      * @depends testInitFromSchema
      * @param string          $sprinkleName
-     * @param bool            $path
      * @param SprinkleManager $sprinkleManager
-     * @testWith        ["foo", "/data/foo"]
-     *                  ["bar", "/data/bar"]
-     *                  ["test", "/data/test"]
+     * @testWith        ["foo"]
+     *                  ["bar"]
+     *                  ["test"]
      */
-    public function testGetSprinklePath($sprinkleName, $path, SprinkleManager $sprinkleManager)
+    public function testGetSprinklePath($sprinkleName, SprinkleManager $sprinkleManager)
     {
-        $sprinkleManager->setSprinklesPath(__DIR__ . '/data/');
-        $this->assertSame(__DIR__ . $path, $sprinkleManager->getSprinklePath($sprinkleName));
+        $basePath = 'app/tests/Unit/data/';
+        $sprinkleManager->setSprinklesPath($basePath);
+        $this->assertSame($basePath . $sprinkleName, $sprinkleManager->getSprinklePath($sprinkleName));
     }
 
     /**
@@ -154,7 +154,8 @@ class SprinkleManagerTest extends TestCase
      */
     public function testGetSprinklePathWherePathDoesntExist(SprinkleManager $sprinkleManager)
     {
-        $sprinkleManager->setSprinklesPath(__DIR__ . '/foo/');
+        $basePath = 'app/tests/Unit/foo/';
+        $sprinkleManager->setSprinklesPath($basePath);
         $sprinkleManager->getSprinklePath('foo');
     }
 
@@ -193,7 +194,8 @@ class SprinkleManagerTest extends TestCase
      */
     public function testAddResources(SprinkleManager $sprinkleManager)
     {
-        $sprinkleManager->setSprinklesPath(__DIR__ . '/data/');
+        $basePath = 'app/tests/Unit/data/';
+        $sprinkleManager->setSprinklesPath($basePath);
         $sprinkleManager->addResources();
     }
 

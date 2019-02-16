@@ -54,7 +54,7 @@ class BuildAssets extends BaseCommand
         $this->checkNodeVersion(false);
         $this->checkNpmVersion(false);
 
-        // Set $path
+        // Set $buildPath. We'll use the aboslute path for this task
         $this->buildPath = \UserFrosting\ROOT_DIR . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME;
 
         // Delete cached data is requested
