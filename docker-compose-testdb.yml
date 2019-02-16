@@ -24,6 +24,7 @@ services:
       - ./docker/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     networks:
       - backend
+
   nginx:
     restart: unless-stopped
     tty: true
@@ -41,6 +42,7 @@ services:
     networks:
       - frontend
       - backend
+
   ufmysql:
     image: mysql:5.7
     networks:
@@ -54,6 +56,7 @@ services:
       - 8593:3306
     volumes:
       - userfrosting-db:/var/lib/mysql
+
   ufmysqltest:
     image: mysql:5.7
     networks:
@@ -67,25 +70,26 @@ services:
       - 8594:3306
     volumes:
       - userfrosting-test-db:/var/lib/mysql
+
   composer:
     image: "composer"
     volumes:
       - .:/app
     working_dir: /app
-    command: -V
+
   node:
-    image: node:alpine
     build:
       context: ./docker/node
     volumes:
       - .:/app
     working_dir: /app/build
-    command: npm run uf-assets-install
+
 volumes:
   userfrosting-db:
     driver: local
   userfrosting-test-db:
     driver: local
+
 networks:
   frontend:
   backend:

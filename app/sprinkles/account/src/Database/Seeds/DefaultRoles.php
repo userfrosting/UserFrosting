@@ -9,13 +9,13 @@
 
 namespace UserFrosting\Sprinkle\Account\Database\Seeds;
 
-use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
+use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 
 /**
  * Seeder for the default roles
  */
-class DefaultRoles implements SeedInterface
+class DefaultRoles extends BaseSeed
 {
     /**
      * {@inheritdoc}
