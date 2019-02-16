@@ -694,7 +694,7 @@ class ServicesProvider
             $locator = $c->locator;
 
             $templatePaths = $locator->getResources('templates://');
-            $view = new Twig($templatePaths);
+            $view = new Twig(array_map('strval', $templatePaths));
             $loader = $view->getLoader();
 
             // Add Sprinkles' templates namespaces
