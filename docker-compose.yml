@@ -17,6 +17,7 @@ services:
       - ./docker/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     networks:
       - backend
+
   nginx:
     restart: unless-stopped
     tty: true
@@ -33,6 +34,7 @@ services:
     networks:
       - frontend
       - backend
+
   ufmysql:
     image: mysql:5.7
     networks:
@@ -46,6 +48,7 @@ services:
       - 8593:3306
     volumes:
       - userfrosting-db:/var/lib/mysql
+
   composer:
     image: "composer"
     volumes:
