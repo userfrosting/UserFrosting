@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - `sprinkle:list` bakery command
 - `NoCache` middleware to prevent caching of routes with dynamic content
+- Sample test environment for Docker
 
 ### Changed
 - Sprinkle list in the bakery `debug` command to uses the new `sprinkle:list` table
 - `routerCacheFile` config now only contains filename. Locator is used to find the full path
+- Updated Docker integration
 - Moved some constants from `app/defines.php` to `app/sprinkles/core/defines.php`
 - Move route initialization from system to core sprinkle as router service is located in the core sprinkle
 
@@ -33,6 +35,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - Added specific tests for sprinkleManager with 100% test coverage
 - Ignore existing `package-lock.json` which caused incorrect dependencies to be installed when upgrading from older versions of UserFrosting.
 - Vendor assets not found in production mode
+- Various Docker specific edge cases and misconfigurations
 - Fix path issue on Windows
 
 ## 4.2.0-beta.1
