@@ -12,7 +12,6 @@ namespace UserFrosting\Sprinkle\Admin\Controller;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
@@ -21,6 +20,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Controller class for role-related requests, including listing roles, CRUD for roles, etc.
@@ -147,7 +147,7 @@ class RoleController extends SimpleController
 
         // If the role doesn't exist, return 404
         if (!$role) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -242,7 +242,7 @@ class RoleController extends SimpleController
 
         // If the role doesn't exist, return 404
         if (!$role) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // Get role
@@ -310,7 +310,7 @@ class RoleController extends SimpleController
 
         // If the role no longer exists, forward to main role listing page
         if (!$role) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -438,7 +438,7 @@ class RoleController extends SimpleController
 
         // If the role doesn't exist, return 404
         if (!$role) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -508,7 +508,7 @@ class RoleController extends SimpleController
 
         // If the role doesn't exist, return 404
         if (!$role) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -549,7 +549,7 @@ class RoleController extends SimpleController
 
         // If the role no longer exists, forward to main role listing page
         if (!$role) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // GET parameters
@@ -600,7 +600,7 @@ class RoleController extends SimpleController
 
         // If the role doesn't exist, return 404
         if (!$role) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -765,7 +765,7 @@ class RoleController extends SimpleController
         $role = $this->getRoleFromParams($args);
 
         if (!$role) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Support\Repository\Repository $config */
@@ -886,7 +886,7 @@ class RoleController extends SimpleController
         $role = $this->getRoleFromParams($args);
 
         if (!$role) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // Get key->value pair from URL and request body
