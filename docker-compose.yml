@@ -51,7 +51,6 @@ services:
     volumes:
       - .:/app
     working_dir: /app
-    command: -V
 
   node:
     build:
@@ -59,7 +58,6 @@ services:
     volumes:
       - .:/app
     working_dir: /app/build
-    command: npm run uf-assets-install
 
 volumes:
   userfrosting-db:
