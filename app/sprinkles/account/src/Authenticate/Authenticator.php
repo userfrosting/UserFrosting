@@ -142,7 +142,7 @@ class Authenticator
     public function attempt($identityColumn, $identityValue, $password, $rememberMe = false)
     {
         // Try to load the user, using the specified conditions
-        $user = $this->classMapper->staticMethod('user', 'where', $identityColumn, $identityValue)->first();
+        $user = $this->classMapper->getClassMapping('user')::where($identityColumn, $identityValue)->first();
 
         if (!$user) {
             throw new InvalidCredentialsException();
@@ -252,7 +252,7 @@ class Authenticator
 
         // User logout actions
         if ($currentUserId) {
-            $currentUser = $this->classMapper->staticMethod('user', 'find', $currentUserId);
+            $currentUser = $this->classMapper->getClassMapping('user')::find($currentUserId);
             if ($currentUser) {
                 $currentUser->onLogout();
             }
@@ -411,7 +411,7 @@ class Authenticator
             // Load user from db, cache the result
             $key = $this->config['cache.user.key'] . $userId;
             $user = $this->cache->remember($key, $this->config['cache.user.delay'], function () use ($userId) {
-                return $this->classMapper->staticMethod('user', 'find', (int) $userId);
+                return $this->classMapper->getClassMapping('user')::find((int) $userId);
             });
 
             // If the user doesn't exist any more, throw an exception.

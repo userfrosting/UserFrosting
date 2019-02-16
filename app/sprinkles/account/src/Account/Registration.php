@@ -90,7 +90,7 @@ class Registration
         $this->validate();
 
         // Set default group
-        $defaultGroup = $this->ci->classMapper->staticMethod('group', 'where', 'slug', $this->defaultGroup)->first();
+        $defaultGroup = $this->ci->classMapper->getClassMapping('group')::where('slug', $this->defaultGroup)->first();
 
         if (!$defaultGroup) {
             $e = new HttpException("Account registration is not working because the default group '{$this->defaultGroup}' does not exist.");
@@ -125,7 +125,7 @@ class Registration
             ]);
 
             // Load default roles
-            $defaultRoles = $this->ci->classMapper->staticMethod('role', 'whereIn', 'slug', $this->defaultRoles)->get();
+            $defaultRoles = $this->ci->classMapper->getClassMapping('role')::whereIn('slug', $this->defaultRoles)->get();
             $defaultRoleIds = $defaultRoles->pluck('id')->all();
 
             // Attach default roles
@@ -188,7 +188,7 @@ class Registration
      */
     public function usernameIsUnique($username)
     {
-        return !($this->ci->classMapper->staticMethod('user', 'findUnique', $username, 'user_name'));
+        return !($this->ci->classMapper->getClassMapping('user')::findUnique($username, 'user_name'));
     }
 
     /**
@@ -200,7 +200,7 @@ class Registration
      */
     public function emailIsUnique($email)
     {
-        return !($this->ci->classMapper->staticMethod('user', 'findUnique', $email, 'email'));
+        return !($this->ci->classMapper->getClassMapping('user')::findUnique($email, 'email'));
     }
 
     /**
@@ -219,7 +219,7 @@ class Registration
         $this->verified = $this->ci->config['site.registration.require_email_verification'];
         $this->requireEmailVerification = $this->ci->config['site.registration.require_email_verification'];
         $this->defaultGroup = $this->ci->config['site.registration.user_defaults.group'];
-        $this->defaultRoles = $this->ci->classMapper->staticMethod('role', 'getDefaultSlugs');
+        $this->defaultRoles = $this->ci->classMapper->getClassMapping('role')::getDefaultSlugs();
     }
 
     /**

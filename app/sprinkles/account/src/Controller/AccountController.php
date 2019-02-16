@@ -98,7 +98,7 @@ class AccountController extends SimpleController
         // Log throttleable event
         $throttler->logEvent('check_username_request');
 
-        if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
+        if ($classMapper->getClassMapping('user')::findUnique($data['user_name'], 'user_name')) {
             $message = $translator->translate('USERNAME.NOT_AVAILABLE', $data);
 
             return $response->write($message)->withStatus(200);
@@ -237,7 +237,7 @@ class AccountController extends SimpleController
             $throttler->logEvent('password_reset_request', $throttleData);
 
             // Load the user, by email address
-            $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
+            $user = $classMapper->getClassMapping('user')::where('email', $data['email'])->first();
 
             // Check that the email exists.
             // If there is no user with that email address, we should still pretend like we succeeded, to prevent account enumeration
@@ -845,7 +845,7 @@ class AccountController extends SimpleController
         }
 
         // Security measure: do not allow registering new users until the master account has been created.
-        if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
+        if (!$classMapper->getClassMapping('user')::find($config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.MASTER_NOT_EXISTS');
 
             return $response->withJson([], 403);
@@ -1002,7 +1002,7 @@ class AccountController extends SimpleController
             $throttler->logEvent('verification_request', $throttleData);
 
             // Load the user, by email address
-            $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
+            $user = $classMapper->getClassMapping('user')::where('email', $data['email'])->first();
 
             // Check that the user exists and is not already verified.
             // If there is no user with that email address, or the user exists and is already verified,
@@ -1181,7 +1181,7 @@ class AccountController extends SimpleController
         unset($data['passwordc']);
 
         // If new email was submitted, check that the email address is not in use
-        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
+        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->getClassMapping('user')::findUnique($data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }

@@ -189,11 +189,11 @@ class User extends Model implements UserInterface
             $this->roles()->detach();
 
             // Remove all user activities
-            $classMapper->staticMethod('activity', 'where', 'user_id', $this->id)->delete();
+            $classMapper->getClassMapping('activity')::where('user_id', $this->id)->delete();
 
             // Remove all user tokens
-            $classMapper->staticMethod('password_reset', 'where', 'user_id', $this->id)->delete();
-            $classMapper->staticMethod('verification', 'where', 'user_id', $this->id)->delete();
+            $classMapper->getClassMapping('password_reset')::where('user_id', $this->id)->delete();
+            $classMapper->getClassMapping('verification')::where('user_id', $this->id)->delete();
 
             // TODO: remove any persistences
 

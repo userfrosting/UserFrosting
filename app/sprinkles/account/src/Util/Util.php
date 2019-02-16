@@ -35,7 +35,7 @@ class Util
             for ($m = 0; $m < 10; $m++) {
                 // Generate a random phrase with $n adjectives
                 $suggestion = CoreUtil::randomPhrase($n, $maxLength, $maxTries, '.');
-                if (!$classMapper->staticMethod('user', 'where', 'user_name', $suggestion)->first()) {
+                if (!$classMapper->getClassMapping('user')::where('user_name', $suggestion)->first()) {
                     return $suggestion;
                 }
             }

@@ -52,7 +52,7 @@ class PermissionController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $permission = $classMapper->staticMethod('permission', 'find', $permissionId);
+        $permission = $classMapper->getClassMapping('permission')::find($permissionId);
 
         // If the permission doesn't exist, return 404
         if (!$permission) {
@@ -178,7 +178,7 @@ class PermissionController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $permission = $classMapper->staticMethod('permission', 'find', $permissionId);
+        $permission = $classMapper->getClassMapping('permission')::find($permissionId);
 
         // If the permission doesn't exist, return 404
         if (!$permission) {
