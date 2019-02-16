@@ -261,29 +261,29 @@ export function bundle() {
     rawConfig.BundlesVirtualBasePath = "./assets/";
 
     // Bundle results callback
+    /**
+     * 
+     * @param {Map<string, any[]} results 
+     */
     function bundleResults(results) {
+        // Compute possible asset base paths (for matching later)
+        /** @type {string[]} */
+        const assetBasePaths = [];
+        assetBasePaths.push(resolvePath(vendorAssetsDir, "bower_components"));
+        assetBasePaths.push(resolvePath(vendorAssetsDir, "node_modules"));
+        for (const sprinkle of sprinkles) {
+            assetBasePaths.push(resolvePath(sprinklesDir, sprinkle, "assets"));
+        }
+
+
         /**
          * Resolves absolute path to gulp-uf-bundle-assets v2 style path
          * @param {string} path Absolute path to resolve.
          */
         function resolveToAssetPath(path) {
-            // TODO There is a significant amount of duplicated code here. We can do better.
-            if (path.startsWith(resolvePath(sprinklesDir))) {
-                // Handle sprinkle path
-                for (const sprinkle of sprinkles) {
-                    const sprinklePath = resolvePath(sprinklesDir, sprinkle, "assets");
-                    if (path.startsWith(sprinklePath)) {
-                        return path.replace(sprinklePath, "").replace(/\\/g, "/").replace("/", "");
-                    }
-                }
-            }
-            else {
-                // Handle vendor path
-                if (path.startsWith(resolvePath(vendorAssetsDir, "bower_components"))) {
-                    return path.replace(resolvePath(vendorAssetsDir, "bower_components"), "").replace(/\\/g, "/").replace("/", "");
-                }
-                else if (path.startsWith(resolvePath(vendorAssetsDir, "node_modules"))) {
-                    return path.replace(resolvePath(vendorAssetsDir, "node_modules"), "").replace(/\\/g, "/").replace("/", "");
+            for (const basePath of assetBasePaths) {
+                if (path.startsWith(basePath)) {
+                    return path.replace(basePath, "").replace(/\\/g, "/").replace("/", "");
                 }
             }
 
