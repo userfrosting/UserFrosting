@@ -37,10 +37,7 @@ class ClassMapper
 
         $params = array_slice(func_get_args(), 1);
 
-        // We must use reflection in PHP < 5.6.  See http://stackoverflow.com/questions/8734522/dynamically-call-class-with-variable-number-of-parameters-in-the-constructor
-        $reflection = new \ReflectionClass($className);
-
-        return $reflection->newInstanceArgs($params);
+        return new $className(...$params);
     }
 
     /**
