@@ -90,6 +90,6 @@ class ClassMapper
 
         $params = array_slice(func_get_args(), 2);
 
-        return call_user_func_array("$className::$methodName", $params);
+        return $className::$methodName(...$params);
     }
 }
