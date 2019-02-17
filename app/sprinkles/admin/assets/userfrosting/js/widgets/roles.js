@@ -51,7 +51,9 @@ function bindRoleButtons(el) {
      */
 
     // Manage permissions button
-    el.find('.js-role-permissions').click(function() {
+    el.find('.js-role-permissions').click(function(e) {
+        e.preventDefault();
+
         var slug = $(this).data('slug');
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/permissions",
@@ -100,7 +102,9 @@ function bindRoleButtons(el) {
      * Buttons that launch a modal dialog
      */
     // Edit role details button
-    el.find('.js-role-edit').click(function() {
+    el.find('.js-role-edit').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/edit",
             ajaxParams: {
@@ -113,7 +117,9 @@ function bindRoleButtons(el) {
     });
 
     // Delete role button
-    el.find('.js-role-delete').click(function() {
+    el.find('.js-role-delete').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/confirm-delete",
             ajaxParams: {
@@ -137,7 +143,9 @@ function bindRoleButtons(el) {
 
 function bindRoleCreationButton(el) {
     // Link create button
-    el.find('.js-role-create').click(function() {
+    el.find('.js-role-create').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/create",
             msgTarget: $("#alerts-page")

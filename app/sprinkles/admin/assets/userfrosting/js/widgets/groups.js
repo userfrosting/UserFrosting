@@ -63,7 +63,9 @@ function bindGroupButtons(el) {
      * Buttons that launch a modal dialog
      */
     // Edit group details button
-    el.find('.js-group-edit').click(function() {
+    el.find('.js-group-edit').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/groups/edit",
             ajaxParams: {
@@ -76,7 +78,9 @@ function bindGroupButtons(el) {
     });
 
     // Delete group button
-    el.find('.js-group-delete').click(function() {
+    el.find('.js-group-delete').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/groups/confirm-delete",
             ajaxParams: {
@@ -85,7 +89,7 @@ function bindGroupButtons(el) {
             msgTarget: $("#alerts-page")
         });
 
-        $("body").on('renderSuccess.ufModal', function (data) {
+        $("body").on('renderSuccess.ufModal', function () {
             var modal = $(this).ufModal('getModal');
             var form = modal.find('.js-form');
 
@@ -100,7 +104,9 @@ function bindGroupButtons(el) {
 
 function bindGroupCreationButton(el) {
     // Link create button
-    el.find('.js-group-create').click(function() {
+    el.find('.js-group-create').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/groups/create",
             msgTarget: $("#alerts-page")
