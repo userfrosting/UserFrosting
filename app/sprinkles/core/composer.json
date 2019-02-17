@@ -50,7 +50,6 @@
         "userfrosting/cache": "~4.2.0",
         "userfrosting/fortress": "~4.2.0",
         "userfrosting/i18n": "~4.2.0",
-        "userfrosting/uniformresourcelocator": "~4.2.0",
         "userfrosting/session": "~4.2.0",
         "userfrosting/support": "~4.2.0",
         "vlucas/phpdotenv": "^2"
