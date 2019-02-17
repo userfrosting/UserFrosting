@@ -45,7 +45,7 @@ class Test extends BaseCommand
              ->addOption('coverage-path', null, InputOption::VALUE_REQUIRED, 'Code coverage report saving location. Default to `_meta/coverage`.')
              ->addArgument('testscope', InputArgument::OPTIONAL, 'Test Scope can either be a sprinkle name or a test class (optional)')
              ->setDescription('Runs automated tests')
-             ->setHelp("Run PHP unit tests. Tests from a specific sprinkle can optionally be run using the 'testscope' argument (`php bakery test SprinkleName`). A specific test class can also be be run using the testscope argument (`php bakery test 'UserFrosting\Sprinkle\SprinkleName\Tests\TestClass'`), as a specific test method (`php bakery test 'UserFrosting\Sprinkle\SprinkleName\Tests\TestClass::method'`).");
+             ->setHelp("Run PHP unit tests. Tests from a specific sprinkle can optionally be run using the 'testscope' argument (`php bakery test SprinkleName`). A specific test class can also be run using the testscope argument (`php bakery test 'UserFrosting\Sprinkle\SprinkleName\Tests\TestClass'`), as a specific test method (`php bakery test 'UserFrosting\Sprinkle\SprinkleName\Tests\TestClass::method'`).");
     }
 
     /**
