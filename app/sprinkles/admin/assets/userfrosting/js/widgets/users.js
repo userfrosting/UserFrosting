@@ -125,14 +125,19 @@ function updateUser(userName, fieldName, fieldValue) {
 
 /**
  * Link user action buttons, for example in a table or on a specific user's page.
+ * @param {module:jQuery} el jQuery wrapped element to target.
+ * @param {{delete_redirect: string}} options Options used to modify behaviour of button actions.
  */
- function bindUserButtons(el) {
+ function bindUserButtons(el, options) {
+     if (!options) options = {};
 
     /**
      * Buttons that launch a modal dialog
      */
     // Edit general user details button
-    el.find('.js-user-edit').click(function() {
+    el.find('.js-user-edit').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/edit",
             ajaxParams: {
@@ -145,7 +150,9 @@ function updateUser(userName, fieldName, fieldValue) {
     });
 
     // Manage user roles button
-    el.find('.js-user-roles').click(function() {
+    el.find('.js-user-roles').click(function(e) {
+        e.preventDefault();
+
         var userName = $(this).data('user_name');
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/roles",
@@ -191,7 +198,9 @@ function updateUser(userName, fieldName, fieldValue) {
     });
 
     // Change user password button
-    el.find('.js-user-password').click(function() {
+    el.find('.js-user-password').click(function(e) {
+        e.preventDefault();
+
         var userName = $(this).data('user_name');
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/password",
@@ -201,7 +210,7 @@ function updateUser(userName, fieldName, fieldValue) {
             msgTarget: $("#alerts-page")
         });
 
-        $("body").on('renderSuccess.ufModal', function (data) {
+        $("body").on('renderSuccess.ufModal', function () {
             var modal = $(this).ufModal('getModal');
             var form = modal.find('.js-form');
 
@@ -216,7 +225,9 @@ function updateUser(userName, fieldName, fieldValue) {
             toggleChangePasswordMode(modal, userName, 'link');
 
             // On submission, submit either the PUT request, or POST for a password reset, depending on the toggle state
-            modal.find("input[name='change_password_mode']").click(function() {
+            modal.find("input[name='change_password_mode']").click(function(e) {
+                e.preventDefault();
+
                 var changePasswordMode = $(this).val();
                 toggleChangePasswordMode(modal, userName, changePasswordMode);
             });
@@ -224,7 +235,9 @@ function updateUser(userName, fieldName, fieldValue) {
     });
 
     // Delete user button
-    el.find('.js-user-delete').click(function() {
+    el.find('.js-user-delete').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/confirm-delete",
             ajaxParams: {
@@ -233,14 +246,15 @@ function updateUser(userName, fieldName, fieldValue) {
             msgTarget: $("#alerts-page")
         });
 
-        $("body").on('renderSuccess.ufModal', function (data) {
+        $("body").on('renderSuccess.ufModal', function () {
             var modal = $(this).ufModal('getModal');
             var form = modal.find('.js-form');
 
             form.ufForm()
             .on("submitSuccess.ufForm", function() {
-                // Reload page on success
-                window.location.reload();
+                // Navigate or reload page on success
+                if (options.delete_redirect) window.location.href = options.delete_redirect;
+                else window.location.reload();
             });
         });
     });
@@ -248,7 +262,9 @@ function updateUser(userName, fieldName, fieldValue) {
     /**
      * Direct action buttons
      */
-    el.find('.js-user-activate').click(function() {
+    el.find('.js-user-activate').click(function(e) {
+        e.preventDefault();
+
         var btn = $(this);
         updateUser(btn.data('user_name'), 'flag_verified', '1');
     });
@@ -266,7 +282,9 @@ function updateUser(userName, fieldName, fieldValue) {
 
 function bindUserCreationButton(el) {
     // Link create button
-    el.find('.js-user-create').click(function() {
+    el.find('.js-user-create').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/create",
             msgTarget: $("#alerts-page")
