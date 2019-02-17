@@ -125,8 +125,11 @@ function updateUser(userName, fieldName, fieldValue) {
 
 /**
  * Link user action buttons, for example in a table or on a specific user's page.
+ * @param {module:jQuery} el jQuery wrapped element to target.
+ * @param {{delete_redirect: string}} options Options used to modify behaviour of button actions.
  */
- function bindUserButtons(el) {
+ function bindUserButtons(el, options) {
+     if (!options) options = {};
 
     /**
      * Buttons that launch a modal dialog
@@ -243,14 +246,15 @@ function updateUser(userName, fieldName, fieldValue) {
             msgTarget: $("#alerts-page")
         });
 
-        $("body").on('renderSuccess.ufModal', function (data) {
+        $("body").on('renderSuccess.ufModal', function () {
             var modal = $(this).ufModal('getModal');
             var form = modal.find('.js-form');
 
             form.ufForm()
             .on("submitSuccess.ufForm", function() {
-                // Reload page on success
-                window.location.reload();
+                // Navigate or reload page on success
+                if (options.delete_redirect) window.location.href = options.delete_redirect;
+                else window.location.reload();
             });
         });
     });

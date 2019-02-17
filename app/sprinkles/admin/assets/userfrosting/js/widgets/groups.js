@@ -53,8 +53,12 @@ function attachGroupForm() {
 
 /**
  * Link group action buttons, for example in a table or on a specific group's page.
+ * @param {module:jQuery} el jQuery wrapped element to target.
+ * @param {{delete_redirect: string}} options Options used to modify behaviour of button actions.
  */
-function bindGroupButtons(el) {
+function bindGroupButtons(el, options) {
+    if (!options) options = {};
+
     /**
      * Link row buttons after table is loaded.
      */
@@ -95,8 +99,9 @@ function bindGroupButtons(el) {
 
             form.ufForm()
             .on("submitSuccess.ufForm", function() {
-                // Reload page on success
-                window.location.reload();
+                // Navigate or reload page on success
+                if (options.delete_redirect) window.location.href = options.delete_redirect;
+                else window.location.reload();
             });
         });
     });

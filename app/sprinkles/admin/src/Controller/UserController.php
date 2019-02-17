@@ -1020,7 +1020,8 @@ class UserController extends SimpleController
             'locales' => $locales,
             'fields'  => $fields,
             'tools'   => $editButtons,
-            'widgets' => $widgets
+            'widgets' => $widgets,
+            'delete_redirect' => $this->ci->router->pathFor('uri_users')
         ]);
     }
 

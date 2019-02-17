@@ -9,7 +9,7 @@
 
 $(document).ready(function() {
     // Control buttons
-    bindUserButtons($("#view-user"));
+    bindUserButtons($("#view-user"), { delete_redirect: page.delete_redirect });
 
     // Table of activities
     $("#widget-user-activities").ufTable({

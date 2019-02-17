@@ -601,7 +601,8 @@ class GroupController extends SimpleController
         return $this->ci->view->render($response, 'pages/group.html.twig', [
             'group'  => $group,
             'fields' => $fields,
-            'tools'  => $editButtons
+            'tools'  => $editButtons,
+            'delete_redirect' => $this->ci->router->pathFor('uri_groups')
         ]);
     }
 
