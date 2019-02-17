@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `sprinkle:list` bakery command
 - `NoCache` middleware to prevent caching of routes with dynamic content
 - Sample test environment for Docker
+- Added `validateMigrationDependencies` helper method to `BaseSeed`
 
 ### Changed
 - Sprinkle list in the bakery `debug` command to uses the new `sprinkle:list` table
