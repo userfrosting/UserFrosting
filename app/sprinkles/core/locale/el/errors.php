@@ -1,4 +1,4 @@
-<? php
+<?php
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
