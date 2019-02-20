@@ -74,8 +74,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Moved Bakery commands from `app/System/Bakery` to the `Core` sprinkle and `UserFrosting\Sprinkle\Core\Bakery` namespace.
-    - Moved `UserFrosting\System\Bakery\DatabaseTest` trait to `UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest`.
-    - Moved `UserFrosting\System\Bakery\ConfirmableTrait` trait to `UserFrosting\Sprinkle\Core\Bakery\Helper\ConfirmableTrait`.
 - Re-written the migrator. It is now detached from the console and Bakery and is now included in the Core Sprinkle ServicesProvider ([#795])
 - Makes the `semantic versioning` part of a migration class optional. Migrations classes can now have the `UserFrosting\Sprinkle\{sprinkleName}\Database\Migrations` namespace, or any other sub-namespace
 - Move User registration out of the `AccountController` ([#793])
@@ -108,6 +106,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed the `io` property from migration classes
 - Removed Bakery `projectRoot` property. Use the `\UserFrosting\ROOT_DIR` constant instead
 - Removed `pretend` option from Bakery `migrate:refresh` and `migrate:reset` commands
+- Removed `UserFrosting\System\Bakery\DatabaseTest` trait, use `UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest` instead.
+- Removed `UserFrosting\System\Bakery\ConfirmableTrait` trait, use `UserFrosting\Sprinkle\Core\Bakery\Helper\ConfirmableTrait` instead.
 
 
 ## v4.1.22
