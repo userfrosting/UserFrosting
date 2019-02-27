@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `NoCache` middleware to prevent caching of routes with dynamic content
 - Sample test environment for Docker
 - Added `validateMigrationDependencies` helper method to `BaseSeed`
+- Greek locale (Thanks @lenasterg!; [#940])
 
 ### Changed
 - Sprinkle list in the bakery `debug` command to uses the new `sprinkle:list` table
@@ -706,3 +707,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#872]: https://github.com/userfrosting/UserFrosting/issues/872
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
 [#919]: https://github.com/userfrosting/UserFrosting/issues/919
+[#940]: https://github.com/userfrosting/UserFrosting/issues/940
