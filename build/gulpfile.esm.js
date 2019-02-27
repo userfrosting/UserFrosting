@@ -1,7 +1,7 @@
 import browserifyDependencies from "@userfrosting/browserify-dependencies";
 import Bundler, { MergeRawConfigs, ValidateRawConfig } from "@userfrosting/gulp-bundle-assets";
 import { bower as mergeBowerDeps, npm as mergeNpmDeps } from "@userfrosting/merge-package-dependencies";
-import { execSync } from "child_process";
+import childProcess, { exec as _exec } from "child_process";
 import { sync as deleteSync } from "del";
 import { config as envConfig } from "dotenv";
 import { existsSync, readFileSync, writeFileSync } from "fs";
@@ -13,36 +13,86 @@ import prune from "gulp-prune";
 import rev from "gulp-rev";
 import minifyJs from "gulp-uglify-es";
 import { info } from "gulplog";
-import { normalize as normalisePath, resolve as resolvePath } from "path";
+import { resolve as resolvePath } from "path";
+import stripAnsi from "strip-ansi";
+import { promisify } from "util";
+
+// Promisify exec
+const exec = promisify(_exec);
+
+// Path constants
+const rootDir = "..";
+const sprinklesDir = `${rootDir}/app/sprinkles/`;
+const sprinklesSchemaPath = `${rootDir}/app/sprinkles.json`;
+const publicAssetsDir = `${rootDir}/public/assets/`;
+const legacyVendorAssetsGlob = `${rootDir}/sprinkles/*/assets/vendor/**`;
+const sprinkleBundleFile = "asset-bundles.json";
+const vendorAssetsDir = `${rootDir}/app/assets/`;
+const logFile = `${rootDir}/app/logs/build.log`;
 
 // Load environment variables
 envConfig({ path: "../app/.env" });
 
 // Set up logging
-const doILog = (process.env.UF_MODE === "dev");
+
+// Write starting command to log
+writeFileSync(logFile, "\n\n" + process.argv.join(" ") + "\n\n", {
+    flag: 'a'
+});
+
+// Verbosity
+const debug = (process.env.UF_MODE === "debug");
+
+// Catch stdout and write to build log
+const write = process.stdout.write;
+const w = (...args) => {
+    process.stdout.write = write;
+    process.stdout.write(...args);
+
+    writeFileSync(logFile, stripAnsi(args[0]), {
+        flag: 'a'
+    });
+
+    process.stdout.write = w;
+};
+process.stdout.write = w;
 
 /**
  * Prints to stdout with newline when UF_MODE is dev.
- * @param {any} message Message to log.
+ * @param {string} message Message to log. If source specified, must be string.
+ * @param {string} source Message source.
  */
 function Logger(message, source) {
-    if (doILog) {
+    const messageLines = message.split("\n");
+    messageLines.forEach(msg => {
         if (source)
-            info(`${source}: ${message}`);
+            info(`${source}: ${msg}`);
         else
-            info(message);
-    }
+            info(msg);
+    });
 }
 
-// Path constants
-const rootDir = "../";
-const sprinklesDir = rootDir + "app/sprinkles/";
-const sprinklesSchemaPath = rootDir + "app/sprinkles.json";
-const publicAssetsDir = rootDir + "public/assets/";
-const legacyVendorAssetsGlob = rootDir + "sprinkles/*/assets/vendor/**";
-const sprinkleBundleFile = "asset-bundles.json";
-const vendorAssetsDir = rootDir + "app/assets/";
-const buildDirFromVendorAssetsDir = "../../build/";
+/**
+ * Runs the provided command and captures output.
+ * @param {string} cmd Command to execute.
+ * @param {childProcess.ExecOptions} options Options to pass to `exec`.
+ */
+async function RunCommand(cmd, options) {
+    Logger(`Running command "${cmd}"`, "CMD");
+
+    try {
+        const result = await exec(cmd, options);
+        if (result.stdout) Logger(result.stdout, `CMD> ${cmd}`);
+        if (result.stderr) Logger(result.stderr, `CMD> ${cmd}`);
+    } catch (e) {
+        if (e.stdout) Logger(e.stdout, `CMD> ${cmd}`);
+        if (e.stderr) Logger(e.stderr, `CMD> ${cmd}`);
+        Logger(`Command "${cmd}" has completed with an error`, "CMD");
+        throw e;
+    }
+
+    Logger(`Command "${cmd}" has completed successfully`, "CMD");
+}
 
 // Load sprinkles
 let sprinkles;
@@ -84,29 +134,28 @@ export async function assetsInstall() {
             private: true
         };
         Logger("Collating dependencies...");
-        const pkg = mergeNpmDeps(npmTemplate, npmPaths, vendorAssetsDir, doILog);
+        const pkg = mergeNpmDeps(npmTemplate, npmPaths, vendorAssetsDir, true);
         Logger("Dependency collation complete.");
 
+        Logger("Using npm from PATH variable");
+
         // Remove any existing unneeded dependencies
-        Logger("Running npm prune (using npm from PATH)");
-        execSync("npm prune", {
-            cwd: vendorAssetsDir,
-            stdio: doILog ? "inherit" : ""
+        Logger("Removing extraneous dependencies");
+        await RunCommand("npm prune", {
+            cwd: vendorAssetsDir
         });
 
         // Perform installation
-        Logger("Running npm install (using npm from PATH)");
-        execSync("npm install", {
-            cwd: vendorAssetsDir,
-            stdio: doILog ? "inherit" : ""
+        Logger("Installing dependencies");
+        await RunCommand("npm install", {
+            cwd: vendorAssetsDir
         });
 
         // Conduct audit
-        Logger("Running npm audit (using npm from PATH)");
+        Logger("Running audit");
         try {
-            execSync("npm audit", {
-                cwd: vendorAssetsDir,
-                stdio: doILog ? "inherit" : ""
+            await RunCommand("npm audit", {
+                cwd: vendorAssetsDir
             });
         }
         catch {
@@ -156,23 +205,22 @@ export async function assetsInstall() {
             name: "uf-vendor-assets"
         };
         Logger("Collating dependencies...");
-        mergeBowerDeps(bowerTemplate, bowerPaths, vendorAssetsDir, doILog);
+        mergeBowerDeps(bowerTemplate, bowerPaths, vendorAssetsDir, true);
         Logger("Dependency collation complete.");
 
         // Perform installation
-        Logger("Running bower install -q --allow-root");
+        Logger("Installed dependencies");
         // --allow-root stops bower from complaining about being in 'sudo' in various situations
-        execSync(normalisePath(buildDirFromVendorAssetsDir + "node_modules/.bin/bower") + " install -q --allow-root", {
-            cwd: vendorAssetsDir,
-            stdio: doILog ? "inherit" : ""
+        await RunCommand("bower install -q --allow-root", {
+            cwd: vendorAssetsDir
         });
+        
 
         // Prune any unnecessary dependencies
-        Logger("Running bower prune -q --allow-root");
+        Logger("Removing extraneous dependencies");
         // --allow-root stops bower from complaining about being in 'sudo' in various situations
-        execSync("bower prune -q --allow-root", {
-            cwd: vendorAssetsDir,
-            stdio: doILog ? "inherit" : ""
+        await RunCommand("bower prune -q --allow-root", {
+            cwd: vendorAssetsDir
         });
     }
     else {
@@ -222,10 +270,10 @@ export function bundle() {
         let fileContent;
         try {
             fileContent = readFileSync(sprinklesDir + sprinkle + "/" + sprinkleBundleFile);
-            Logger(`   Read '${sprinkleBundleFile}'.`);
+            Logger(`Read '${sprinkleBundleFile}'.`, sprinkle);
         }
         catch (error) {
-            Logger(`   No '${sprinkleBundleFile}' detected, or can't be read.`);
+            Logger(`No '${sprinkleBundleFile}' detected, or can't be read.`, sprinkle);
             continue;
         }
 
@@ -235,10 +283,10 @@ export function bundle() {
             rawConfig = JSON.parse(fileContent);
             ValidateRawConfig(rawConfig);
             rawConfigs.push(rawConfig);
-            Logger("   Asset bundles validated and loaded.");
+            Logger("Asset bundles validated and loaded.", sprinkle);
         }
         catch (error) {
-            Logger("   Asset bundle is invalid.");
+            Logger("Asset bundle is invalid.", sprinkle);
             throw error;
         }
     }
@@ -260,9 +308,8 @@ export function bundle() {
     // Set base path for bundle resources to align with virtual paths
     rawConfig.BundlesVirtualBasePath = "./assets/";
 
-    // Bundle results callback
     /**
-     * 
+     * Bundle results callback.
      * @param {Map<string, any[]} results 
      */
     function bundleResults(results) {
@@ -321,7 +368,7 @@ export function bundle() {
     // Logger adapter
     function LoggerAdapter(message, loglevel) {
         // Normal level and above
-        if (loglevel > 0) {
+        if (loglevel > 0 || debug) {
             Logger(message, "gulp-bundle-assets");
         }
     }
