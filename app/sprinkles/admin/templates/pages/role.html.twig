@@ -111,11 +111,12 @@
     <script>
     {% include "pages/partials/page.js.twig" %}
 
-    // Add user name
+    // Add role slug
     page = $.extend(
-        true,               // deep extend
+        true, // deep extend
         {
-            "role_slug": "{{role.slug}}"
+            role_slug: "{{role.slug}}",
+            delete_redirect: "{{delete_redirect}}"
         },
         page
     );

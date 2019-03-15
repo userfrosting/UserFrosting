@@ -179,9 +179,10 @@
 
     // Add user name
     page = $.extend(
-        true,               // deep extend
+        true, // deep extend
         {
-            "user_name": "{{user.user_name}}"
+            user_name: "{{user.user_name}}",
+            delete_redirect: "{{delete_redirect}}"
         },
         page
     );

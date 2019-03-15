@@ -88,11 +88,12 @@
     <script>
     {% include "pages/partials/page.js.twig" %}
 
-    // Add user name
+    // Add group slug
     page = $.extend(
-        true,               // deep extend
+        true, // deep extend
         {
-            "group_slug": "{{group.slug}}"
+            group_slug: "{{group.slug}}",
+            delete_redirect: "{{delete_redirect}}"
         },
         page
     );

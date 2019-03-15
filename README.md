@@ -112,6 +112,7 @@ This project exists thanks to all the people who contribute. If you're intereste
 - Dmitriy (@rendername) - Russian
 - Amin Akbari (@aminakbari) - Farsi
 - Dumblledore - Turkish
+- Lena Stergatou (@lenasterg) - Greek
 
 ## Supporting UserFrosting
 

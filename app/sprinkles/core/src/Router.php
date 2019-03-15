@@ -104,7 +104,8 @@ class Router extends \Slim\Router implements RouterInterface
 
         $ci = $app->getContainer();
 
-        $routeFiles = array_reverse($ci->locator->listResources('routes://', true));
+        // Reverse the list, so the lower priority are required first
+        $routeFiles = array_reverse($ci->locator->listResources('routes://', true, false));
         foreach ($routeFiles as $routeFile) {
             require $routeFile;
         }

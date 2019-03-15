@@ -31,8 +31,8 @@ class TestMailCommand extends BaseCommand
     {
         $this->setName('test:mail')
              ->setDescription('Test mail settings')
-             ->setHelp('This command let you test the email sending capability of your UserFrosting setup')
-             ->addOption('to', null, InputOption::VALUE_REQUIRED, 'Adress to send test email to. Use admin contact if ommited.');
+             ->setHelp('This command let you test the email sending capability of your UserFrosting setup.')
+             ->addOption('to', null, InputOption::VALUE_REQUIRED, 'Email address to send test email to. Use admin contact if omitted.');
     }
 
     /**

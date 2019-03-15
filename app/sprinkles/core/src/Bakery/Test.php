@@ -43,9 +43,9 @@ class Test extends BaseCommand
              ->addOption('coverage', 'c', InputOption::VALUE_NONE, 'Enable code coverage report.')
              ->addOption('coverage-format', null, InputOption::VALUE_REQUIRED, 'Select test coverage format. Choose from html, clover, crap4j, php, text, xml, etc. Default to HTML.')
              ->addOption('coverage-path', null, InputOption::VALUE_REQUIRED, 'Code coverage report saving location. Default to `_meta/coverage`.')
-             ->addArgument('testscope', InputArgument::OPTIONAL, 'Test Scope can either be a sprinkle name or a test class (optional)')
+             ->addArgument('testscope', InputArgument::OPTIONAL, 'Test Scope can either be a sprinkle name or a test class (optional).')
              ->setDescription('Runs automated tests')
-             ->setHelp("Run PHP unit tests. Tests from a specific sprinkle can optionally be run using the 'testscope' argument (`php bakery test SprinkleName`). A specific test class can also be be run using the testscope argument (`php bakery test 'UserFrosting\Sprinkle\SprinkleName\Tests\TestClass'`), as a specific test method (`php bakery test 'UserFrosting\Sprinkle\SprinkleName\Tests\TestClass::method'`).");
+             ->setHelp("Run PHP unit tests. Tests from a specific sprinkle can optionally be run using the 'testscope' argument (eg. `php bakery test SprinkleName`). A specific test class can also be run using the testscope argument (eg. `php bakery test 'UserFrosting\Sprinkle\SprinkleName\Tests\TestClass'`), as a specific test method (eg. `php bakery test 'UserFrosting\Sprinkle\SprinkleName\Tests\TestClass::method'`).");
     }
 
     /**

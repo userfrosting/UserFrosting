@@ -8,7 +8,9 @@
  */
 $(document).ready(function() {
     // TOS modal
-    $(this).find('.js-show-tos').click(function() {
+    $(this).find('.js-show-tos').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/account/tos",
             msgTarget: $("#alerts-page")

@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException as NotFoundException;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
@@ -28,6 +27,7 @@ use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
@@ -489,7 +489,7 @@ class AccountController extends SimpleController
         $localePathBuilder = $this->ci->localePathBuilder;
 
         if (!$config['site.registration.enabled']) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
