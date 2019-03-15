@@ -3,19 +3,21 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Controller;
 
 use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException as NotFoundException;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
+use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Util\Util as AccountUtil;
@@ -25,7 +27,7 @@ use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
-use UserFrosting\Support\Exception\HttpException;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
@@ -40,12 +42,15 @@ class AccountController extends SimpleController
      *
      * This route is throttled by default, to discourage abusing it for account enumeration.
      * This route is "public access".
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/check-username
+     * Route Name: {none}
+     * Request type: GET
+     * @param  Request             $request
+     * @param  Response            $response
+     * @param  array               $args
+     * @throws BadRequestException
      */
     public function checkUsername(Request $request, Response $response, $args)
     {
@@ -68,7 +73,7 @@ class AccountController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException('Missing or malformed request data!');
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
@@ -81,7 +86,7 @@ class AccountController extends SimpleController
 
         // Throttle requests
         if ($delay > 0) {
-            return $response->withStatus(429);
+            return $response->withJson([], 429);
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -95,6 +100,7 @@ class AccountController extends SimpleController
 
         if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
             $message = $translator->translate('USERNAME.NOT_AVAILABLE', $data);
+
             return $response->write($message)->withStatus(200);
         } else {
             return $response->write('true')->withStatus(200);
@@ -107,12 +113,14 @@ class AccountController extends SimpleController
      * This is provided so that users can cancel a password reset request, if they made it in error or if it was not initiated by themselves.
      * Processes the request from the password reset link, checking that:
      * 1. The provided token is associated with an existing user account, who has a pending password reset request.
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/set-password/deny
+     * Route Name: {none}
+     * Request type: GET
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function denyResetPassword(Request $request, Response $response, $args)
     {
@@ -138,18 +146,20 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            // 400 code + redirect is perfectly fine, according to user Dilaz in #laravel
-            return $response->withRedirect($loginPage, 400);
+
+            return $response->withRedirect($loginPage);
         }
 
         $passwordReset = $this->ci->repoPasswordReset->cancel($data['token']);
 
         if (!$passwordReset) {
             $ms->addMessageTranslated('danger', 'PASSWORD.FORGET.INVALID');
-            return $response->withRedirect($loginPage, 400);
+
+            return $response->withRedirect($loginPage);
         }
 
         $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_CANNED');
+
         return $response->withRedirect($loginPage);
     }
 
@@ -163,14 +173,16 @@ class AccountController extends SimpleController
      * Note that we have removed the requirement that a password reset request not already be in progress.
      * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
      * This route is "public access".
-     * Request type: POST
      * @todo require additional user information
      * @todo prevent password reset requests for root account?
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/forgot-password
+     * Route Name: {none}
+     * Request type: POST
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function forgotPassword(Request $request, Response $response, $args)
     {
@@ -197,7 +209,8 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            return $response->withStatus(400);
+
+            return $response->withJson([], 400);
         }
 
         // Throttle requests
@@ -212,12 +225,13 @@ class AccountController extends SimpleController
 
         if ($delay > 0) {
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', ['delay' => $delay]);
-            return $response->withStatus(429);
+
+            return $response->withJson([], 429);
         }
 
         // All checks passed!  log events/activities, update user, and send email
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $throttler, $throttleData, $config) {
+        Capsule::transaction(function () use ($classMapper, $data, $throttler, $throttleData, $config) {
 
             // Log throttleable event
             $throttler->logEvent('password_reset_request', $throttleData);
@@ -237,8 +251,8 @@ class AccountController extends SimpleController
                 $message->from($config['address_book.admin'])
                         ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                         ->addParams([
-                            'user' => $user,
-                            'token' => $passwordReset->getToken(),
+                            'user'         => $user,
+                            'token'        => $passwordReset->getToken(),
                             'request_date' => Carbon::now()->format('Y-m-d H:i:s')
                         ]);
 
@@ -249,19 +263,22 @@ class AccountController extends SimpleController
         // TODO: create delay to prevent timing-based attacks
 
         $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_SENT', ['email' => $data['email']]);
-        return $response->withStatus(200);
+
+        return $response->withJson([], 200);
     }
 
     /**
      * Returns a modal containing account terms of service.
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /modals/account/tos
+     * Route Name: {none}
+     * Request type: GET
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function getModalAccountTos(Request $request, Response $response, $args)
     {
@@ -271,12 +288,13 @@ class AccountController extends SimpleController
     /**
      * Generate a random captcha, store it to the session, and return the captcha image.
      *
+     * AuthGuard: false
+     * Route: /account/captcha
+     * Route Name: {none}
      * Request type: GET
-     *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function imageCaptcha(Request $request, Response $response, $args)
     {
@@ -299,19 +317,21 @@ class AccountController extends SimpleController
      * 5. The user account is enabled and verified.
      * 6. The user entered a valid username/email and password.
      * This route, by definition, is "public access".
-     * Request type: POST
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/login
+     * Route Name: {none}
+     * Request type: POST
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function login(Request $request, Response $response, $args)
     {
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -320,7 +340,8 @@ class AccountController extends SimpleController
         // Return 200 success if user is already logged in
         if ($authenticator->check()) {
             $ms->addMessageTranslated('warning', 'LOGIN.ALREADY_COMPLETE');
-            return $response->withStatus(200);
+
+            return $response->withJson([], 200);
         }
 
         /** @var \UserFrosting\Support\Repository\Repository $config */
@@ -340,7 +361,8 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            return $response->withStatus(400);
+
+            return $response->withJson([], 400);
         }
 
         // Determine whether we are trying to log in with an email address or a username
@@ -362,7 +384,8 @@ class AccountController extends SimpleController
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', [
                 'delay' => $delay
             ]);
-            return $response->withStatus(429);
+
+            return $response->withJson([], 429);
         }
 
         // Log throttleable event
@@ -372,7 +395,8 @@ class AccountController extends SimpleController
         // Note that we do this after logging throttle event, so this error counts towards throttling limit.
         if ($isEmail && !$config['site.login.enable_email']) {
             $ms->addMessageTranslated('danger', 'USER_OR_PASS_INVALID');
-            return $response->withStatus(403);
+
+            return $response->withJson([], 403);
         }
 
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
@@ -392,12 +416,13 @@ class AccountController extends SimpleController
     /**
      * Log the user out completely, including destroying any "remember me" token.
      *
+     * AuthGuard: true
+     * Route: /account/logout
+     * Route Name: {none}
      * Request type: GET
-     *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function logout(Request $request, Response $response, $args)
     {
@@ -406,6 +431,7 @@ class AccountController extends SimpleController
 
         // Return to home page
         $config = $this->ci->config;
+
         return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
     }
 
@@ -414,12 +440,14 @@ class AccountController extends SimpleController
      *
      * This creates a simple form to allow users who forgot their password to have a time-limited password reset link emailed to them.
      * By default, this is a "public page" (does not require authentication).
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/forgot-password
+     * Route Name: forgot-password
+     * Request type: GET
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageForgotPassword(Request $request, Response $response, $args)
     {
@@ -436,26 +464,32 @@ class AccountController extends SimpleController
         ]);
     }
 
-
     /**
      * Render the account registration page for UserFrosting.
      *
      * This allows new (non-authenticated) users to create a new account for themselves on your website (if enabled).
      * By definition, this is a "public page" (does not require authentication).
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * checkEnvironment
+     * Route: /account/register
+     * Route Name: register
+     * Request type: GET
+     * @param  Request           $request
+     * @param  Response          $response
+     * @param  array             $args
+     * @throws NotFoundException If site registration is disabled
      */
     public function pageRegister(Request $request, Response $response, $args)
     {
         /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
+        /** @var \UserFrosting\I18n\LocalePathBuilder */
+        $localePathBuilder = $this->ci->localePathBuilder;
+
         if (!$config['site.registration.enabled']) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -472,11 +506,18 @@ class AccountController extends SimpleController
         $schema = new RequestSchema('schema://requests/register.yaml');
         $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
 
+        // Get locale information
+        $currentLocales = $localePathBuilder->getLocales();
+
         return $this->ci->view->render($response, 'pages/register.html.twig', [
             'page' => [
                 'validators' => [
                     'register' => $validatorRegister->rules('json', false)
                 ]
+            ],
+            'locales' => [
+                'available' => $config['site.locales.available'],
+                'current'   => end($currentLocales)
             ]
         ]);
     }
@@ -486,12 +527,14 @@ class AccountController extends SimpleController
      *
      * This is a form that allows users who lost their account verification link to have the link resent to their email address.
      * By default, this is a "public page" (does not require authentication).
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/resend-verification
+     * Route Name: {none}
+     * Request type: GET
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageResendVerification(Request $request, Response $response, $args)
     {
@@ -512,12 +555,14 @@ class AccountController extends SimpleController
      * Reset password page.
      *
      * Renders the new password page for password reset requests.
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/set-password/confirm
+     * Route Name: {none}
+     * Request type: GET
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageResetPassword(Request $request, Response $response, $args)
     {
@@ -543,12 +588,14 @@ class AccountController extends SimpleController
      *
      * Renders the page where new users who have had accounts created for them by another user, can set their password.
      * By default, this is a "public page" (does not require authentication).
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route:
+     * Route Name: {none}
+     * Request type: GET
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageSetPassword(Request $request, Response $response, $args)
     {
@@ -575,19 +622,22 @@ class AccountController extends SimpleController
      * Provides a form for users to modify various properties of their account, such as name, email, locale, etc.
      * Any fields that the user does not have permission to modify will be automatically disabled.
      * This page requires authentication.
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: true
+     * Route: /account/settings
+     * Route Name: {none}
+     * Request type: GET
+     * @param  Request            $request
+     * @param  Response           $response
+     * @param  array              $args
+     * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageSettings(Request $request, Response $response, $args)
     {
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -610,7 +660,7 @@ class AccountController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
             'locales' => $locales,
-            'page' => [
+            'page'    => [
                 'validators' => [
                     'account_settings'    => $validatorAccountSettings->rules('json', false),
                     'profile_settings'    => $validatorProfileSettings->rules('json', false)
@@ -625,12 +675,15 @@ class AccountController extends SimpleController
      *
      * This allows existing users to sign in.
      * By definition, this is a "public page" (does not require authentication).
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * checkEnvironment
+     * Route: /account/sign-in
+     * Route Name: login
+     * Request type: GET
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function pageSignIn(Request $request, Response $response, $args)
     {
@@ -667,12 +720,14 @@ class AccountController extends SimpleController
      * 1. They have the necessary permissions to update the posted field(s);
      * 2. The submitted data is valid.
      * This route requires authentication.
-     * Request type: POST
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: true
+     * Route: /account/settings/profile
+     * Route Name: {none}
+     * Request type: POST
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function profile(Request $request, Response $response, $args)
     {
@@ -682,14 +737,15 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access control for entire resource - check that the current user has permission to modify themselves
         // See recipe "per-field access control" for dynamic fine-grained control over which properties a user can modify.
         if (!$authorizer->checkAccess($currentUser, 'update_account_settings')) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.ACCESS_DENIED');
-            return $response->withStatus(403);
+
+            return $response->withJson([], 403);
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -725,7 +781,7 @@ class AccountController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Looks good, let's update with new values!
@@ -740,7 +796,8 @@ class AccountController extends SimpleController
         ]);
 
         $ms->addMessageTranslated('success', 'PROFILE.UPDATED');
-        return $response->withStatus(200);
+
+        return $response->withJson([], 200);
     }
 
     /**
@@ -757,13 +814,16 @@ class AccountController extends SimpleController
      * 7. The username and email are not already taken.
      * Automatically sends an activation link upon success, if account activation is enabled.
      * This route is "public access".
-     * Request type: POST
      * Returns the User Object for the user record that was created.
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/register
+     * Route Name: {none}
+     * Request type: POST
+     * @param  Request                $request
+     * @param  Response               $response
+     * @param  array                  $args
+     * @throws SpammyRequestException
      */
     public function register(Request $request, Response $response, $args)
     {
@@ -787,13 +847,15 @@ class AccountController extends SimpleController
         // Security measure: do not allow registering new users until the master account has been created.
         if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.MASTER_NOT_EXISTS');
-            return $response->withStatus(403);
+
+            return $response->withJson([], 403);
         }
 
         // Check if registration is currently enabled
         if (!$config['site.registration.enabled']) {
             $ms->addMessageTranslated('danger', 'REGISTRATION.DISABLED');
-            return $response->withStatus(403);
+
+            return $response->withJson([], 403);
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -802,7 +864,8 @@ class AccountController extends SimpleController
         // Prevent the user from registering if he/she is already logged in
         if ($authenticator->check()) {
             $ms->addMessageTranslated('danger', 'REGISTRATION.LOGOUT');
-            return $response->withStatus(403);
+
+            return $response->withJson([], 403);
         }
 
         // Load the request schema
@@ -827,18 +890,7 @@ class AccountController extends SimpleController
 
         // Throttle requests
         if ($delay > 0) {
-            return $response->withStatus(429);
-        }
-
-        // Check if username or email already exists
-        if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
-            $ms->addMessageTranslated('danger', 'USERNAME.IN_USE', $data);
-            $error = true;
-        }
-
-        if ($classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
-            $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
-            $error = true;
+            return $response->withJson([], 429);
         }
 
         // Check captcha, if required
@@ -851,89 +903,33 @@ class AccountController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Remove captcha, password confirmation from object data after validation
         unset($data['captcha']);
         unset($data['passwordc']);
 
+        // Now that we check the form, we can register the actual user
+        $registration = new Registration($this->ci, $data);
+
+        try {
+            $user = $registration->register();
+        } catch (\Exception $e) {
+            $ms->addMessageTranslated('danger', $e->getMessage(), $data);
+            $error = true;
+        }
+
+        // Success message
         if ($config['site.registration.require_email_verification']) {
-            $data['flag_verified'] = false;
+            // Verification required
+            $ms->addMessageTranslated('success', 'REGISTRATION.COMPLETE_TYPE2', $user->toArray());
         } else {
-            $data['flag_verified'] = true;
+            // No verification required
+            $ms->addMessageTranslated('success', 'REGISTRATION.COMPLETE_TYPE1');
         }
 
-        // Load default group
-        $groupSlug = $config['site.registration.user_defaults.group'];
-        $defaultGroup = $classMapper->staticMethod('group', 'where', 'slug', $groupSlug)->first();
-
-        if (!$defaultGroup) {
-            $e = new HttpException("Account registration is not working because the default group '$groupSlug' does not exist.");
-            $e->addUserMessage('REGISTRATION.BROKEN');
-            throw $e;
-        }
-
-        // Set default group
-        $data['group_id'] = $defaultGroup->id;
-
-        // Set default locale
-        $data['locale'] = $config['site.registration.user_defaults.locale'];
-
-        // Hash password
-        $data['password'] = Password::hash($data['password']);
-
-        // All checks passed!  log events/activities, create user, and send verification email (if required)
-        // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $throttler) {
-            // Log throttleable event
-            $throttler->logEvent('registration_attempt');
-
-            // Create the user
-            $user = $classMapper->createInstance('user', $data);
-
-            // Store new user to database
-            $user->save();
-
-            // Create activity record
-            $this->ci->userActivityLogger->info("User {$user->user_name} registered for a new account.", [
-                'type' => 'sign_up',
-                'user_id' => $user->id
-            ]);
-
-            // Load default roles
-            $defaultRoleSlugs = $classMapper->staticMethod('role', 'getDefaultSlugs');
-            $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
-            $defaultRoleIds = $defaultRoles->pluck('id')->all();
-
-            // Attach default roles
-            $user->roles()->attach($defaultRoleIds);
-
-            // Verification email
-            if ($config['site.registration.require_email_verification']) {
-                // Try to generate a new verification request
-                $verification = $this->ci->repoVerification->create($user, $config['verification.timeout']);
-
-                // Create and send verification email
-                $message = new TwigMailMessage($this->ci->view, 'mail/verify-account.html.twig');
-
-                $message->from($config['address_book.admin'])
-                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-                        ->addParams([
-                            'user' => $user,
-                            'token' => $verification->getToken()
-                        ]);
-
-                $this->ci->mailer->send($message);
-
-                $ms->addMessageTranslated('success', 'REGISTRATION.COMPLETE_TYPE2', $user->toArray());
-            } else {
-                // No verification required
-                $ms->addMessageTranslated('success', 'REGISTRATION.COMPLETE_TYPE1');
-            }
-        });
-
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -945,12 +941,14 @@ class AccountController extends SimpleController
      * 3. The user account is not already verified;
      * 4. The submitted data is valid.
      * This route is "public access".
-     * Request type: POST
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/resend-verification
+     * Route Name: {none}
+     * Request type: POST
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function resendVerification(Request $request, Response $response, $args)
     {
@@ -977,7 +975,8 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            return $response->withStatus(400);
+
+            return $response->withJson([], 400);
         }
 
         // Throttle requests
@@ -992,12 +991,13 @@ class AccountController extends SimpleController
 
         if ($delay > 0) {
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', ['delay' => $delay]);
-            return $response->withStatus(429);
+
+            return $response->withJson([], 429);
         }
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $throttler, $throttleData, $config) {
+        Capsule::transaction(function () use ($classMapper, $data, $throttler, $throttleData, $config) {
             // Log throttleable event
             $throttler->logEvent('verification_request', $throttleData);
 
@@ -1017,7 +1017,7 @@ class AccountController extends SimpleController
                 $message->from($config['address_book.admin'])
                         ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                         ->addParams([
-                            'user' => $user,
+                            'user'  => $user,
                             'token' => $verification->getToken()
                         ]);
 
@@ -1026,7 +1026,8 @@ class AccountController extends SimpleController
         });
 
         $ms->addMessageTranslated('success', 'ACCOUNT.VERIFICATION.NEW_LINK_SENT', ['email' => $data['email']]);
-        return $response->withStatus(200);
+
+        return $response->withJson([], 200);
     }
 
     /**
@@ -1038,12 +1039,14 @@ class AccountController extends SimpleController
      * 3. The token has not expired;
      * 4. The submitted data (new password) is valid.
      * This route is "public access".
-     * Request type: POST
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/set-password
+     * Route Name: {none}
+     * Request type: POST
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function setPassword(Request $request, Response $response, $args)
     {
@@ -1070,7 +1073,8 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            return $response->withStatus(400);
+
+            return $response->withJson([], 400);
         }
 
         $forgotPasswordPage = $this->ci->router->pathFor('forgot-password');
@@ -1082,7 +1086,8 @@ class AccountController extends SimpleController
 
         if (!$passwordReset) {
             $ms->addMessageTranslated('danger', 'PASSWORD.FORGET.INVALID', ['url' => $forgotPasswordPage]);
-            return $response->withStatus(400);
+
+            return $response->withJson([], 400);
         }
 
         $ms->addMessageTranslated('success', 'PASSWORD.UPDATED');
@@ -1100,7 +1105,8 @@ class AccountController extends SimpleController
         $authenticator->login($user);
 
         $ms->addMessageTranslated('success', 'WELCOME', $user->export());
-        return $response->withStatus(200);
+
+        return $response->withJson([], 200);
     }
 
     /**
@@ -1111,12 +1117,14 @@ class AccountController extends SimpleController
      * 2. They have the necessary permissions to update the posted field(s);
      * 3. The submitted data is valid.
      * This route requires authentication.
-     * Request type: POST
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: true
+     * Route: /account/settings
+     * Route Name: settings
+     * Request type: POST
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function settings(Request $request, Response $response, $args)
     {
@@ -1126,14 +1134,15 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access control for entire resource - check that the current user has permission to modify themselves
         // See recipe "per-field access control" for dynamic fine-grained control over which properties a user can modify.
         if (!$authorizer->checkAccess($currentUser, 'update_account_settings')) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.ACCESS_DENIED');
-            return $response->withStatus(403);
+
+            return $response->withJson([], 403);
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -1178,7 +1187,7 @@ class AccountController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Hash new password, if specified
@@ -1201,20 +1210,23 @@ class AccountController extends SimpleController
         ]);
 
         $ms->addMessageTranslated('success', 'ACCOUNT.SETTINGS.UPDATED');
-        return $response->withStatus(200);
+
+        return $response->withJson([], 200);
     }
 
     /**
      * Suggest an available username for a specified first/last name.
      *
      * This route is "public access".
-     * Request type: GET
      * @todo Can this route be abused for account enumeration?  If so we should throttle it as well.
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/suggest-username
+     * Route Name: {none}
+     * Request type: GET
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function suggestUsername(Request $request, Response $response, $args)
     {
@@ -1240,12 +1252,14 @@ class AccountController extends SimpleController
      * 1. The token provided matches a user in the database;
      * 2. The user account is not already verified;
      * This route is "public access".
-     * Request type: GET
      *
-     * @param  Request $request
-     * @param  Response $response
-     * @param  array $args
-     * @return void
+     * AuthGuard: false
+     * Route: /account/verify
+     * Route Name: {none}
+     * Request type: GET
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
      */
     public function verify(Request $request, Response $response, $args)
     {
@@ -1274,15 +1288,16 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            // 400 code + redirect is perfectly fine, according to user Dilaz in #laravel
-            return $response->withRedirect($loginPage, 400);
+
+            return $response->withRedirect($loginPage);
         }
 
         $verification = $this->ci->repoVerification->complete($data['token']);
 
         if (!$verification) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.VERIFICATION.TOKEN_NOT_FOUND');
-            return $response->withRedirect($loginPage, 400);
+
+            return $response->withRedirect($loginPage);
         }
 
         $ms->addMessageTranslated('success', 'ACCOUNT.VERIFICATION.COMPLETE');

@@ -3,14 +3,14 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
-namespace UserFrosting\Tests\Unit;
 
-use Illuminate\Database\Capsule\Manager as DB;
+namespace UserFrosting\Sprinkle\Core\Tests\Unit;
+
 use Mockery as m;
 use UserFrosting\Tests\TestCase;
-use UserFrosting\Tests\DatabaseTransactions;
 use UserFrosting\Sprinkle\Core\Database\Builder as Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
@@ -19,17 +19,16 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 /**
  * SprunjeTest class.
  * Tests a basic Sprunje.
- *
- * @extends TestCase
  */
 class SprunjeTest extends TestCase
 {
     public function tearDown()
     {
+        parent::tearDown();
         m::close();
     }
 
-    function testSprunjeApplyFiltersDefault()
+    public function testSprunjeApplyFiltersDefault()
     {
         $sprunje = new SprunjeStub([
             'filters' => [
@@ -51,7 +50,7 @@ class SprunjeTest extends TestCase
         $sprunje->applyFilters($builder);
     }
 
-    function testSprunjeApplySortsDefault()
+    public function testSprunjeApplySortsDefault()
     {
         $sprunje = new SprunjeStub([
             'sorts' => [
@@ -63,7 +62,6 @@ class SprunjeTest extends TestCase
         $builder->shouldReceive('orderBy')->once()->with('species', 'asc');
         $sprunje->applySorts($builder);
     }
-
 }
 
 class SprunjeStub extends Sprunje
@@ -97,4 +95,3 @@ class SprunjeTestModelStub extends Model
 {
     protected $table = 'table';
 }
-

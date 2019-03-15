@@ -3,8 +3,10 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Models;
 
 /**
@@ -17,20 +19,20 @@ namespace UserFrosting\Sprinkle\Core\Database\Models;
  * @property string request_data
  */
 class Throttle extends Model
-{    
+{
     /**
      * @var string The name of the table for the current model.
-     */ 
-    protected $table = "throttles";
+     */
+    protected $table = 'throttles';
 
     protected $fillable = [
-        "type",
-        "ip",
-        "request_data"
+        'type',
+        'ip',
+        'request_data'
     ];
 
     /**
      * @var bool Enable timestamps for Throttles.
-     */ 
-    public $timestamps = true;    
+     */
+    public $timestamps = true;
 }

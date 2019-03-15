@@ -11,6 +11,7 @@ php:
   - 7
   - 7.1
   - 7.2
+  - 7.3
 
 env:
   matrix:
@@ -18,20 +19,31 @@ env:
     - DB=sqlite
     - DB=pgsql
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+    
 before_install:
   # copy sprinkles.json
   - cp app/sprinkles.example.json app/sprinkles.json
   # set up db
   - bash build/before_install.sh $DB
+  # update node
+  - nvm install 10.12.0
 
 before_script:
   # install deps and UF
   - composer install
+  - php bakery debug
+  - php bakery build-assets
   - php bakery migrate
 
 script:
   # run unit tests
-  - composer test
+  - app/vendor/bin/phpunit --coverage-clover=coverage.xml
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 after_failure:
   - cat app/log/userfrosting.log

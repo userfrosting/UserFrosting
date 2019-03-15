@@ -3,12 +3,14 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Repository;
 
 use Carbon\Carbon;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
@@ -21,7 +23,6 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
  */
 abstract class TokenRepository
 {
-
     /**
      * @var ClassMapper
      */
@@ -41,7 +42,7 @@ abstract class TokenRepository
      * Create a new TokenRepository object.
      *
      * @param ClassMapper $classMapper Maps generic class identifiers to specific class names.
-     * @param string $algorithm The hashing algorithm to use when storing generated tokens.
+     * @param string      $algorithm   The hashing algorithm to use when storing generated tokens.
      */
     public function __construct(ClassMapper $classMapper, $algorithm = 'sha512')
     {
@@ -52,7 +53,7 @@ abstract class TokenRepository
     /**
      * Cancels a specified token by removing it from the database.
      *
-     * @param int $token The token to remove.
+     * @param  int         $token The token to remove.
      * @return Model|false
      */
     public function cancel($token)
@@ -78,8 +79,8 @@ abstract class TokenRepository
     /**
      * Completes a token-based process, invoking updateUser() in the child object to do the actual action.
      *
-     * @param int $token The token to complete.
-     * @param mixed[] $userParams An optional list of parameters to pass to updateUser().
+     * @param  int         $token      The token to complete.
+     * @param  mixed[]     $userParams An optional list of parameters to pass to updateUser().
      * @return Model|false
      */
     public function complete($token, $userParams = [])
@@ -120,11 +121,11 @@ abstract class TokenRepository
     /**
      * Create a new token for a specified user.
      *
-     * @param User $user The user object to associate with this token.
-     * @param int $timeout The time, in seconds, after which this token should expire.
-     * @return Model The model (PasswordReset, Verification, etc) object that stores the token.
+     * @param  UserInterface $user    The user object to associate with this token.
+     * @param  int           $timeout The time, in seconds, after which this token should expire.
+     * @return Model         The model (PasswordReset, Verification, etc) object that stores the token.
      */
-    public function create(User $user, $timeout)
+    public function create(UserInterface $user, $timeout)
     {
         // Remove any previous tokens for this user
         $this->removeExisting($user);
@@ -156,11 +157,11 @@ abstract class TokenRepository
     /**
      * Determine if a specified user has an incomplete and unexpired token.
      *
-     * @param User $user The user object to look up.
-     * @param int $token Optionally, try to match a specific token.
+     * @param  UserInterface $user  The user object to look up.
+     * @param  int           $token Optionally, try to match a specific token.
      * @return Model|false
      */
-    public function exists(User $user, $token = null)
+    public function exists(UserInterface $user, $token = null)
     {
         $model = $this->classMapper
             ->staticMethod($this->modelIdentifier, 'where', 'user_id', $user->id)
@@ -179,10 +180,10 @@ abstract class TokenRepository
     /**
      * Delete all existing tokens from the database for a particular user.
      *
-     * @param  User  $user
+     * @param  UserInterface $user
      * @return int
      */
-    protected function removeExisting(User $user)
+    protected function removeExisting(UserInterface $user)
     {
         return $this->classMapper
             ->staticMethod($this->modelIdentifier, 'where', 'user_id', $user->id)
@@ -206,16 +207,17 @@ abstract class TokenRepository
      * Generate a new random token for this user.
      *
      * This generates a token to use for verifying a new account, resetting a lost password, etc.
-     * @param string $gen specify an existing token that, if we happen to generate the same value, we should regenerate on.
+     * @param  string $gen specify an existing token that, if we happen to generate the same value, we should regenerate on.
      * @return string
      */
     protected function generateRandomToken($gen = null)
     {
         do {
             $gen = md5(uniqid(mt_rand(), false));
-        } while($this->classMapper
+        } while ($this->classMapper
             ->staticMethod($this->modelIdentifier, 'where', 'hash', hash($this->algorithm, $gen))
             ->first());
+
         return $gen;
     }
 
@@ -223,8 +225,9 @@ abstract class TokenRepository
      * Modify the user during the token completion process.
      *
      * This method is called during complete(), and is a way for concrete implementations to modify the user.
-     * @param User $user the user object to modify.
-     * @return mixed[] $args the list of parameters that were supplied to the call to `complete()`
+     * @param  UserInterface $user the user object to modify.
+     * @param  mixed[]       $args
+     * @return mixed[]       $args the list of parameters that were supplied to the call to `complete()`
      */
-    abstract protected function updateUser($user, $args);
+    abstract protected function updateUser(UserInterface $user, $args);
 }

@@ -3,11 +3,14 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Throttle;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**
@@ -18,7 +21,7 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 class Throttler
 {
     /**
-     * @var UserFrosting\Sprinkle\Core\Util\ClassMapper
+     * @var ClassMapper
      */
     protected $classMapper;
 
@@ -41,10 +44,10 @@ class Throttler
     /**
      * Add a throttling rule for a particular throttle event type.
      *
-     * @param string $type The type of throttle event to check against.
-     * @param ThrottleRule $rule The rule to use when throttling this type of event.
+     * @param string            $type The type of throttle event to check against.
+     * @param ThrottleRule|null $rule The rule to use when throttling this type of event.
      */
-    public function addThrottleRule($type, $rule)
+    public function addThrottleRule($type, ThrottleRule $rule = null)
     {
         if (!($rule instanceof ThrottleRule || ($rule === null))) {
             throw new ThrottlerException('$rule must be of type ThrottleRule (or null).');
@@ -58,8 +61,8 @@ class Throttler
     /**
      * Check the current request against a specified throttle rule.
      *
-     * @param string $type The type of throttle event to check against.
-     * @param mixed[] $requestData Any additional request parameters to use in checking the throttle.
+     * @param  string  $type        The type of throttle event to check against.
+     * @param  mixed[] $requestData Any additional request parameters to use in checking the throttle.
      * @return bool
      */
     public function getDelay($type, $requestData = [])
@@ -108,7 +111,7 @@ class Throttler
     /**
      * Get a registered rule of a particular type.
      *
-     * @param string $type
+     * @param  string             $type
      * @throws ThrottlerException
      * @return ThrottleRule[]
      */
@@ -134,7 +137,7 @@ class Throttler
     /**
      * Log a throttleable event to the database.
      *
-     * @param string $type the type of event
+     * @param string   $type        the type of event
      * @param string[] $requestData an array of field names => values that are relevant to throttling for this event (e.g. username, email, etc).
      */
     public function logEvent($type, $requestData = [])
@@ -147,8 +150,8 @@ class Throttler
         }
 
         $event = $this->classMapper->createInstance('throttle', [
-            'type' => $type,
-            'ip' => $_SERVER['REMOTE_ADDR'],
+            'type'         => $type,
+            'ip'           => $_SERVER['REMOTE_ADDR'],
             'request_data' => json_encode($requestData)
         ]);
 
@@ -160,11 +163,11 @@ class Throttler
     /**
      * Returns the current delay for a specified throttle rule.
      *
-     * @param  Throttle[] $events a Collection of throttle events.
+     * @param  Collection   $events       a Collection of throttle events.
      * @param  ThrottleRule $throttleRule a rule representing the strategy to use for throttling a particular type of event.
-     * @return int seconds remaining until a particular event is permitted to be attempted again.
+     * @return int          seconds remaining until a particular event is permitted to be attempted again.
      */
-    protected function computeDelay($events, $throttleRule)
+    protected function computeDelay(Collection $events, ThrottleRule $throttleRule)
     {
         // If no matching events found, then there is no delay
         if (!$events->count()) {
@@ -173,6 +176,7 @@ class Throttler
 
         // Great, now we compare our delay against the most recent attempt
         $lastEvent = $events->last();
+
         return $throttleRule->getDelay($lastEvent->created_at, $events->count());
     }
 }

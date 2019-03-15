@@ -1,20 +1,24 @@
-# UserFrosting 4.1
+# UserFrosting 4.2
+
+[![Latest Version](https://img.shields.io/github/release/userfrosting/UserFrosting.svg)](https://github.com/userfrosting/UserFrosting/releases)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
+[![Join the chat at https://chat.userfrosting.com/channel/support](https://demo.rocket.chat/images/join-chat.svg)](https://chat.userfrosting.com/channel/support)
+[![Backers on Open Collective](https://opencollective.com/userfrosting/backers/badge.svg)](#backers)
+[![Sponsors on Open Collective](https://opencollective.com/userfrosting/sponsors/badge.svg)](#sponsors)
+[![Donate](https://img.shields.io/badge/Open%20Collective-Donate-blue.svg)](https://opencollective.com/userfrosting#backer)
+
+| Branch | Status |
+| ------ | ------ |
+| master | [![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)](https://travis-ci.org/userfrosting/UserFrosting) [![codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting/branch/master) |
+| develop | [![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=develop)](https://travis-ci.org/userfrosting/UserFrosting) [![codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting/branch/develop) |
 
 [https://www.userfrosting.com](https://www.userfrosting.com)
-
-[![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)](https://travis-ci.org/userfrosting/UserFrosting)
-[![Join the chat at https://chat.userfrosting.com/channel/support](https://demo.rocket.chat/images/join-chat.svg)](https://chat.userfrosting.com/channel/support)
-[![Backers on Open Collective](https://opencollective.com/userfrosting/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/userfrosting/sponsors/badge.svg)](#sponsors)
-
-<a href="https://opencollective.com/userfrosting#backer" target="_blank">
-  <img src="https://opencollective.com/userfrosting/donate/button.png?color=blue" width=300 />
-</a>
 
 If you simply want to show that you like this project, or want to remember it for later, you should **star**, not **fork**, this repository.  Forking is only for when you are ready to create your own copy of the code to work on.
 
 ## By [Alex Weissman](https://alexanderweissman.com)
 
-Copyright (c) 2018, free to use in personal and commercial software as per the [license](LICENSE.md).
+Copyright (c) 2019, free to use in personal and commercial software as per the [license](LICENSE.md).
 
 UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.4/eloquent#introduction) ORM.
 
@@ -76,7 +80,7 @@ Louis's a civil engineer in Montréal, Québec who also has a passion for coding
 
 ### Jordan Mele
 
-Jordan's a developer at Mayvin Training and a student studying Computer Science at the University of Wollongong. His passion is creating software-based solutions to overcomplicated problems, without taking control away from the user. He's also Australian.
+Jordan's an Australian PHP Developer at [4mation](https://www.4mation.com.au) in Surry Hills, NSW. His passion is creating simple yet intuitive software-based solutions for problems that would otherwise be tedious and overcomplicated to address, while keeping the user in control.
 
 ### Sarah Baghdadi
 
@@ -108,6 +112,7 @@ This project exists thanks to all the people who contribute. If you're intereste
 - Dmitriy (@rendername) - Russian
 - Amin Akbari (@aminakbari) - Farsi
 - Dumblledore - Turkish
+- Lena Stergatou (@lenasterg) - Greek
 
 ## Supporting UserFrosting
 

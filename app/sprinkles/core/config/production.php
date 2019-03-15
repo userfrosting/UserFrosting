@@ -1,40 +1,62 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
+ */
 
-    /**
-     * Default production config file for UserFrosting.  You may override/extend this in your site's configuration file to customize deploy settings.
-     *
+/*
+ * Default production config file for UserFrosting.  You may override/extend this in your site's configuration file to customize deploy settings.
+ */
+return [
+    /*
+     * Use compiled assets
      */
-
-    return [
-        'assets' => [
-            'use_raw' => false
-        ],
-        'cache' => [
-            'twig' => true
-        ],
-        'debug' => [
-            'twig' => false,
-            'auth' => false,
-            'smtp' => false
-        ],
-        // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
-        'settings' => [
-            'routerCacheFile' => \UserFrosting\ROOT_DIR . '/' . \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME . '/' . 'routes.cache',
-            'displayErrorDetails' => false
-        ],
-        'site' => [
-            'analytics' => [
-                'google' => [
-                    'enabled' => true
-                ]
-            ],
-            'debug' => [
-                'ajax' => false,
-                'info' => false
+    'assets' => [
+        'use_raw' => false
+    ],
+    /*
+     * Enable Twig cache
+     */
+    'cache' => [
+        'twig' => true
+    ],
+    /*
+     * Turn off debug logs
+     */
+    'debug' => [
+        'twig' => false,
+        'auth' => false,
+        'smtp' => false
+    ],
+    /*
+     * Use router cache, disable full error details
+     */
+    'settings' => [
+        'routerCacheFile'     => 'routes.cache',
+        'displayErrorDetails' => false
+    ],
+    /*
+     * Enable analytics, disable more debugging
+     */
+    'site' => [
+        'analytics' => [
+            'google' => [
+                'enabled' => true
             ]
         ],
-        'php' => [
-            'display_errors'  => 'false',
-            'log_errors'      => 'true'
+        'debug' => [
+            'ajax' => false,
+            'info' => false
         ]
-    ];
+    ],
+    /*
+     * Send errors to log
+     */
+    'php' => [
+        'display_errors'  => 'false',
+        'log_errors'      => 'true'
+    ]
+];

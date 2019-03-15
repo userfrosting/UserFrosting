@@ -44,28 +44,76 @@ When it's time to integrate changes, our git flow more or less follows http://nv
 
 ### Branches
 
-- `master`: The current release or release candidate.  Always numbered as `major.minor.revision`, possibly with an `-alpha` or `-beta` extension as well.
-- `develop`: During alpha/beta, contains major changes to a release candidate.  After beta, contains breaking changes that will need to wait for the next version to be integrated.  Always numbered as `major.minor.x`, possibly with an `-alpha` or `-beta` extension as well.
+#### `master`
+The current release or release candidate.  Always numbered as `major.minor.revision`, possibly with an `-alpha`, `-beta` or `-RC` extension as well. Commits should **never** be send directly on this branch.
 
-### Changes
+#### `hotfix`
+Contains the next bug fix release, typically matching the next `revision` version.  Any changes not introducing a breaking change can be committed to this branch. Always numbered as `major.minor.revision`.
 
-#### Hotfixes
+When ready, changes should be merged into both **master** and **develop**.
 
-Hotfixes should be created in a separate branch, and then merged into both **master** and **develop**.
+#### `develop`
+Contains breaking changes that will need to wait for the next version to be integrated. Typically matched the next `minor` version. Always numbered as `major.minor.x`.
 
-#### Features
+When ready, changes should be merged into both **master** and **hotfix**.
 
-New features that introduce some breaking changes should be created in a separate branch.  When they are ready, they can be merged into `develop`.
+#### `feature-*`
+New features that introduce some breaking changes or incomplete code should be committed in a separate `feature-{name}` branch.  
+
+When ready, the branch should be **[squashed-merged](https://github.com/blog/2141-squash-your-commits)** ([guide](https://stackoverflow.com/a/5309051/445757)) into `develop` (or `hotfix` if it doesn't introduce a breaking change).
 
 ### Releases
 
-After every release, the `master` branch (and possibly `develop`, for minor/major releases) should immediately be version-bumped.  That way, new changes can be accumulated until the next release.
+After every release, the `hotfix` branch (and possibly `develop`, for minor/major releases) should immediately be version-bumped.  That way, new changes can be accumulated until the next release.
 
 When a new version is created, the version number need to be changed in `app/define.php`. `CHANGELOG.md` should also be updated and the associated tag should be created on Github.
 
-#### Alpha/beta releases
+#### Alpha/beta/RC releases
 
-During alpha/beta, a release candidate sits on the `master` branch.  Minor improvements should be treated as hotfixes, while major changes should be treated as features.  In alpha/beta, major changes can still be integrated into `master` from `develop`.  However, this should bump the revision number instead of the minor/major number.
+During alpha/beta/RC, a release candidate always sits on the `master` branch. During the alpha/beta phase, major changes can still be integrated into `master` from `develop`. However, this should bump the revision number instead of the minor/major number. During RC, only _hotfixes_ can be merged into `master`.
+
+## Working together
+
+### Issues
+
+Issues are used as a todo list. Each issue represent something that needs to be fixed, added or improved. Be sure to assign issues to yourself when working on something so everyones knows this issue is taken care of.
+
+Issues are tagged to represent the feature or category it refers to. We also have some special tags to help organize issues. These includes:
+
+ - [`good first issue`](https://github.com/userfrosting/UserFrosting/labels/good%20first%20issue): If this is your first time contributing to UserFrosting, look for the `good first issue` tag. It's associated with easier issues anyone can tackle.
+
+ - [`up-for-grabs`](https://github.com/userfrosting/UserFrosting/labels/up-for-grabs): Theses issues have not yet been assigned to anybody. Look for theses when you want to start working on a new issue.
+
+ - [`needs discussion`](https://github.com/userfrosting/UserFrosting/labels/needs%20discussion) : This issue needs to be discussed with the dev team before being implemented as more information is required, questions remain or a higher level decision needs to be made.
+
+ - [`needs more info`](https://github.com/userfrosting/UserFrosting/labels/needs%20more%20info): More information is required from the author of the issue.
+
+### Milestones
+
+In order to keep a clear roadmap, milestones are used to track what is happening and what needs to be done. Milestones are used to classify problems by:
+- Things that need to be done ASAP
+- Things we are doing right now
+- Things we will probably do soon
+- Things we probably will not do soon
+
+**Things that need to be done ASAP**: this is the highest priority and this milestone should always be empty. Issues related to important bug fixes should be set on this milestone immediately. The milestone always refers to the next version of _revision_, also known as the next bugfix version.
+
+**Things we are doing right now**: this is the "main" milestone we are currently working on. Usually represents the next `minor` version, but may also represent the next major version when the focus is on the next major release.
+
+**Things we’ll probably do soon**: It's a "Next Tasks" milestone. These tasks will be addressed in the near future, but not close enough for the next version. Usually represents the second minor revision **and** the next major release.
+
+**Things we probably won’t do soon**: We refer to these issues and sometimes look through them, but they are easy to ignore and sometimes intentionally ignored. Represent issues without milestones that do not have a defined timeframe.
+
+
+To maintain a clear history of progress on each milestone, milestones must be closed when completed and the corresponding version released. A new milestone must then be created for the next release. In addition, the milestone version must be updated when new versions are released.
+
+## Learn documentation
+
+The [Learn Documentation](https://learn.userfrosting.com) should always be updated along side code changes.
+
+Changes to the [learn repository](https://github.com/userfrosting/learn) should follow the same logic as the main repository, ie. any changes applied to the `hotfix` branch should be documented in the learn `hotfix` branch. This also apply to `feature-*` branches.
+
+Additionally, the `learn` repository can have `dev-*` for learn specific features and fixes.
 
 ## Building the API documentation
 
@@ -74,3 +122,19 @@ To build the API documentation, install [ApiGen](http://www.apigen.org/) globall
 `apigen generate --source UserFrosting/app,userfrosting-assets/src,userfrosting-config/Config,userfrosting-fortress/Fortress,userfrosting-i18n/I18n,userfrosting-session/Session,userfrosting-support/Support --destination userfrosting-api --exclude *vendor*,*_meta* --template-theme "bootstrap"`
 
 from inside your dev directory.
+
+## Automatically fixing coding style with PHP-CS-Fixer
+
+[PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) can be used to automatically fix PHP code styling. UserFrosting provides a project specific configuration file ([`.php_cs`](.php_cs)) with a set of rules reflecting our [style guidelines](../STYLE-GUIDE.md). This tool should be used before submitting any code change to assure the style guidelines are met. Every sprinkles will also be parsed by the fixer.
+
+PHP-CS-Fixer is automatically loaded by Composer and can be used from the UserFrosting root directory :
+
+```
+app/vendor/bin/php-cs-fixer fix
+```
+
+## Useful tools
+
+If you are using **Atom**, be sure to checkout theses useful packages :  
+ - [Docblockr](https://atom.io/packages/docblockr) : Used to generate [documentation block](https://github.com/userfrosting/UserFrosting/blob/master/STYLE-GUIDE.md#documentation).
+ - [php-ide-serenata](https://atom.io/packages/php-ide-serenata) : Integrates [Serenata](https://gitlab.com/Serenata/Serenata) as PHP IDE, providing autocompletion, code navigation, refactoring, signature help, linting and annotations.

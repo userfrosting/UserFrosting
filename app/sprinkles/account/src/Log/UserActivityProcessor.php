@@ -3,11 +3,11 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Log;
 
-use Monolog\Logger;
+namespace UserFrosting\Sprinkle\Account\Log;
 
 /**
  * Monolog processor for constructing the user activity message.
@@ -29,10 +29,14 @@ class UserActivityProcessor
         $this->userId = $userId;
     }
 
+    /**
+     * @param  array $record
+     * @return array
+     */
     public function __invoke(array $record)
     {
         $additionalFields = [
-            'ip_address'  => $_SERVER['REMOTE_ADDR'],
+            'ip_address'  => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
             'user_id'     => $this->userId,
             'occurred_at' => $record['datetime'],
             'description' => $record['message']

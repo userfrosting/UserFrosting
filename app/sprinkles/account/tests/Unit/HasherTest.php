@@ -3,20 +3,23 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
-namespace UserFrosting\Tests\Unit;
+
+namespace UserFrosting\Sprinkle\Account\Tests\Unit;
 
 use UserFrosting\Sprinkle\Account\Authenticate\Hasher;
 use UserFrosting\Tests\TestCase;
 
 /**
  * Tests the password Hasher class.
- *
- * @extends TestCase
  */
 class HasherTest extends TestCase
 {
+    /**
+     * @var string
+     */
     protected $plainText = 'hodleth';
 
     /**
@@ -34,9 +37,12 @@ class HasherTest extends TestCase
      */
     protected $modernHash = '$2y$10$ucxLwloFso6wJoct1baBQefdrttws/taEYvavi6qoPsw/vd1u4Mha';
 
+    /**
+     * testGetHashType
+     */
     public function testGetHashType()
     {
-        $hasher = new Hasher;
+        $hasher = new Hasher();
 
         $type = $hasher->getHashType($this->modernHash);
 
@@ -51,18 +57,24 @@ class HasherTest extends TestCase
         $this->assertEquals('sha1', $type);
     }
 
+    /**
+     * testVerify
+     */
     public function testVerify()
     {
-        $hasher = new Hasher;
+        $hasher = new Hasher();
 
         $this->assertTrue($hasher->verify($this->plainText, $this->modernHash));
         $this->assertTrue($hasher->verify($this->plainText, $this->legacyHash));
         $this->assertTrue($hasher->verify($this->plainText, $this->userCakeHash));
     }
 
+    /**
+     * testVerifyReject
+     */
     public function testVerifyReject()
     {
-        $hasher = new Hasher;
+        $hasher = new Hasher();
 
         $this->assertFalse($hasher->verify('selleth', $this->modernHash));
         $this->assertFalse($hasher->verify('selleth', $this->legacyHash));

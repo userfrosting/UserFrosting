@@ -3,15 +3,19 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core;
 
 use RocketTheme\Toolbox\Event\Event;
+use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\System\Sprinkle\Sprinkle;
+use Interop\Container\ContainerInterface;
 
 /**
  * Bootstrapper class for the core sprinkle.
@@ -21,14 +25,27 @@ use UserFrosting\System\Sprinkle\Sprinkle;
 class Core extends Sprinkle
 {
     /**
+     * Create a new Sprinkle object.
+     *
+     * @param ContainerInterface $ci The global container object, which holds all your services.
+     */
+    public function __construct(ContainerInterface $ci)
+    {
+        $this->ci = $ci;
+
+        $this->registerStreams();
+    }
+
+    /**
      * Defines which events in the UF lifecycle our Sprinkle should hook into.
      */
     public static function getSubscribedEvents()
     {
         return [
-            'onSprinklesInitialized' => ['onSprinklesInitialized', 0],
+            'onSprinklesInitialized'      => ['onSprinklesInitialized', 0],
             'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0],
-            'onAddGlobalMiddleware' => ['onAddGlobalMiddleware', 0]
+            'onAddGlobalMiddleware'       => ['onAddGlobalMiddleware', 0],
+            'onAppInitialize'             => ['onAppInitialize', 0]
         ];
     }
 
@@ -88,34 +105,50 @@ class Core extends Sprinkle
     }
 
     /**
+     * Register routes
+     *
+     * @param Event $event
+     */
+    public function onAppInitialize(Event $event)
+    {
+        $this->ci->router->loadRoutes($event->getApp());
+    }
+
+    /**
      * Add CSRF middleware.
+     *
+     * @param Event $event
      */
     public function onAddGlobalMiddleware(Event $event)
     {
-        $request = $this->ci->request;
-        $path = $request->getUri()->getPath();
-        $method = $request->getMethod();
+        SlimCsrfProvider::registerMiddleware($event->getApp(), $this->ci->request, $this->ci->csrf);
+    }
 
-        // Normalize path to always have a leading slash
-        $path = '/' . ltrim($path, '/');
-        // Normalize method to uppercase
-        $method = strtoupper($method);
+    /**
+     * Register Core sprinkle locator streams
+     */
+    protected function registerStreams()
+    {
+        /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
+        $locator = $this->ci->locator;
 
-        $csrfBlacklist = $this->ci->config['csrf.blacklist'];
-        $isBlacklisted = false;
+        // Register core locator shared streams
+        $locator->registerStream('cache', '', \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\CACHE_DIR_NAME, true);
+        $locator->registerStream('log', '', \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\LOG_DIR_NAME, true);
+        $locator->registerStream('session', '', \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SESSION_DIR_NAME, true);
 
-        // Go through the blacklist and determine if the path and method match any of the blacklist entries.
-        foreach ($csrfBlacklist as $pattern => $methods) {
-            $methods = array_map('strtoupper', (array) $methods);
-            if (in_array($method, $methods) && $pattern != '' && preg_match('~' . $pattern . '~', $path)) {
-                $isBlacklisted = true;
-                break;
-            }
-        }
+        // Register core locator sprinkle streams
+        $locator->registerStream('config', '', \UserFrosting\CONFIG_DIR_NAME);
+        $locator->registerStream('extra', '', \UserFrosting\EXTRA_DIR_NAME);
+        $locator->registerStream('factories', '', \UserFrosting\FACTORY_DIR_NAME);
+        $locator->registerStream('locale', '', \UserFrosting\LOCALE_DIR_NAME);
+        $locator->registerStream('routes', '', \UserFrosting\ROUTE_DIR_NAME);
+        $locator->registerStream('schema', '', \UserFrosting\SCHEMA_DIR_NAME);
+        $locator->registerStream('templates', '', \UserFrosting\TEMPLATE_DIR_NAME);
 
-        if (!$path || !$isBlacklisted) {
-            $app = $event->getApp();
-            $app->add($this->ci->csrf);
-        }
+        // Register core sprinkle class streams
+        $locator->registerStream('seeds', '', \UserFrosting\SEEDS_DIR);
+        $locator->registerStream('migrations', '', \UserFrosting\MIGRATIONS_DIR);
+
     }
 }

@@ -3,8 +3,10 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 /**
@@ -16,7 +18,6 @@ namespace UserFrosting\Sprinkle\Core\Mail;
  */
 class EmailRecipient
 {
-
     /**
      * @var string The email address for this recipient.
      */
@@ -45,11 +46,11 @@ class EmailRecipient
     /**
      * Create a new EmailRecipient instance.
      *
-     * @param string $email The primary recipient email address.
-     * @param string $name The primary recipient name.
-     * @param array $params An array of template parameters to render the email message with for this particular recipient.
+     * @param string $email  The primary recipient email address.
+     * @param string $name   The primary recipient name.
+     * @param array  $params An array of template parameters to render the email message with for this particular recipient.
      */
-    public function __construct($email, $name = "", $params = [])
+    public function __construct($email, $name = '', $params = [])
     {
         $this->email = $email;
         $this->name = $name;
@@ -60,13 +61,13 @@ class EmailRecipient
      * Add a CC for this primary recipient.
      *
      * @param string $email The CC recipient email address.
-     * @param string $name The CC recipient name.
+     * @param string $name  The CC recipient name.
      */
-    public function cc($email, $name = "")
+    public function cc($email, $name = '')
     {
         $this->cc[] = [
-            "email" => $email,
-            "name" => $name
+            'email' => $email,
+            'name'  => $name
         ];
     }
 
@@ -74,13 +75,13 @@ class EmailRecipient
      * Add a BCC for this primary recipient.
      *
      * @param string $email The BCC recipient email address.
-     * @param string $name The BCC recipient name.
+     * @param string $name  The BCC recipient name.
      */
-    public function bcc($email, $name = "")
+    public function bcc($email, $name = '')
     {
         $this->bcc[] = [
-            "email" => $email,
-            "name" => $name
+            'email' => $email,
+            'name'  => $name
         ];
     }
 

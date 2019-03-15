@@ -3,8 +3,10 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Relations;
 
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +20,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique;
  * A BelongsToMany relationship that queries through an additional intermediate model.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
- * @link https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
+ * @see https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
  */
 class BelongsToManyThrough extends BelongsToMany
 {
@@ -34,14 +36,13 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Create a new belongs to many relationship instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
-     * @param  \Illuminate\Database\Eloquent\Relations\Relation $intermediateRelation
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $relatedKey
-     * @param  string  $relationName
-     * @return void
+     * @param \Illuminate\Database\Eloquent\Builder            $query
+     * @param \Illuminate\Database\Eloquent\Model              $parent
+     * @param \Illuminate\Database\Eloquent\Relations\Relation $intermediateRelation
+     * @param string                                           $table
+     * @param string                                           $foreignKey
+     * @param string                                           $relatedKey
+     * @param string                                           $relationName
      */
     public function __construct(Builder $query, Model $parent, Relation $intermediateRelation, $table, $foreignKey, $relatedKey, $relationName = null)
     {
@@ -76,9 +77,9 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Add a "via" query to load the intermediate models through which the child models are related.
      *
-     * @param string   $viaRelationName
-     * @param callable $viaCallback
-     * @return $this
+     * @param  string   $viaRelationName
+     * @param  callable $viaCallback
+     * @return self
      */
     public function withVia($viaRelationName = null, $viaCallback = null)
     {
@@ -93,7 +94,7 @@ class BelongsToManyThrough extends BelongsToMany
                             ? function () {
                                 //
                             }
-                            : $viaCallback;
+        : $viaCallback;
 
         return $this;
     }
@@ -101,8 +102,7 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Set the constraints for an eager load of the relation.
      *
-     * @param  array  $models
-     * @return void
+     * @param array $models
      */
     public function addEagerConstraints(array $models)
     {
@@ -115,14 +115,16 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Set the where clause for the relation query.
      *
-     * @return $this
+     * @return self
      */
     protected function addWhereConstraints()
     {
         $parentKeyName = $this->getParentKeyName();
 
         $this->query->where(
-            $parentKeyName, '=', $this->parent->getKey()
+            $parentKeyName,
+            '=',
+            $this->parent->getKey()
         );
 
         return $this;
@@ -131,9 +133,9 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Match the eagerly loaded results to their parents
      *
-     * @param  array   $models
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @param  string  $relation
+     * @param  array                                    $models
+     * @param  \Illuminate\Database\Eloquent\Collection $results
+     * @param  string                                   $relation
      * @return array
      */
     public function match(array $models, Collection $results, $relation)
@@ -163,7 +165,8 @@ class BelongsToManyThrough extends BelongsToMany
                 }
 
                 $model->setRelation(
-                    $relation, $items
+                    $relation,
+                    $items
                 );
             }
         }
@@ -174,8 +177,7 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Unset tertiary pivots on a collection or array of models.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection $models
-     * @return void
+     * @param \Illuminate\Database\Eloquent\Collection $models
      */
     protected function unsetTertiaryPivots(Collection $models)
     {
@@ -187,8 +189,8 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Set the join clause for the relation query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder|null  $query
-     * @return $this
+     * @param  \Illuminate\Database\Eloquent\Builder|null $query
+     * @return self
      */
     protected function performJoin($query = null)
     {

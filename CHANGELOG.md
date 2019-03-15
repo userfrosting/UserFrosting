@@ -5,6 +5,108 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.2.0]
+### Changed Requirements
+- Changed minimum Node.js version to **v10.12.0**
+- Changed minimum NPM version to **6.0.0**
+
+### Added
+- Use locale requested by browser when possible for guests ([#718])
+- Add locale drop down to registration page, with the currently applied locale selected ([#718])
+- Added new `filesystem` service ([#869])
+- Greek locale (Thanks @lenasterg!; [#940])
+- Add cache facade (Ref [#838])
+- Added new `Seeder`
+- `NoCache` middleware to prevent caching of routes with dynamic content
+- Bakery :
+    - Added `sprinkle:list` Bakery Command
+    - Added `migrate:status` Bakery Command
+    - Added `test:mail` Bakery Command
+    - Added `seed` Bakery command
+    - New `isProduction` method for Bakery command to test if app is in production mode
+    - Added `database` option for `migrate` and `migrate:*` Bakery commands
+    - Added arguments to the `create-admin` and `setup` Bakery commands so it can be used in a non-interactive way ([#808])
+    - Extended `bakery test` to add Test Scope and sprinkle selection argument ([#919], Thanks @ssnukala !)
+- Testing :
+    - Added `RefreshDatabase` test Trait to use a fresh database for a test
+    - Added `TestDatabase` test Trait to use the in memory database for a test
+    - Added tests for migrator and it's components
+    - Added tests for `migrate` Bakery command and sub-commands
+    - Added `withTestUser` trait for helper methods when running tests requiring a user
+    - Added `ControllerTestCase` special test case to help testing controllers
+    - Improved overall test coverage and added coverage config to `phpunit.xml`
+- Assets :
+    - Added support for npm dependencies on the frontend with auditting for known vulnerabilities
+- Database :
+    - Implement `withRaw`, `withSum`, `withAvg`, `withMin`, `withMax` (see https://github.com/laravel/framework/pull/16815)
+- Vagrant / Docker :
+    - Include Vagrant integration directly inside UF ([#829])
+    - Sample test environment for Docker
+- Misc :
+    - Integrated improvements from [v4.0.25-Alpha](#v4025-alpha)
+    - Added code style config (`.php_cs`) and instructions for PHP-CS-Fixer in Readme
+    - Add support for other config['mailer'] options ([#872]; Thanks @apple314159 !)
+
+### Changed
+- Move User registration out of the `AccountController` ([#793])
+- Rewritten the `locator` service so it's better suited for sprinkle system ([#853])
+- Bakery :
+    - Moved Bakery commands from `app/System/Bakery` to the `Core` sprinkle and `UserFrosting\Sprinkle\Core\Bakery` namespace.
+    - Improved `route:list` Bakery command from [v4.1.20](#v4.1.20)
+    - Sprinkle list in the bakery `debug` command to uses the new `sprinkle:list` table
+- Migrations & Database :
+    - `migrate` and `migrate:*` Bakery command now require confirmation before execution when in production mode.
+    - Re-written the migrator. It is now detached from the console and Bakery and is now included in the Core Sprinkle ServicesProvider ([#795])
+    - Makes the `semantic versioning` part of a migration class optional. Migrations classes can now have the `UserFrosting\Sprinkle\{sprinkleName}\Database\Migrations` namespace, or any other sub-namespace
+    - Uncomment foreign keys in core migrations ([#833])
+    - Move default groups, roles & permissions creation to seeds
+- Assets
+    - Rewrote asset processing to minimise file sizes, drastically reduce IO, and improve maintainability
+    - Rewrote frontend dependency installation to prevent duplication and detect incompatibilities
+    - Rewrite `AssetLoader` to act as a wrapper for `Assets`
+- Misc :
+    - Updated Docker integration
+    - Moved some constants from `app/defines.php` to `app/sprinkles/core/defines.php`
+    - Move route initialization from system to core sprinkle as router service is located in the core sprinkle
+    - `dev` environment changed to `debug`  ([#653])
+    - Changed deprecations to `warning`, and suppressed them in tests
+    - `routerCacheFile` config now only contains filename. Locator is used to find the full path
+
+### Fixed
+- Sprinkle without a `template/` folder won't cause error anymore
+- Fixed routes not available in Tests and Bakery ([#854])
+- redirect failing in UserController::pageInfo when user not found ([#888])
+- Fix WhoopsRenderer integration, resolving a temp fix in [v4.1.21](#v4.1.21).
+- Fix Travis not running tests with the env database
+- Ignore existing `package-lock.json` which caused incorrect dependencies to be installed when upgrading from older versions of UserFrosting.
+- Testing :
+    - Added `coverage-format` and `coverage-path` options to `test` Bakery command
+    - Sprinkle Testscope is now case insensitive
+    - **Class testscope now relative to `/` instead of `/UserFrosting/Sprinkle/` for more intuitive usage and to enable testing of non sprinkle tests**
+    - Detect and use the sprinkle `phpunit.xml` config when testing a specific sprinkle
+- SprinkleManager Improvements :
+    - Added public `getSprinklePath` method to get path to the sprinkle directory
+    - Added public `getSprinkleClassNamespace` method to get sprinkle base namespace
+    - Added public `getSprinkle` method. Returns the sprinkle name as formatted in `sprinkles.json` file, independent of the case of the search argument.
+    - Public `isAvailable` method now case insensitive.
+    - Added public `getSprinklesPath` & `setSprinklesPath` to return or set the path to the sprinkle dir (`app/sprinkles/`)
+    - Added `JsonException` if `sprinkles.json` doesn't contain valid json.
+    - Added specific tests for sprinkleManager with 100% test coverage
+
+### Deprecated
+- Migrations should now extends `UserFrosting\Sprinkle\Core\Database\Migration` instead of `UserFrosting\System\Bakery\Migration`
+- Migrations dependencies property should now be a static property
+- Deprecated migration `seed` method. Database seeding should now be done using the new Seeder
+- Trait `\UserFrosting\Tests\DatabaseTransactions` has been deprecated. Tests should now use the `\UserFrosting\Sprinkle\Core\Tests\DatabaseTransactions` trait instead. ([#826])
+
+### Removed
+- The console IO instance is not available anymore in migrations. Removed the `io` property from migration classes
+- Removed Bakery `projectRoot` property. Use the `\UserFrosting\ROOT_DIR` constant instead
+- Removed `pretend` option from Bakery `migrate:refresh` and `migrate:reset` commands
+- Removed `UserFrosting\System\Bakery\DatabaseTest` trait, use `UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest` instead.
+- Removed `UserFrosting\System\Bakery\ConfirmableTrait` trait, use `UserFrosting\Sprinkle\Core\Bakery\Helper\ConfirmableTrait` instead.
+
+
 ## v4.1.22
 - Updated Docker `README.md`.
 - Replaced `libpng12-dev` which has been dropped since Ubuntu 16.04 with `libpng-dev` in PHP `Dockerfile`.
@@ -202,6 +304,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Use YAML as default format for request schema (#690)
 
 See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x documentation) for complete list of changes and breaking changes.
+
+## v4.0.25-Alpha
+- Support npm for frontend vendor assets, and deprecation of bower (#737)
+- Duplicate frontend vendor assets are no longer downloaded (#727)
+- Detect incompatibilites between frontend vendor assets (related to #727)
+- Improved reliability of generated base URL, especially when using docker
+- Fixed syntax error in Portugese translations
+- Minimise verbosity of assets build scripts when not in 'dev' mode
+- Fix to stop bower complaining about sudo when using docker
+- The `assetLoader` service has been deprecated, and may be removed in the future.
+- **Potential breaking change:** Some packages like `Handlebars` are organised differently at npm. If referencing vendor assets introduced by UF, make sure they are still correct.
 
 ## v4.0.24-alpha
 - Fixes to nginx config file, and add location block for LE acme challenge
@@ -574,3 +687,22 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Added 404 error page
 - Standardized JSON interface for backend scripts
 - Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
+
+[#653]: https://github.com/userfrosting/UserFrosting/issues/653
+[#718]: https://github.com/userfrosting/UserFrosting/issues/718
+[#793]: https://github.com/userfrosting/UserFrosting/issues/793
+[#795]: https://github.com/userfrosting/UserFrosting/issues/795
+[#808]: https://github.com/userfrosting/UserFrosting/issues/808
+[#826]: https://github.com/userfrosting/UserFrosting/issues/826
+[#829]: https://github.com/userfrosting/UserFrosting/issues/829
+[#833]: https://github.com/userfrosting/UserFrosting/issues/833
+[#838]: https://github.com/userfrosting/UserFrosting/issues/838
+[#853]: https://github.com/userfrosting/UserFrosting/issues/853
+[#854]: https://github.com/userfrosting/UserFrosting/issues/854
+[#869]: https://github.com/userfrosting/UserFrosting/issues/869
+[#872]: https://github.com/userfrosting/UserFrosting/issues/872
+[#888]: https://github.com/userfrosting/UserFrosting/issues/888
+[#919]: https://github.com/userfrosting/UserFrosting/issues/919
+[#940]: https://github.com/userfrosting/UserFrosting/issues/940
+
+[v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0

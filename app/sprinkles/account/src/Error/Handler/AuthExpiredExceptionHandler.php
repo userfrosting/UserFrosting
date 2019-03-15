@@ -3,10 +3,13 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Error\Handler;
 
+use Psr\Http\Message\ResponseInterface;
 use UserFrosting\Sprinkle\Core\Error\Handler\HttpExceptionHandler;
 
 /**
@@ -19,6 +22,8 @@ class AuthExpiredExceptionHandler extends HttpExceptionHandler
 {
     /**
      * Custom handling for requests that did not pass authentication.
+     *
+     * @return ResponseInterface
      */
     public function handle()
     {
@@ -33,11 +38,11 @@ class AuthExpiredExceptionHandler extends HttpExceptionHandler
             $path = $uri->getPath();
             $query = $uri->getQuery();
             $fragment = $uri->getFragment();
-    
+
             $path = $path
                 . ($query ? '?' . $query : '')
                 . ($fragment ? '#' . $fragment : '');
-    
+
             $loginPage = $this->ci->router->pathFor('login', [], [
                 'redirect' => $path
             ]);

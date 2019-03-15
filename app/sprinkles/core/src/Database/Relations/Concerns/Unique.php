@@ -3,12 +3,15 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Relations\Concerns;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Expression;
 
 /**
@@ -21,7 +24,7 @@ trait Unique
     /**
      * The related tertiary model instance.
      *
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     protected $tertiaryRelated = null;
 
@@ -64,7 +67,7 @@ trait Unique
      * Alias to set the "offset" value of the query.
      *
      * @param  int  $value
-     * @return $this
+     * @return self
      */
     public function skip($value)
     {
@@ -77,7 +80,7 @@ trait Unique
      * @todo Implement for 'unionOffset' as well?  (By checking the value of $this->query->getQuery()->unions)
      * @see \Illuminate\Database\Query\Builder
      * @param  int  $value
-     * @return $this
+     * @return self
      */
     public function offset($value)
     {
@@ -90,7 +93,7 @@ trait Unique
      * Alias to set the "limit" value of the query.
      *
      * @param  int  $value
-     * @return $this
+     * @return self
      */
     public function take($value)
     {
@@ -103,7 +106,7 @@ trait Unique
      * @todo Implement for 'unionLimit' as well?  (By checking the value of $this->query->getQuery()->unions)
      * @see \Illuminate\Database\Query\Builder
      * @param  int  $value
-     * @return $this
+     * @return self
      */
     public function limit($value)
     {
@@ -118,8 +121,8 @@ trait Unique
      * Set the limit on the number of intermediate models to load.
      *
      * @deprecated since 4.1.7
-     * @param int $value
-     * @return    $this
+     * @param  int   $value
+     * @return $this
      */
     public function withLimit($value)
     {
@@ -130,8 +133,8 @@ trait Unique
      * Set the offset when loading the intermediate models.
      *
      * @deprecated since 4.1.7
-     * @param int $value
-     * @return    $this
+     * @param  int   $value
+     * @return $this
      */
     public function withOffset($value)
     {
@@ -141,15 +144,15 @@ trait Unique
     /**
      * Add a query to load the nested tertiary models for this relationship.
      *
-     * @param \Illuminate\Database\Eloquent\Model   $tertiaryRelated
-     * @param string                                $tertiaryRelationName
-     * @param string                                $tertiaryKey
-     * @param callable                              $tertiaryCallback
-     * @return $this
+     * @param  string   $tertiaryRelated
+     * @param  string   $tertiaryRelationName
+     * @param  string   $tertiaryKey
+     * @param  callable $tertiaryCallback
+     * @return self
      */
     public function withTertiary($tertiaryRelated, $tertiaryRelationName = null, $tertiaryKey = null, $tertiaryCallback = null)
     {
-        $this->tertiaryRelated = new $tertiaryRelated;
+        $this->tertiaryRelated = new $tertiaryRelated();
 
         // Try to guess the tertiary related key from the tertiaryRelated model.
         $this->tertiaryKey = $tertiaryKey ?: $this->tertiaryRelated->getForeignKey();
@@ -163,7 +166,7 @@ trait Unique
                             ? function () {
                                 //
                             }
-                            : $tertiaryCallback;
+        : $tertiaryCallback;
 
         return $this;
     }
@@ -187,23 +190,25 @@ trait Unique
      * Add the constraints for a relationship count query.
      *
      * @see    \Illuminate\Database\Eloquent\Relations\Relation
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \Illuminate\Database\Eloquent\Builder  $parentQuery
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder $query
+     * @param  Builder $parentQuery
+     * @return Builder
      */
     public function getRelationExistenceCountQuery(Builder $query, Builder $parentQuery)
     {
         return $this->getRelationExistenceQuery(
-            $query, $parentQuery, new Expression("count(distinct {$this->relatedKey})")
+            $query,
+            $parentQuery,
+            new Expression("count(distinct {$this->relatedKey})")
         );
     }
 
     /**
      * Match the eagerly loaded results to their parents
      *
-     * @param  array   $models
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @param  string  $relation
+     * @param  array      $models
+     * @param  Collection $results
+     * @param  string     $relation
      * @return array
      */
     public function match(array $models, Collection $results, $relation)
@@ -228,7 +233,8 @@ trait Unique
                 }
 
                 $model->setRelation(
-                    $relation, $items
+                    $relation,
+                    $items
                 );
             }
         }
@@ -240,8 +246,8 @@ trait Unique
      * Execute the query as a "select" statement, getting all requested models
      * and matching up any tertiary models.
      *
-     * @param  array  $columns
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param  array      $columns
+     * @return Collection
      */
     public function get($columns = ['*'])
     {
@@ -258,10 +264,10 @@ trait Unique
      * If we are applying either a limit or offset, we'll first determine a limited/offset list of model ids
      * to select from in the final query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  int $limit
-     * @param  int $offset
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder $query
+     * @param  int     $limit
+     * @param  int     $offset
+     * @return Builder
      */
     public function getPaginatedQuery(Builder $query, $limit = null, $offset = null)
     {
@@ -306,7 +312,7 @@ trait Unique
      * This is not what we want here though, because our get() method removes records before
      * `match` has a chance to build out the substructures.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function getEager()
     {
@@ -317,9 +323,9 @@ trait Unique
      * Get the hydrated models and eager load their relations, optionally
      * condensing the set of models before performing the eager loads.
      *
-     * @param  array  $columns
-     * @param  bool   $condenseModels
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param  array      $columns
+     * @param  bool       $condenseModels
+     * @return Collection
      */
     public function getModels($columns = ['*'], $condenseModels = true)
     {
@@ -392,8 +398,8 @@ trait Unique
      * that maps parent ids to arrays of related ids, which in turn map to arrays
      * of tertiary models corresponding to each relationship.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @param  string $parentKey
+     * @param  Collection $results
+     * @param  string     $parentKey
      * @return array
      */
     protected function buildDictionary(Collection $results, $parentKey = null)
@@ -439,11 +445,11 @@ trait Unique
 
                 if (!is_null($tertiaryKeyValue)) {
                     $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
-    
+
                     // We also transfer the pivot relation at this point, since we have already coalesced
                     // any tertiary models into the nested dictionary.
                     $this->transferPivotsToTertiary($result, $tertiaryModel);
-    
+
                     $nestedTertiaryDictionary[$parentKeyValue][$result->getKey()][] = $tertiaryModel;
                 }
             }
@@ -455,7 +461,7 @@ trait Unique
     /**
      * Build dictionary of tertiary models keyed by the corresponding related model keys.
      *
-     * @param  array  $models
+     * @param  array $models
      * @return array
      */
     protected function buildTertiaryDictionary(array $models)
@@ -479,6 +485,12 @@ trait Unique
         return $dictionary;
     }
 
+    /**
+     * Transfer the pivot to the tertiary model
+     *
+     * @param Model $model
+     * @param Model $tertiaryModel
+     */
     protected function transferPivotsToTertiary($model, $tertiaryModel)
     {
         $pivotAttributes = [];
@@ -499,8 +511,8 @@ trait Unique
     /**
      * Get the tertiary models for the relationship.
      *
-     * @param  array  $models
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param  array      $models
+     * @return Collection
      */
     protected function getTertiaryModels(array $models)
     {
@@ -528,9 +540,8 @@ trait Unique
     /**
      * Match a collection of child models into a collection of parent models using a dictionary.
      *
-     * @param  array $dictionary
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @return void
+     * @param array      $dictionary
+     * @param Collection $results
      */
     protected function matchTertiaryModels(array $dictionary, Collection $results)
     {
@@ -540,7 +551,8 @@ trait Unique
                 $tertiaryModels = $dictionary[$key];
 
                 $model->setRelation(
-                    $this->tertiaryRelationName, $this->tertiaryRelated->newCollection($tertiaryModels)
+                    $this->tertiaryRelationName,
+                    $this->tertiaryRelated->newCollection($tertiaryModels)
                 );
             }
         }
@@ -549,8 +561,7 @@ trait Unique
     /**
      * Unset tertiary pivots on a collection or array of models.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection $models
-     * @return void
+     * @param Collection $models
      */
     protected function unsetTertiaryPivots(Collection $models)
     {

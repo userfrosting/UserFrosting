@@ -3,8 +3,10 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Monolog\Logger;
@@ -22,15 +24,16 @@ use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
  */
 class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
 {
-
     /**
      * @var array[callable] An array of callback functions to be used when evaluating a condition expression.
      */
     protected $callbacks;
+
     /**
      * @var \PhpParser\PrettyPrinter\Standard The PrettyPrinter object to use (initialized in the ctor)
      */
     protected $prettyPrinter;
+
     /**
      * @var array The parameters to be used when evaluating the methods in the condition expression, as an array.
      */
@@ -49,15 +52,15 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     /**
      * Create a new ParserNodeFunctionEvaluator object.
      *
-     * @param array $params The parameters to be used when evaluating the methods in the condition expression, as an array.
-     * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
-     * @param bool $debug Set to true if you want debugging information printed to the auth log.
+     * @param array  $callbacks The parameters to be used when evaluating the methods in the condition expression, as an array.
+     * @param Logger $logger    A Monolog logger, used to dump debugging info for authorization evaluations.
+     * @param bool   $debug     Set to true if you want debugging information printed to the auth log.
      */
-    public function __construct($callbacks, $logger, $debug = false)
+    public function __construct($callbacks, Logger $logger, $debug = false)
     {
         $this->callbacks = $callbacks;
-        $this->prettyPrinter = new StandardPrettyPrinter;
-        $this->logger        = $logger;
+        $this->prettyPrinter = new StandardPrettyPrinter();
+        $this->logger = $logger;
         $this->debug = $debug;
         $this->params = [];
     }
@@ -66,7 +69,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     {
         // Look for function calls
         if ($node instanceof \PhpParser\Node\Expr\FuncCall) {
-            $eval = new \PhpParser\Node\Scalar\LNumber;
+            $eval = new \PhpParser\Node\Scalar\LNumber();
 
             // Get the method name
             $callbackName = $node->name->toString();
@@ -85,31 +88,31 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
                 // Resolve parameter placeholders ('variable' names (either single-word or array-dot identifiers))
                 if (($arg->value instanceof \PhpParser\Node\Expr\BinaryOp\Concat) || ($arg->value instanceof \PhpParser\Node\Expr\ConstFetch)) {
                     $value = $this->resolveParamPath($argString);
-                    $currentArgInfo['type'] = "parameter";
+                    $currentArgInfo['type'] = 'parameter';
                     $currentArgInfo['resolved_value'] = $value;
                 // Resolve arrays
                 } elseif ($arg->value instanceof \PhpParser\Node\Expr\Array_) {
                     $value = $this->resolveArray($arg);
-                    $currentArgInfo['type'] = "array";
+                    $currentArgInfo['type'] = 'array';
                     $currentArgInfo['resolved_value'] = print_r($value, true);
                 // Resolve strings
                 } elseif ($arg->value instanceof \PhpParser\Node\Scalar\String_) {
                     $value = $arg->value->value;
-                    $currentArgInfo['type'] = "string";
+                    $currentArgInfo['type'] = 'string';
                     $currentArgInfo['resolved_value'] = $value;
                 // Resolve numbers
                 } elseif ($arg->value instanceof \PhpParser\Node\Scalar\DNumber) {
                     $value = $arg->value->value;
-                    $currentArgInfo['type'] = "float";
+                    $currentArgInfo['type'] = 'float';
                     $currentArgInfo['resolved_value'] = $value;
                 } elseif ($arg->value instanceof \PhpParser\Node\Scalar\LNumber) {
                     $value = $arg->value->value;
-                    $currentArgInfo['type'] = "integer";
+                    $currentArgInfo['type'] = 'integer';
                     $currentArgInfo['resolved_value'] = $value;
                 // Anything else is simply interpreted as its literal string value
                 } else {
                     $value = $argString;
-                    $currentArgInfo['type'] = "unknown";
+                    $currentArgInfo['type'] = 'unknown';
                     $currentArgInfo['resolved_value'] = $value;
                 }
 
@@ -133,13 +136,18 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
             }
 
             if ($this->debug) {
-                $this->logger->debug("Result: " . ($result ? "1" : "0"));
+                $this->logger->debug('Result: ' . ($result ? '1' : '0'));
             }
 
-            return new \PhpParser\Node\Scalar\LNumber($result ? "1" : "0");
+            return new \PhpParser\Node\Scalar\LNumber($result ? '1' : '0');
         }
     }
 
+    /**
+     * Set params
+     *
+     * @param array $params
+     */
     public function setParams($params)
     {
         $this->params = $params;
@@ -148,7 +156,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     /**
      * Resolve an array expression in a condition expression into an actual array.
      *
-     * @param string $arg the array, represented as a string.
+     * @param  string       $arg the array, represented as a string.
      * @return array[mixed] the array, as a plain ol' PHP array.
      */
     private function resolveArray($arg)
@@ -162,19 +170,20 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
                 $arr[] = $item->value->value;
             }
         }
+
         return $arr;
     }
 
     /**
      * Resolve a parameter path (e.g. "user.id", "post", etc) into its value.
      *
-     * @param string $path the name of the parameter to resolve, based on the parameters set in this object.
-     * @throws Exception the path could not be resolved.  Path is malformed or key does not exist.
-     * @return mixed the value of the specified parameter.
+     * @param  string     $path the name of the parameter to resolve, based on the parameters set in this object.
+     * @throws \Exception the path could not be resolved.  Path is malformed or key does not exist.
+     * @return mixed      the value of the specified parameter.
      */
     private function resolveParamPath($path)
     {
-        $pathTokens = explode(".", $path);
+        $pathTokens = explode('.', $path);
         $value = $this->params;
         foreach ($pathTokens as $token) {
             $token = trim($token);
@@ -188,6 +197,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
                 throw new AuthorizationException("Cannot resolve the path \"$path\".  Error at token \"$token\".");
             }
         }
+
         return $value;
     }
 }

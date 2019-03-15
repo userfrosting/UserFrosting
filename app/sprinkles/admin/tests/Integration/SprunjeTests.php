@@ -1,34 +1,45 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
+ */
 
-namespace UserFrosting\Tests\Integration;
+namespace UserFrosting\Sprinkle\Admin\Tests\Integration;
 
-use Exception;
-use Illuminate\Database\Capsule\Manager as DB;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserPermissionSprunje;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
-use UserFrosting\Tests\DatabaseTransactions;
 use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
+use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 
 /**
  * Integration tests for the built-in Sprunje classes.
  */
 class SprunjeTests extends TestCase
 {
-    use DatabaseTransactions;
+    use TestDatabase;
+    use RefreshDatabase;
 
+    /**
+     *    @var ClassMapper
+     */
     protected $classMapper;
 
     /**
      * Setup the database schema.
-     *
-     * @return void
      */
     public function setUp()
     {
         parent::setUp();
 
         $this->classMapper = new ClassMapper();
+
+        // Setup test database
+        $this->setupTestDatabase();
+        $this->refreshDatabase();
     }
 
     /**

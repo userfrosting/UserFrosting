@@ -85,6 +85,7 @@
  * == METHODS ==
  *
  * `getTableStateVars( table )`: fetches the current page size, page number, sort order, sort field, and column filters.
+ * `refresh`: reload the table data
  *
  * UserFrosting https://www.userfrosting.com
  * @author Alexander Weissman <https://alexanderweissman.com>
@@ -415,6 +416,13 @@
     };
 
     /**
+     * Refresh the table
+     */
+    Plugin.prototype.refresh = function() {
+        this.ts.trigger('pagerUpdate');
+    };
+
+    /**
      * Generate the AJAX url.
      * Used as the default callback for pager_customAjaxUrl
      * @private
@@ -433,6 +441,7 @@
 
         return url;
     };
+
     /**
      * Process data returned from the AJAX request and rendering the table cells.
      * Used as the default callback for pager_ajaxProcessing

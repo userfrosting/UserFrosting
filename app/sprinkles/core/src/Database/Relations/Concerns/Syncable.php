@@ -3,13 +3,11 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Core\Database\Relations\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+namespace UserFrosting\Sprinkle\Core\Database\Relations\Concerns;
 
 /**
  * Implements the `sync` method for HasMany relationships.
@@ -22,9 +20,9 @@ trait Syncable
      * Synchronizes an array of data for related models with a parent model.
      *
      * @param mixed[] $data
-     * @param bool $deleting          Delete models from the database that are not represented in the input data.
-     * @param bool $forceCreate       Ignore mass assignment restrictions on child models.
-     * @param string $relatedKeyName  The primary key used to determine which child models are new, updated, or deleted.
+     * @param bool    $deleting       Delete models from the database that are not represented in the input data.
+     * @param bool    $forceCreate    Ignore mass assignment restrictions on child models.
+     * @param string  $relatedKeyName The primary key used to determine which child models are new, updated, or deleted.
      */
     public function sync($data, $deleting = true, $forceCreate = false, $relatedKeyName = null)
     {
@@ -86,7 +84,7 @@ trait Syncable
                  ->where($relatedKeyName, $id)
                  ->update($row);
         }
-        
+
         $changes['updated'] = $this->castKeys($updateIds);
 
         // Insert the new rows
@@ -105,11 +103,10 @@ trait Syncable
         return $changes;
     }
 
-
     /**
      * Cast the given keys to integers if they are numeric and string otherwise.
      *
-     * @param  array  $keys
+     * @param  array $keys
      * @return array
      */
     protected function castKeys(array $keys)
@@ -118,11 +115,11 @@ trait Syncable
             return $this->castKey($v);
         }, $keys);
     }
-    
+
     /**
      * Cast the given key to an integer if it is numeric.
      *
-     * @param  mixed  $key
+     * @param  mixed $key
      * @return mixed
      */
     protected function castKey($key)

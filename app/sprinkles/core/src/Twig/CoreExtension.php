@@ -3,12 +3,15 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Interop\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Core\Util\Util;
+use UserFrosting\Assets\AssetsTemplatePlugin;
 
 /**
  * Extends Twig functionality for the Core sprinkle.
@@ -17,7 +20,6 @@ use UserFrosting\Sprinkle\Core\Util\Util;
  */
 class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
-
     /**
      * @var ContainerInterface The global container object, which holds all your services.
      */
@@ -50,7 +52,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
      */
     public function getFunctions()
     {
-        return array(
+        return [
             // Add Twig function for fetching alerts
             new \Twig_SimpleFunction('getAlerts', function ($clear = true) {
                 if ($clear) {
@@ -59,12 +61,12 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
                     return $this->services['alerts']->messages();
                 }
             }),
-            new \Twig_SimpleFunction('translate', function ($hook, $params = array()) {
+            new \Twig_SimpleFunction('translate', function ($hook, $params = []) {
                 return $this->services['translator']->translate($hook, $params);
             }, [
                 'is_safe' => ['html']
             ])
-        );
+        ];
     }
 
     /**
@@ -74,12 +76,12 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
      */
     public function getFilters()
     {
-        return array(
-            /**
+        return [
+            /*
              * Converts phone numbers to a standard format.
              *
-             * @param   String   $num   A unformatted phone number
-             * @return  String   Returns the formatted phone number
+             * @param   string   $num   A unformatted phone number
+             * @return  string   Returns the formatted phone number
              */
             new \Twig_SimpleFilter('phone', function ($num) {
                 return Util::formatPhoneNumber($num);
@@ -87,7 +89,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
             new \Twig_SimpleFilter('unescape', function ($string) {
                 return html_entity_decode($string);
             })
-        );
+        ];
     }
 
     /**
@@ -118,7 +120,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
 
         return [
             'site'   => $site,
-            'assets' => $this->services->assets
+            'assets' => new AssetsTemplatePlugin($this->services->assets)
         ];
     }
 }

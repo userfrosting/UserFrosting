@@ -3,12 +3,15 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Log;
 
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
+use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**
  * Monolog handler for storing the record to a database.
@@ -18,7 +21,7 @@ use Monolog\Handler\AbstractProcessingHandler;
 class DatabaseHandler extends AbstractProcessingHandler
 {
     /**
-     * @var UserFrosting\Sprinkle\Core\Util\ClassMapper
+     * @var ClassMapper
      */
     protected $classMapper;
 
@@ -30,12 +33,12 @@ class DatabaseHandler extends AbstractProcessingHandler
     /**
      * Create a new DatabaseHandler object.
      *
-     * @param ClassMapper $classMapper Maps the modelIdentifier to the specific Eloquent model.
-     * @param string $modelIdentifier
-     * @param int     $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param ClassMapper $classMapper     Maps the modelIdentifier to the specific Eloquent model.
+     * @param string      $modelIdentifier
+     * @param int         $level           The minimum logging level at which this handler will be triggered
+     * @param bool        $bubble          Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($classMapper, $modelIdentifier, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(ClassMapper $classMapper, $modelIdentifier, $level = Logger::DEBUG, $bubble = true)
     {
         $this->classMapper = $classMapper;
         $this->modelName = $modelIdentifier;
@@ -43,7 +46,7 @@ class DatabaseHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function write(array $record)
     {

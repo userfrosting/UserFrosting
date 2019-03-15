@@ -12,7 +12,7 @@ $(document).ready(function() {
     $('.js-select2').select2();
 
     $("#account-settings").ufForm({
-        validators: page.validators.account_settings,
+        validator: page.validators.account_settings,
         msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function() {
         // Reload the page on success
@@ -20,7 +20,7 @@ $(document).ready(function() {
     });
 
     $("#profile-settings").ufForm({
-        validators: page.validators.profile_settings,
+        validator: page.validators.profile_settings,
         msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function() {
         // Reload the page on success

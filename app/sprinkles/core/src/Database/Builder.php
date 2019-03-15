@@ -3,29 +3,32 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database;
 
-use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Query\Builder as LaravelBuilder;
 
 /**
- * UFBuilder Class
+ * UserFrosting's custom Query Builder Class
  *
- * The base Eloquent data model, from which all UserFrosting data classes extend.
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Builder extends LaravelBuilder
 {
+    /**
+     * @var array List of excluded columns
+     */
     protected $excludedColumns = null;
 
     /**
      * Perform a "begins with" pattern match on a specified column in a query.
      *
-     * @param $query
-     * @param $field string The column to match
-     * @param $value string The value to match
+     * @param  string $field The column to match
+     * @param  string $value The value to match
+     * @return self
      */
     public function beginsWith($field, $value)
     {
@@ -35,9 +38,9 @@ class Builder extends LaravelBuilder
     /**
      * Perform an "ends with" pattern match on a specified column in a query.
      *
-     * @param $query
-     * @param $field string The column to match
-     * @param $value string The value to match
+     * @param  string $field The column to match
+     * @param  string $value The value to match
+     * @return self
      */
     public function endsWith($field, $value)
     {
@@ -47,8 +50,8 @@ class Builder extends LaravelBuilder
     /**
      * Add columns to be excluded from the query.
      *
-     * @param $value array|string The column(s) to exclude
-     * @return $this
+     * @param  array|string $column The column(s) to exclude
+     * @return self
      */
     public function exclude($column)
     {
@@ -61,9 +64,10 @@ class Builder extends LaravelBuilder
 
     /**
      * Perform a pattern match on a specified column in a query.
-     * @param $query
-     * @param $field string The column to match
-     * @param $value string The value to match
+     *
+     * @param  string $field The column to match
+     * @param  string $value The value to match
+     * @return self
      */
     public function like($field, $value)
     {
@@ -72,9 +76,10 @@ class Builder extends LaravelBuilder
 
     /**
      * Perform a pattern match on a specified column in a query.
-     * @param $query
-     * @param $field string The column to match
-     * @param $value string The value to match
+     *
+     * @param  string $field The column to match
+     * @param  string $value The value to match
+     * @return self
      */
     public function orLike($field, $value)
     {
@@ -84,7 +89,7 @@ class Builder extends LaravelBuilder
     /**
      * Execute the query as a "select" statement.
      *
-     * @param  array  $columns
+     * @param  array                          $columns
      * @return \Illuminate\Support\Collection
      */
     public function get($columns = ['*'])
@@ -129,7 +134,7 @@ class Builder extends LaravelBuilder
     /**
      * Find any wildcard columns ('*'), remove it from the column list and replace with an explicit list of columns.
      *
-     * @param array $columns
+     * @param  array $columns
      * @return array
      */
     protected function replaceWildcardColumns(array $columns)
@@ -150,7 +155,7 @@ class Builder extends LaravelBuilder
     /**
      * Return a list of wildcard columns from the list of columns, mapping columns to their corresponding tables.
      *
-     * @param array $columns
+     * @param  array $columns
      * @return array
      */
     protected function findWildcardTables(array $columns)
@@ -177,7 +182,7 @@ class Builder extends LaravelBuilder
     /**
      * Gets the fully qualified column names for a specified table.
      *
-     * @param string $table
+     * @param  string $table
      * @return array
      */
     protected function getQualifiedColumnNames($table = null)
@@ -190,7 +195,8 @@ class Builder extends LaravelBuilder
     /**
      * Fully qualify any unqualified columns in a list with this builder's table name.
      *
-     * @param array $columns
+     * @param  array  $columns
+     * @param  string $table
      * @return array
      */
     protected function convertColumnsToFullyQualified($columns, $table = null)

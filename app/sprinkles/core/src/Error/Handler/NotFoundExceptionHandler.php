@@ -3,13 +3,13 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
-use UserFrosting\Sprinkle\Core\Error\Handler\HttpExceptionHandler;
-use UserFrosting\Support\Exception\HttpException;
-use UserFrosting\Support\Message\UserMessage;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Handler for NotFoundExceptions.
@@ -21,7 +21,7 @@ class NotFoundExceptionHandler extends HttpExceptionHandler
     /**
      * Custom handling for NotFoundExceptions.  Always render a generic response!
      *
-     * @return Response
+     * @return ResponseInterface
      */
     public function handle()
     {

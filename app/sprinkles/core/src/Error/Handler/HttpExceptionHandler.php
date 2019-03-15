@@ -3,11 +3,14 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
 use UserFrosting\Support\Exception\HttpException;
+use UserFrosting\Support\Message\UserMessage;
 
 /**
  * Handler for HttpExceptions.
@@ -18,8 +21,6 @@ class HttpExceptionHandler extends ExceptionHandler
 {
     /**
      * For HttpExceptions, only write to the error log if the status code is 500
-     *
-     * @return void
      */
     public function writeToErrorLog()
     {
@@ -42,6 +43,7 @@ class HttpExceptionHandler extends ExceptionHandler
         } elseif ($this->exception instanceof HttpException) {
             return $this->exception->getHttpErrorCode();
         }
+
         return 500;
     }
 
@@ -58,7 +60,7 @@ class HttpExceptionHandler extends ExceptionHandler
 
         // Fallback
         return [
-            new UserMessage("ERROR.SERVER")
+            new UserMessage('ERROR.SERVER')
         ];
     }
 }

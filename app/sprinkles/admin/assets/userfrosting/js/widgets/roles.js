@@ -34,7 +34,7 @@ function attachRoleForm() {
 
         // Set up the form for submission
         form.ufForm({
-            validators: page.validators
+            validator: page.validators
         }).on("submitSuccess.ufForm", function() {
             // Reload page on success
             window.location.reload();
@@ -44,14 +44,20 @@ function attachRoleForm() {
 
 /**
  * Link role action buttons, for example in a table or on a specific role's page.
+ * @param {module:jQuery} el jQuery wrapped element to target.
+ * @param {{delete_redirect: string}} options Options used to modify behaviour of button actions.
  */
-function bindRoleButtons(el) {
+function bindRoleButtons(el, options) {
+    if (!options) options = {};
+
     /**
      * Link row buttons after table is loaded.
      */
 
     // Manage permissions button
-    el.find('.js-role-permissions').click(function() {
+    el.find('.js-role-permissions').click(function(e) {
+        e.preventDefault();
+
         var slug = $(this).data('slug');
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/permissions",
@@ -88,8 +94,8 @@ function bindRoleButtons(el) {
             });
 
             // Set up form for submission
-            form.ufForm({
-            }).on("submitSuccess.ufForm", function() {
+            form.ufForm()
+            .on("submitSuccess.ufForm", function() {
                 // Reload page on success
                 window.location.reload();
             });
@@ -100,7 +106,9 @@ function bindRoleButtons(el) {
      * Buttons that launch a modal dialog
      */
     // Edit role details button
-    el.find('.js-role-edit').click(function() {
+    el.find('.js-role-edit').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/edit",
             ajaxParams: {
@@ -113,7 +121,9 @@ function bindRoleButtons(el) {
     });
 
     // Delete role button
-    el.find('.js-role-delete').click(function() {
+    el.find('.js-role-delete').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/confirm-delete",
             ajaxParams: {
@@ -128,8 +138,9 @@ function bindRoleButtons(el) {
 
             form.ufForm()
             .on("submitSuccess.ufForm", function() {
-                // Reload page on success
-                window.location.reload();
+                // Navigate or reload page on success
+                if (options.delete_redirect) window.location.href = options.delete_redirect;
+                else window.location.reload();
             });
         });
     });
@@ -137,7 +148,9 @@ function bindRoleButtons(el) {
 
 function bindRoleCreationButton(el) {
     // Link create button
-    el.find('.js-role-create').click(function() {
+    el.find('.js-role-create').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/create",
             msgTarget: $("#alerts-page")
