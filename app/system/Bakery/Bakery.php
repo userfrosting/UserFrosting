@@ -92,7 +92,7 @@ class Bakery
         $locator = $this->ci->locator;
 
         // Get Bakery command resources
-        $commandResources = $locator->listResources($this->scheme);
+        $commandResources = $locator->listResources($this->scheme, false, false);
 
         // Add commands to the App
         foreach ($commandResources as $commandResource) {

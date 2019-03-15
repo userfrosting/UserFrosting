@@ -689,24 +689,17 @@ class ServicesProvider
          * @return \Slim\Views\Twig
          */
         $container['view'] = function ($c) {
-            $templatePaths = $c->locator->findResources('templates://', true, false);
 
-            $view = new Twig($templatePaths);
+            /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
+            $locator = $c->locator;
 
+            $templatePaths = $locator->getResources('templates://');
+            $view = new Twig(array_map('strval', $templatePaths));
             $loader = $view->getLoader();
 
-            $sprinkles = $c->sprinkleManager->getSprinkleNames();
-
             // Add Sprinkles' templates namespaces
-            // TODO : Use locator
-            foreach ($sprinkles as $sprinkle) {
-                $path = \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS .
-                    $sprinkle . \UserFrosting\DS .
-                    \UserFrosting\TEMPLATE_DIR_NAME . \UserFrosting\DS;
-
-                if (is_dir($path)) {
-                    $loader->addPath($path, $sprinkle);
-                }
+            foreach (array_reverse($templatePaths) as $templateResource) {
+                $loader->addPath($templateResource->getAbsolutePath(), $templateResource->getLocation()->getName());
             }
 
             $twig = $view->getEnvironment();

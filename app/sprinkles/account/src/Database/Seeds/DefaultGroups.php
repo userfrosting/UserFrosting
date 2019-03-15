@@ -9,13 +9,13 @@
 
 namespace UserFrosting\Sprinkle\Account\Database\Seeds;
 
-use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
+use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 
 /**
  * Seeder for the default groups
  */
-class DefaultGroups implements SeedInterface
+class DefaultGroups extends BaseSeed
 {
     /**
      * {@inheritdoc}

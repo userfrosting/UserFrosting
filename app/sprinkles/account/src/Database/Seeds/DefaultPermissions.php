@@ -9,7 +9,7 @@
 
 namespace UserFrosting\Sprinkle\Account\Database\Seeds;
 
-use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
+use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Core\Facades\Seeder;
@@ -17,7 +17,7 @@ use UserFrosting\Sprinkle\Core\Facades\Seeder;
 /**
  * Seeder for the default permissions
  */
-class DefaultPermissions implements SeedInterface
+class DefaultPermissions extends BaseSeed
 {
     /**
      * {@inheritdoc}

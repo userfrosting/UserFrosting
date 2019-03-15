@@ -314,7 +314,9 @@ return [
                     'tr'    => 'Türk',
                     'it_IT' => 'Italiano',
                     'th_TH' => 'ภาษาไทย',
-                    'fa'    => 'فارسی'
+                    'fa'    => 'فارسی',
+                    'el'    => 'Greek',
+
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales.
                 // Supported browser requested languages always have first preference.

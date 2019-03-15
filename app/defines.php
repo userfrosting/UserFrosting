@@ -10,7 +10,7 @@
 namespace UserFrosting;
 
 // Some standard defines
-define('UserFrosting\VERSION', '4.2.0-beta.2');
+define('UserFrosting\VERSION', '4.2.0');
 define('UserFrosting\DS', '/');
 define('UserFrosting\PHP_MIN_VERSION', '5.6');
 define('UserFrosting\PHP_RECOMMENDED_VERSION', '7.1');
@@ -35,7 +35,7 @@ define('UserFrosting\SPRINKLES_DIR_NAME', 'sprinkles');
 define('UserFrosting\SRC_DIR_NAME', 'src');
 
 // Full path to Sprinkles directory
-define('UserFrosting\SPRINKLES_DIR', APP_DIR_NAME . DS . SPRINKLES_DIR_NAME);
+define('UserFrosting\SPRINKLES_DIR', APP_DIR . DS . SPRINKLES_DIR_NAME);
 
 // Full path to sprinkles schema file
 define('UserFrosting\SPRINKLES_SCHEMA_FILE', APP_DIR . DS . 'sprinkles.json');

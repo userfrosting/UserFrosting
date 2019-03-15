@@ -12,7 +12,6 @@ namespace UserFrosting\Sprinkle\Admin\Controller;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
@@ -21,6 +20,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Controller class for group-related requests, including listing groups, CRUD for groups, etc.
@@ -147,7 +147,7 @@ class GroupController extends SimpleController
 
         // If the group doesn't exist, return 404
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -243,7 +243,7 @@ class GroupController extends SimpleController
 
         // If the group doesn't exist, return 404
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // Get group
@@ -311,7 +311,7 @@ class GroupController extends SimpleController
 
         // If the group no longer exists, forward to main group listing page
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -431,7 +431,7 @@ class GroupController extends SimpleController
 
         // If the group doesn't exist, return 404
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -494,7 +494,7 @@ class GroupController extends SimpleController
 
         // If the group no longer exists, forward to main group listing page
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // GET parameters
@@ -547,9 +547,7 @@ class GroupController extends SimpleController
 
         // If the group no longer exists, forward to main group listing page
         if (!$group) {
-            $redirectPage = $this->ci->router->pathFor('uri_groups');
-
-            return $response->withRedirect($redirectPage);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -603,7 +601,8 @@ class GroupController extends SimpleController
         return $this->ci->view->render($response, 'pages/group.html.twig', [
             'group'  => $group,
             'fields' => $fields,
-            'tools'  => $editButtons
+            'tools'  => $editButtons,
+            'delete_redirect' => $this->ci->router->pathFor('uri_groups')
         ]);
     }
 
@@ -659,7 +658,7 @@ class GroupController extends SimpleController
         $group = $this->getGroupFromParams($args);
 
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Support\Repository\Repository $config */

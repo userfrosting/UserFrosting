@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
@@ -25,6 +24,7 @@ use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Controller class for user-related requests, including listing users, CRUD for users, etc.
@@ -192,7 +192,7 @@ class UserController extends SimpleController
         $user = $this->getUserFromParams($args);
 
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -265,7 +265,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -333,7 +333,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -384,7 +384,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -476,7 +476,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -623,7 +623,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -717,7 +717,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -768,7 +768,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -808,7 +808,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // GET parameters
@@ -856,7 +856,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -909,9 +909,7 @@ class UserController extends SimpleController
 
         // If the user no longer exists, forward to main user listing page
         if (!$user) {
-            $usersPage = $this->ci->router->pathFor('uri_users');
-
-            return $response->withRedirect($usersPage);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
@@ -1022,7 +1020,8 @@ class UserController extends SimpleController
             'locales' => $locales,
             'fields'  => $fields,
             'tools'   => $editButtons,
-            'widgets' => $widgets
+            'widgets' => $widgets,
+            'delete_redirect' => $this->ci->router->pathFor('uri_users')
         ]);
     }
 
@@ -1077,7 +1076,7 @@ class UserController extends SimpleController
         $user = $this->getUserFromParams($args);
 
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         /** @var \UserFrosting\Support\Repository\Repository $config */
@@ -1205,7 +1204,7 @@ class UserController extends SimpleController
         $user = $this->getUserFromParams($args);
 
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // Get key->value pair from URL and request body

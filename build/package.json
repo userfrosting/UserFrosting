@@ -1,13 +1,13 @@
 {
   "private": true,
   "dependencies": {
-    "@userfrosting/browserify-dependencies": "^1.0.0-beta.1",
-    "@userfrosting/gulp-bundle-assets": "^3.0.0-rc.1",
+    "@userfrosting/browserify-dependencies": "^1.0.0",
+    "@userfrosting/gulp-bundle-assets": "^3.0.0",
     "@userfrosting/merge-package-dependencies": "^1.2.1",
-    "bower": "^1.8.4",
-    "esm": "^3.0.84",
-    "del": "^3.0.0",
+    "bower": "^1.8.8",
+    "del": "^4.0.0",
     "dotenv": "^6.2.0",
+    "esm": "^3.2.16",
     "gulp": "^4.0.0",
     "gulp-clean-css": "^4.0.0",
     "gulp-concat": "^2.6.1",
@@ -15,13 +15,14 @@
     "gulp-prune": "^0.2.0",
     "gulp-rev": "^9.0.0",
     "gulp-uglify-es": "^1.0.4",
-    "gulplog": "^1.0.0"
+    "gulplog": "^1.0.0",
+    "strip-ansi": "^5.1.0"
   },
   "scripts": {
-    "uf-bundle": "gulp bundle",
-    "uf-assets-install": "gulp assetsInstall",
-    "uf-frontend": "gulp frontend",
-    "uf-clean": "gulp clean"
+    "uf-bundle": "./node_modules/.bin/gulp bundle",
+    "uf-assets-install": "./node_modules/.bin/gulp assetsInstall",
+    "uf-frontend": "./node_modules/.bin/gulp frontend",
+    "uf-clean": "./node_modules/.bin/gulp clean"
   },
   "engines": {
     "node": ">=10.12.0",

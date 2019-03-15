@@ -11,9 +11,9 @@ namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Controller class for permission-related requests, including listing permissions, CRUD for permissions, etc.
@@ -56,7 +56,7 @@ class PermissionController extends SimpleController
 
         // If the permission doesn't exist, return 404
         if (!$permission) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // Get permission
@@ -182,7 +182,7 @@ class PermissionController extends SimpleController
 
         // If the permission doesn't exist, return 404
         if (!$permission) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         return $this->ci->view->render($response, 'pages/permission.html.twig', [

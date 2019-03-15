@@ -49,7 +49,7 @@ class MigrationLocator implements MigrationLocatorInterface
      */
     public function getMigrations()
     {
-        $migrationFiles = $this->locator->listResources($this->scheme);
+        $migrationFiles = $this->locator->listResources($this->scheme, false, false);
 
         $migrations = [];
         foreach ($migrationFiles as $migrationFile) {

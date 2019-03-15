@@ -49,7 +49,9 @@ class Seeder
      */
     public function getSeeds()
     {
-        return $this->loadSeeders($this->ci->locator->listResources($this->scheme));
+        $seeds = $this->ci->locator->listResources($this->scheme, false, false);
+        
+        return $this->loadSeeders($seeds);
     }
 
     /**

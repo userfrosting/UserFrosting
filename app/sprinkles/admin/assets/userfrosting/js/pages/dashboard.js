@@ -6,7 +6,9 @@
  */
 
 $(document).ready(function() {
-    $('.js-clear-cache').click(function() {
+    $('.js-clear-cache').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/dashboard/clear-cache",
             ajaxParams: {
