@@ -182,5 +182,5 @@ return [
     'USER_OR_EMAIL_INVALID' => "L'indirizzo mail o il nome utente non sono validi",
     'USER_OR_PASS_INVALID'  => 'Il nome utente o la password non sono validi',
 
-    'WELCOME' => 'Bentornato, {{display_name}}'
+    'WELCOME' => 'Bentornato, {{first_name}}'
 ];
