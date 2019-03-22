@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.2.1]
+- Fix Italian translation ([#950])
+
 ## [v4.2.0]
 ### Changed Requirements
 - Changed minimum Node.js version to **v10.12.0**
@@ -704,5 +707,6 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
 [#919]: https://github.com/userfrosting/UserFrosting/issues/919
 [#940]: https://github.com/userfrosting/UserFrosting/issues/940
+[#950]: https://github.com/userfrosting/UserFrosting/issues/950
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
