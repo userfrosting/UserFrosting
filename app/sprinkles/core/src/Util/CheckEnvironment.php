@@ -125,6 +125,10 @@ class CheckEnvironment
             $problemsFound = true;
         }
 
+        if ($this->checkDirectories()) {
+            $problemsFound = true;
+        }
+
         if ($this->checkPermissions()) {
             $problemsFound = true;
         }
@@ -258,11 +262,50 @@ class CheckEnvironment
     }
 
     /**
+    * Check that log, cache, and session directories exist.
+    */
+    public function checkDirectories()
+    {
+        $problemsFound = false;
+
+        $directoryPaths = [
+            "log"     => $this->locator->findResource('log://'),
+            "cache"   => $this->locator->findResource('cache://'),
+            "session" => $this->locator->findResource('session://')
+        ];
+
+        foreach ($directoryPaths as $directory => $path) {
+          if ($path == null) {
+            $problemsFound = true;
+            $this->resultsFailed['directory-' . $directory] = [
+                'title'   => "<i class='fa fa-file-o fa-fw'></i> A required directory was not found.",
+                'message' => "Please check that <code>userfrosting/app/$directory</code> exists.",
+                'success' => false
+            ];
+          }
+          else {
+              $this->resultsSuccess['directory-' . $directory] = [
+                  'title'   => "<i class='fa fa-file-o fa-fw'></i> File/directory check passed!",
+                  'message' => "<code>userfrosting/app/$directory</code> exists.",
+                  'success' => true
+              ];
+          }
+      }
+        return $problemsFound;
+  }
+
+    /**
      * Check that log, cache, and session directories are writable, and that other directories are set appropriately for the environment.
      */
     public function checkPermissions()
     {
         $problemsFound = false;
+
+        // Skip this check if the required directories do not exist.
+        if ($this->checkDirectories() == true) {
+          $problemsFound = true;
+        return $problemsFound;
+        }
 
         $shouldBeWriteable = [
             $this->locator->findResource('log://')     => true,
@@ -280,15 +323,6 @@ class CheckEnvironment
 
         // Check for essential files & perms
         foreach ($shouldBeWriteable as $file => $assertWriteable) {
-            $is_dir = false;
-            if (!file_exists($file)) {
-                $problemsFound = true;
-                $this->resultsFailed['file-' . $file] = [
-                    'title'   => "<i class='fa fa-file-o fa-fw'></i> File or directory does not exist.",
-                    'message' => "We could not find the file or directory <code>$file</code>.",
-                    'success' => false
-                ];
-            } else {
                 $writeable = is_writable($file);
                 if ($assertWriteable !== $writeable) {
                     $problemsFound = true;
@@ -311,11 +345,9 @@ class CheckEnvironment
                             . '</b>.',
                         'success' => true
                     ];
-                }
-            }
+              }
         }
-
-        return $problemsFound;
+          return $problemsFound;
     }
 
     /**
