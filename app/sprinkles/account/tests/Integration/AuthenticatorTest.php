@@ -12,6 +12,7 @@ namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
+use UserFrosting\Sprinkle\Core\Database\Models\Session;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Tests\TestCase;
@@ -66,6 +67,47 @@ class AuthenticatorTest extends TestCase
 
         // Login the test user
         $authenticator->login($testUser, false);
+
+        // Test session to see if user was logged in
+        $this->assertNotNull($this->ci->session[$key]);
+        $this->assertSame($testUser->id, $this->ci->session[$key]);
+
+        // Must logout to avoid test issue
+        $authenticator->logout(true);
+
+        // We'll test the logout system works too while we're at it (and depend on it)
+        $key = $this->ci->config['session.keys.current_user_id'];
+        $this->assertNull($this->ci->session[$key]);
+        $this->assertNotSame($testUser->id, $this->ci->session[$key]);
+    }
+
+    /**
+     * @depends testConstructor
+     * @param Authenticator $authenticator
+     */
+    public function testLoginWithSessionDatabase(Authenticator $authenticator)
+    {
+        // Change session
+        $this->ci->config['session.handler'] = 'database';
+
+        // Create a test user
+        $testUser = $this->createTestUser();
+
+        // Check the table
+        $this->assertSame(0, Session::count());
+
+        // Test session to avoid false positive
+        $key = $this->ci->config['session.keys.current_user_id'];
+        $this->assertNull($this->ci->session[$key]);
+        $this->assertNotSame($testUser->id, $this->ci->session[$key]);
+
+        // Login the test user
+        $authenticator->login($testUser, false);
+
+        // Check the table again
+        $get = Session::get();
+        echo print_r($get, true);
+        $this->assertSame(1, Session::count());
 
         // Test session to see if user was logged in
         $this->assertNotNull($this->ci->session[$key]);
