@@ -41,6 +41,8 @@ function attachGroupForm() {
             $(this).prev(".icon-preview").find("i").removeClass().addClass($(this).val());
         });
 
+         $('.icp-auto').iconpicker();
+
         // Set up the form for submission
         form.ufForm({
             validator: page.validators
