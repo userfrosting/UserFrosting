@@ -88,7 +88,8 @@ class AuthenticatorTest extends TestCase
     public function testLoginWithSessionDatabase(Authenticator $authenticator)
     {
         // Change session
-        $this->ci->config['session.handler'] = 'database';
+        $this->ci->config['session.handler'] = 'database';  //<-- This doesn't work as service is already initialized ! Uncomment "echo" bellow to test
+        //echo print_r($this->ci->session, true);
 
         // Create a test user
         $testUser = $this->createTestUser();
@@ -105,8 +106,6 @@ class AuthenticatorTest extends TestCase
         $authenticator->login($testUser, false);
 
         // Check the table again
-        $get = Session::get();
-        echo print_r($get, true);
         $this->assertSame(1, Session::count());
 
         // Test session to see if user was logged in
@@ -120,6 +119,9 @@ class AuthenticatorTest extends TestCase
         $key = $this->ci->config['session.keys.current_user_id'];
         $this->assertNull($this->ci->session[$key]);
         $this->assertNotSame($testUser->id, $this->ci->session[$key]);
+
+        // Make sure table entry has been removed
+        $this->assertSame(0, Session::count());
     }
 
     /**

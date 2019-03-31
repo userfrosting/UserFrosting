@@ -9,8 +9,6 @@
 
 namespace UserFrosting\Sprinkle\Core\Database\Models;
 
-use UserFrosting\Sprinkle\Core\Database\Models\Model;
-
 /**
  * Session Class
  *
