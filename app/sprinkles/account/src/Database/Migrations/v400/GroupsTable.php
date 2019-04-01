@@ -34,7 +34,7 @@ class GroupsTable extends Migration
                 $table->string('slug');
                 $table->string('name');
                 $table->text('description')->nullable();
-                $table->string('icon', 100)->nullable(false)->default('fa fa-user')->comment('The icon representing users in this group.');
+                $table->string('icon', 100)->nullable(false)->default('fas fa-user')->comment('The icon representing users in this group.');
                 $table->timestamps();
 
                 $table->engine = 'InnoDB';

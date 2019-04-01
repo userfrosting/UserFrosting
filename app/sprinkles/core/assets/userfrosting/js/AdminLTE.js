@@ -631,7 +631,7 @@ function _init() {
     }, options);
 
     //The overlay
-    var overlay = $('<div class="overlay"><div class="fa fa-refresh fa-spin"></div></div>');
+    var overlay = $('<div class="overlay"><div class="fas fa-refresh fa-spin"></div></div>');
 
     return this.each(function () {
       //if a source is specified
