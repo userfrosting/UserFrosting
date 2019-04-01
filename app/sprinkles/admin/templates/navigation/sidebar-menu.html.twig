@@ -1,7 +1,7 @@
 {% block navigation %}
     {% if checkAccess('uri_dashboard') %}
     <li>
-        <a href="{{site.uri.public}}/dashboard"><i class="fa fa-dashboard fa-fw"></i> <span>{{ translate("DASHBOARD") }}</span></a>
+        <a href="{{site.uri.public}}/dashboard"><i class="fa fa-tachometer-alt fa-fw"></i> <span>{{ translate("DASHBOARD") }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_users') %}
@@ -22,7 +22,7 @@
     {% endif %}
     {% if checkAccess('uri_roles') %}
     <li>
-        <a href="{{site.uri.public}}/roles"><i class="fa fa-drivers-license fa-fw"></i> <span>{{ translate("ROLE", 2) }}</span></a>
+        <a href="{{site.uri.public}}/roles"><i class="fa fa-id-card fa-fw"></i> <span>{{ translate("ROLE", 2) }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_permissions') %}

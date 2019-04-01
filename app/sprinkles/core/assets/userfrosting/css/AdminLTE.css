@@ -255,7 +255,8 @@ a:focus {
   background-color: transparent;
   background-image: none;
   padding: 15px 15px;
-  font-family: fontAwesome;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
 }
 .main-header .sidebar-toggle:before {
   content: "\f0c9";

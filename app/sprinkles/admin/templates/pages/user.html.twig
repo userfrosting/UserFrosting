@@ -43,7 +43,7 @@
                                                 {% if 'roles' not in tools.hidden %}
                                                     <li>
                                                         <a href="#" class="js-user-roles" data-user_name="{{user.user_name}}">
-                                                            <i class="fa fa-drivers-license fa-fw"></i> {{translate('ROLE', 2)}}
+                                                            <i class="fa fa-id-card fa-fw"></i> {{translate('ROLE', 2)}}
                                                         </a>
                                                     </li>
                                                 {% endif %}
@@ -117,7 +117,7 @@
 
                             {% if 'roles' not in fields.hidden %}
                                 <hr>
-                                <strong><i class="fa fa-drivers-license margin-r-5"></i> {{translate("ROLE", 2)}}</strong>
+                                <strong><i class="fa fa-id-card margin-r-5"></i> {{translate("ROLE", 2)}}</strong>
                                 <p class="box-profile-property">
                                     {% for role in user.roles %}
                                         <span class="label label-primary" title="{{role.description}}">{{role.name}}</span>
