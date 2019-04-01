@@ -1,6 +1,7 @@
 {
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.1",
     "bootstrap": "^3.3.6",
     "clipboard": "^1.5.16",
     "fastclick": "^1.0.6",
