@@ -20,7 +20,7 @@ class SetupFontAwesomeCommand extends BaseCommand
   /**
    * @var string Path to the build/ directory
    */
-  protected $buildPath = \UserFrosting\ROOT_DIR . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME. '/.npmrc';
+    protected $buildPath = \UserFrosting\ROOT_DIR . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME;
   /**
    * {@inheritdoc}
    */
@@ -36,14 +36,17 @@ class SetupFontAwesomeCommand extends BaseCommand
     {
         // Display header,
         $this->io->title("UserFrosting's Font Awesome Setup Wizard");
-        $this->io->note("Font Awesome authentication key will be saved in `{$this->buildPath}`");
-        $this->io->write('Please enter your Font Awesome authentication key. This will be used to download the neccessary packages.');
+
+        // Display nice explanation and ask wich method to use
+        $this->io->write("This setup will configure Font Awesome 5 Pro. Font Awesome 5 Free is already included with UserFrosting.");
+
+        $this->io->confirm('Would you like to continue?');
+
+        $this->io->note("The Authentication Key will be saved in `{$this->buildPath}/.npmrc`");
+        $this->io->write('Please enter your Font Awesome Authentication Key to begin. This will be used to download the neccessary packages.');
 
         // Ask for Font Awesome authentication key
         $newAuthKey = $this->io->ask('What is Font Awesome Authentication key?');
-
-        // Set $buildPath. We'll use the aboslute path for this task
-        $this->buildPath = \UserFrosting\ROOT_DIR . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME;
 
         // Temporarily change the working directory (more reliable than --prefix npm switch)
         $wd = getcwd();
