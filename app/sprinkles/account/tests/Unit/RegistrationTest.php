@@ -81,6 +81,10 @@ class RegistrationTest extends TestCase
         $this->expectException(HttpException::class);
         $validation = $registration->validate();
 
+        /**
+         * @todo --> THIS TEST IS NOT EXECUTED BECAUSE OF THE PREVIOUS EXCEPTION !!!
+         *           Plus need to validate a message is trown, because apparently it doesn't !
+         */
         // Should throw email error if we change the username
         $fakeUserData['user_name'] = 'BarFoo';
         $registration = new Registration($this->ci, $fakeUserData);
@@ -93,9 +97,6 @@ class RegistrationTest extends TestCase
      */
     public function testValidation()
     {
-        // Reset database
-        $this->refreshDatabase();
-
         $registration = new Registration($this->ci, [
             'user_name'     => 'FooBar',
             'first_name'    => 'Foo',
@@ -114,9 +115,6 @@ class RegistrationTest extends TestCase
      */
     public function testMissingFields()
     {
-        // Reset database
-        $this->refreshDatabase();
-
         $registration = new Registration($this->ci, [
             'user_name'     => 'FooBar',
             //'first_name'    => 'Foo',

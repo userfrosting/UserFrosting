@@ -917,7 +917,7 @@ class AccountController extends SimpleController
             $user = $registration->register();
         } catch (\Exception $e) {
             $ms->addMessageTranslated('danger', $e->getMessage(), $data);
-            $error = true;
+            return $response->withJson([], 400);
         }
 
         // Success message
