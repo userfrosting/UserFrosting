@@ -190,7 +190,7 @@ abstract class Sprunje
             // Prepare response
             $settings = http_build_query($this->options);
             $date = Carbon::now()->format('Ymd');
-            $response = $response->withAddedHeader('Content-Disposition', "attachment;filename=$date-{$this->name}-$settings.csv");
+            $response = $response->withAddedHeader('Content-Disposition', "attachment;filename={$this->name}.csv");
             $response = $response->withAddedHeader('Content-Type', 'text/csv; charset=utf-8');
 
             return $response->write($result);
