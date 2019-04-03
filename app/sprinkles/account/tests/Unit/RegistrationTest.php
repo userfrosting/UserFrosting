@@ -78,7 +78,7 @@ class RegistrationTest extends TestCase
 
         // We try to register the same user again. Should throw an error
         $registration = new Registration($this->ci, $fakeUserData);
-        $this->expectException(HttpException::class);
+        $this->expectException(HttpException::class); // @Todo : need to validate a message is trown
         $validation = $registration->validate();
 
         /**
