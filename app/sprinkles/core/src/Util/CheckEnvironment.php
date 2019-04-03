@@ -127,6 +127,8 @@ class CheckEnvironment
 
         if ($this->checkDirectories()) {
             $problemsFound = true;
+        // Skip checkPermissions() if the required directories do not exist.
+        return $problemsFound;
         }
 
         if ($this->checkPermissions()) {
@@ -300,12 +302,6 @@ class CheckEnvironment
     public function checkPermissions()
     {
         $problemsFound = false;
-
-        // Skip this check if the required directories do not exist.
-        if ($this->checkDirectories() == true) {
-          $problemsFound = true;
-        return $problemsFound;
-        }
 
         $shouldBeWriteable = [
             $this->locator->findResource('log://')     => true,
