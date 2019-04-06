@@ -46,7 +46,7 @@
         },
         "css/main": {
             "styles": [
-                "vendor/fontawesome-iconpicker/css/font-awesome.css",
+                "vendor/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.css",
                 "vendor/font-awesome/css/font-awesome.css",
                 "vendor/bootstrap/dist/css/bootstrap.css",
                 "vendor/select2/dist/css/select2.css",
