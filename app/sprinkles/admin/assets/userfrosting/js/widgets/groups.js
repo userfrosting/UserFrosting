@@ -36,6 +36,9 @@ function attachGroupForm() {
             }
         });
 
+        // Fontawesome-iconpicker
+         $('.icp-auto').iconpicker();
+
         // Set icon when changed
         form.find('input[name=icon]').on('input change', function() {
             $(this).prev(".icon-preview").find("i").removeClass().addClass($(this).val());
