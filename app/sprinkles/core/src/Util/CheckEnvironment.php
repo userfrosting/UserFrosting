@@ -271,9 +271,9 @@ class CheckEnvironment
         $problemsFound = false;
 
         $directoryPaths = [
-            "log"     => $this->locator->findResource('log://'),
-            "cache"   => $this->locator->findResource('cache://'),
-            "session" => $this->locator->findResource('session://')
+            "logs"     => $this->locator->findResource('log://'),
+            "cache"    => $this->locator->findResource('cache://'),
+            "sessions" => $this->locator->findResource('session://')
         ];
 
         foreach ($directoryPaths as $directory => $path) {
@@ -343,7 +343,7 @@ class CheckEnvironment
                     ];
               }
         }
-          return $problemsFound;
+        return $problemsFound;
     }
 
     /**
