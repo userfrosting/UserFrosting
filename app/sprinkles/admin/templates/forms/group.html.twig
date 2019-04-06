@@ -35,11 +35,11 @@
             {% endif %}
             {% if 'icon' not in fields.hidden %}
             <div class="col-sm-12">
-                <div class="form-group">
+                <div class="form-group iconpicker-container">
                     <label>{{translate("GROUP.ICON")}}</label>
                     <div class="input-group">
                         <span class="input-group-addon icon-preview"><i class="{{group.icon}} fa-fw"></i></span>
-                        <input type="text" class="form-control" name="icon" autocomplete="off" value="{{group.icon}}" placeholder="{{translate("GROUP.ICON_EXPLAIN")}}" {% if 'icon' in form.fields.disabled %}disabled{% endif %}>
+                        <input type="text" class="form-control icp icp-auto" name="icon" autocomplete="off" value="{{group.icon}}" placeholder="{{translate("GROUP.ICON_EXPLAIN")}}" {% if 'icon' in form.fields.disabled %}disabled{% endif %}>
                     </div>
                 </div>
             </div>
