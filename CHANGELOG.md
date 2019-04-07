@@ -6,8 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [v4.2.1]
-- Fix Italian translation ([#950])
-- User Registration fails when trying to register two accounts with the same email address ([#953])
+
+### Fixed
+- Italian translation ([#950])
+- User Registration failing when trying to register two accounts with the same email address ([#953])
+- Bad test case for `CoreController::getAsset`.
 
 ## [v4.2.0]
 ### Changed Requirements
