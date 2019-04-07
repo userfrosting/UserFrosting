@@ -10,6 +10,7 @@
 namespace UserFrosting\Sprinkle\Core\Tests;
 
 use UserFrosting\Sprinkle\Core\Controller\CoreController;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Tests CoreController
@@ -51,23 +52,33 @@ class CoreControllerTest extends ControllerTestCase
 
     /**
      * @depends testControllerConstructor
-     * @expectedException \UserFrosting\Support\Exception\NotFoundException
      * @param CoreController $controller
      */
     public function testGetAsset_ExceptionNoUrl(CoreController $controller)
     {
+        $this->expectException(NotFoundException::class);
         $controller->getAsset($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
      * @depends testControllerConstructor
-     * @expectedException \UserFrosting\Support\Exception\NotFoundException
      * @param CoreController $controller
      */
     public function testGetAsset_ExceptionBadUrl(CoreController $controller)
     {
+        $this->expectException(NotFoundException::class);
         $url = '/' . rand(0, 99999);
         $controller->getAsset($this->getRequest(), $this->getResponse(), ['url' => $url]);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @param CoreController $controller
+     */
+    public function testGetAsset_ExceptionEmptyUrl(CoreController $controller)
+    {
+        $this->expectException(NotFoundException::class);
+        $controller->getAsset($this->getRequest(), $this->getResponse(), ['url' => '']);
     }
 
     /**
@@ -78,10 +89,6 @@ class CoreControllerTest extends ControllerTestCase
      */
     public function testGetAsset(CoreController $controller)
     {
-        $result = $controller->getAsset($this->getRequest(), $this->getResponse(), ['url' => '']);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertSame('', (string) $result->getBody());
-
         $result = $controller->getAsset($this->getRequest(), $this->getResponse(), ['url' => 'userfrosting/js/uf-alerts.js']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertNotEmpty((string) $result->getBody());
