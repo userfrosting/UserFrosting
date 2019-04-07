@@ -161,15 +161,15 @@ class Registration
 
         // Check if username is unique
         if (!$this->usernameIsUnique($this->userdata['user_name'])) {
-            $e = new HttpException();
-            $e->addUserMessage('USERNAME.IN_USE');
+            $e = new HttpException('Username is already in use.');
+            $e->addUserMessage('USERNAME.IN_USE', ['user_name' => $this->userdata['user_name']]);
             throw $e;
         }
 
         // Check if email is unique
         if (!$this->emailIsUnique($this->userdata['email'])) {
-            $e = new HttpException();
-            $e->addUserMessage('EMAIL.IN_USE');
+            $e = new HttpException('Email is already in use.');
+            $e->addUserMessage('EMAIL.IN_USE', ['email' => $this->userdata['email']]);
             throw $e;
         }
 
