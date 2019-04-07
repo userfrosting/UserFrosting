@@ -9,6 +9,7 @@
 
 namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
+use Illuminate\Session\DatabaseSessionHandler;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
@@ -88,8 +89,8 @@ class AuthenticatorTest extends TestCase
     public function testLoginWithSessionDatabase(Authenticator $authenticator)
     {
         // Change session
-        $this->ci->config['session.handler'] = 'database';  //<-- This doesn't work as service is already initialized ! Uncomment "echo" bellow to test
-        //echo print_r($this->ci->session, true);
+        $this->ci->config['session.handler'] = 'database';  //<-- This doesn't work as service is already initialized ! See test bellow 
+        $this->assertInstanceOf(DatabaseSessionHandler::class, $this->ci->session->getHandler());
 
         // Create a test user
         $testUser = $this->createTestUser();
