@@ -913,12 +913,9 @@ class AccountController extends SimpleController
         // Now that we check the form, we can register the actual user
         $registration = new Registration($this->ci, $data);
 
-        try {
-            $user = $registration->register();
-        } catch (\Exception $e) {
-            $ms->addMessageTranslated('danger', $e->getMessage(), $data);
-            $error = true;
-        }
+        // Try registration. An HttpException will be thrown if it fails
+        // No need to catch, as this kind of exception will automatically returns the addMessageTranslated
+        $user = $registration->register();
 
         // Success message
         if ($config['site.registration.require_email_verification']) {
