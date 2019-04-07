@@ -15,7 +15,8 @@
         },
         {
             "name": "Jordan Mele",
-            "email": "SiliconSoldier@outlook.com.au"
+            "email": "SiliconSoldier@outlook.com.au",
+            "homepage": "https://blog.djmm.me"
         },
         {
             "name": "Mike Jacobs"
@@ -45,7 +46,7 @@
         "slim/twig-view": "^1.2",
         "symfony/http-foundation": "*",
         "twig/twig": "^1.18",
-        "userfrosting/assets": "^5.0.0",
+        "userfrosting/assets": "^5.0.4",
         "userfrosting/config": "~4.2.0",
         "userfrosting/cache": "~4.2.0",
         "userfrosting/fortress": "~4.2.0",
