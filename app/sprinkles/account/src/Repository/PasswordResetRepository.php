@@ -9,7 +9,6 @@
 
 namespace UserFrosting\Sprinkle\Account\Repository;
 
-use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 
 /**
@@ -28,7 +27,7 @@ class PasswordResetRepository extends TokenRepository
     /**
      * {@inheritdoc}
      */
-    protected function updateUser(UserInterface $user, $args)
+    protected function updateUser($user, $args)
     {
         $user->password = Password::hash($args['password']);
         // TODO: generate user activity? or do this in controller?
