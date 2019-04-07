@@ -38,9 +38,9 @@ class UserModelTest extends TestCase
     }
 
     /**
-     * Test user deletion.
+     * Test user soft deletion.
      */
-    public function testUserForceDelete()
+    public function testUserSoftDelete()
     {
         // Create a user & make sure it exist
         $user = $this->createTestUser();
@@ -49,6 +49,17 @@ class UserModelTest extends TestCase
         // Soft Delete. User won't be found using normal query, but will withTrash
         $this->assertTrue($user->delete());
         $this->assertNull(User::find($user->id));
+        $this->assertInstanceOf(User::class, User::withTrashed()->find($user->id));
+    }
+
+    /**
+     * Test user hard deletion.
+     *
+     */
+    public function testUserHardDelete()
+    {
+        // Create a user & make sure it exist
+        $user = $this->createTestUser();
         $this->assertInstanceOf(User::class, User::withTrashed()->find($user->id));
 
         // Force delete. Now user can't be found at all
