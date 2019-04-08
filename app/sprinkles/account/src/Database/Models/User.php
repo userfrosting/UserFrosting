@@ -198,7 +198,7 @@ class User extends Model implements UserInterface
             // TODO: remove any persistences
 
             // Delete the user
-            $result = parent::forceDelete();
+            $result = $this->forceDelete();
         } else {
             // Soft delete the user, leaving all associated records alone
             $result = parent::delete();
