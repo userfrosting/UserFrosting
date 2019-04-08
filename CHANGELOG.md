@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - User Registration failing when trying to register two accounts with the same email address ([#953])
 - Bad test case for `CoreController::getAsset`.
 - User Model `forceDelete` doesn't remove the record from the DB ([#951])
+- Fix PHP Fatal error that can be thrown when registering a new User
 
 ## [v4.2.0]
 ### Changed Requirements
