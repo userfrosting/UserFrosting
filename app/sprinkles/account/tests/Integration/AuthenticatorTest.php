@@ -88,9 +88,14 @@ class AuthenticatorTest extends TestCase
      */
     public function testLoginWithSessionDatabase(Authenticator $authenticator)
     {
-        // Change session
-        $this->ci->config['session.handler'] = 'database';  //<-- This doesn't work as service is already initialized ! See test bellow 
-        $this->assertInstanceOf(DatabaseSessionHandler::class, $this->ci->session->getHandler());
+        // Force test to use database session handler
+        putenv('TEST_SESSION_HANDLER=database');
+        $this->refreshApplication();
+
+        // Make sure it worked
+        if (!($this->ci->session->getHandler() instanceof DatabaseSessionHandler)) {
+            $this->markTestSkipped('Session handler not an instance of DatabaseSessionHandler');
+        }
 
         // Create a test user
         $testUser = $this->createTestUser();
@@ -106,12 +111,12 @@ class AuthenticatorTest extends TestCase
         // Login the test user
         $authenticator->login($testUser, false);
 
-        // Check the table again
-        $this->assertSame(1, Session::count());
-
         // Test session to see if user was logged in
         $this->assertNotNull($this->ci->session[$key]);
         $this->assertSame($testUser->id, $this->ci->session[$key]);
+
+        // Check the table again
+        $this->assertSame(1, Session::count());
 
         // Must logout to avoid test issue
         $authenticator->logout(true);
