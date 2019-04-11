@@ -15,6 +15,12 @@ function attachUserForm() {
             width: '100%'
         });
 
+        // Needed to allow select2 to render a 'empty' list item.
+        form.find(".js-select2-group").select2({
+            width: '100%',
+            templateResult: item => item.text || '\u200B'
+        });
+
         // Set up the form for submission
         form.ufForm({
             validator: page.validators
@@ -113,7 +119,7 @@ function updateUser(userName, fieldName, fieldValue) {
             } else {
                 $("#alerts-page").ufAlerts('clear');
             }
-    
+
             $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
         }
 

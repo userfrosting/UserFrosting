@@ -1016,11 +1016,11 @@ class UserController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'pages/user.html.twig', [
-            'user'    => $user,
-            'locales' => $locales,
-            'fields'  => $fields,
-            'tools'   => $editButtons,
-            'widgets' => $widgets,
+            'user'            => $user,
+            'locales'         => $locales,
+            'fields'          => $fields,
+            'tools'           => $editButtons,
+            'widgets'         => $widgets,
             'delete_redirect' => $this->ci->router->pathFor('uri_users')
         ]);
     }
@@ -1155,6 +1155,9 @@ class UserController extends SimpleController
             return $response->withJson([], 400);
         }
 
+        if ($data['group_id'] == 0) {
+            $data['group_id'] = null;
+        }
         // Begin transaction - DB will be rolled back if an exception occurs
         Capsule::transaction(function () use ($data, $user, $currentUser) {
             // Update the user and generate success messages
