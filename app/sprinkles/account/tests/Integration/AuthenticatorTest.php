@@ -13,7 +13,7 @@ use Illuminate\Session\DatabaseSessionHandler;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
-use UserFrosting\Sprinkle\Core\Database\Models\Session;
+use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Tests\TestCase;
@@ -101,7 +101,7 @@ class AuthenticatorTest extends TestCase
         $testUser = $this->createTestUser();
 
         // Check the table
-        $this->assertSame(0, Session::count());
+        $this->assertSame(0, SessionTable::count());
 
         // Test session to avoid false positive
         $key = $this->ci->config['session.keys.current_user_id'];
@@ -116,7 +116,7 @@ class AuthenticatorTest extends TestCase
         $this->assertSame($testUser->id, $this->ci->session[$key]);
 
         // Check the table again
-        $this->assertSame(1, Session::count());
+        $this->assertSame(1, SessionTable::count());
 
         // Must logout to avoid test issue
         $authenticator->logout(true);
@@ -127,7 +127,7 @@ class AuthenticatorTest extends TestCase
         $this->assertNotSame($testUser->id, $this->ci->session[$key]);
 
         // Make sure table entry has been removed
-        $this->assertSame(0, Session::count());
+        $this->assertSame(0, SessionTable::count());
     }
 
     /**
