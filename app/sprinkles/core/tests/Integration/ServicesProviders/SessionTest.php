@@ -28,8 +28,43 @@ class SessionTest extends TestCase
     {
         parent::setUp();
 
+        // Boot up memory database
         $this->setupTestDatabase();
         $this->refreshDatabase();
+
+        // Force test to use database session handler
+        putenv('TEST_SESSION_HANDLER=database');
+
+        // Refresh app to use new setup
+        $this->refreshApplication();
+        $this->setupTestDatabase();
+        $this->refreshDatabase();
+    }
+
+    public function testUsingSessionService()
+    {
+        // Make sure config is set
+        $this->assertSame('database', $this->ci->config['session.handler']);
+
+        // Make sure correct db is set
+        $this->assertInstanceOf('Illuminate\Database\SQLiteConnection', $this->ci->db->connection());
+
+        // Test service
+        $session = $this->ci->session;
+        $this->assertInstanceOf(Session::class, $session);
+        $this->assertInstanceOf(DatabaseSessionHandler::class, $session->getHandler());
+
+        // Destroy previously defined session
+        $session->destroy();
+
+        // Start new one and validate status
+        $this->assertSame(PHP_SESSION_NONE, $session->status());
+        $session->start();
+        $this->assertSame(PHP_SESSION_ACTIVE, $session->status());
+
+        // Make sure db was filled with something
+        $this->assertNotEquals(0, SessionTable::count());
+
     }
 
     public function testSessionDouble()
@@ -40,7 +75,7 @@ class SessionTest extends TestCase
         // Destroy previously defined session
         $session->destroy();
 
-        // Validate status
+        // Start new one and validate status
         $this->assertSame(PHP_SESSION_NONE, $session->status());
         $session->start();
         $this->assertSame(PHP_SESSION_ACTIVE, $session->status());
