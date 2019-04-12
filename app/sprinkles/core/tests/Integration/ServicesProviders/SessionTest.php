@@ -28,10 +28,6 @@ class SessionTest extends TestCase
     {
         parent::setUp();
 
-        // Boot up memory database
-        $this->setupTestDatabase();
-        $this->refreshDatabase();
-
         // Force test to use database session handler
         putenv('TEST_SESSION_HANDLER=database');
 
@@ -41,47 +37,52 @@ class SessionTest extends TestCase
         $this->refreshDatabase();
     }
 
+    /**
+     * Test session table connection & existance
+     */
+    public function testSessionTable()
+    {
+        $connection = $this->ci->db->connection();
+        $config = $this->ci->config;
+        $table = $config['session.database.table'];
+
+        // Check connexion is ok and returns what's expected from DatabaseSessionHandler
+        $this->assertInstanceOf(\Illuminate\Database\ConnectionInterface::class, $connection);
+        $this->assertInstanceOf(\Illuminate\Database\Query\Builder::class, $connection->table($table));
+
+        // Check table exist
+        $this->assertTrue($connection->getSchemaBuilder()->hasTable($table));
+    }
+
+    /**
+     * @depends testSessionTable
+     */
+    public function testSessionWrite()
+    {
+        $config = $this->ci->config;
+        $connection = $this->ci->db->connection();
+        $handler = new DatabaseSessionHandler($connection, $config['session.database.table'], $config['session.minutes']);
+
+        $this->assertEquals(0, SessionTable::count());
+        $handler->write(123, 'foo');
+        $this->assertNotEquals(0, SessionTable::count());
+    }
+
+    /**
+     * @depends testSessionTable
+     */
     public function testUsingSessionService()
     {
         // Make sure config is set
-        $this->assertSame('database', $this->ci->config['session.handler']);
-
-        // Make sure correct db is set
-        $this->assertInstanceOf('Illuminate\Database\SQLiteConnection', $this->ci->db->connection());
-
-        // Test service
-        $session = $this->ci->session;
-        $this->assertInstanceOf(Session::class, $session);
-        $this->assertInstanceOf(DatabaseSessionHandler::class, $session->getHandler());
-
-        // Destroy previously defined session
-        $session->destroy();
-
-        // Start new one and validate status
-        $this->assertSame(PHP_SESSION_NONE, $session->status());
-        $session->start();
-        $this->assertSame(PHP_SESSION_ACTIVE, $session->status());
-
-        // Make sure db was filled with something
-        $this->assertNotEquals(0, SessionTable::count());
-
+        $this->sessionTests($this->ci->session);
     }
 
-    public function testSessionDouble()
+    /**
+     * @depends testSessionTable
+     */
+    public function testUsingSessionDouble()
     {
-        // Get session double
-        $session = $this->getSession();
-
-        // Destroy previously defined session
-        $session->destroy();
-
-        // Start new one and validate status
-        $this->assertSame(PHP_SESSION_NONE, $session->status());
-        $session->start();
-        $this->assertSame(PHP_SESSION_ACTIVE, $session->status());
-
-        // Make sure db was filled with something
-        $this->assertNotEquals(0, SessionTable::count());
+        $this->sessionTests($this->getSession());
     }
 
     /**
@@ -103,5 +104,33 @@ class SessionTest extends TestCase
         $this->assertSame($handler, $session->getHandler());
 
         return $session;
+    }
+
+    /**
+     * @param  Session $session
+     */
+    protected function sessionTests(Session $session)
+    {
+        // Check setting is ok
+        $this->assertSame('database', $this->ci->config['session.handler']);
+
+        // Make sure session service have correct instance
+        $this->assertInstanceOf(Session::class, $session);
+        $this->assertInstanceOf(DatabaseSessionHandler::class, $session->getHandler());
+
+        // Destroy previously defined session
+        $session->destroy();
+
+        // Start new one and validate status
+        $this->assertSame(PHP_SESSION_NONE, $session->status());
+        $session->start();
+        $this->assertSame(PHP_SESSION_ACTIVE, $session->status());
+
+        // Set something to the session
+        $session->set('foo', 'bar');
+        $this->assertEquals('bar', $session->get('foo'));
+
+        // Make sure db was filled with something
+        $this->assertNotEquals(0, SessionTable::count());
     }
 }
