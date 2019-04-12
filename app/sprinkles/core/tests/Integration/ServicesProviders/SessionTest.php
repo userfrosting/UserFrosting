@@ -130,6 +130,9 @@ class SessionTest extends TestCase
         $session->set('foo', 'bar');
         $this->assertEquals('bar', $session->get('foo'));
 
+        // Close session to initiate write
+        session_write_close();
+
         // Make sure db was filled with something
         $this->assertNotEquals(0, SessionTable::count());
     }
