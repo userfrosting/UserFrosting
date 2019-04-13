@@ -9,9 +9,9 @@
 
 namespace UserFrosting\Sprinkle\Account\Tests\Integration\Session;
 
-use Illuminate\Session\DatabaseSessionHandler;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;
+use UserFrosting\Sprinkle\Core\Session\DatabaseSessionHandler;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Tests\TestCase;
@@ -99,7 +99,9 @@ class SessionDatabaseHandlerTest extends TestCase
     public function testUsingSessionDouble()
     {
         $this->ci->session->destroy();
-        $this->sessionTests($this->getSession());
+        $session = $this->getSession();
+
+        $this->sessionTests($session);
     }
 
     /**

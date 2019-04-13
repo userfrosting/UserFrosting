@@ -9,11 +9,11 @@
 
 namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
-use Illuminate\Session\DatabaseSessionHandler;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;
+use UserFrosting\Sprinkle\Core\Session\DatabaseSessionHandler;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Tests\TestCase;
