@@ -27,6 +27,7 @@ class SessionFileHandlerTest extends TestCase
         putenv('TEST_SESSION_HANDLER=file');
 
         // Refresh app to use new setup
+        $this->ci->session->destroy();
         $this->refreshApplication();
     }
 
@@ -149,10 +150,12 @@ class SessionFileHandlerTest extends TestCase
         // Close session to initiate write
         session_write_close();
 
-        // Make sure db was filled with something
+        // Make sure file was filled with something
+        $session_dir = $this->ci->locator->findResource('session://');
+        $session_file = "$session_dir/$session_id";
+
         $fs = new Filesystem();
-        $file = "session://$session_id";
-        $this->assertTrue($fs->exists($file));
-        $this->assertSame('foo|s:3:"bar";', $fs->get($file));
+        $this->assertTrue($fs->exists($session_file));
+        $this->assertSame('foo|s:3:"bar";', $fs->get($session_file));
     }
 }

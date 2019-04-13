@@ -19,7 +19,7 @@ use UserFrosting\Tests\TestCase;
 /**
  * Integration tests for the session service.
  */
-class SessionDatabaseHanglerTest extends TestCase
+class SessionDatabaseHandlerTest extends TestCase
 {
     use TestDatabase;
     use RefreshDatabase;
