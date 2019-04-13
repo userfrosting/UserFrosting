@@ -28,13 +28,8 @@ class SessionDatabaseHandlerTest extends TestCase
     {
         parent::setUp();
 
-        // Force test to use database session handler
-        //putenv('TEST_SESSION_HANDLER=database');
-
-        // Refresh app to use new setup
-        ///$this->refreshApplication();
-        //$this->setupTestDatabase();
-        //$this->refreshDatabase();
+        $this->setupTestDatabase();
+        $this->refreshDatabase();
     }
 
     /**
@@ -57,33 +52,76 @@ class SessionDatabaseHandlerTest extends TestCase
     /**
      * @depends testSessionTable
      */
-    /*public function testSessionWrite()
+    public function testSessionWrite()
     {
         $config = $this->ci->config;
         $connection = $this->ci->db->connection();
+
+        // Define random session ID
+        $session_id = 'test'.rand(1, 100000);
+
+        // Make sure db is empty at first
+        $this->assertEquals(0, SessionTable::count());
+        $this->assertNull(SessionTable::find($session_id));
+
+        // Get handler
         $handler = new DatabaseSessionHandler($connection, $config['session.database.table'], $config['session.minutes']);
 
-        $this->assertEquals(0, SessionTable::count());
-        $handler->write(123, 'foo');
+        // Write session
+        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/DatabaseSessionHandler.php#L132
+        $this->assertTrue($handler->write($session_id, 'foo'));
+
+        // Closing the handler does nothing anyway
+        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/DatabaseSessionHandler.php#L78
+        $this->assertTrue($handler->close());
+
+        // Read session
+        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/DatabaseSessionHandler.php#L86-L101
+        $this->assertSame('foo', $handler->read($session_id));
+
+        // Check manually that the file has been written
         $this->assertNotEquals(0, SessionTable::count());
-    }*/
+        $this->assertNotNull(SessionTable::find($session_id));
+        $this->assertSame(base64_encode('foo'), SessionTable::find($session_id)->payload);
+
+        // Destroy session
+        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/DatabaseSessionHandler.php#L256
+        $this->assertTrue($handler->destroy($session_id));
+
+        // Check db to make sure it's gone
+        $this->assertEquals(0, SessionTable::count());
+        $this->assertNull(SessionTable::find($session_id));
+    }
 
     /**
      * @depends testSessionWrite
      */
-    /*public function testUsingSessionService()
+    public function testUsingSessionDouble()
     {
+        $this->ci->session->destroy();
+        $this->sessionTests($this->getSession());
+    }
+
+    /**
+     * @depends testUsingSessionDouble
+     */
+    public function testUsingSessionService()
+    {
+        // Force test to use database session handler
+        putenv('TEST_SESSION_HANDLER=database');
+
+        // Refresh app to use new setup
+        $this->ci->session->destroy();
+        $this->refreshApplication();
+        $this->setupTestDatabase();
+        $this->refreshDatabase();
+
+        // Check setting is ok
+        $this->assertSame('database', $this->ci->config['session.handler']);
+
         // Make sure config is set
         $this->sessionTests($this->ci->session);
-    }*/
-
-    /**
-     * @depends testSessionWrite
-     */
-    /*public function testUsingSessionDouble()
-    {
-        $this->sessionTests($this->getSession());
-    }*/
+    }
 
     /**
      * Simulate session service with database handler.
@@ -111,9 +149,6 @@ class SessionDatabaseHandlerTest extends TestCase
      */
     protected function sessionTests(Session $session)
     {
-        // Check setting is ok
-        $this->assertSame('database', $this->ci->config['session.handler']);
-
         // Make sure session service have correct instance
         $this->assertInstanceOf(Session::class, $session);
         $this->assertInstanceOf(DatabaseSessionHandler::class, $session->getHandler());
@@ -126,6 +161,9 @@ class SessionDatabaseHandlerTest extends TestCase
         $session->start();
         $this->assertSame(PHP_SESSION_ACTIVE, $session->status());
 
+        // Get id
+        $session_id = $session->getId();
+
         // Set something to the session
         $session->set('foo', 'bar');
         $this->assertEquals('bar', $session->get('foo'));
@@ -135,5 +173,6 @@ class SessionDatabaseHandlerTest extends TestCase
 
         // Make sure db was filled with something
         $this->assertNotEquals(0, SessionTable::count());
+        $this->assertNotNull(SessionTable::find($session_id));
     }
 }
