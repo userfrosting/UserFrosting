@@ -19,18 +19,6 @@ use UserFrosting\Tests\TestCase;
  */
 class SessionFileHandlerTest extends TestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-
-        // Force test to use database session handler
-        putenv('TEST_SESSION_HANDLER=file');
-
-        // Refresh app to use new setup
-        $this->ci->session->destroy();
-        $this->refreshApplication();
-    }
-
     /**
      * Test FileSessionHandler works with our locator
      */
@@ -85,18 +73,29 @@ class SessionFileHandlerTest extends TestCase
     /**
      * @depends testSessionWrite
      */
-    public function testUsingSessionService()
+    public function testUsingSessionDouble()
     {
-        // Make sure config is set
-        $this->sessionTests($this->ci->session);
+        $this->ci->session->destroy();
+        $this->sessionTests($this->getSession());
     }
 
     /**
-     * @depends testSessionWrite
+     * @depends testUsingSessionDouble
      */
-    public function testUsingSessionDouble()
+    public function testUsingSessionService()
     {
-        $this->sessionTests($this->getSession());
+        // Force test to use database session handler
+        putenv('TEST_SESSION_HANDLER=file');
+
+        // Refresh app to use new setup
+        $this->ci->session->destroy();
+        $this->refreshApplication();
+
+        // Check setting is ok
+        $this->assertSame('file', $this->ci->config['session.handler']);
+
+        // Make sure config is set
+        $this->sessionTests($this->ci->session);
     }
 
     /**
@@ -125,9 +124,6 @@ class SessionFileHandlerTest extends TestCase
      */
     protected function sessionTests(Session $session)
     {
-        // Check setting is ok
-        $this->assertSame('file', $this->ci->config['session.handler']);
-
         // Make sure session service have correct instance
         $this->assertInstanceOf(Session::class, $session);
         $this->assertInstanceOf(FileSessionHandler::class, $session->getHandler());
