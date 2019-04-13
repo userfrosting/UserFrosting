@@ -109,9 +109,6 @@ class TestCase extends BaseTestCase
                 call_user_func($callback);
             }
 
-            // Make sure we close the sessions
-            $this->ci->session->destroy();
-
             $this->ci = null;
         }
 
