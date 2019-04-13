@@ -7,7 +7,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Account\Tests\Integration\ServicesProvider;
+namespace UserFrosting\Sprinkle\Account\Tests\Integration\Session;
 
 use Illuminate\Session\DatabaseSessionHandler;
 use UserFrosting\Session\Session;
@@ -19,7 +19,7 @@ use UserFrosting\Tests\TestCase;
 /**
  * Integration tests for the session service.
  */
-class SessionTest extends TestCase
+class SessionDatabaseHanglerTest extends TestCase
 {
     use TestDatabase;
     use RefreshDatabase;
@@ -29,12 +29,12 @@ class SessionTest extends TestCase
         parent::setUp();
 
         // Force test to use database session handler
-        putenv('TEST_SESSION_HANDLER=database');
+        //putenv('TEST_SESSION_HANDLER=database');
 
         // Refresh app to use new setup
-        $this->refreshApplication();
-        $this->setupTestDatabase();
-        $this->refreshDatabase();
+        ///$this->refreshApplication();
+        //$this->setupTestDatabase();
+        //$this->refreshDatabase();
     }
 
     /**
@@ -57,7 +57,7 @@ class SessionTest extends TestCase
     /**
      * @depends testSessionTable
      */
-    public function testSessionWrite()
+    /*public function testSessionWrite()
     {
         $config = $this->ci->config;
         $connection = $this->ci->db->connection();
@@ -66,24 +66,24 @@ class SessionTest extends TestCase
         $this->assertEquals(0, SessionTable::count());
         $handler->write(123, 'foo');
         $this->assertNotEquals(0, SessionTable::count());
-    }
+    }*/
 
     /**
-     * @depends testSessionTable
+     * @depends testSessionWrite
      */
-    public function testUsingSessionService()
+    /*public function testUsingSessionService()
     {
         // Make sure config is set
         $this->sessionTests($this->ci->session);
-    }
+    }*/
 
     /**
-     * @depends testSessionTable
+     * @depends testSessionWrite
      */
-    public function testUsingSessionDouble()
+    /*public function testUsingSessionDouble()
     {
         $this->sessionTests($this->getSession());
-    }
+    }*/
 
     /**
      * Simulate session service with database handler.
