@@ -86,7 +86,7 @@ class AuthenticatorTest extends TestCase
      * @depends testConstructor
      * @param Authenticator $authenticator
      */
-    public function testLoginWithSessionDatabase(Authenticator $authenticator)
+    /*public function testLoginWithSessionDatabase(Authenticator $authenticator)
     {
         // Force test to use database session handler
         putenv('TEST_SESSION_HANDLER=database');
@@ -128,7 +128,7 @@ class AuthenticatorTest extends TestCase
 
         // Make sure table entry has been removed
         $this->assertSame(0, SessionTable::count());
-    }
+    }*/
 
     /**
      * @depends testConstructor
