@@ -109,13 +109,21 @@ class SessionDatabaseHandlerTest extends TestCase
      */
     public function testUsingSessionService()
     {
+        // Skip test if using in-memory database.
+        // However we tell UF to use database session handler and in-memroy
+        // database, the session will always be created before the db can be
+        // migrate, causing "table not found" errors
+        if ($this->usingInMemoryDatabase()) {
+            $this->markTestSkipped("Can't run this test on memory database");
+        }
+
         // Force test to use database session handler
         putenv('TEST_SESSION_HANDLER=database');
 
         // Refresh app to use new setup
         $this->ci->session->destroy();
         $this->refreshApplication();
-        $this->setupTestDatabase();
+        $this->setupTestDatabase(); //<-- N.B.: This is executed after the session is created on the default db...
         $this->refreshDatabase();
 
         // Check setting is ok
