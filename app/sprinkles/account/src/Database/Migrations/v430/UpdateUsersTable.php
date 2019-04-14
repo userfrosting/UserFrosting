@@ -26,6 +26,7 @@ class UpdateUsersTable extends Migration
      * {@inheritdoc}
      */
     public static $dependencies = [
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\GroupsTable',
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable',
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v420\AddingForeignKeys'
     ];
@@ -38,7 +39,7 @@ class UpdateUsersTable extends Migration
         if ($this->schema->hasTable('users')) {
             $this->schema->table('users', function (Blueprint $table) {
                 $table->dropForeign('users_group_id_foreign');
-                $table->integer('group_id')->unsigned()->default(null)->comment('The id of the user group.')->nullable()->change();
+                $table->unsignedInteger('group_id')->default(null)->comment('The id of the user group.')->nullable()->change();
                 $table->foreign('group_id')->references('id')->on('groups');
             });
         }
@@ -51,7 +52,7 @@ class UpdateUsersTable extends Migration
     {
         $this->schema->table('users', function (Blueprint $table) {
             $table->dropForeign('users_group_id_foreign');
-            $table->integer('group_id')->unsigned()->default(1)->comment('The id of the user group.')->nullable(false)->change();
+            $table->unsignedInteger('group_id')->default(1)->comment('The id of the user group.')->nullable(false)->change();
             $table->foreign('group_id')->references('id')->on('groups');
         });
     }
