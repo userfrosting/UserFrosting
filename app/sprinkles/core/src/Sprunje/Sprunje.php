@@ -188,8 +188,6 @@ abstract class Sprunje
             $result = $this->getCsv();
 
             // Prepare response
-            $settings = http_build_query($this->options);
-            $date = Carbon::now()->format('Ymd');
             $response = $response->withAddedHeader('Content-Disposition', "attachment;filename={$this->name}.csv");
             $response = $response->withAddedHeader('Content-Type', 'text/csv; charset=utf-8');
 
