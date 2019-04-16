@@ -34,6 +34,12 @@ trait withDatabaseSessionHandler
         // Force test to use database session handler
         putenv('TEST_SESSION_HANDLER=database');
 
+        // Unset the env when test is done to avoid conflict
+        $this->beforeApplicationDestroyedCallbacks[] = function()
+        {
+            putenv('TEST_SESSION_HANDLER');
+        };
+
         // Refresh app to use new setup
         $this->ci->session->destroy();
         $this->refreshApplication();

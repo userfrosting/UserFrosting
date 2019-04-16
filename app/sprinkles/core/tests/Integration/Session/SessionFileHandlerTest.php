@@ -96,6 +96,9 @@ class SessionFileHandlerTest extends TestCase
 
         // Make sure config is set
         $this->sessionTests($this->ci->session);
+
+        // Unset the env when test is done to avoid conflict
+        putenv('TEST_SESSION_HANDLER');
     }
 
     /**
