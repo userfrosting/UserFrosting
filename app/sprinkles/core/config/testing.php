@@ -60,7 +60,7 @@ return [
      * Disable native sessions in tests
      */
     'session' => [
-        'handler' => 'array'
+        'handler' => getenv('TEST_SESSION_HANDLER') ?: 'array'
     ],
     /*
      * Database to use when using the TestDatabase Trait

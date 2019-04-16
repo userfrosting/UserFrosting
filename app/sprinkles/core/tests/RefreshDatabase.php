@@ -37,7 +37,7 @@ trait RefreshDatabase
      *
      * @return bool
      */
-    protected function usingInMemoryDatabase()
+    public function usingInMemoryDatabase()
     {
         $connection = $this->ci->db->getConnection();
 
