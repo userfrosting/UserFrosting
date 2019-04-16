@@ -13,9 +13,9 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;
-use UserFrosting\Sprinkle\Core\Session\DatabaseSessionHandler;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
+use UserFrosting\Sprinkle\Core\Tests\withDatabaseSessionHandler;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -28,6 +28,7 @@ class AuthenticatorTest extends TestCase
     use TestDatabase;
     use RefreshDatabase;
     use withTestUser;
+    use withDatabaseSessionHandler;
 
     /**
      * Setup the test database.
@@ -86,16 +87,10 @@ class AuthenticatorTest extends TestCase
      * @depends testConstructor
      * @param Authenticator $authenticator
      */
-    /*public function testLoginWithSessionDatabase(Authenticator $authenticator)
+    public function testLoginWithSessionDatabase(Authenticator $authenticator)
     {
-        // Force test to use database session handler
-        putenv('TEST_SESSION_HANDLER=database');
-        $this->refreshApplication();
-
-        // Make sure it worked
-        if (!($this->ci->session->getHandler() instanceof DatabaseSessionHandler)) {
-            $this->markTestSkipped('Session handler not an instance of DatabaseSessionHandler');
-        }
+        // Reset CI Session
+        $this->useDatabaseSessionHandler();
 
         // Create a test user
         $testUser = $this->createTestUser();
@@ -115,8 +110,14 @@ class AuthenticatorTest extends TestCase
         $this->assertNotNull($this->ci->session[$key]);
         $this->assertSame($testUser->id, $this->ci->session[$key]);
 
+        // Close session to initiate write
+        session_write_close();
+
         // Check the table again
         $this->assertSame(1, SessionTable::count());
+
+        // Reopen session
+        $this->ci->session->start();
 
         // Must logout to avoid test issue
         $authenticator->logout(true);
@@ -128,7 +129,7 @@ class AuthenticatorTest extends TestCase
 
         // Make sure table entry has been removed
         $this->assertSame(0, SessionTable::count());
-    }*/
+    }
 
     /**
      * @depends testConstructor

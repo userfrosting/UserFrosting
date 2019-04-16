@@ -14,6 +14,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;
 use UserFrosting\Sprinkle\Core\Session\DatabaseSessionHandler;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
+use UserFrosting\Sprinkle\Core\Tests\withDatabaseSessionHandler;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -23,6 +24,7 @@ class SessionDatabaseHandlerTest extends TestCase
 {
     use TestDatabase;
     use RefreshDatabase;
+    use withDatabaseSessionHandler;
 
     public function setUp()
     {
@@ -94,54 +96,16 @@ class SessionDatabaseHandlerTest extends TestCase
     }
 
     /**
+     * Simulate session service with database handler.
+     * We can't use the real service as it is created before we can even setup
+     * the in-memory database with the basic table we need
+     *
      * @depends testSessionWrite
      */
     public function testUsingSessionDouble()
     {
         $this->ci->session->destroy();
-        $session = $this->getSession();
 
-        $this->sessionTests($session);
-    }
-
-    /**
-     * @depends testUsingSessionDouble
-     */
-    public function testUsingSessionService()
-    {
-        // Skip test if using in-memory database.
-        // However we tell UF to use database session handler and in-memroy
-        // database, the session will always be created before the db can be
-        // migrate, causing "table not found" errors
-        if ($this->usingInMemoryDatabase()) {
-            $this->markTestSkipped("Can't run this test on memory database");
-        }
-
-        // Force test to use database session handler
-        putenv('TEST_SESSION_HANDLER=database');
-
-        // Refresh app to use new setup
-        $this->ci->session->destroy();
-        $this->refreshApplication();
-        $this->setupTestDatabase(); //<-- N.B.: This is executed after the session is created on the default db...
-        $this->refreshDatabase();
-
-        // Check setting is ok
-        $this->assertSame('database', $this->ci->config['session.handler']);
-
-        // Make sure config is set
-        $this->sessionTests($this->ci->session);
-    }
-
-    /**
-     * Simulate session service with database handler.
-     * We can't use the real service as it is created before we can even setup
-     * the in-memory database with the basic table we need
-     *
-     * @return Session
-     */
-    protected function getSession()
-    {
         $config = $this->ci->config;
         $connection = $this->ci->db->connection();
         $handler = new DatabaseSessionHandler($connection, $config['session.database.table'], $config['session.minutes']);
@@ -151,7 +115,19 @@ class SessionDatabaseHandlerTest extends TestCase
         $this->assertInstanceOf(DatabaseSessionHandler::class, $session->getHandler());
         $this->assertSame($handler, $session->getHandler());
 
-        return $session;
+        $this->sessionTests($session);
+    }
+
+    /**
+     * @depends testUsingSessionDouble
+     */
+    public function testUsingSessionService()
+    {
+        // Reset CI Session
+        $this->useDatabaseSessionHandler();
+
+        // Make sure config is set
+        $this->sessionTests($this->ci->session);
     }
 
     /**
