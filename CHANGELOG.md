@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Italian translation ([#950])
 - User Registration failing when trying to register two accounts with the same email address ([#953])
 - Bad test case for `CoreController::getAsset`.
+- User Model `forceDelete` doesn't remove the record from the DB ([#951])
 - Fix PHP Fatal error that can be thrown when registering a new User
 - Session not working with database handler ([#952])
 
@@ -719,6 +720,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#919]: https://github.com/userfrosting/UserFrosting/issues/919
 [#940]: https://github.com/userfrosting/UserFrosting/issues/940
 [#950]: https://github.com/userfrosting/UserFrosting/issues/950
+[#951]: https://github.com/userfrosting/UserFrosting/issues/951
 [#952]: https://github.com/userfrosting/UserFrosting/issues/952
 [#953]: https://github.com/userfrosting/UserFrosting/issues/953
 
