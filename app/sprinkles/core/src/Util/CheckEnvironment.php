@@ -127,8 +127,8 @@ class CheckEnvironment
 
         if ($this->checkDirectories()) {
             $problemsFound = true;
-        // Skip checkPermissions() if the required directories do not exist.
-        return $problemsFound;
+            // Skip checkPermissions() if the required directories do not exist.
+            return $problemsFound;
         }
 
         if ($this->checkPermissions()) {
@@ -264,37 +264,37 @@ class CheckEnvironment
     }
 
     /**
-    * Check that log, cache, and session directories exist.
-    */
+     * Check that log, cache, and session directories exist.
+     */
     public function checkDirectories()
     {
         $problemsFound = false;
 
         $directoryPaths = [
-            "logs"     => $this->locator->findResource('log://'),
-            "cache"    => $this->locator->findResource('cache://'),
-            "sessions" => $this->locator->findResource('session://')
+            'logs'     => $this->locator->findResource('log://'),
+            'cache'    => $this->locator->findResource('cache://'),
+            'sessions' => $this->locator->findResource('session://')
         ];
 
         foreach ($directoryPaths as $directory => $path) {
-          if ($path == null) {
-            $problemsFound = true;
-            $this->resultsFailed['directory-' . $directory] = [
+            if ($path == null) {
+                $problemsFound = true;
+                $this->resultsFailed['directory-' . $directory] = [
                 'title'   => "<i class='fa fa-file-o fa-fw'></i> A required directory was not found.",
                 'message' => "Please check that <code>userfrosting/app/$directory</code> exists.",
                 'success' => false
             ];
-          }
-          else {
-              $this->resultsSuccess['directory-' . $directory] = [
+            } else {
+                $this->resultsSuccess['directory-' . $directory] = [
                   'title'   => "<i class='fa fa-file-o fa-fw'></i> File/directory check passed!",
                   'message' => "<code>userfrosting/app/$directory</code> exists.",
                   'success' => true
               ];
-          }
-      }
+            }
+        }
+
         return $problemsFound;
-  }
+    }
 
     /**
      * Check that log, cache, and session directories are writable, and that other directories are set appropriately for the environment.
@@ -319,10 +319,10 @@ class CheckEnvironment
 
         // Check for essential files & perms
         foreach ($shouldBeWriteable as $file => $assertWriteable) {
-                $writeable = is_writable($file);
-                if ($assertWriteable !== $writeable) {
-                    $problemsFound = true;
-                    $this->resultsFailed['file-' . $file] = [
+            $writeable = is_writable($file);
+            if ($assertWriteable !== $writeable) {
+                $problemsFound = true;
+                $this->resultsFailed['file-' . $file] = [
                         'title'   => "<i class='fa fa-file-o fa-fw'></i> Incorrect permissions for file or directory.",
                         'message' => "<code>$file</code> is "
                             . ($writeable ? 'writeable' : 'not writeable')
@@ -333,16 +333,17 @@ class CheckEnvironment
                             . ($assertWriteable ? 'has' : 'does not have') . ' write permissions for this directory.',
                         'success' => false
                     ];
-                } else {
-                    $this->resultsSuccess['file-' . $file] = [
+            } else {
+                $this->resultsSuccess['file-' . $file] = [
                         'title'   => "<i class='fa fa-file-o fa-fw'></i> File/directory check passed!",
                         'message' => "<code>$file</code> exists and is correctly set as <b>"
                             . ($writeable ? 'writeable' : 'not writeable')
                             . '</b>.',
                         'success' => true
                     ];
-              }
+            }
         }
+
         return $problemsFound;
     }
 
