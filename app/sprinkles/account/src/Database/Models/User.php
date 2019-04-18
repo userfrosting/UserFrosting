@@ -188,6 +188,10 @@ class User extends Model implements UserInterface
             // Remove all role associations
             $this->roles()->detach();
 
+            // Remove last activity association
+            $this->lastActivity()->dissociate();
+            $this->save();
+
             // Remove all user tokens
             $this->activities()->delete();
             $this->passwordResets()->delete();

@@ -28,7 +28,7 @@ class UserActivityDatabaseHandler extends DatabaseHandler
 
         if (isset($record['extra']['user_id'])) {
             $user = $this->classMapper->staticMethod('user', 'find', $record['extra']['user_id']);
-            $user->last_activity_id = $log->id;
+            $user->lastActivity()->associate($log);
             $user->save();
         }
     }
