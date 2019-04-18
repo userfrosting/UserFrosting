@@ -509,12 +509,22 @@ class AccountController extends SimpleController
         // Get locale information
         $currentLocales = $localePathBuilder->getLocales();
 
+        // Hide the locale field if there is only 1 locale available
+        $fields = [
+            'hidden'   => [],
+            'disabled' => []
+        ];
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $fields['hidden'][] = 'locale';
+        }
+
         return $this->ci->view->render($response, 'pages/register.html.twig', [
             'page' => [
                 'validators' => [
                     'register' => $validatorRegister->rules('json', false)
                 ]
             ],
+            'fields' => $fields,
             'locales' => [
                 'available' => $config['site.locales.available'],
                 'current'   => end($currentLocales)
@@ -658,8 +668,18 @@ class AccountController extends SimpleController
         // Get a list of all locales
         $locales = $config->getDefined('site.locales.available');
 
+        // Hide the locale field if there is only 1 locale available
+        $fields = [
+            'hidden'   => [],
+            'disabled' => []
+        ];
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $fields['hidden'][] = 'locale';
+        }
+
         return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
             'locales' => $locales,
+            'fields' => $fields,
             'page'    => [
                 'validators' => [
                     'account_settings'    => $validatorAccountSettings->rules('json', false),
@@ -765,6 +785,11 @@ class AccountController extends SimpleController
         $data = $transformer->transform($params);
 
         $error = false;
+
+        // Ensure that in the case of using a single locale, that the locale is set
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $data['locale'] = $currentUser->locale;
+        }
 
         // Validate, and halt on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
@@ -876,6 +901,11 @@ class AccountController extends SimpleController
         $data = $transformer->transform($params);
 
         $error = false;
+
+        // Ensure that in the case of using a single locale, that the locale is set
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $data['locale'] = $config['site.registration.user_defaults.locale'];
+        }
 
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
@@ -1162,6 +1192,11 @@ class AccountController extends SimpleController
         $data = $transformer->transform($params);
 
         $error = false;
+
+        // Ensure that in the case of using a single locale, that the locale is set
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $data['locale'] = $currentUser->locale;
+        }
 
         // Validate, and halt on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
