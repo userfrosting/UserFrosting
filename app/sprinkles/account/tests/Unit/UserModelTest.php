@@ -54,7 +54,6 @@ class UserModelTest extends TestCase
 
     /**
      * Test user hard deletion.
-     *
      */
     public function testUserHardDelete()
     {
