@@ -60,6 +60,9 @@ class UserController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
+        /** @var \UserFrosting\Support\Repository\Repository $config */
+        $config = $this->ci->config;
+
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'create_user')) {
             throw new ForbiddenException();
@@ -76,6 +79,11 @@ class UserController extends SimpleController
         $data = $transformer->transform($params);
 
         $error = false;
+
+        // Ensure that in the case of using a single locale, that the locale is set bu inheriting from current user
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $data['locale'] = $currentUser->locale;
+        }
 
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
@@ -573,6 +581,11 @@ class UserController extends SimpleController
             $fields['disabled'][] = 'group';
         }
 
+        // Hide the locale field if there is only 1 locale available
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $fields['hidden'][] = 'locale';
+        }
+
         // Create a dummy user to prepopulate fields
         $data = [
             'group_id' => $currentUser->group_id,
@@ -671,6 +684,11 @@ class UserController extends SimpleController
             'fields' => ['group']
         ])) {
             $fields['disabled'][] = 'group';
+        }
+
+        // Hide the locale field if there is only 1 locale available
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $fields['hidden'][] = 'locale';
         }
 
         // Load validation rules
@@ -948,6 +966,11 @@ class UserController extends SimpleController
             ])) {
                 $fields['hidden'][] = $field;
             }
+        }
+
+        // Hide the locale field if there is only 1 locale available
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $fields['hidden'][] = 'locale';
         }
 
         // Determine buttons to display
