@@ -71,13 +71,13 @@ class DebugCommand extends BaseCommand
     {
         $this->io->writeln('PHP Version : ' . phpversion());
         if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
-            $this->io->error('UserFrosting requires php version '.\UserFrosting\PHP_MIN_VERSION." or above. You'll need to update you PHP version before you can continue.");
+            $this->io->error('UserFrosting requires php version ' . \UserFrosting\PHP_MIN_VERSION . " or above. You'll need to update you PHP version before you can continue.");
             exit(1);
         }
 
         // Check for deprecated versions
         if (version_compare(phpversion(), \UserFrosting\PHP_RECOMMENDED_VERSION, '<')) {
-            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommends version '.\UserFrosting\PHP_RECOMMENDED_VERSION.' or above as '.phpversion().' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
+            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommends version ' . \UserFrosting\PHP_RECOMMENDED_VERSION . ' or above as ' . phpversion() . ' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
         }
     }
 

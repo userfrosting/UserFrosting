@@ -16,6 +16,7 @@ $rules = [
     'braces'                                      => true,
     'cast_spaces'                                 => true,
     'class_definition'                            => true,
+    'concat_space'                                => ['spacing' => 'one'],
     'declare_equal_normalize'                     => true,
     'elseif'                                      => true,
     'encoding'                                    => true,

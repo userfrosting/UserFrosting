@@ -179,7 +179,7 @@ class WhoopsRenderer extends ErrorRenderer
                 if (isset($_ENV['whoops-test'])) {
                     throw new \Exception(
                         'Use handleUnconditionally instead of whoops-test'
-                        .' environment variable'
+                        . ' environment variable'
                     );
                 }
 
@@ -693,7 +693,7 @@ class WhoopsRenderer extends ErrorRenderer
         // If we got this far, nothing was found.
         throw new RuntimeException(
             "Could not find resource '$resource' in any resource paths."
-            . '(searched: ' . join(', ', $this->searchPaths). ')'
+            . '(searched: ' . join(', ', $this->searchPaths) . ')'
         );
     }
 

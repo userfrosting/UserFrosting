@@ -73,7 +73,7 @@ class SeedCommand extends BaseCommand
             }
 
             // Display the class we are going to use as info
-            $this->io->writeln('<info>Seeding database using class `'.get_class($seedClass).'`</>');
+            $this->io->writeln('<info>Seeding database using class `' . get_class($seedClass) . '`</>');
 
             // Add seed class to list
             $seeds[] = $seedClass;

@@ -29,7 +29,7 @@ class SetupDbCommand extends BaseCommand
     /**
      * @var string Path to the .env file
      */
-    protected $envPath = \UserFrosting\APP_DIR. '/.env';
+    protected $envPath = \UserFrosting\APP_DIR . '/.env';
 
     /**
      * {@inheritdoc}
@@ -217,8 +217,8 @@ class SetupDbCommand extends BaseCommand
             $conn->getPdo();
         } catch (\PDOException $e) {
             if ($displayMessage) {
-                $message = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':".PHP_EOL;
-                $message .= 'Exception: ' . $e->getMessage() . PHP_EOL.PHP_EOL;
+                $message = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':" . PHP_EOL;
+                $message .= 'Exception: ' . $e->getMessage() . PHP_EOL . PHP_EOL;
                 $message .= 'Please check your database configuration and/or google the exception shown above and run the command again.';
                 $this->io->error($message);
             }

@@ -61,7 +61,7 @@ class SessionDatabaseHandlerTest extends TestCase
         $connection = $this->ci->db->connection();
 
         // Define random session ID
-        $session_id = 'test'.rand(1, 100000);
+        $session_id = 'test' . rand(1, 100000);
 
         // Make sure db is empty at first
         $this->assertEquals(0, SessionTable::count());

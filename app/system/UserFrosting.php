@@ -164,7 +164,7 @@ class UserFrosting
         ob_clean();
         $title = 'UserFrosting Application Error';
         $errorMessage = 'Unable to start site. Contact owner.<br/><br/>' .
-            'Version: UserFrosting '.\UserFrosting\VERSION.'<br/>' .
+            'Version: UserFrosting ' . \UserFrosting\VERSION . '<br/>' .
             $errorMessage;
         $output = sprintf(
             "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .

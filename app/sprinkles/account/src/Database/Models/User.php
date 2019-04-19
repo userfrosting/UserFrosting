@@ -230,7 +230,7 @@ class User extends Model implements UserInterface
      */
     public function getCache()
     {
-        return static::$ci->cache->tags('_u'.$this->id);
+        return static::$ci->cache->tags('_u' . $this->id);
     }
 
     /**

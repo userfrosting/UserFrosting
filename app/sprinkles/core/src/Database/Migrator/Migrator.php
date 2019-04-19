@@ -447,7 +447,7 @@ class Migrator
         $migration = new $migrationClassName($this->getSchemaBuilder());
 
         if (!$migration instanceof MigrationInterface) {
-            throw new \Exception('Migration must be an instance of `'.MigrationInterface::class.'`');
+            throw new \Exception('Migration must be an instance of `' . MigrationInterface::class . '`');
         }
 
         return $migration;

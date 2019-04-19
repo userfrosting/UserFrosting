@@ -222,7 +222,7 @@ class BelongsToManyThrough extends BelongsToMany
     {
         $defaults = [$this->foreignKey, $this->relatedKey];
         $aliasedPivotColumns = collect(array_merge($defaults, $this->pivotColumns))->map(function ($column) {
-            return $this->table.'.'.$column.' as pivot_'.$column;
+            return $this->table . '.' . $column . ' as pivot_' . $column;
         });
 
         $parentKeyName = $this->getParentKeyName();
