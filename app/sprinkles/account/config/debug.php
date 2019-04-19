@@ -13,6 +13,6 @@
  */
 return [
     'debug' => [
-        'auth' => true
+        'auth' => true,
     ],
 ];

@@ -26,23 +26,23 @@ class UserSprunje extends Sprunje
     protected $name = 'users';
 
     protected $listable = [
-        'status'
+        'status',
     ];
 
     protected $sortable = [
         'name',
         'last_activity',
-        'status'
+        'status',
     ];
 
     protected $filterable = [
         'name',
         'last_activity',
-        'status'
+        'status',
     ];
 
     protected $excludeForAll = [
-        'last_activity'
+        'last_activity',
     ];
 
     /**
@@ -136,16 +136,16 @@ class UserSprunje extends Sprunje
         return [
             [
                 'value' => 'active',
-                'text'  => Translator::translate('ACTIVE')
+                'text'  => Translator::translate('ACTIVE'),
             ],
             [
                 'value' => 'unactivated',
-                'text'  => Translator::translate('UNACTIVATED')
+                'text'  => Translator::translate('UNACTIVATED'),
             ],
             [
                 'value' => 'disabled',
-                'text'  => Translator::translate('DISABLED')
-            ]
+                'text'  => Translator::translate('DISABLED'),
+            ],
         ];
     }
 

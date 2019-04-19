@@ -46,7 +46,7 @@ class Core extends Sprinkle
             'onSprinklesInitialized'      => ['onSprinklesInitialized', 0],
             'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0],
             'onAddGlobalMiddleware'       => ['onAddGlobalMiddleware', 0],
-            'onAppInitialize'             => ['onAppInitialize', 0]
+            'onAppInitialize'             => ['onAppInitialize', 0],
         ];
     }
 
@@ -96,7 +96,7 @@ class Core extends Sprinkle
             '1',
             'on',
             'true',
-            'yes'
+            'yes',
         ])) {
             $displayErrors = true;
         }

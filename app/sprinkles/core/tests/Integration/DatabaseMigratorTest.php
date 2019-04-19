@@ -108,7 +108,7 @@ class DatabaseMigratorTest extends TestCase
         $testMigrations = [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ];
 
         // When running up, Locator will return all 3 migration classes
@@ -143,12 +143,12 @@ class DatabaseMigratorTest extends TestCase
         $this->locator->shouldReceive('getMigrations')->andReturn([
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ]);
 
         // Repository will be asked to return the ran migrations (one), the next batch number and will log 2 new migrations
         $this->repository->shouldReceive('getMigrationsList')->andReturn([
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
         ]);
         $this->repository->shouldReceive('getNextBatchNumber')->andReturn(2);
         $this->repository->shouldReceive('log')->times(2)->andReturn(null);
@@ -167,7 +167,7 @@ class DatabaseMigratorTest extends TestCase
         // The migration already ran shoudn't be in the pending ones
         $this->assertEquals([
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ], $migrations);
     }
 
@@ -180,7 +180,7 @@ class DatabaseMigratorTest extends TestCase
         $testMigrations = [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ];
 
         // When running up, Locator will return all 3 migration classes
@@ -230,7 +230,7 @@ class DatabaseMigratorTest extends TestCase
         $testMigrations = [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ];
 
         // When running up, Locator will return all 3 migration classes
@@ -263,14 +263,14 @@ class DatabaseMigratorTest extends TestCase
     {
         // Locator will only return one of the two installed migrations
         $this->locator->shouldReceive('getMigrations')->once()->andReturn([
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ]);
 
         // Repository will be asked to return the ran migrations (two of them)
         // and will only be asked to delete one
         $installed = [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ];
         $this->repository->shouldReceive('getLast')->once()->andReturn($installed);
         $this->repository->shouldReceive('getMigrationsList')->once()->andReturn($installed);
@@ -289,7 +289,7 @@ class DatabaseMigratorTest extends TestCase
 
         // The migration not available from the locator shouldn't have been run dowm
         $this->assertEquals([
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ], $migrations);
     }
 
@@ -302,13 +302,13 @@ class DatabaseMigratorTest extends TestCase
         $testMigrations = [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ];
 
         // Migration object for the one being deleted
         $migration = '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable';
         $migrationObject = (object) [
-            'migration' => $migration
+            'migration' => $migration,
         ];
 
         // Locator will return all 3 migration classes as available
@@ -343,13 +343,13 @@ class DatabaseMigratorTest extends TestCase
         $testMigrations = [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ];
 
         // Migration object for the one being deleted
         $migration = '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable';
         $migrationObject = (object) [
-            'migration' => $migration
+            'migration' => $migration,
         ];
 
         // Locator will return all 3 migration classes as available
@@ -382,7 +382,7 @@ class DatabaseMigratorTest extends TestCase
         $testMigrations = [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ];
 
         // Locator will return all 3 migration classes

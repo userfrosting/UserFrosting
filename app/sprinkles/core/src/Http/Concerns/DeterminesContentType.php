@@ -29,7 +29,7 @@ trait DeterminesContentType
         'application/xml',
         'text/xml',
         'text/html',
-        'text/plain'
+        'text/plain',
     ];
 
     /**

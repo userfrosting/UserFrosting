@@ -239,7 +239,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
 
         // Only the `CreateFlightsTable` migration should be ran
         $this->assertEquals([
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ], $migrated);
     }
 
@@ -308,7 +308,7 @@ class MigrationLocatorStub extends MigrationLocator
     {
         return [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ];
     }
 }
@@ -318,7 +318,7 @@ class FlightsTableMigrationLocatorStub extends MigrationLocator
     public function getMigrations()
     {
         return [
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ];
     }
 }
@@ -331,7 +331,7 @@ class InvalidMigrationLocatorStub extends MigrationLocator
     public function getMigrations()
     {
         return [
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\Foo'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\Foo',
         ];
     }
 }
@@ -348,7 +348,7 @@ class DependableMigrationLocatorStub extends MigrationLocator
         return [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ];
     }
 }
@@ -364,7 +364,7 @@ class UnfulfillableMigrationLocatorStub extends MigrationLocator
         return [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\UnfulfillableTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\UnfulfillableTable',
         ];
     }
 }
@@ -378,7 +378,7 @@ class DeprecatedMigrationLocatorStub extends MigrationLocator
     public function getMigrations()
     {
         return [
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\DeprecatedClassTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\DeprecatedClassTable',
         ];
     }
 }

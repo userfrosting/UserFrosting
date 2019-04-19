@@ -40,7 +40,7 @@ class UserActivityProcessor
             'ip_address'  => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
             'user_id'     => $this->userId,
             'occurred_at' => $record['datetime'],
-            'description' => $record['message']
+            'description' => $record['message'],
         ];
 
         $record['extra'] = array_replace_recursive($record['extra'], $additionalFields, $record['context']);

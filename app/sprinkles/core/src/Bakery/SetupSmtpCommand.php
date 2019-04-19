@@ -88,7 +88,7 @@ class SetupSmtpCommand extends BaseCommand
         $keys = [
             'SMTP_HOST'     => ($dotenvEditor->keyExists('SMTP_HOST')) ? $dotenvEditor->getValue('SMTP_HOST') : '',
             'SMTP_USER'     => ($dotenvEditor->keyExists('SMTP_USER')) ? $dotenvEditor->getValue('SMTP_USER') : '',
-            'SMTP_PASSWORD' => ($dotenvEditor->keyExists('SMTP_PASSWORD')) ? $dotenvEditor->getValue('SMTP_PASSWORD') : ''
+            'SMTP_PASSWORD' => ($dotenvEditor->keyExists('SMTP_PASSWORD')) ? $dotenvEditor->getValue('SMTP_PASSWORD') : '',
         ];
 
         // There may be some custom config or global env values defined on the server.
@@ -171,7 +171,7 @@ class SetupSmtpCommand extends BaseCommand
         return [
             'SMTP_HOST'     => $smtpHost,
             'SMTP_USER'     => $smtpUser,
-            'SMTP_PASSWORD' => $smtpPassword
+            'SMTP_PASSWORD' => $smtpPassword,
         ];
     }
 
@@ -192,7 +192,7 @@ class SetupSmtpCommand extends BaseCommand
         return [
             'SMTP_HOST'     => 'smtp.gmail.com',
             'SMTP_USER'     => $smtpUser,
-            'SMTP_PASSWORD' => $smtpPassword
+            'SMTP_PASSWORD' => $smtpPassword,
         ];
     }
 
@@ -211,7 +211,7 @@ class SetupSmtpCommand extends BaseCommand
             return [
                 'SMTP_HOST'     => '',
                 'SMTP_USER'     => '',
-                'SMTP_PASSWORD' => ''
+                'SMTP_PASSWORD' => '',
             ];
         } else {
             $this->askForSmtpMethod($input);

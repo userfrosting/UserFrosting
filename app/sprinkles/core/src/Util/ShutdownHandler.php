@@ -64,7 +64,7 @@ class ShutdownHandler
             E_PARSE,
             E_CORE_ERROR,
             E_COMPILE_ERROR,
-            E_RECOVERABLE_ERROR
+            E_RECOVERABLE_ERROR,
         ];
 
         // Handle fatal errors and parse errors
@@ -114,7 +114,7 @@ class ShutdownHandler
             E_PARSE             => 'Parse error',
             E_CORE_ERROR        => 'PHP core error',
             E_COMPILE_ERROR     => 'Zend compile error',
-            E_RECOVERABLE_ERROR => 'Catchable fatal error'
+            E_RECOVERABLE_ERROR => 'Catchable fatal error',
         ];
 
         return '<strong>' . $errorTypes[$error['type']] . "</strong>: $errstr in <strong>$errfile</strong> on line <strong>$errline</strong>";

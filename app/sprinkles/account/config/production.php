@@ -25,8 +25,8 @@ return [
             'method'   => 'ip',
             'interval' => 3600,
             'delays'   => [
-                40 => 1000
-            ]
+                40 => 1000,
+            ],
         ],
         'password_reset_request' => [
             'method'   => 'ip',
@@ -37,8 +37,8 @@ return [
                 4 => 20,
                 5 => 40,
                 6 => 80,
-                7 => 600
-            ]
+                7 => 600,
+            ],
         ],
         'registration_attempt' => [
             'method'   => 'ip',
@@ -49,8 +49,8 @@ return [
                 4 => 20,
                 5 => 40,
                 6 => 80,
-                7 => 600
-            ]
+                7 => 600,
+            ],
         ],
         'sign_in_attempt' => [
             'method'   => 'ip',
@@ -61,8 +61,8 @@ return [
                 6 => 20,
                 7 => 40,
                 8 => 80,
-                9 => 600
-            ]
+                9 => 600,
+            ],
         ],
         'verification_request' => [
             'method'   => 'ip',
@@ -73,8 +73,8 @@ return [
                 4 => 20,
                 5 => 40,
                 6 => 80,
-                7 => 600
-            ]
-        ]
-    ]
+                7 => 600,
+            ],
+        ],
+    ],
 ];

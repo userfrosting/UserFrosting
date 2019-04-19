@@ -88,7 +88,7 @@ class BakeryMigrateResetCommandTest extends TestCase
 
         // Add the command to the input to create the execute argument
         $execute = array_merge([
-            'command' => $command->getName()
+            'command' => $command->getName(),
         ], $input);
 
         // Execute command tester

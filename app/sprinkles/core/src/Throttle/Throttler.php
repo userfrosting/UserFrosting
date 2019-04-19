@@ -153,7 +153,7 @@ class Throttler
         $event = $this->classMapper->createInstance('throttle', [
             'type'         => $type,
             'ip'           => $_SERVER['REMOTE_ADDR'],
-            'request_data' => json_encode($requestData)
+            'request_data' => json_encode($requestData),
         ]);
 
         $event->save();

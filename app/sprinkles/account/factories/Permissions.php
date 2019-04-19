@@ -17,5 +17,5 @@ $fm->define('UserFrosting\Sprinkle\Account\Database\Models\Permission')->setDefi
     'slug'        => Faker::word(),
     'name'        => Faker::word(),
     'description' => Faker::paragraph(),
-    'conditions'  => Faker::word()
+    'conditions'  => Faker::word(),
 ]);

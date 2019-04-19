@@ -34,7 +34,7 @@ class Persistence extends Model
         'user_id',
         'token',
         'persistent_token',
-        'expires_at'
+        'expires_at',
     ];
 
     /**

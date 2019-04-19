@@ -42,18 +42,18 @@ class DefaultRoles extends BaseSeed
             new Role([
                 'slug'        => 'user',
                 'name'        => 'User',
-                'description' => 'This role provides basic user functionality.'
+                'description' => 'This role provides basic user functionality.',
             ]),
             new Role([
                 'slug'        => 'site-admin',
                 'name'        => 'Site Administrator',
-                'description' => 'This role is meant for "site administrators", who can basically do anything except create, edit, or delete other administrators.'
+                'description' => 'This role is meant for "site administrators", who can basically do anything except create, edit, or delete other administrators.',
             ]),
             new Role([
                 'slug'        => 'group-admin',
                 'name'        => 'Group Administrator',
-                'description' => 'This role is meant for "group administrators", who can basically do anything with users in their own group, except other administrators of that group.'
-            ])
+                'description' => 'This role is meant for "group administrators", who can basically do anything with users in their own group, except other administrators of that group.',
+            ]),
         ];
     }
 }

@@ -27,14 +27,14 @@ return [
             'DESCRIPTION' => 'Nous ne pouvons trouver ce que vous cherchez.',
             'DETAIL'      => 'Nous avons tout tenté...',
             'EXPLAIN'     => 'Nous ne pouvons trouver la page que vous cherchez.',
-            'RETURN'      => 'Cliquez <a href="{{url}}">ici</a> pour retourner à la page d\'accueil.'
+            'RETURN'      => 'Cliquez <a href="{{url}}">ici</a> pour retourner à la page d\'accueil.',
         ],
 
         'CONFIG' => [
             'TITLE'       => 'Problème de configuration UserFrosting!',
             'DESCRIPTION' => "Les exigences de configuration de UserFrosting n'ont pas été satisfaites.",
             'DETAIL'      => 'Quelque chose cloche ici...',
-            'RETURN'      => 'Corrigez les erreurs suivantes, ensuite <a href="{{url}}"> recharger la page</a>.'
+            'RETURN'      => 'Corrigez les erreurs suivantes, ensuite <a href="{{url}}"> recharger la page</a>.',
         ],
 
         'DESCRIPTION' => 'Nous avons ressenti un grand bouleversement de la Force.',
@@ -48,6 +48,6 @@ return [
 
         'SERVER' => "Oops, il semblerait que le serveur a gaffé. Si vous êtes administrateur, s-v-p vérifier les logs d'erreurs PHP ou ceux de UserFrosting.",
 
-        'TITLE' => 'Bouleversement de la Force'
-    ]
+        'TITLE' => 'Bouleversement de la Force',
+    ],
 ];

@@ -56,7 +56,7 @@ abstract class Sprunje
         'lists'   => [],
         'size'    => 'all',
         'page'    => null,
-        'format'  => 'json'
+        'format'  => 'json',
     ];
 
     /**
@@ -216,7 +216,7 @@ abstract class Sprunje
             $this->countKey           => $count,
             $this->countFilteredKey   => $countFiltered,
             $this->rowsKey            => $rows->values()->toArray(),
-            $this->listableKey        => $this->getListable()
+            $this->listableKey        => $this->getListable(),
         ];
     }
 
@@ -527,7 +527,7 @@ abstract class Sprunje
         foreach ($rawValues as $raw) {
             $values[] = [
                 'value' => $raw[$column],
-                'text'  => $raw[$column]
+                'text'  => $raw[$column],
             ];
         }
 

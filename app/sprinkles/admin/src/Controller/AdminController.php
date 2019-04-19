@@ -73,24 +73,24 @@ class AdminController extends SimpleController
             'counter' => [
                 'users'  => $classMapper->staticMethod('user', 'count'),
                 'roles'  => $classMapper->staticMethod('role', 'count'),
-                'groups' => $classMapper->staticMethod('group', 'count')
+                'groups' => $classMapper->staticMethod('group', 'count'),
             ],
             'info' => [
                 'version' => [
                     'UF'       => \UserFrosting\VERSION,
                     'php'      => phpversion(),
-                    'database' => EnvironmentInfo::database()
+                    'database' => EnvironmentInfo::database(),
                 ],
                 'database' => [
-                    'name' => $config['db.default.database']
+                    'name' => $config['db.default.database'],
                 ],
                 'environment' => $this->ci->environment,
                 'path'        => [
-                    'project' => \UserFrosting\ROOT_DIR
-                ]
+                    'project' => \UserFrosting\ROOT_DIR,
+                ],
             ],
             'sprinkles' => $sprinkles,
-            'users'     => $users
+            'users'     => $users,
         ]);
     }
 
@@ -153,7 +153,7 @@ class AdminController extends SimpleController
         return $this->ci->view->render($response, 'modals/confirm-clear-cache.html.twig', [
             'form' => [
                 'action' => 'api/dashboard/clear-cache',
-            ]
+            ],
         ]);
     }
 }

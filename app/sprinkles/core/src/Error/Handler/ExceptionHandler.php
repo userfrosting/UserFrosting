@@ -161,7 +161,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
             ->withStatus($httpCode)
             ->withHeader('Content-type', $this->contentType)
             ->write($template->render([
-                'messages' => $messages
+                'messages' => $messages,
             ]));
     }
 
@@ -256,7 +256,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
     protected function determineUserMessages()
     {
         return [
-            new UserMessage('ERROR.SERVER')
+            new UserMessage('ERROR.SERVER'),
         ];
     }
 

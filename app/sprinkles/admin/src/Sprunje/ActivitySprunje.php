@@ -25,13 +25,13 @@ class ActivitySprunje extends Sprunje
     protected $sortable = [
         'occurred_at',
         'user',
-        'description'
+        'description',
     ];
 
     protected $filterable = [
         'occurred_at',
         'user',
-        'description'
+        'description',
     ];
 
     protected $name = 'activities';

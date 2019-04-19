@@ -37,5 +37,5 @@ return [
     'lengthBetween' => 'benötigt zwischen %d und %d Zeichen',
     'creditCard'    => 'muss eine gültige Kreditkartennummer sein',
     'lengthMin'     => 'muss mindestens %d Zeichen enthalten',
-    'lengthMax'     => 'kann nicht mehr als %d Zeichen enthalten'
+    'lengthMax'     => 'kann nicht mehr als %d Zeichen enthalten',
 ];

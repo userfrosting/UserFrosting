@@ -22,7 +22,7 @@ class UnfulfillableTable extends Migration
      * {@inheritdoc}
      */
     public static $dependencies = [
-        '\UserFrosting\Tests\Integration\Migrations\NonExistingMigration'
+        '\UserFrosting\Tests\Integration\Migrations\NonExistingMigration',
     ];
 
     /**

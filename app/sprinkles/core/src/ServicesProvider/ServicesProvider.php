@@ -258,7 +258,7 @@ class ServicesProvider
             // See https://github.com/laravel/framework/issues/8172#issuecomment-99112012 for more information on why it's bad to hit Laravel sessions multiple times in rapid succession.
             $csrfBlacklist = $config['csrf.blacklist'];
             $csrfBlacklist['^/' . $config['assets.raw.path']] = [
-                'GET'
+                'GET',
             ];
 
             $config->set('csrf.blacklist', $csrfBlacklist);
@@ -314,7 +314,7 @@ class ServicesProvider
                     $logger->debug("Query executed on database [{$query->connectionName}]:", [
                         'query'    => $query->sql,
                         'bindings' => $query->bindings,
-                        'time'     => $query->time . ' ms'
+                        'time'     => $query->time . ' ms',
                     ]);
                 });
             }

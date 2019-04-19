@@ -33,7 +33,7 @@ class CreateAdminUser extends BaseCommand
     protected $dependencies = [
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable',
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RolesTable',
-        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RoleUsersTable'
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RoleUsersTable',
     ];
 
     /**
@@ -112,7 +112,7 @@ class CreateAdminUser extends BaseCommand
                 'email'         => $email,
                 'first_name'    => $firstName,
                 'last_name'     => $lastName,
-                'password'      => $password
+                'password'      => $password,
             ]);
             $registration->setRequireEmailVerification(false);
             $registration->setDefaultRoles(['user', 'group-admin', 'site-admin']);
@@ -161,8 +161,8 @@ class CreateAdminUser extends BaseCommand
         // Validate format
         $options = [
             'options' => [
-                'regexp' => "/^\S((.*\S)|)$/"
-            ]
+                'regexp' => "/^\S((.*\S)|)$/",
+            ],
         ];
         $validate = filter_var($username, FILTER_VALIDATE_REGEXP, $options);
         if (!$validate) {

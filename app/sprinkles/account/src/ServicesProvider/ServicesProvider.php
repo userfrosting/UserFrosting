@@ -324,7 +324,7 @@ class ServicesProvider
                  */
                 'subset_keys' => function ($needle, $haystack) {
                     return count($needle) == count(array_intersect(array_keys($needle), $haystack));
-                }
+                },
             ];
 
             $authorizer = new AuthorizationManager($c, $callbacks);

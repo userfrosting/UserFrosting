@@ -61,7 +61,7 @@ class HttpExceptionHandler extends ExceptionHandler
 
         // Fallback
         return [
-            new UserMessage('ERROR.SERVER')
+            new UserMessage('ERROR.SERVER'),
         ];
     }
 }

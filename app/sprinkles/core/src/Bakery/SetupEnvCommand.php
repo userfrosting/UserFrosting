@@ -86,7 +86,7 @@ class SetupEnvCommand extends BaseCommand
                 'default',
                 'production',
                 'debug',
-                'Other...'
+                'Other...',
             ], 'default');
         }
 

@@ -35,7 +35,7 @@ class RegistrationTest extends TestCase
         'first_name'    => 'Foo',
         'last_name'     => 'Bar',
         'email'         => 'Foo@Bar.com',
-        'password'      => 'FooBarFooBar123'
+        'password'      => 'FooBarFooBar123',
     ];
 
     public function tearDown()
@@ -66,7 +66,7 @@ class RegistrationTest extends TestCase
             'first_name'    => 'Owl',
             'last_name'     => 'Fancy',
             'email'         => 'owl@fancy.com',
-            'password'      => 'owlFancy1234'
+            'password'      => 'owlFancy1234',
         ]);
 
         $validation = $registration->validate();
@@ -86,7 +86,7 @@ class RegistrationTest extends TestCase
             //'first_name'    => 'Owl',
             'last_name'     => 'Fancy',
             'email'         => 'owl@fancy.com',
-            'password'      => 'owlFancy1234'
+            'password'      => 'owlFancy1234',
         ]);
 
         $validation = $registration->validate();

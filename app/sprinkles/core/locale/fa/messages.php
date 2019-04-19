@@ -22,7 +22,7 @@ return [
         '@TRANSLATION' => 'کد امنیتی',
         'FAIL'         => 'کد امنیتی درست نیست',
         'SPECIFY'      => 'کد امنیتی را وارد کنید',
-        'VERIFY'       => 'کد امنیتی را بررسی کنید'
+        'VERIFY'       => 'کد امنیتی را بررسی کنید',
     ],
 
     'CSRF_MISSING' => 'سی اس آر اف توکن یافت نشد. لطفا صفحه را از نو بارگذاری کرده و دوباره تلاش کنید.',
@@ -31,12 +31,12 @@ return [
     'DESCRIPTION'   => 'توضیحات',
     'DOWNLOAD'      => [
         '@TRANSLATION' => 'دانلود',
-        'CSV'          => 'دانلود سی اس وی'
+        'CSV'          => 'دانلود سی اس وی',
     ],
 
     'EMAIL' => [
         '@TRANSLATION' => 'ایمیل',
-        'YOUR'         => 'آدرس ایمیل'
+        'YOUR'         => 'آدرس ایمیل',
     ],
 
     'HOME'  => 'خانه',
@@ -44,7 +44,7 @@ return [
     'LEGAL' => 'سیاست حقوقی',
 
     'LOCALE' => [
-        '@TRANSLATION' => 'زبان'
+        '@TRANSLATION' => 'زبان',
     ],
 
     'NAME'       => 'نام',
@@ -58,7 +58,7 @@ return [
         // Paginator
         // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
         // also {page:input} & {startRow:input} will add a modifiable input in place of the value
-        'OUTPUT' => '{startRow} تا {endRow} از {filteredRows} ({totalRows})'
+        'OUTPUT' => '{startRow} تا {endRow} از {filteredRows} ({totalRows})',
     ],
     'PRIVACY' => 'سیاست حفظ حریم خصوصی',
 
@@ -107,5 +107,5 @@ return [
 
     // Misc.
     'BUILT_WITH_UF'     => 'ساخته شده با <a href="http://www.userfrosting.com">یوزرفراستینگ</a>',
-    'ADMINLTE_THEME_BY' => 'قالب از <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> تمامی حقوق محفوظ است'
+    'ADMINLTE_THEME_BY' => 'قالب از <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> تمامی حقوق محفوظ است',
 ];

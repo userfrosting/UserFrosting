@@ -84,7 +84,7 @@ trait withTestUser
 
         $permission = $fm->create(Permission::class, [
             'slug'       => $slug,
-            'conditions' => $conditions
+            'conditions' => $conditions,
         ]);
 
         // Add the permission to the user

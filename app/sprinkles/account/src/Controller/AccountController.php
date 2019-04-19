@@ -220,7 +220,7 @@ class AccountController extends SimpleController
         $throttler = $this->ci->throttler;
 
         $throttleData = [
-            'email' => $data['email']
+            'email' => $data['email'],
         ];
         $delay = $throttler->getDelay('password_reset_request', $throttleData);
 
@@ -254,7 +254,7 @@ class AccountController extends SimpleController
                         ->addParams([
                             'user'         => $user,
                             'token'        => $passwordReset->getToken(),
-                            'request_date' => Carbon::now()->format('Y-m-d H:i:s')
+                            'request_date' => Carbon::now()->format('Y-m-d H:i:s'),
                         ]);
 
                 $this->ci->mailer->send($message);
@@ -377,13 +377,13 @@ class AccountController extends SimpleController
         $userIdentifier = $data['user_name'];
 
         $throttleData = [
-            'user_identifier' => $userIdentifier
+            'user_identifier' => $userIdentifier,
         ];
 
         $delay = $throttler->getDelay('sign_in_attempt', $throttleData);
         if ($delay > 0) {
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', [
-                'delay' => $delay
+                'delay' => $delay,
             ]);
 
             return $response->withJson([], 429);
@@ -459,9 +459,9 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/forgot-password.html.twig', [
             'page' => [
                 'validators' => [
-                    'forgot_password'    => $validator->rules('json', false)
-                ]
-            ]
+                    'forgot_password'    => $validator->rules('json', false),
+                ],
+            ],
         ]);
     }
 
@@ -513,7 +513,7 @@ class AccountController extends SimpleController
         // Hide the locale field if there is only 1 locale available
         $fields = [
             'hidden'   => [],
-            'disabled' => []
+            'disabled' => [],
         ];
         if (count($config->getDefined('site.locales.available')) <= 1) {
             $fields['hidden'][] = 'locale';
@@ -522,14 +522,14 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/register.html.twig', [
             'page' => [
                 'validators' => [
-                    'register' => $validatorRegister->rules('json', false)
-                ]
+                    'register' => $validatorRegister->rules('json', false),
+                ],
             ],
             'fields'  => $fields,
             'locales' => [
                 'available' => $config['site.locales.available'],
-                'current'   => end($currentLocales)
-            ]
+                'current'   => end($currentLocales),
+            ],
         ]);
     }
 
@@ -556,9 +556,9 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/resend-verification.html.twig', [
             'page' => [
                 'validators' => [
-                    'resend_verification'    => $validator->rules('json', false)
-                ]
-            ]
+                    'resend_verification'    => $validator->rules('json', false),
+                ],
+            ],
         ]);
     }
 
@@ -587,8 +587,8 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
             'page' => [
                 'validators' => [
-                    'set_password'    => $validator->rules('json', false)
-                ]
+                    'set_password'    => $validator->rules('json', false),
+                ],
             ],
             'token' => isset($params['token']) ? $params['token'] : '',
         ]);
@@ -620,8 +620,8 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/set-password.html.twig', [
             'page' => [
                 'validators' => [
-                    'set_password'    => $validator->rules('json', false)
-                ]
+                    'set_password'    => $validator->rules('json', false),
+                ],
             ],
             'token' => isset($params['token']) ? $params['token'] : '',
         ]);
@@ -672,7 +672,7 @@ class AccountController extends SimpleController
         // Hide the locale field if there is only 1 locale available
         $fields = [
             'hidden'   => [],
-            'disabled' => []
+            'disabled' => [],
         ];
         if (count($config->getDefined('site.locales.available')) <= 1) {
             $fields['hidden'][] = 'locale';
@@ -684,10 +684,10 @@ class AccountController extends SimpleController
             'page'    => [
                 'validators' => [
                     'account_settings'    => $validatorAccountSettings->rules('json', false),
-                    'profile_settings'    => $validatorProfileSettings->rules('json', false)
+                    'profile_settings'    => $validatorProfileSettings->rules('json', false),
                 ],
-                'visibility' => ($authorizer->checkAccess($currentUser, 'update_account_settings') ? '' : 'disabled')
-            ]
+                'visibility' => ($authorizer->checkAccess($currentUser, 'update_account_settings') ? '' : 'disabled'),
+            ],
         ]);
     }
 
@@ -728,9 +728,9 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/sign-in.html.twig', [
             'page' => [
                 'validators' => [
-                    'login'    => $validatorLogin->rules('json', false)
-                ]
-            ]
+                    'login'    => $validatorLogin->rules('json', false),
+                ],
+            ],
         ]);
     }
 
@@ -818,7 +818,7 @@ class AccountController extends SimpleController
 
         // Create activity record
         $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated their profile settings.", [
-            'type' => 'update_profile_settings'
+            'type' => 'update_profile_settings',
         ]);
 
         $ms->addMessageTranslated('success', 'PROFILE.UPDATED');
@@ -1013,7 +1013,7 @@ class AccountController extends SimpleController
         $throttler = $this->ci->throttler;
 
         $throttleData = [
-            'email' => $data['email']
+            'email' => $data['email'],
         ];
         $delay = $throttler->getDelay('verification_request', $throttleData);
 
@@ -1046,7 +1046,7 @@ class AccountController extends SimpleController
                         ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                         ->addParams([
                             'user'  => $user,
-                            'token' => $verification->getToken()
+                            'token' => $verification->getToken(),
                         ]);
 
                 $this->ci->mailer->send($message);
@@ -1109,7 +1109,7 @@ class AccountController extends SimpleController
 
         // Ok, try to complete the request with the specified token and new password
         $passwordReset = $this->ci->repoPasswordReset->complete($data['token'], [
-            'password' => $data['password']
+            'password' => $data['password'],
         ]);
 
         if (!$passwordReset) {
@@ -1239,7 +1239,7 @@ class AccountController extends SimpleController
 
         // Create activity record
         $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated their account settings.", [
-            'type' => 'update_account_settings'
+            'type' => 'update_account_settings',
         ]);
 
         $ms->addMessageTranslated('success', 'ACCOUNT.SETTINGS.UPDATED');
@@ -1274,7 +1274,7 @@ class AccountController extends SimpleController
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
         return $response->withJson([
-            'user_name' => $suggestion
+            'user_name' => $suggestion,
         ], 200, JSON_PRETTY_PRINT);
     }
 

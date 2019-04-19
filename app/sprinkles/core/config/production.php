@@ -16,13 +16,13 @@ return [
      * Use compiled assets
      */
     'assets' => [
-        'use_raw' => false
+        'use_raw' => false,
     ],
     /*
      * Enable Twig cache
      */
     'cache' => [
-        'twig' => true
+        'twig' => true,
     ],
     /*
      * Turn off debug logs
@@ -30,14 +30,14 @@ return [
     'debug' => [
         'twig' => false,
         'auth' => false,
-        'smtp' => false
+        'smtp' => false,
     ],
     /*
      * Use router cache, disable full error details
      */
     'settings' => [
         'routerCacheFile'     => 'routes.cache',
-        'displayErrorDetails' => false
+        'displayErrorDetails' => false,
     ],
     /*
      * Enable analytics, disable more debugging
@@ -45,19 +45,19 @@ return [
     'site' => [
         'analytics' => [
             'google' => [
-                'enabled' => true
-            ]
+                'enabled' => true,
+            ],
         ],
         'debug' => [
             'ajax' => false,
-            'info' => false
-        ]
+            'info' => false,
+        ],
     ],
     /*
      * Send errors to log
      */
     'php' => [
         'display_errors'  => 'false',
-        'log_errors'      => 'true'
-    ]
+        'log_errors'      => 'true',
+    ],
 ];

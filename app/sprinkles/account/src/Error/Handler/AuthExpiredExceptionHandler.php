@@ -45,7 +45,7 @@ class AuthExpiredExceptionHandler extends HttpExceptionHandler
                 . ($fragment ? '#' . $fragment : '');
 
             $loginPage = $this->ci->router->pathFor('login', [], [
-                'redirect' => $path
+                'redirect' => $path,
             ]);
 
             $response = $response->withRedirect($loginPage);

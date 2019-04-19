@@ -26,17 +26,17 @@ class PermissionSprunje extends Sprunje
 
     protected $sortable = [
         'name',
-        'properties'
+        'properties',
     ];
 
     protected $filterable = [
         'name',
         'properties',
-        'info'
+        'info',
     ];
 
     protected $excludeForAll = [
-        'info'
+        'info',
     ];
 
     /**

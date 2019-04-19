@@ -34,7 +34,7 @@ class Permission extends Model
         'slug',
         'name',
         'conditions',
-        'description'
+        'description',
     ];
 
     /**

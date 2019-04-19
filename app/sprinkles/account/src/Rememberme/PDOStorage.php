@@ -42,7 +42,7 @@ class PDOStorage implements StorageInterface
     {
         $result = Persistence::notExpired()->where([
             'user_id'          => $credential,
-            'persistent_token' => sha1($persistentToken)
+            'persistent_token' => sha1($persistentToken),
         ])->first();
 
         if (!$result) {
@@ -66,7 +66,7 @@ class PDOStorage implements StorageInterface
             'user_id'          => $credential,
             'token'            => sha1($token),
             'persistent_token' => sha1($persistentToken),
-            'expires_at'       => date('Y-m-d H:i:s', $expire)
+            'expires_at'       => date('Y-m-d H:i:s', $expire),
         ]);
         $persistence->save();
     }
@@ -79,7 +79,7 @@ class PDOStorage implements StorageInterface
     {
         Persistence::where([
             'user_id'          => $credential,
-            'persistent_token' => sha1($persistentToken)
+            'persistent_token' => sha1($persistentToken),
         ])->delete();
     }
 

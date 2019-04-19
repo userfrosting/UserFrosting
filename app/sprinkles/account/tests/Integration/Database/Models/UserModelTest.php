@@ -57,7 +57,7 @@ class UserModelTest extends TestCase
         //$user->activities - activities
         $this->ci->userActivityLogger->info('test', [
             'type'    => 'group_create',
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $this->assertSame(1, $user->activities()->count());
 
@@ -70,7 +70,7 @@ class UserModelTest extends TestCase
             'user_id'          => $user->id,
             'token'            => '',
             'persistent_token' => '',
-            'expires_at'       => null
+            'expires_at'       => null,
         ]);
         $persistence->save();
         $this->assertSame(1, Persistence::where('user_id', $user->id)->count());

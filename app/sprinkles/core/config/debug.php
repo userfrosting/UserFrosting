@@ -13,24 +13,24 @@
  */
 return [
     'assets' => [
-        'use_raw' => true
+        'use_raw' => true,
     ],
     'cache' => [
-        'twig' => false
+        'twig' => false,
     ],
     'debug' => [
         'deprecation'   => true,
         'queries'       => true,
         'smtp'          => true,
-        'twig'          => true
+        'twig'          => true,
     ],
     'settings' => [
-        'displayErrorDetails' => true
+        'displayErrorDetails' => true,
     ],
     'site' => [
         'debug' => [
             'ajax' => true,
-            'info' => true
-        ]
-    ]
+            'info' => true,
+        ],
+    ],
 ];

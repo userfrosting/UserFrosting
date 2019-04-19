@@ -25,12 +25,12 @@ class GroupSprunje extends Sprunje
 
     protected $sortable = [
         'name',
-        'description'
+        'description',
     ];
 
     protected $filterable = [
         'name',
-        'description'
+        'description',
     ];
 
     /**

@@ -1225,5 +1225,5 @@ return [
     'young',
     'yummy',
     'zany',
-    'zealous'
+    'zealous',
 ];

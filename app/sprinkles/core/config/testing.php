@@ -18,7 +18,7 @@ return [
     'cache' => [
         'illuminate' => [
             'default' => 'array',
-        ]
+        ],
     ],
     /*
      * Define in memory db for testing
@@ -27,7 +27,7 @@ return [
         'test_integration' => [
             'driver'    => 'sqlite',
             'database'  => ':memory:',
-        ]
+        ],
     ],
     /*
      * Don't log deprecations in tests
@@ -47,26 +47,26 @@ return [
             ],
             'testingDriver' => [
                 'driver' => 'localTest',
-                'root'   => \UserFrosting\STORAGE_DIR . \UserFrosting\DS . 'testingDriver'
+                'root'   => \UserFrosting\STORAGE_DIR . \UserFrosting\DS . 'testingDriver',
             ],
-        ]
+        ],
     ],
     /*
      * Don't display error detail in test. Return the non formatted errors
      */
     'settings' => [
-        'displayErrorDetails' => false
+        'displayErrorDetails' => false,
     ],
     /*
      * Disable native sessions in tests
      */
     'session' => [
-        'handler' => getenv('TEST_SESSION_HANDLER') ?: 'array'
+        'handler' => getenv('TEST_SESSION_HANDLER') ?: 'array',
     ],
     /*
      * Database to use when using the TestDatabase Trait
      */
     'testing' => [
-        'dbConnection' => getenv('TEST_DB') ?: 'test_integration'
-    ]
+        'dbConnection' => getenv('TEST_DB') ?: 'test_integration',
+    ],
 ];

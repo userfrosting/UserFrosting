@@ -31,14 +31,14 @@ return [
         'SESSION_COMPROMISED' => [
             '@TRANSLATION'  => 'Oturumunuz tehlikeye atıldı. Tüm cihazlardan çıkmanız, daha sonra giriş yapmanız ve bilgilerinizin değiştirilmediğini kontrol etmeniz gerekir.',
             'TITLE'         => 'Hesabınız tehlikeye atılmış olabilir',
-            'TEXT'          => 'Birisi bu sayfayı ele geçirmek için giriş verilerinizi kullanmış olabilir. Güvenliğiniz için tüm oturumlar günlüğe kaydedildi. Lütfen  <a href="{{url}}">giriş yapın</a>ve şüpheli hareketler için hesabınızı kontrol edin. Ayrıca şifrenizi değiştirmek isteyebilirsiniz.'
+            'TEXT'          => 'Birisi bu sayfayı ele geçirmek için giriş verilerinizi kullanmış olabilir. Güvenliğiniz için tüm oturumlar günlüğe kaydedildi. Lütfen  <a href="{{url}}">giriş yapın</a>ve şüpheli hareketler için hesabınızı kontrol edin. Ayrıca şifrenizi değiştirmek isteyebilirsiniz.',
         ],
         'SESSION_EXPIRED'       => 'Oturumunuz sona erdi. Lütfen tekrar oturum açın.',
 
         'SETTINGS' => [
             '@TRANSLATION'  => 'Hesap ayarları',
             'DESCRIPTION'   => 'E-posta, isim ve parolanız da dahil olmak üzere hesap ayarlarınızı güncelleyin.',
-            'UPDATED'       => 'Hesap ayarları güncellendi'
+            'UPDATED'       => 'Hesap ayarları güncellendi',
         ],
 
         'TOOLS' => 'Hesap araçları',
@@ -53,13 +53,13 @@ return [
             'PAGE'              => 'Yeni hesabınız için doğrulama e-postasını tekrar gönder.',
             'SEND'              => 'Hesabım için doğrulama bağlantısını e-posta ile gönder',
             'TOKEN_NOT_FOUND'   => 'Doğrulama belirteci bulunumadı / Hesap zaten doğrulandı',
-        ]
+        ],
     ],
 
     'EMAIL' => [
         'INVALID'               => '<strong>{{email}}</strong> için hesap yoktur.',
         'IN_USE'                => 'E-posta <strong>{{email}}</strong> zaten kullanılıyor.',
-        'VERIFICATION_REQUIRED' => 'E-posta (doğrulama gerekli - gerçek bir adres kullanın!)'
+        'VERIFICATION_REQUIRED' => 'E-posta (doğrulama gerekli - gerçek bir adres kullanın!)',
     ],
 
     'EMAIL_OR_USERNAME' => 'Kullanıcı adı veya e-posta adresi',
@@ -71,13 +71,13 @@ return [
     'LAST_NAME' => 'Soyadı',
     'LOCALE'    => [
         'ACCOUNT' => 'Hesabınız için kullanılacak dil ve yerel ayar',
-        'INVALID' => '<strong>{{locale}}</strong> geçersiz bir yerel.'
+        'INVALID' => '<strong>{{locale}}</strong> geçersiz bir yerel.',
     ],
     'LOGIN' => [
         '@TRANSLATION'      => 'Oturum Aç',
         'ALREADY_COMPLETE'  => 'Zaten oturum açtınız!',
         'SOCIAL'            => 'Veya şununla oturum aç',
-        'REQUIRED'          => 'Üzgünüm, bu sayfaya ulaşmak için oturum açmalısın.'
+        'REQUIRED'          => 'Üzgünüm, bu sayfaya ulaşmak için oturum açmalısın.',
     ],
     'LOGOUT' => 'Oturumu kapat',
 
@@ -90,7 +90,7 @@ return [
             'DESCRIPTION'   => '{{site_name}} hesabınız ile giriş yapın ya da yeni bir hesap oluşturun.',
             'SUBTITLE'      => 'Ücretsiz üye ol veya mevcut bir hesap ile giriş yapın.',
             'TITLE'         => 'Hadi başlayalım!',
-        ]
+        ],
     ],
 
     'PASSWORD' => [
@@ -106,7 +106,7 @@ return [
         'CREATE'                => [
             '@TRANSLATION'  => 'Parola Oluştur',
             'PAGE'          => 'Yeni hesabınız için bir şifre belirleyin.',
-            'SET'           => 'Parolayı Ayarla ve Giriş Yap'
+            'SET'           => 'Parolayı Ayarla ve Giriş Yap',
         ],
         'CURRENT'               => 'Şimdiki Parola',
         'CURRENT_EXPLAIN'       => 'Değişiklikler için şimdiki parolanız ile onaylamalısınız',
@@ -121,7 +121,7 @@ return [
             'INVALID'           => 'Bu şifre sıfırlama isteği bulunamadı ya da süresi bitmiş. Lütfen <a href="{{url}}">isteğinizi yeniden göndermeyi<a>deneyin.',
             'PAGE'              => 'Şifrenizi sıfırlamak için bir bağlantı oluşturun.',
             'REQUEST_CANNED'    => 'Kayıp parola isteği iptal edildi.',
-            'REQUEST_SENT'      => 'Eğer e-posta<strong>{{email}}</strong> sistemdeki bir hesap ile eşleşirse, bir şifre yenileme bağlantısı<strong>{{email}}</strong> gönderilir.'
+            'REQUEST_SENT'      => 'Eğer e-posta<strong>{{email}}</strong> sistemdeki bir hesap ile eşleşirse, bir şifre yenileme bağlantısı<strong>{{email}}</strong> gönderilir.',
         ],
 
         'HASH_FAILED'       => 'Parola karma başarısız oldu. Lütfen bir site yöneticisiyle iletişime geçin.',
@@ -133,15 +133,15 @@ return [
             '@TRANSLATION'      => 'Şifre sıfırlama',
             'CHOOSE'            => 'Lütfen devam etmek için yeni bir şifre belirleyiniz.',
             'PAGE'              => 'Hesabınız için yeni bir şifre belirleyiniz.',
-            'SEND'              => 'Yeni şifre ayarla ve giriş yap'
+            'SEND'              => 'Yeni şifre ayarla ve giriş yap',
         ],
 
-        'UPDATED'           => 'Hesap şifresi güncellendi'
+        'UPDATED'           => 'Hesap şifresi güncellendi',
     ],
 
     'PROFILE'       => [
         'SETTINGS'  => 'Profil ayarları',
-        'UPDATED'   => 'Profil ayarları güncellendi'
+        'UPDATED'   => 'Profil ayarları güncellendi',
     ],
 
     'RATE_LIMIT_EXCEEDED'       => 'Bu işlem için belirlenen son oran aşıldı. Başka bir deneme yapmanıza izin verilene kadar {{delay}} bir süre beklemelisiniz.',
@@ -154,7 +154,7 @@ return [
         'COMPLETE_TYPE2'    => 'Kaydınız başarıyla tamamlandı. Hesabınızı aktifleştirmek için bir bağlantı gönderildi<strong>{{email}}</strong>. Bu adımı tamamlayana kadar oturum açamazsınız.',
         'DISABLED'          => 'Üzgünüz, hesap kaydı devre dışı bırakıldı.',
         'LOGOUT'            => 'Üzgünüm, oturumunuz açıkken yeni bir hesap oluşturamazsınız. Lütfen önce oturumunuzdan çıkış yapınız.',
-        'WELCOME'           => 'Kaydolmak hızlı ve basittir.'
+        'WELCOME'           => 'Kaydolmak hızlı ve basittir.',
     ],
     'REMEMBER_ME'               => 'Beni hatırla!',
     'REMEMBER_ME_ON_COMPUTER'   => 'Bu bilgisayarda beni hatırla ( genel bilgisayarlar için önerilmez)',
@@ -174,12 +174,12 @@ return [
         'CHOOSE'        => 'Benzersiz bir kullanıcı adı seç',
         'INVALID'       => 'Geçersiz kullanıcı adı',
         'IN_USE'        => '<strong>{{user_name}}</strong> kullanıcı adı zaten mevcut.',
-        'NOT_AVAILABLE' => "<strong>{{user_name}}</strong> kullanıcı adı kullanılamaz. Farklı bir isim veya 'öneriye' tıklayın."
+        'NOT_AVAILABLE' => "<strong>{{user_name}}</strong> kullanıcı adı kullanılamaz. Farklı bir isim veya 'öneriye' tıklayın.",
     ],
 
     'USER_ID_INVALID'       => 'İstenen kullanıcı adı mevcut değil.',
     'USER_OR_EMAIL_INVALID' => 'Kullanıcı adı veya e-posta adresi hatalı.',
     'USER_OR_PASS_INVALID'  => 'Kullanıcı bulunamadı ya da şifre hatalı.',
 
-    'WELCOME' => 'Tekrar Hoşgeldiniz.{{first_name}}'
+    'WELCOME' => 'Tekrar Hoşgeldiniz.{{first_name}}',
 ];
