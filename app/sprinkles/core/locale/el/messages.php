@@ -15,26 +15,26 @@ return [
         '@TRANSLATION' => 'Captcha',
         'FAIL'         => 'Δεν έχετε εισάγει σωστά τον κωδικό captcha.',
         'SPECIFY'      => 'Εισαγάγετε τον captcha',
-        'VERIFY'       => 'Επαλήθευση του captcha'
+        'VERIFY'       => 'Επαλήθευση του captcha',
     ],
     'CSRF_MISSING' => 'Λείπει το CSRF token. Γιατί δεν δοκιμάζετε να ανανεώσετε τη σελίδα και στη συνέχεια να υποβάλετε ξανά;',
     'DB_INVALID'   => 'Δεν είναι δυνατή η σύνδεση με τη βάση δεδομένων Εάν είστε διαχειριστής, ελέγξτε το αρχείο καταγραφής σφαλμάτων.',
     'DESCRIPTION'  => 'Περιγραφή',
     'DOWNLOAD'     => [
         '@TRANSLATION' => 'Λήψη',
-        'CSV'          => 'Λήψη CSV'
+        'CSV'          => 'Λήψη CSV',
     ],
     'EMAIL' => [
         '@TRANSLATION' => 'Email',
-        'YOUR'         => 'Η διεύθυνσή σας ηλεκτρονικού ταχυδρομείου'
+        'YOUR'         => 'Η διεύθυνσή σας ηλεκτρονικού ταχυδρομείου',
     ],
     'HOME'  => 'Αρχική σελίδα',
     'LEGAL' => [
         '@TRANSLATION' => 'Όροι χρήσης',
-        'DESCRIPTION'  => 'Οι όροι χρήσης που ισχύουν για τη χρήση αυτού του ιστότοπου και των υπηρεσιών μας.'
+        'DESCRIPTION'  => 'Οι όροι χρήσης που ισχύουν για τη χρήση αυτού του ιστότοπου και των υπηρεσιών μας.',
     ],
     'LOCALE' => [
-        '@TRANSLATION' => 'Γλώσσα'
+        '@TRANSLATION' => 'Γλώσσα',
     ],
     'NAME'       => 'Όνομα',
     'NAVIGATION' => 'Πλοήγηση',
@@ -49,12 +49,12 @@ return [
         'NEXT'     => 'Επόμενη σελίδα',
         'PREVIOUS' => 'Προηγούμενη σελίδα',
         'FIRST'    => 'Πρώτη σελίδα',
-        'LAST'     => 'Τελευταία σελίδα'
+        'LAST'     => 'Τελευταία σελίδα',
     ],
     'PRIVACY' => [
         '@TRANSLATION' => 'Πολιτική απορρήτου',
         'DESCRIPTION'  => 'Η πολιτική απορρήτου μας περιγράφει τι είδους πληροφορίες συλλέγουμε από εσάς και πώς θα το χρησιμοποιήσουμε' .
-            ],
+            , ],
     'SLUG'           => 'Slug',
     'SLUG_CONDITION' => 'Slug/ Προϋποθέσεις',
     'SLUG_IN_USE'    => 'Υπάρχει ήδη ένα slug <strong> {{slug}} </ strong>',
@@ -98,5 +98,5 @@ return [
 // Misc.
     'BUILT_WITH_UF'     => 'Κατασκευάστηκε με το <a href="http://www.userfrosting.com">UserFrosting </a>',
     'ADMINLTE_THEME_BY' => "Θέμα από <strong> <a href=\"http://almsaeedstudio.com\>> Almsaeed Studio </a>. </ Strong> Όλα τα δικαιώματα διατηρούνται",
-    'WELCOME_TO'        => 'Καλώς ορίσατε στο {{title}}!'
+    'WELCOME_TO'        => 'Καλώς ορίσατε στο {{title}}!',
 ];

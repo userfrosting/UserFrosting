@@ -29,7 +29,7 @@ class Throttle extends Model
     protected $fillable = [
         'type',
         'ip',
-        'request_data'
+        'request_data',
     ];
 
     /**

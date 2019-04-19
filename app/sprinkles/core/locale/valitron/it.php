@@ -35,5 +35,5 @@ return [
     'contains'      => 'deve contenere %s',
     'boolean'       => 'deve essere un booleano',
     'lengthBetween' => 'deve essere compreso tra %d e %d caratteri',
-    'creditCard'    => 'deve essere un numero di carta di credito valido'
+    'creditCard'    => 'deve essere un numero di carta di credito valido',
 ];

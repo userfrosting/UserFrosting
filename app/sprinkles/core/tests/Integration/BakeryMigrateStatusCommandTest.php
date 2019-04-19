@@ -86,7 +86,7 @@ class BakeryMigrateStatusCommandTest extends TestCase
 
         // Add the command to the input to create the execute argument
         $execute = array_merge([
-            'command' => $command->getName()
+            'command' => $command->getName(),
         ], $input);
 
         // Execute command tester
@@ -100,7 +100,7 @@ class BakeryMigrateStatusCommandTest extends TestCase
     {
         return collect([
             (object) ['migration' => 'foo', 'batch' => 1, 'sprinkle' => 'foo'],
-            (object) ['migration' => 'bar', 'batch' => 2, 'sprinkle' => 'bar']
+            (object) ['migration' => 'bar', 'batch' => 2, 'sprinkle' => 'bar'],
         ]);
     }
 }

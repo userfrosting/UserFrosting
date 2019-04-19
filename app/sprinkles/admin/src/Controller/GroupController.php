@@ -114,7 +114,7 @@ class GroupController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} created group {$group->name}.", [
                 'type'    => 'group_create',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
 
             $ms->addMessageTranslated('success', 'GROUP.CREATION_SUCCESSFUL', $data);
@@ -159,7 +159,7 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_group', [
-            'group' => $group
+            'group' => $group,
         ])) {
             throw new ForbiddenException();
         }
@@ -196,7 +196,7 @@ class GroupController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted group {$groupName}.", [
                 'type'    => 'group_delete',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
@@ -204,7 +204,7 @@ class GroupController extends SimpleController
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'GROUP.DELETION_SUCCESSFUL', [
-            'name' => $groupName
+            'name' => $groupName,
         ]);
 
         return $response->withJson([], 200);
@@ -323,7 +323,7 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_group', [
-            'group' => $group
+            'group' => $group,
         ])) {
             throw new ForbiddenException();
         }
@@ -343,7 +343,7 @@ class GroupController extends SimpleController
             'group' => $group,
             'form'  => [
                 'action' => "api/groups/g/{$group->slug}",
-            ]
+            ],
         ]);
     }
 
@@ -389,7 +389,7 @@ class GroupController extends SimpleController
         $fieldNames = ['name', 'slug', 'icon', 'description'];
         $fields = [
             'hidden'   => [],
-            'disabled' => []
+            'disabled' => [],
         ];
 
         // Load validation rules
@@ -402,11 +402,11 @@ class GroupController extends SimpleController
                 'action'      => 'api/groups',
                 'method'      => 'POST',
                 'fields'      => $fields,
-                'submit_text' => $translator->translate('CREATE')
+                'submit_text' => $translator->translate('CREATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -451,7 +451,7 @@ class GroupController extends SimpleController
         $fieldNames = ['name', 'slug', 'icon', 'description'];
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
             'group' => $group,
-            'fields' => $fieldNames
+            'fields' => $fieldNames,
         ])) {
             throw new ForbiddenException();
         }
@@ -459,7 +459,7 @@ class GroupController extends SimpleController
         // Generate form
         $fields = [
             'hidden'   => [],
-            'disabled' => []
+            'disabled' => [],
         ];
 
         // Load validation rules
@@ -472,11 +472,11 @@ class GroupController extends SimpleController
                 'action'      => "api/groups/g/{$group->slug}",
                 'method'      => 'PUT',
                 'fields'      => $fields,
-                'submit_text' => $translator->translate('UPDATE')
+                'submit_text' => $translator->translate('UPDATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -510,7 +510,7 @@ class GroupController extends SimpleController
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
             'group' => $group,
-            'property' => 'users'
+            'property' => 'users',
         ])) {
             throw new ForbiddenException();
         }
@@ -559,7 +559,7 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_group', [
-                'group' => $group
+                'group' => $group,
             ])) {
             throw new ForbiddenException();
         }
@@ -569,13 +569,13 @@ class GroupController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         foreach ($fieldNames as $field) {
             if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
                 'group' => $group,
-                'property' => $field
+                'property' => $field,
             ])) {
                 $fields['hidden'][] = $field;
             }
@@ -583,18 +583,18 @@ class GroupController extends SimpleController
 
         // Determine buttons to display
         $editButtons = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
             'group' => $group,
-            'fields' => ['name', 'slug', 'icon', 'description']
+            'fields' => ['name', 'slug', 'icon', 'description'],
         ])) {
             $editButtons['hidden'][] = 'edit';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'delete_group', [
-            'group' => $group
+            'group' => $group,
         ])) {
             $editButtons['hidden'][] = 'delete';
         }
@@ -603,7 +603,7 @@ class GroupController extends SimpleController
             'group'           => $group,
             'fields'          => $fields,
             'tools'           => $editButtons,
-            'delete_redirect' => $this->ci->router->pathFor('uri_groups')
+            'delete_redirect' => $this->ci->router->pathFor('uri_groups'),
         ]);
     }
 
@@ -702,7 +702,7 @@ class GroupController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this group
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
             'group' => $group,
-            'fields' => array_values(array_unique($fieldNames))
+            'fields' => array_values(array_unique($fieldNames)),
         ])) {
             throw new ForbiddenException();
         }
@@ -747,12 +747,12 @@ class GroupController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated details for group {$group->name}.", [
                 'type'    => 'group_update_info',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
         $ms->addMessageTranslated('success', 'GROUP.UPDATE', [
-            'name' => $group->name
+            'name' => $group->name,
         ]);
 
         return $response->withJson([], 200);

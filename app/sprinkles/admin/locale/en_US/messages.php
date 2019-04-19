@@ -20,14 +20,14 @@ return [
 
        'LAST' => 'Last Activity',
        'PAGE' => 'A listing of user activities',
-       'TIME' => 'Activity Time'
+       'TIME' => 'Activity Time',
     ],
 
     'CACHE' => [
         'CLEAR'             => 'Clear cache',
         'CLEAR_CONFIRM'     => 'Are you sure you want to clear the site cache?',
         'CLEAR_CONFIRM_YES' => 'Yes, clear cache',
-        'CLEARED'           => 'Cache cleared successfully !'
+        'CLEARED'           => 'Cache cleared successfully !',
     ],
 
     'DASHBOARD'             => 'Dashboard',
@@ -62,13 +62,13 @@ return [
         'NOT_EMPTY'           => "You can't do that because there are still users associated with the group <strong>{{name}}</strong>.",
         'PAGE_DESCRIPTION'    => 'A listing of the groups for your site.  Provides management tools for editing and deleting groups.',
         'SUMMARY'             => 'Group Summary',
-        'UPDATE'              => 'Details updated for group <strong>{{name}}</strong>'
+        'UPDATE'              => 'Details updated for group <strong>{{name}}</strong>',
     ],
 
     'MANUALLY_ACTIVATED'    => "{{user_name}}'s account has been manually activated",
     'MASTER_ACCOUNT_EXISTS' => 'The master account already exists!',
     'MIGRATION'             => [
-        'REQUIRED'          => 'Database update required'
+        'REQUIRED'          => 'Database update required',
     ],
 
     'PERMISSION' => [
@@ -84,7 +84,7 @@ return [
         'PAGE_DESCRIPTION'  => 'A listing of the permissions for your site.  Provides management tools for editing and deleting permissions.',
         'SUMMARY'           => 'Permission Summary',
         'UPDATE'            => 'Update permissions',
-        'VIA_ROLES'         => 'Has permission via roles'
+        'VIA_ROLES'         => 'Has permission via roles',
     ],
 
     'ROLE' => [
@@ -109,7 +109,7 @@ return [
         'PAGE_DESCRIPTION'    => 'A listing of the roles for your site.  Provides management tools for editing and deleting roles.',
         'PERMISSIONS_UPDATED' => 'Permissions updated for role <strong>{{name}}</strong>',
         'SUMMARY'             => 'Role Summary',
-        'UPDATED'             => 'Details updated for role <strong>{{name}}</strong>'
+        'UPDATED'             => 'Details updated for role <strong>{{name}}</strong>',
     ],
 
     'SYSTEM_INFO' => [
@@ -122,7 +122,7 @@ return [
         'SERVER'        => 'Webserver software',
         'SPRINKLES'     => 'Loaded sprinkles',
         'UF_VERSION'    => 'UserFrosting version',
-        'URL'           => 'Site root url'
+        'URL'           => 'Site root url',
     ],
 
     'TOGGLE_COLUMNS' => 'Toggle columns',
@@ -134,7 +134,7 @@ return [
         'ADMIN' => [
             'CHANGE_PASSWORD'    => 'Change User Password',
             'SEND_PASSWORD_LINK' => 'Send the user a link that will allow them to choose their own password',
-            'SET_PASSWORD'       => "Set the user's password as"
+            'SET_PASSWORD'       => "Set the user's password as",
         ],
 
         'ACTIVATE'          => 'Activate user',
@@ -152,11 +152,11 @@ return [
         'PAGE_DESCRIPTION'  => 'A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.',
         'SUMMARY'           => 'Account Summary',
         'VIEW_ALL'          => 'View all users',
-        'WITH_PERMISSION'   => 'Users with this permission'
+        'WITH_PERMISSION'   => 'Users with this permission',
     ],
     'X_USER' => [
         0 => 'No users',
         1 => '{{plural}} user',
-        2 => '{{plural}} users'
-    ]
+        2 => '{{plural}} users',
+    ],
 ];

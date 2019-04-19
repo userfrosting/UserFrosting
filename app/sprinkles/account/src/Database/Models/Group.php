@@ -36,7 +36,7 @@ class Group extends Model
         'slug',
         'name',
         'description',
-        'icon'
+        'icon',
     ];
 
     /**

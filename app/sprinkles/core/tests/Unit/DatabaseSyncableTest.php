@@ -56,7 +56,7 @@ class DatabaseSyncableTest extends TestCase
 
         // Test creation of new items ('x')
         $model = $this->expectCreatedModel($relation, [
-            'id' => 'x'
+            'id' => 'x',
         ]);
         $model->shouldReceive('getAttribute')->with('id')->andReturn('x');
 
@@ -90,17 +90,17 @@ class DatabaseSyncableTest extends TestCase
                 [
                     [
                         'id'      => 2,
-                        'species' => 'Tyto'
+                        'species' => 'Tyto',
                     ],
                     [
                         'id'      => 3,
-                        'species' => 'Megascops'
+                        'species' => 'Megascops',
                     ],
                     [
-                        'id' => 'x'
-                    ]
-                ]
-            ]
+                        'id' => 'x',
+                    ],
+                ],
+            ],
             // Additional test sets here
         ];
     }

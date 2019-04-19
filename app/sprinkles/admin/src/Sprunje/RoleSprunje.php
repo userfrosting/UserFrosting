@@ -26,17 +26,17 @@ class RoleSprunje extends Sprunje
 
     protected $sortable = [
         'name',
-        'description'
+        'description',
     ];
 
     protected $filterable = [
         'name',
         'description',
-        'info'
+        'info',
     ];
 
     protected $excludeForAll = [
-        'info'
+        'info',
     ];
 
     /**

@@ -68,7 +68,7 @@ class User extends Model implements UserInterface
         'flag_enabled',
         'last_activity_id',
         'password',
-        'deleted_at'
+        'deleted_at',
     ];
 
     /**
@@ -78,7 +78,7 @@ class User extends Model implements UserInterface
      * @var string[]
      */
     protected $hidden = [
-        'password'
+        'password',
     ];
 
     /**
@@ -87,11 +87,11 @@ class User extends Model implements UserInterface
      * @var string[]
      */
     protected $dates = [
-        'deleted_at'
+        'deleted_at',
     ];
 
     protected $appends = [
-        'full_name'
+        'full_name',
     ];
 
     /**
@@ -100,7 +100,7 @@ class User extends Model implements UserInterface
      */
     protected $events = [
         'saved'   => Events\DeleteUserCacheEvent::class,
-        'deleted' => Events\DeleteUserCacheEvent::class
+        'deleted' => Events\DeleteUserCacheEvent::class,
     ];
 
     /**
@@ -132,7 +132,7 @@ class User extends Model implements UserInterface
         if (in_array($name, [
                 'group',
                 'last_sign_in_time',
-                'avatar'
+                'avatar',
             ])) {
             return true;
         } else {
@@ -369,7 +369,7 @@ class User extends Model implements UserInterface
     {
         // Add a sign in activity (time is automatically set by database)
         static::$ci->userActivityLogger->info("User {$this->user_name} signed in.", [
-            'type' => 'sign_in'
+            'type' => 'sign_in',
         ]);
 
         // Update password if we had encountered an outdated hash
@@ -406,7 +406,7 @@ class User extends Model implements UserInterface
     public function onLogout($params = [])
     {
         static::$ci->userActivityLogger->info("User {$this->user_name} signed out.", [
-            'type' => 'sign_out'
+            'type' => 'sign_out',
         ]);
 
         return $this;

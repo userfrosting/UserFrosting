@@ -32,5 +32,5 @@ return [
     'dateFormat'    => "日期的格式應該為 '%s'",
     'dateBefore'    => "日期必須在 '%s' 之前",
     'dateAfter'     => "日期必須在 '%s' 之後",
-    'contains'      => '必須包含 %s'
+    'contains'      => '必須包含 %s',
 ];

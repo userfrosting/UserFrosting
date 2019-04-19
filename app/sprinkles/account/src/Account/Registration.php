@@ -63,7 +63,7 @@ class Registration
         'first_name',
         'last_name',
         'email',
-        'password'
+        'password',
     ];
 
     /**
@@ -122,7 +122,7 @@ class Registration
             // Create activity record
             $this->ci->userActivityLogger->info("User {$user->user_name} registered for a new account.", [
                 'type'    => 'sign_up',
-                'user_id' => $user->id
+                'user_id' => $user->id,
             ]);
 
             // Load default roles
@@ -240,7 +240,7 @@ class Registration
                 ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                 ->addParams([
                     'user'  => $user,
-                    'token' => $verification->getToken()
+                    'token' => $verification->getToken(),
                 ]);
 
         $this->ci->mailer->send($message);

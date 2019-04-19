@@ -68,7 +68,7 @@ class EmailRecipient
     {
         $this->cc[] = [
             'email' => $email,
-            'name'  => $name
+            'name'  => $name,
         ];
     }
 
@@ -82,7 +82,7 @@ class EmailRecipient
     {
         $this->bcc[] = [
             'email' => $email,
-            'name'  => $name
+            'name'  => $name,
         ];
     }
 

@@ -29,7 +29,7 @@ return [
         'SPRUNJE'       => [
             'BAD_FILTER' => '<strong>{{name}}</strong> не является допустимым фильтром.',
             'BAD_LIST'   => '<strong>{{name}}</strong> не является допустимым списком.',
-            'BAD_SORT'   => '<strong>{{name}}</strong> не является допустимым для сортировки полей.'
-        ]
-    ]
+            'BAD_SORT'   => '<strong>{{name}}</strong> не является допустимым для сортировки полей.',
+        ],
+    ],
 ];

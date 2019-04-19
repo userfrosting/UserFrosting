@@ -306,7 +306,7 @@ class AuthenticatorTest extends TestCase
         $password = 'FooBar';
         $testUser = $this->createTestUser(false, false, [
             'password'     => Password::hash($password),
-            'flag_enabled' => 0
+            'flag_enabled' => 0,
         ]);
 
         $currentUser = $authenticator->attempt('user_name', $testUser->user_name, $password, false);
@@ -323,7 +323,7 @@ class AuthenticatorTest extends TestCase
         $password = 'FooBar';
         $testUser = $this->createTestUser(false, false, [
             'password'      => Password::hash($password),
-            'flag_verified' => 0
+            'flag_verified' => 0,
         ]);
 
         $currentUser = $authenticator->attempt('user_name', $testUser->user_name, $password, false);
@@ -345,7 +345,7 @@ class AuthenticatorTest extends TestCase
         $password = 'FooBar';
         $testUser = $this->createTestUser(false, false, [
             'password'      => Password::hash($password),
-            'flag_verified' => 0
+            'flag_verified' => 0,
         ]);
 
         $currentUser = $authenticator->attempt('user_name', $testUser->user_name, $password, false);
@@ -366,7 +366,7 @@ class AuthenticatorTest extends TestCase
     {
         $password = 'FooBar';
         $testUser = $this->createTestUser(false, false, [
-            'password' => Password::hash($password)
+            'password' => Password::hash($password),
         ]);
 
         $currentUser = $authenticator->attempt('user_name', $testUser->user_name, 'BarFoo', false);

@@ -91,7 +91,7 @@ class SprinkleManagerTest extends TestCase
         $this->assertEquals([
             'foo'  => null,
             'bar'  => null,
-            'test' => new \UserFrosting\Sprinkle\Test\Test()
+            'test' => new \UserFrosting\Sprinkle\Test\Test(),
         ], $sprinkles);
     }
 

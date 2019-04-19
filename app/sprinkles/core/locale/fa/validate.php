@@ -26,7 +26,7 @@ return [
         'SPRUNJE'       => [
             'BAD_FILTER' => '<strong>{{name}}</strong> فیلتر صحیحی نیست.',
             'BAD_LIST'   => '<strong>{{name}}</strong> لیست صحیحی نیست.',
-            'BAD_SORT'   => '<strong>{{name}}</strong> فیلد مرتب سازی صحیحی نیست.'
-        ]
-    ]
+            'BAD_SORT'   => '<strong>{{name}}</strong> فیلد مرتب سازی صحیحی نیست.',
+        ],
+    ],
 ];

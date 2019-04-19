@@ -33,8 +33,8 @@ class SprunjeTest extends TestCase
     {
         $sprunje = new SprunjeStub([
             'filters' => [
-                'species' => 'Tyto'
-            ]
+                'species' => 'Tyto',
+            ],
         ]);
 
         $builder = $sprunje->getQuery();
@@ -55,8 +55,8 @@ class SprunjeTest extends TestCase
     {
         $sprunje = new SprunjeStub([
             'sorts' => [
-                'species' => 'asc'
-            ]
+                'species' => 'asc',
+            ],
         ]);
 
         $builder = $sprunje->getQuery();
@@ -68,11 +68,11 @@ class SprunjeTest extends TestCase
 class SprunjeStub extends Sprunje
 {
     protected $filterable = [
-        'species'
+        'species',
     ];
 
     protected $sortable = [
-        'species'
+        'species',
     ];
 
     public function __construct($options)

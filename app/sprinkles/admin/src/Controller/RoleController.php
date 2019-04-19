@@ -114,7 +114,7 @@ class RoleController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} created role {$role->name}.", [
                 'type'    => 'role_create',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
 
             $ms->addMessageTranslated('success', 'ROLE.CREATION_SUCCESSFUL', $data);
@@ -159,7 +159,7 @@ class RoleController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_role', [
-            'role' => $role
+            'role' => $role,
         ])) {
             throw new ForbiddenException();
         }
@@ -195,7 +195,7 @@ class RoleController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted role {$roleName}.", [
                 'type'    => 'role_delete',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
@@ -203,7 +203,7 @@ class RoleController extends SimpleController
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'ROLE.DELETION_SUCCESSFUL', [
-            'name' => $roleName
+            'name' => $roleName,
         ]);
 
         return $response->withJson([], 200);
@@ -322,7 +322,7 @@ class RoleController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_role', [
-            'role' => $role
+            'role' => $role,
         ])) {
             throw new ForbiddenException();
         }
@@ -352,7 +352,7 @@ class RoleController extends SimpleController
             'role' => $role,
             'form' => [
                 'action' => "api/roles/r/{$role->slug}",
-            ]
+            ],
         ]);
     }
 
@@ -396,7 +396,7 @@ class RoleController extends SimpleController
         $fieldNames = ['name', 'slug', 'description'];
         $fields = [
             'hidden'   => [],
-            'disabled' => []
+            'disabled' => [],
         ];
 
         // Load validation rules
@@ -409,11 +409,11 @@ class RoleController extends SimpleController
                 'action'      => 'api/roles',
                 'method'      => 'POST',
                 'fields'      => $fields,
-                'submit_text' => $translator->translate('CREATE')
+                'submit_text' => $translator->translate('CREATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -458,7 +458,7 @@ class RoleController extends SimpleController
         $fieldNames = ['name', 'slug', 'description'];
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
             'role' => $role,
-            'fields' => $fieldNames
+            'fields' => $fieldNames,
         ])) {
             throw new ForbiddenException();
         }
@@ -466,7 +466,7 @@ class RoleController extends SimpleController
         // Generate form
         $fields = [
             'hidden'   => [],
-            'disabled' => []
+            'disabled' => [],
         ];
 
         // Load validation rules
@@ -479,11 +479,11 @@ class RoleController extends SimpleController
                 'action'      => "api/roles/r/{$role->slug}",
                 'method'      => 'PUT',
                 'fields'      => $fields,
-                'submit_text' => $translator->translate('UPDATE')
+                'submit_text' => $translator->translate('UPDATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -521,13 +521,13 @@ class RoleController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit "permissions" field for this role
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
             'role' => $role,
-            'fields' => ['permissions']
+            'fields' => ['permissions'],
         ])) {
             throw new ForbiddenException();
         }
 
         return $this->ci->view->render($response, 'modals/role-manage-permissions.html.twig', [
-            'role' => $role
+            'role' => $role,
         ]);
     }
 
@@ -565,7 +565,7 @@ class RoleController extends SimpleController
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
             'role' => $role,
-            'property' => 'permissions'
+            'property' => 'permissions',
         ])) {
             throw new ForbiddenException();
         }
@@ -619,7 +619,7 @@ class RoleController extends SimpleController
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
             'role' => $role,
-            'property' => 'users'
+            'property' => 'users',
         ])) {
             throw new ForbiddenException();
         }
@@ -665,7 +665,7 @@ class RoleController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_role', [
-                'role' => $role
+                'role' => $role,
             ])) {
             throw new ForbiddenException();
         }
@@ -675,13 +675,13 @@ class RoleController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         foreach ($fieldNames as $field) {
             if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
                 'role' => $role,
-                'property' => $field
+                'property' => $field,
             ])) {
                 $fields['hidden'][] = $field;
             }
@@ -689,18 +689,18 @@ class RoleController extends SimpleController
 
         // Determine buttons to display
         $editButtons = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
             'role' => $role,
-            'fields' => ['name', 'slug', 'description']
+            'fields' => ['name', 'slug', 'description'],
         ])) {
             $editButtons['hidden'][] = 'edit';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'delete_role', [
-            'role' => $role
+            'role' => $role,
         ])) {
             $editButtons['hidden'][] = 'delete';
         }
@@ -709,7 +709,7 @@ class RoleController extends SimpleController
             'role'            => $role,
             'fields'          => $fields,
             'tools'           => $editButtons,
-            'delete_redirect' => $this->ci->router->pathFor('uri_roles')
+            'delete_redirect' => $this->ci->router->pathFor('uri_roles'),
         ]);
     }
 
@@ -808,7 +808,7 @@ class RoleController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this role
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
             'role' => $role,
-            'fields' => array_values(array_unique($fieldNames))
+            'fields' => array_values(array_unique($fieldNames)),
         ])) {
             throw new ForbiddenException();
         }
@@ -853,12 +853,12 @@ class RoleController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated details for role {$role->name}.", [
                 'type'    => 'role_update_info',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
         $ms->addMessageTranslated('success', 'ROLE.UPDATED', [
-            'name' => $role->name
+            'name' => $role->name,
         ]);
 
         return $response->withJson([], 200);
@@ -901,7 +901,7 @@ class RoleController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit the specified field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
             'role' => $role,
-            'fields' => [$fieldName]
+            'fields' => [$fieldName],
         ])) {
             throw new ForbiddenException();
         }
@@ -917,7 +917,7 @@ class RoleController extends SimpleController
         }
 
         $params = [
-            $fieldName => $put['value']
+            $fieldName => $put['value'],
         ];
 
         // Validate key -> value pair
@@ -961,18 +961,18 @@ class RoleController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for role {$role->name}.", [
                 'type'    => 'role_update_field',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
         // Add success messages
         if ($fieldName == 'permissions') {
             $ms->addMessageTranslated('success', 'ROLE.PERMISSIONS_UPDATED', [
-                'name' => $role->name
+                'name' => $role->name,
             ]);
         } else {
             $ms->addMessageTranslated('success', 'ROLE.UPDATED', [
-                'name' => $role->name
+                'name' => $role->name,
             ]);
         }
 

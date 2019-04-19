@@ -29,14 +29,14 @@ return [
             'DESCRIPTION' => 'Non riusciamo a trovare quel che cerchi...',
             'DETAIL'      => 'Abbiamo provato a trovare quello che cercavi...',
             'EXPLAIN'     => 'Non abbiamo trovato la pagina che stavi cercando.',
-            'RETURN'      => 'Fai clic <a href="{{url}}">qui</a> per tornare alla homepage.'
+            'RETURN'      => 'Fai clic <a href="{{url}}">qui</a> per tornare alla homepage.',
         ],
 
         'CONFIG' => [
             'TITLE'       => 'Problema di configurazione di UserFrosting!',
             'DESCRIPTION' => 'Alcuni requisiti di configurazione di UserFrosting non sono stati soddisfatti.',
             'DETAIL'      => 'Qualcosa qui non va bene.',
-            'RETURN'      => 'Correggi i seguenti errori, quindi <a href="{{url}}">ricarica la pagina</a>.'
+            'RETURN'      => 'Correggi i seguenti errori, quindi <a href="{{url}}">ricarica la pagina</a>.',
         ],
 
         'DESCRIPTION' => 'Abbiamo notato un grande disturbo della Forza.',
@@ -50,6 +50,6 @@ return [
 
         'SERVER' => 'Sembra esserci un errore nel server. Se sei un admin, controlla i log di PHP o UserFrosting.',
 
-        'TITLE' => 'Disturbo della Forza'
-    ]
+        'TITLE' => 'Disturbo della Forza',
+    ],
 ];

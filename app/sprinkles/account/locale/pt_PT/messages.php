@@ -30,14 +30,14 @@ return [
 
         'SESSION_COMPROMISED' => [
             '@TRANSLATION'  => 'A sua sessão foi comprometida.  Deverá fechar todas as sessões, voltar a iniciar sessão e verificar que os seus dados não foram alterados por alheios.',
-            'TITLE'         => 'A sua sessão pode ter sido comprometida'
+            'TITLE'         => 'A sua sessão pode ter sido comprometida',
         ],
         'SESSION_EXPIRED'       => 'A sua sessão expirou. Por favor inicie nova sessão.',
 
         'SETTINGS' => [
             '@TRANSLATION'  => 'Definições de conta',
             'DESCRIPTION'   => 'Atualize as suas definições, incluindo email, nome e password.',
-            'UPDATED'       => 'Definições de conta atualizadas'
+            'UPDATED'       => 'Definições de conta atualizadas',
         ],
 
         'TOOLS' => 'Ferramentas de conta',
@@ -52,12 +52,12 @@ return [
             'PAGE'              => 'Reenviar email de verificação para a sua nova conta.',
             'SEND'              => 'Enviar email com link de verificação',
             'TOKEN_NOT_FOUND'   => 'Token de verificação inexistente / Conta já verificada',
-        ]
+        ],
     ],
 
     'EMAIL' => [
         'INVALID'   => 'Não existe nenhuma conta para <strong>{{email}}</strong>.',
-        'IN_USE'    => 'O email <strong>{{email}}</strong> já se encontra em uso.'
+        'IN_USE'    => 'O email <strong>{{email}}</strong> já se encontra em uso.',
     ],
 
     'FIRST_NAME' => 'Primeiro nome',
@@ -73,7 +73,7 @@ return [
 
         'ALREADY_COMPLETE'  => 'Sessão já iniciada!',
         'SOCIAL'            => 'Ou inicie sessão com',
-        'REQUIRED'          => 'Lamentamos, tem de iniciar sessão para aceder a este recurso.'
+        'REQUIRED'          => 'Lamentamos, tem de iniciar sessão para aceder a este recurso.',
     ],
 
     'LOGOUT' => 'Sair',
@@ -85,7 +85,7 @@ return [
             'DESCRIPTION'   => 'Inicie sessão na sua conta {{site_name}}, ou registre-se para uma nova conta.',
             'SUBTITLE'      => 'Registre-se gratuitamente, ou inicie sessão com uma conta existente.',
             'TITLE'         => 'Vamos começar!',
-        ]
+        ],
     ],
 
     'PASSWORD' => [
@@ -111,21 +111,21 @@ return [
             'INVALID'           => 'This password reset request could not be found, or has expired.  Please try <a href="{{url}}">resubmitting your request<a>.',
             'PAGE'              => 'Obtenha um link para fazer reset à sua password.',
             'REQUEST_CANNED'    => 'Pedido de password esquecida foi cancelado.',
-            'REQUEST_SENT'      => 'Se o email <strong>{{email}}</strong> corresponder a uma conta em nosso sistema, um link de redefinição de senha será enviado para <strong>{{email}}</strong>.'
+            'REQUEST_SENT'      => 'Se o email <strong>{{email}}</strong> corresponder a uma conta em nosso sistema, um link de redefinição de senha será enviado para <strong>{{email}}</strong>.',
         ],
 
         'RESET' => [
             '@TRANSLATION'      => 'Reset Password',
             'CHOOSE'            => 'Por favor escolha uma nova password para continuar.',
             'PAGE'              => 'Escolha uma nova password para a sua conta.',
-            'SEND'              => 'Definir nova password e registrar'
+            'SEND'              => 'Definir nova password e registrar',
         ],
 
         'HASH_FAILED'       => 'Falhou o hashing da password. Por favor contacte um administrador do site.',
         'INVALID'           => 'A password atual não coincide com a que temos em sistema',
         'NEW'               => 'Nova Password',
         'NOTHING_TO_UPDATE' => 'Não pode atualizar para a mesma password',
-        'UPDATED'           => 'Password da conta foi atualizada'
+        'UPDATED'           => 'Password da conta foi atualizada',
     ],
 
     'REGISTER'      => 'Registrar',
@@ -137,7 +137,7 @@ return [
         'COMPLETE_TYPE2'    => 'Registrou-se com sucesso. Receberá em breve um email de verificação contendo um link para verificar a sua conta.  Não será possível iniciar sessão até completar este passo.',
         'DISABLED'          => 'Lamentamos, o registro de novas contas foi desativado.',
         'LOGOUT'            => 'Não pode registrar uma nova conta enquanto tiver sessão iniciada. Por favor feche a sua sessão primeiro.',
-        'WELCOME'           => 'O registro é rápido e simples.'
+        'WELCOME'           => 'O registro é rápido e simples.',
     ],
 
     'RATE_LIMIT_EXCEEDED'       => 'Excedeu o número de tentativas para esta ação.  Tem de aguardar {{delay}} segundos até lhe ser permitida nova tentativa.',
@@ -157,12 +157,12 @@ return [
 
         'CHOOSE'  => 'Escolha um nome de utilizador único',
         'INVALID' => 'Nome de utilizador inválido',
-        'IN_USE'  => 'O nome de utilizador <strong>{{user_name}}</strong> já se encontra em uso.'
+        'IN_USE'  => 'O nome de utilizador <strong>{{user_name}}</strong> já se encontra em uso.',
     ],
 
     'USER_ID_INVALID'       => 'O id de utilizador solicitado não existe.',
     'USER_OR_EMAIL_INVALID' => 'Nome de utilizador ou endereço de email inválidos.',
     'USER_OR_PASS_INVALID'  => 'Nome de utilizador ou password inválidos.',
 
-    'WELCOME' => 'Bem-vindo, {{first_name}}'
+    'WELCOME' => 'Bem-vindo, {{first_name}}',
 ];

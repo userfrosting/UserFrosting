@@ -15,6 +15,6 @@
  */
 return [
     'VALIDATE' => [
-        'PASSWORD_MISMATCH' => 'A password e respetiva confirmação têm de coincidir.'
-    ]
+        'PASSWORD_MISMATCH' => 'A password e respetiva confirmação têm de coincidir.',
+    ],
 ];

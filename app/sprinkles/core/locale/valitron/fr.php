@@ -38,5 +38,5 @@ return [
     'creditCard'    => 'doit être un numéro de carte de crédit valide',
     'lengthMin'     => 'doit contenir plus de %d caractères',
     'lengthMax'     => 'doit contenir moins de %d caractères',
-    'instanceOf'    => "doit être une instance de '%s'"
+    'instanceOf'    => "doit être une instance de '%s'",
 ];

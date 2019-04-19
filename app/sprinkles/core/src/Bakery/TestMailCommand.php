@@ -54,7 +54,7 @@ class TestMailCommand extends BaseCommand
         $message->from($config['address_book.admin'])
                 ->addEmailRecipient(new EmailRecipient($to, $to))
                 ->addParams([
-                    'request_date' => Carbon::now()->format('Y-m-d H:i:s')
+                    'request_date' => Carbon::now()->format('Y-m-d H:i:s'),
                 ]);
 
         try {

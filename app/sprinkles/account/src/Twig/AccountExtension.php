@@ -58,7 +58,7 @@ class AccountExtension extends \Twig_Extension implements \Twig_Extension_Global
                 $authenticator = $this->services->authenticator;
 
                 return $authenticator->check();
-            })
+            }),
         ];
     }
 
@@ -71,7 +71,7 @@ class AccountExtension extends \Twig_Extension implements \Twig_Extension_Global
         }
 
         return [
-            'current_user'   => $currentUser
+            'current_user'   => $currentUser,
         ];
     }
 }

@@ -84,7 +84,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
 
                 // Debugger info
                 $currentArgInfo = [
-                    'expression' => $argString
+                    'expression' => $argString,
                 ];
                 // Resolve parameter placeholders ('variable' names (either single-word or array-dot identifiers))
                 if (($arg->value instanceof \PhpParser\Node\Expr\BinaryOp\Concat) || ($arg->value instanceof \PhpParser\Node\Expr\ConstFetch)) {

@@ -22,7 +22,7 @@ return [
         '@TRANSLATION' => 'รหัสยืนยัน',
         'FAIL'         => 'คุณยังกรอกรหัสยืนยันไม่ถูกต้อง',
         'SPECIFY'      => 'กรอกรหัสยืนยัน',
-        'VERIFY'       => 'ตรวจสอบรหัสยืนยัน'
+        'VERIFY'       => 'ตรวจสอบรหัสยืนยัน',
     ],
 
     'CSRF_MISSING' => 'ไม่พบโทเคน CSRF กรุณารีเฟรชแล้วส่งข้อมูลใหม่',
@@ -31,12 +31,12 @@ return [
     'DESCRIPTION'   => 'รายละเอียด',
     'DOWNLOAD'      => [
         '@TRANSLATION' => 'ดาวน์โหลด',
-        'CSV'          => 'ดาวน์โหลด CSV'
+        'CSV'          => 'ดาวน์โหลด CSV',
     ],
 
     'EMAIL' => [
         '@TRANSLATION' => 'อีเมล',
-        'YOUR'         => 'ที่อยู่อีเมลของคุณ'
+        'YOUR'         => 'ที่อยู่อีเมลของคุณ',
     ],
 
     'HOME'  => 'หน้าแรก',
@@ -44,7 +44,7 @@ return [
     'LEGAL' => 'นโยบายทางกฎหมาย',
 
     'LOCALE' => [
-        '@TRANSLATION' => 'ภาษา'
+        '@TRANSLATION' => 'ภาษา',
     ],
 
     'NAME'       => 'ชื่อ',
@@ -53,7 +53,7 @@ return [
     'PAGINATION' => [
         'GOTO'   => 'ข้ามไปยังหน้า',
         'SHOW'   => 'แสดง',
-        'OUTPUT' => '{startRow} to {endRow} of {filteredRows} ({totalRows})'
+        'OUTPUT' => '{startRow} to {endRow} of {filteredRows} ({totalRows})',
     ],
     'PRIVACY' => 'นโยบายความเป็นส่วนตัว',
 
@@ -100,5 +100,5 @@ return [
 
     // Misc.
     'BUILT_WITH_UF'     => 'สร้างด้วย <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY' => 'ธีมโดย <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a></strong> สงวนลิขสิทธิ์'
+    'ADMINLTE_THEME_BY' => 'ธีมโดย <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a></strong> สงวนลิขสิทธิ์',
 ];

@@ -146,7 +146,7 @@ class DebugCommand extends BaseCommand
             'PORT : ' . $config['db.default.port'],
             'DATABASE : ' . $config['db.default.database'],
             'USERNAME : ' . $config['db.default.username'],
-            'PASSWORD : ' . ($config['db.default.password'] ? '*********' : '')
+            'PASSWORD : ' . ($config['db.default.password'] ? '*********' : ''),
         ]);
     }
 }

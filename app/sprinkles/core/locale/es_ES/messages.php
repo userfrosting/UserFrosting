@@ -23,7 +23,7 @@ return [
         '@TRANSLATION' => 'Captcha',
         'FAIL'         => 'No has introducido correctamente el código de captcha.',
         'SPECIFY'      => 'Introduzce el captcha',
-        'VERIFY'       => 'Verificar el captcha'
+        'VERIFY'       => 'Verificar el captcha',
     ],
 
     'CSRF_MISSING' => '¿Falta el símbolo CSRF?. Intenta refrescar la página y luego volver a enviarla',
@@ -32,12 +32,12 @@ return [
     'DESCRIPTION'   => 'Descripción',
     'DOWNLOAD'      => [
         '@TRANSLATION' => 'Descargar',
-        'CSV'          => 'Descargar CSV'
+        'CSV'          => 'Descargar CSV',
     ],
 
     'EMAIL' => [
         '@TRANSLATION' => 'Email',
-        'YOUR'         => 'Tu correo electrónico'
+        'YOUR'         => 'Tu correo electrónico',
     ],
 
     'HOME'  => 'Inicio',
@@ -45,7 +45,7 @@ return [
     'LEGAL' => 'Política Legal',
 
     'LOCALE' => [
-        '@TRANSLATION' => 'Traducción'
+        '@TRANSLATION' => 'Traducción',
     ],
 
     'MAIL_ERROR' => 'Error fatal al intentar enviar correo, ponte en contacto con el administrador del servidor. Si eres el administrador, comprueba el registro de correo de UF.',
@@ -64,7 +64,7 @@ return [
         'NEXT'     => 'Siguiente página',
         'PREVIOUS' => 'Pagina anterior',
         'FIRST'    => 'Primera página',
-        'LAST'     => 'Última página'
+        'LAST'     => 'Última página',
     ],
     'PRIVACY' => 'Política de privacidad',
 
@@ -113,5 +113,5 @@ return [
 
     // Misc.
     'BUILT_WITH_UF'     => 'Construido con <a href="http://www.userfrosting.com"> UserFrosting </a>',
-    'ADMINLTE_THEME_BY' => 'Theme by <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved'
+    'ADMINLTE_THEME_BY' => 'Theme by <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved',
 ];

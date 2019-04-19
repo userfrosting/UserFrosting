@@ -163,7 +163,7 @@ class Seeder
         return [
             'name'     => $name,
             'class'    => "\\UserFrosting\\Sprinkle\\$sprinkleName\\Database\\Seeds\\$className",
-            'sprinkle' => $sprinkleName
+            'sprinkle' => $sprinkleName,
         ];
     }
 }

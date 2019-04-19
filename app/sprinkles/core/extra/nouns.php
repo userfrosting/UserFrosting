@@ -94,5 +94,5 @@ return [
     'wigeon',
     'woodpecker',
     'wren',
-    'yellowlegs'
+    'yellowlegs',
 ];

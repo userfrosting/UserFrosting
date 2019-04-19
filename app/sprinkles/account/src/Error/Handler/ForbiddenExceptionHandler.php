@@ -28,7 +28,7 @@ class ForbiddenExceptionHandler extends HttpExceptionHandler
     protected function determineUserMessages()
     {
         return [
-            new UserMessage('ACCOUNT.ACCESS_DENIED')
+            new UserMessage('ACCOUNT.ACCESS_DENIED'),
         ];
     }
 }

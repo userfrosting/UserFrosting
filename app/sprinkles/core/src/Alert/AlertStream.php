@@ -70,7 +70,7 @@ abstract class AlertStream
         $messages = $this->messages();
         $messages[] = [
             'type'    => $type,
-            'message' => $message
+            'message' => $message,
         ];
         $this->saveMessages($messages);
 

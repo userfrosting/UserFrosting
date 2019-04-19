@@ -31,7 +31,7 @@ class PermissionsTable extends Migration
      */
     public static $dependencies = [
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RolesTable',
-        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PermissionRolesTable'
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PermissionRolesTable',
     ];
 
     /**

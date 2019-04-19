@@ -37,7 +37,7 @@ class Activity extends Model
         'user_id',
         'type',
         'occurred_at',
-        'description'
+        'description',
     ];
 
     /**

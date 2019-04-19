@@ -111,7 +111,7 @@ abstract class TokenRepository
 
         $model->fill([
             'completed'    => true,
-            'completed_at' => Carbon::now()
+            'completed_at' => Carbon::now(),
         ]);
 
         $model->save();
@@ -145,7 +145,7 @@ abstract class TokenRepository
         $model->fill([
             'hash'       => $hash,
             'completed'  => false,
-            'expires_at' => $expiresAt
+            'expires_at' => $expiresAt,
         ]);
 
         $model->user_id = $user->id;

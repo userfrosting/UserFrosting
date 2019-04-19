@@ -20,14 +20,14 @@ return [
 
        'LAST' => 'Última atividade',
        'PAGE' => 'Lista de atividade dos utilizadores',
-       'TIME' => 'Tempo da Atividade'
+       'TIME' => 'Tempo da Atividade',
     ],
 
     'CACHE' => [
         'CLEAR'             => 'Limpar cache',
         'CLEAR_CONFIRM'     => 'Tem a certeza que pretende limpar a cache do site?',
         'CLEAR_CONFIRM_YES' => 'Sim, limpar cache',
-        'CLEARED'           => 'Cache limpa com sucesso!'
+        'CLEARED'           => 'Cache limpa com sucesso!',
     ],
 
     'DASHBOARD'             => 'Painel de Controlo',
@@ -56,13 +56,13 @@ return [
         //"MANAGE"        => "Manage group",
         'NAME'             => 'Nome do grupo',
         'NAME_EXPLAIN'     => 'Por favor introduza um nome para o grupo',
-        'PAGE_DESCRIPTION' => 'Lista de grupos do site. Contém opções para editar e remover grupos.'
+        'PAGE_DESCRIPTION' => 'Lista de grupos do site. Contém opções para editar e remover grupos.',
     ],
 
     'MANUALLY_ACTIVATED'    => 'A conta de {{user_name}} foi ativada manualmente.',
     'MASTER_ACCOUNT_EXISTS' => 'A contra principal já existe!',
     'MIGRATION'             => [
-        'REQUIRED'          => 'É necessário uma atualização da base de dados.'
+        'REQUIRED'          => 'É necessário uma atualização da base de dados.',
     ],
 
     'PERMISSION' => [
@@ -73,7 +73,7 @@ return [
         'HOOK_CONDITION'    => 'Hook/Condições',
         'MANAGE'            => 'Gerir permissões',
         'PAGE_DESCRIPTION'  => 'Lista de permissões do site.  Contém opções para editar e remover permissões.',
-        'UPDATE'            => 'Atualizar permissões'
+        'UPDATE'            => 'Atualizar permissões',
     ],
 
     'ROLE' => [
@@ -94,7 +94,7 @@ return [
         'NAME_EXPLAIN'        => 'Por favor introduza um nome para o cargo',
         'PAGE_DESCRIPTION'    => 'Lista de cargos do site.  Contém opções para editar e remover cargos.',
         'UPDATE'              => 'Atualizar cargos',
-        'UPDATED'             => 'Cargo <strong>{{name}}</strong> atualizado'
+        'UPDATED'             => 'Cargo <strong>{{name}}</strong> atualizado',
     ],
 
     'SYSTEM_INFO' => [
@@ -107,7 +107,7 @@ return [
         'SERVER'        => 'Software do servidor web',
         'SPRINKLES'     => 'Sprinkles carregados',
         'UF_VERSION'    => 'Versão do UserFrosting',
-        'URL'           => 'Raiz (url) do site'
+        'URL'           => 'Raiz (url) do site',
     ],
 
     'USER' => [
@@ -117,7 +117,7 @@ return [
         'ADMIN' => [
             'CHANGE_PASSWORD'    => 'Alterar password',
             'SEND_PASSWORD_LINK' => 'Enviar um link ao utilizador que lhe permita escolher a sua password',
-            'SET_PASSWORD'       => 'Definir a password do utilizador como'
+            'SET_PASSWORD'       => 'Definir a password do utilizador como',
         ],
 
         'ACTIVATE'          => 'Ativar utilizador',
@@ -131,11 +131,11 @@ return [
         'INFO_PAGE'         => 'Página informativa do utilizador {{name}}',
         'PAGE_DESCRIPTION'  => 'Lista de utilizadores do site.  Contém opções para editar detalhes, ativar/desativar utilizadores e outras.',
         'LATEST'            => 'Últimos Utilizadores',
-        'VIEW_ALL'          => 'Ver todos os utilizadores'
+        'VIEW_ALL'          => 'Ver todos os utilizadores',
     ],
     'X_USER' => [
         0 => 'Nenhum utilizador',
         1 => '{{plural}} utilizador',
-        2 => '{{plural}} utilizadores'
-    ]
+        2 => '{{plural}} utilizadores',
+    ],
 ];

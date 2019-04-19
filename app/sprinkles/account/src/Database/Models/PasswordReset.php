@@ -35,7 +35,7 @@ class PasswordReset extends Model
         'hash',
         'completed',
         'expires_at',
-        'completed_at'
+        'completed_at',
     ];
 
     /**

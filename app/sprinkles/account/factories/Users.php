@@ -21,5 +21,5 @@ $fm->define('UserFrosting\Sprinkle\Account\Database\Models\User')->setDefinition
     'locale'        => 'en_US',
     'flag_verified' => 1,
     'flag_enabled'  => 1,
-    'password'      => Faker::password()
+    'password'      => Faker::password(),
 ]);

@@ -80,7 +80,7 @@ class SetupDbCommand extends BaseCommand
             'DB_HOST'     => ($dotenvEditor->keyExists('DB_HOST')) ? $dotenvEditor->getValue('DB_HOST') : '',
             'DB_NAME'     => ($dotenvEditor->keyExists('DB_NAME')) ? $dotenvEditor->getValue('DB_NAME') : '',
             'DB_USER'     => ($dotenvEditor->keyExists('DB_USER')) ? $dotenvEditor->getValue('DB_USER') : '',
-            'DB_PASSWORD' => ($dotenvEditor->keyExists('DB_PASSWORD')) ? $dotenvEditor->getValue('DB_PASSWORD') : ''
+            'DB_PASSWORD' => ($dotenvEditor->keyExists('DB_PASSWORD')) ? $dotenvEditor->getValue('DB_PASSWORD') : '',
         ];
 
         // There may be some custom config or global env values defined on the server.
@@ -118,7 +118,7 @@ class SetupDbCommand extends BaseCommand
             'DB_PORT'     => $dbParams['port'],
             'DB_NAME'     => $dbParams['database'],
             'DB_USER'     => $dbParams['username'],
-            'DB_PASSWORD' => $dbParams['password']
+            'DB_PASSWORD' => $dbParams['password'],
         ];
 
         foreach ($fileContent as $key => $value) {
@@ -172,7 +172,7 @@ class SetupDbCommand extends BaseCommand
                 'port'     => '',
                 'database' => $name,
                 'username' => '',
-                'password' => ''
+                'password' => '',
             ];
         } else {
             $defaultPort = $driver['defaultPort'];
@@ -193,7 +193,7 @@ class SetupDbCommand extends BaseCommand
                 'database' => $name,
                 'username' => $user,
                 'password' => $password,
-                'charset'  => $this->ci->config['db.default.charset'] // Used when replacing config later
+                'charset'  => $this->ci->config['db.default.charset'], // Used when replacing config later
             ];
         }
     }
@@ -241,26 +241,26 @@ class SetupDbCommand extends BaseCommand
                 'driver'        => 'mysql',
                 'name'          => 'MySQL / MariaDB',
                 'defaultDBName' => 'userfrosting',
-                'defaultPort'   => 3306
+                'defaultPort'   => 3306,
             ],
             [
                 'driver'        => 'pgsql',
                 'name'          => 'ProgreSQL',
                 'defaultDBName' => 'userfrosting',
-                'defaultPort'   => 5432
+                'defaultPort'   => 5432,
             ],
             [
                 'driver'        => 'sqlsrv',
                 'name'          => 'SQL Server',
                 'defaultDBName' => 'userfrosting',
-                'defaultPort'   => 1433
+                'defaultPort'   => 1433,
             ],
             [
                 'driver'        => 'sqlite',
                 'name'          => 'SQLite',
                 'defaultDBName' => \UserFrosting\DB_DIR . \UserFrosting\DS . 'userfrosting.db',
-                'defaultPort'   => null
-            ]
+                'defaultPort'   => null,
+            ],
         ]);
     }
 

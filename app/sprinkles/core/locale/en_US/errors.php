@@ -28,14 +28,14 @@ return [
             'DESCRIPTION' => "We can't seem to find what you're looking for.",
             'DETAIL'      => 'We tried to find your page...',
             'EXPLAIN'     => 'We could not find the page you were looking for.',
-            'RETURN'      => 'Either way, click <a href="{{url}}">here</a> to return to the front page.'
+            'RETURN'      => 'Either way, click <a href="{{url}}">here</a> to return to the front page.',
         ],
 
         'CONFIG' => [
             'TITLE'       => 'UserFrosting Configuration Issue!',
             'DESCRIPTION' => 'Some UserFrosting configuration requirements have not been met.',
             'DETAIL'      => "Something's not right here.",
-            'RETURN'      => 'Please fix the following errors, then <a href="{{url}}">reload</a>.'
+            'RETURN'      => 'Please fix the following errors, then <a href="{{url}}">reload</a>.',
         ],
 
         'DESCRIPTION' => "We've sensed a great disturbance in the Force.",
@@ -49,6 +49,6 @@ return [
 
         'SERVER' => "Oops, looks like our server might have goofed. If you're an admin, please check the PHP or UserFrosting logs.",
 
-        'TITLE' => 'Disturbance in the Force'
-    ]
+        'TITLE' => 'Disturbance in the Force',
+    ],
 ];

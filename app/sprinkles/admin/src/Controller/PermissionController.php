@@ -187,7 +187,7 @@ class PermissionController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'pages/permission.html.twig', [
-            'permission' => $permission
+            'permission' => $permission,
         ]);
     }
 

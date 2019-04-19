@@ -28,7 +28,7 @@ return [
         'SPRUNJE'                       => [
             'BAD_FILTER'                => '<strong>{{name}}</strong> ist kein gültiger Filter für dieses Sprunje.',
             'BAD_LIST'                  => '<strong>{{name}}</strong> ist kein gültige Liste für dieses Sprunje.',
-            'BAD_SORT'                  => '<strong>{{name}}</strong> ist kein gültiges Sortierungsfeld für dieses Sprunje.'
-        ]
-    ]
+            'BAD_SORT'                  => '<strong>{{name}}</strong> ist kein gültiges Sortierungsfeld für dieses Sprunje.',
+        ],
+    ],
 ];
