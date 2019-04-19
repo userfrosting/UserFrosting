@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -36,7 +37,7 @@ class DatabaseSessionHandler extends LaravelDatabaseSessionHandler
 
             return base64_decode($session->payload);
         }
-        
+
         return '';
     }
 }

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -1039,11 +1040,11 @@ class UserController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'pages/user.html.twig', [
-            'user'    => $user,
-            'locales' => $locales,
-            'fields'  => $fields,
-            'tools'   => $editButtons,
-            'widgets' => $widgets,
+            'user'            => $user,
+            'locales'         => $locales,
+            'fields'          => $fields,
+            'tools'           => $editButtons,
+            'widgets'         => $widgets,
             'delete_redirect' => $this->ci->router->pathFor('uri_users')
         ]);
     }

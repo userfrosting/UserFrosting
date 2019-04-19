@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -50,7 +51,7 @@ class Seeder
     public function getSeeds()
     {
         $seeds = $this->ci->locator->listResources($this->scheme, false, false);
-        
+
         return $this->loadSeeders($seeds);
     }
 

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,7 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Core\Sprunje;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use League\Csv\Writer;
 use Psr\Http\Message\ResponseInterface as Response;
