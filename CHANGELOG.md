@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Remove any persistences when forceDeleting user to prevent Foreign Key Constraints issue ([#963])
 - More helpful error message in checkEnvironment.php (Thanks @amosfolz; [#958])
 - Hide locale select from UI if only one locale is available (Thanks @avsdev-cw; [#968])
+- Download CSV filename error ([#893])
 
 ## [v4.2.0]
 ### Changed Requirements
@@ -720,6 +721,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#869]: https://github.com/userfrosting/UserFrosting/issues/869
 [#872]: https://github.com/userfrosting/UserFrosting/issues/872
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
+[#893]: https://github.com/userfrosting/UserFrosting/issues/893
 [#919]: https://github.com/userfrosting/UserFrosting/issues/919
 [#940]: https://github.com/userfrosting/UserFrosting/issues/940
 [#950]: https://github.com/userfrosting/UserFrosting/issues/950
