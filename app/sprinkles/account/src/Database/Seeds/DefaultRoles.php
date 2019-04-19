@@ -10,11 +10,11 @@
 
 namespace UserFrosting\Sprinkle\Account\Database\Seeds;
 
-use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
+use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 
 /**
- * Seeder for the default roles
+ * Seeder for the default roles.
  */
 class DefaultRoles extends BaseSeed
 {

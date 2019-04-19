@@ -21,7 +21,7 @@ use UserFrosting\System\Bakery\BaseCommand;
 /**
  * route:list Bakery Command
  * Generate a list all registered routes
- * Inspired by Laravel `route:list` artisan command
+ * Inspired by Laravel `route:list` artisan command.
  *
  * @author Jose Vasconcellos
  * @author Louis Charette
@@ -84,8 +84,9 @@ class RouteListCommand extends BaseCommand
     /**
      * Get the route information for a given route.
      *
-     * @param  Route          $route
-     * @param  InputInterface $input [description]
+     * @param Route          $route
+     * @param InputInterface $input [description]
+     *
      * @return array
      */
     protected function getRouteInformation(Route $route, InputInterface $input)
@@ -101,8 +102,9 @@ class RouteListCommand extends BaseCommand
     /**
      * Sort the routes by a given element.
      *
-     * @param  string $sort
-     * @param  array  $routes
+     * @param string $sort
+     * @param array  $routes
+     *
      * @return array
      */
     protected function sortRoutes($sort, $routes)
@@ -115,8 +117,9 @@ class RouteListCommand extends BaseCommand
     /**
      * Filter the route by URI and / or name.
      *
-     * @param  array          $route
-     * @param  InputInterface $input [description]
+     * @param array          $route
+     * @param InputInterface $input [description]
+     *
      * @return array|null
      */
     protected function filterRoute(array $route, InputInterface $input)

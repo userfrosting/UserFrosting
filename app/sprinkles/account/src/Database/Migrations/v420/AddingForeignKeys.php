@@ -10,13 +10,13 @@
 
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v420;
 
-use UserFrosting\Sprinkle\Core\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
  * Foreign Keys migration
  * Adds missing foreign keys from 4.0.0 migrations
- * Version 4.2.0
+ * Version 4.2.0.
  */
 class AddingForeignKeys extends Migration
 {

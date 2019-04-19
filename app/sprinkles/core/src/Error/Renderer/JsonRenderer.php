@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 /**
- * Default JSON Error Renderer
+ * Default JSON Error Renderer.
  */
 class JsonRenderer extends ErrorRenderer
 {
@@ -26,7 +26,8 @@ class JsonRenderer extends ErrorRenderer
     }
 
     /**
-     * @param  string $message
+     * @param string $message
+     *
      * @return string
      */
     public function formatExceptionPayload($message)
@@ -45,7 +46,8 @@ class JsonRenderer extends ErrorRenderer
     }
 
     /**
-     * @param  \Exception|\Throwable $e
+     * @param \Exception|\Throwable $e
+     *
      * @return array
      */
     public function formatExceptionFragment($e)

@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 /**
- * MigrationRollbackDependencyAnalyser Class
+ * MigrationRollbackDependencyAnalyser Class.
  *
  * Helper class used to analyse migrations rollback dependencies and return the
  * list of migrations classes that prevent the specified migrations to be rolledback
@@ -21,7 +21,7 @@ namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 class MigrationRollbackDependencyAnalyser extends MigrationDependencyAnalyser
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $installed The installed migrations
      * @param array $rollback  The migrations to rollback
@@ -39,8 +39,9 @@ class MigrationRollbackDependencyAnalyser extends MigrationDependencyAnalyser
      * represent the same thing as "up" dependencies. fulfillable can be
      * rolledback, unfulfillable cannot.
      *
-     * @param  string $migrationName The migration classname
-     * @return bool   True/False if the migration is fulfillable
+     * @param string $migrationName The migration classname
+     *
+     * @return bool True/False if the migration is fulfillable
      */
     protected function validateClassDependencies($migrationName)
     {

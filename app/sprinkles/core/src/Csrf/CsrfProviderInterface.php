@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 
 /**
- * CSRF Provider interface
+ * CSRF Provider interface.
  *
  * CSRF Providers
  */
@@ -23,16 +23,17 @@ interface CsrfProviderInterface
 {
     /**
      * Setup the CSRF service.
-     * Returns the CSRF Guard which will be added to the app later
+     * Returns the CSRF Guard which will be added to the app later.
      *
-     * @param  ContainerInterface $ci
-     * @return mixed              The csrf guard
+     * @param ContainerInterface $ci
+     *
+     * @return mixed The csrf guard
      */
     public static function setupService(ContainerInterface $ci);
 
     /**
      * Register middleware.
-     * Add the guard to the app as a middleware
+     * Add the guard to the app as a middleware.
      *
      * @param App     $app
      * @param Request $request

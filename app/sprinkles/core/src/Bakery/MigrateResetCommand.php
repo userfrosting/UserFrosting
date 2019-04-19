@@ -11,12 +11,12 @@
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * migrate:reset Bakery Command
- * Reset the database to a clean state
+ * Reset the database to a clean state.
  *
  * @author Louis Charette
  */
@@ -51,7 +51,7 @@ class MigrateResetCommand extends MigrateCommand
     }
 
     /**
-     * Reset the whole database to an empty state by rolling back all migrations
+     * Reset the whole database to an empty state by rolling back all migrations.
      *
      * @param InputInterface $input
      */
@@ -111,7 +111,7 @@ class MigrateResetCommand extends MigrateCommand
     }
 
     /**
-     * Hard reset the whole database to an empty state by dropping all tables
+     * Hard reset the whole database to an empty state by dropping all tables.
      *
      * @param InputInterface $input
      */

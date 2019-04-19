@@ -14,7 +14,7 @@ use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventSubscriberInterface;
 
 /**
- * Sprinkle class
+ * Sprinkle class.
  *
  * Represents a sprinkle (plugin, theme, site, etc), and the code required to boot up that sprinkle.
  *

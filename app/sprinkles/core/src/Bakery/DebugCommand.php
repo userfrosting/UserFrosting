@@ -65,7 +65,7 @@ class DebugCommand extends BaseCommand
 
     /**
      * Check the minimum version of php.
-     * This is done by composer itself, but we do it again for good mesure
+     * This is done by composer itself, but we do it again for good mesure.
      */
     protected function checkPhpVersion()
     {
@@ -83,7 +83,7 @@ class DebugCommand extends BaseCommand
 
     /**
      * List all sprinkles defined in the Sprinkles schema file,
-     * making sure this file exist at the same time
+     * making sure this file exist at the same time.
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
@@ -131,7 +131,7 @@ class DebugCommand extends BaseCommand
     }
 
     /**
-     * Display database config as for debug purposes
+     * Display database config as for debug purposes.
      */
     protected function showConfig()
     {

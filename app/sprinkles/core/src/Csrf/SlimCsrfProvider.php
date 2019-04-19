@@ -24,6 +24,7 @@ class SlimCsrfProvider implements CsrfProviderInterface
 {
     /**
      * {@inheritdoc}
+     *
      * @return \Slim\Csrf\Guard
      */
     public static function setupService(ContainerInterface $ci)
@@ -43,8 +44,8 @@ class SlimCsrfProvider implements CsrfProviderInterface
         $onFailure = function ($request, $response, $next) {
             $e = new BadRequestException('The CSRF code was invalid or not provided.');
             $e->addUserMessage('CSRF_MISSING');
-            throw $e;
 
+            throw $e;
             return $next($request, $response);
         };
 

@@ -21,7 +21,7 @@ use UserFrosting\Support\Message\UserMessage;
 class HttpExceptionHandler extends ExceptionHandler
 {
     /**
-     * For HttpExceptions, only write to the error log if the status code is 500
+     * For HttpExceptions, only write to the error log if the status code is 500.
      */
     public function writeToErrorLog()
     {

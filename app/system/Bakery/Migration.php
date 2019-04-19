@@ -11,8 +11,8 @@
 namespace UserFrosting\System\Bakery;
 
 use Illuminate\Database\Schema\Builder;
-use UserFrosting\Sprinkle\Core\Database\Migration as NewMigration;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use UserFrosting\Sprinkle\Core\Database\Migration as NewMigration;
 use UserFrosting\Sprinkle\Core\Facades\Config;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 
@@ -20,12 +20,13 @@ use UserFrosting\Sprinkle\Core\Facades\Debug;
  * Abstract Migration class.
  *
  * @deprecated since 4.2.0 Use `UserFrosting\Sprinkle\Core\Database\Migration` instead
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 abstract class Migration extends NewMigration
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param Builder|null      $schema The schema builder
      * @param SymfonyStyle|null $io     The SymfonyStyle instance

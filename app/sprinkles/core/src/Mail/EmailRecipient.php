@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 /**
- * EmailRecipient Class
+ * EmailRecipient Class.
  *
  * A class representing a recipient for a MailMessage, with associated parameters.
  *

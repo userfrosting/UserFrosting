@@ -10,7 +10,7 @@
 
 use UserFrosting\Sprinkle\Core\Util\NoCache;
 
-/**
+/*
  * Routes for administrative group management.
  */
 $app->group('/groups', function () {

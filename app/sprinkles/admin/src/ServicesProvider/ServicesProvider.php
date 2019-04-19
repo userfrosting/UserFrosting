@@ -28,7 +28,7 @@ class ServicesProvider
      */
     public function register(ContainerInterface $container)
     {
-        /**
+        /*
          * Extend the 'classMapper' service to register sprunje classes.
          *
          * Mappings added: 'activity_sprunje', 'group_sprunje', 'permission_sprunje', 'role_sprunje', 'user_sprunje'
@@ -47,7 +47,7 @@ class ServicesProvider
             return $classMapper;
         });
 
-        /**
+        /*
          * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
          *
          * Overrides the service definition in the account Sprinkle.
@@ -55,7 +55,7 @@ class ServicesProvider
          * @return callable
          */
         $container['redirect.onLogin'] = function ($c) {
-            /**
+            /*
              * This method is invoked when a user completes the login process.
              *
              * Returns a callback that handles setting the `UF-Redirect` header after a successful login.

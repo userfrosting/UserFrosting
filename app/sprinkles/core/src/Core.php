@@ -10,13 +10,13 @@
 
 namespace UserFrosting\Sprinkle\Core;
 
+use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\Event;
 use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\System\Sprinkle\Sprinkle;
-use Interop\Container\ContainerInterface;
 
 /**
  * Bootstrapper class for the core sprinkle.
@@ -106,7 +106,7 @@ class Core extends Sprinkle
     }
 
     /**
-     * Register routes
+     * Register routes.
      *
      * @param Event $event
      */
@@ -126,7 +126,7 @@ class Core extends Sprinkle
     }
 
     /**
-     * Register Core sprinkle locator streams
+     * Register Core sprinkle locator streams.
      */
     protected function registerStreams()
     {

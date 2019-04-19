@@ -13,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Facades;
 use UserFrosting\System\Facade;
 
 /**
- * Implements facade for the "filesystem" service
+ * Implements facade for the "filesystem" service.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */

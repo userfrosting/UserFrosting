@@ -13,7 +13,7 @@ namespace UserFrosting\Sprinkle\Admin\Sprunje;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * GroupSprunje
+ * GroupSprunje.
  *
  * Implements Sprunje for the groups API.
  *

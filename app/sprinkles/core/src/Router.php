@@ -13,13 +13,14 @@ namespace UserFrosting\Sprinkle\Core;
 use Illuminate\Filesystem\Filesystem;
 use InvalidArgumentException;
 use Slim\App;
-use Slim\Interfaces\RouterInterface;
 use Slim\Interfaces\RouteInterface;
+use Slim\Interfaces\RouterInterface;
 
 /**
- * Router
+ * Router.
  *
  * This class extends Slim's router, to permit overriding of routes with the same signature.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Router extends \Slim\Router implements RouterInterface
@@ -30,13 +31,14 @@ class Router extends \Slim\Router implements RouterInterface
     protected $identifiers;
 
     /**
-     * Add route
+     * Add route.
      *
      * @param string[] $methods Array of HTTP methods
      * @param string   $pattern The route pattern
      * @param callable $handler The route callable
      *
      * @throws InvalidArgumentException if the route pattern isn't a string
+     *
      * @return RouteInterface
      */
     public function map($methods, $pattern, $handler)
@@ -74,7 +76,7 @@ class Router extends \Slim\Router implements RouterInterface
     }
 
     /**
-     * Delete the cache file
+     * Delete the cache file.
      *
      * @return bool true/false if operation is successfull
      */
@@ -93,7 +95,7 @@ class Router extends \Slim\Router implements RouterInterface
     }
 
     /**
-     * Load all avaialbe routes
+     * Load all avaialbe routes.
      *
      * @param App $slimApp
      */

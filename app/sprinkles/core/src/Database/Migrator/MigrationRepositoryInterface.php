@@ -11,26 +11,28 @@
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 /**
- * MigrationRepository Interface
+ * MigrationRepository Interface.
  *
  * @author Louis Charette
  */
 interface MigrationRepositoryInterface
 {
     /**
-     * Get the list of ran migrations
+     * Get the list of ran migrations.
      *
-     * @param  int    $steps Number of batch to return
-     * @param  string $order asc|desc
-     * @return array  An array of migration class names in the order they where ran
+     * @param int    $steps Number of batch to return
+     * @param string $order asc|desc
+     *
+     * @return array An array of migration class names in the order they where ran
      */
     public function getMigrationsList($steps = -1, $order = 'asc');
 
     /**
      * Get list of migrations.
      *
-     * @param  int    $steps Number of batch to return
-     * @param  string $order asc|desc
+     * @param int    $steps Number of batch to return
+     * @param string $order asc|desc
+     *
      * @return array
      */
     public function getMigrations($steps = -1, $order = 'asc');
@@ -77,7 +79,7 @@ interface MigrationRepositoryInterface
     public function createRepository();
 
     /**
-     * Delete the migration repository data store
+     * Delete the migration repository data store.
      */
     public function deleteRepository();
 

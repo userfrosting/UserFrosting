@@ -18,12 +18,12 @@ namespace UserFrosting\Sprinkle\Core\Database;
 interface MigrationInterface
 {
     /**
-     * Method to apply changes to the database
+     * Method to apply changes to the database.
      */
     public function up();
 
     /**
-     * Method to revert changes applied by the `up` method
+     * Method to revert changes applied by the `up` method.
      */
     public function down();
 }

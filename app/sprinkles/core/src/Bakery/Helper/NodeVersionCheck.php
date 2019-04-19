@@ -11,13 +11,15 @@
 namespace UserFrosting\Sprinkle\Core\Bakery\Helper;
 
 /**
- * Helper trait to check NodeJS and NPM version dependencies
+ * Helper trait to check NodeJS and NPM version dependencies.
+ *
  * @author Louis Charette
  */
 trait NodeVersionCheck
 {
     /**
-     * Check the minimum version requirement of Node installed
+     * Check the minimum version requirement of Node installed.
+     *
      * @param bool $displayVersion
      */
     protected function checkNodeVersion($displayVersion = true)
@@ -35,7 +37,8 @@ trait NodeVersionCheck
     }
 
     /**
-     * Check the minimum version requirement for Npm
+     * Check the minimum version requirement for Npm.
+     *
      * @param bool $displayVersion
      */
     protected function checkNpmVersion($displayVersion = true)

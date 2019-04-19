@@ -15,9 +15,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Default UserFrosting application error handler
+ * Default UserFrosting application error handler.
  *
  * It outputs the error message and diagnostic information in either JSON, XML, or HTML based on the Accept header.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class ExceptionHandlerManager
@@ -38,7 +39,7 @@ class ExceptionHandlerManager
     protected $displayErrorDetails;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param ContainerInterface $ci                  The global container object, which holds all your services.
      * @param bool               $displayErrorDetails Set to true to display full details
@@ -50,11 +51,12 @@ class ExceptionHandlerManager
     }
 
     /**
-     * Invoke error handler
+     * Invoke error handler.
      *
-     * @param  ServerRequestInterface $request   The most recent Request object
-     * @param  ResponseInterface      $response  The most recent Response object
-     * @param  \Throwable             $exception The caught Exception object
+     * @param ServerRequestInterface $request   The most recent Request object
+     * @param ResponseInterface      $response  The most recent Response object
+     * @param \Throwable             $exception The caught Exception object
+     *
      * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $exception)
@@ -79,8 +81,9 @@ class ExceptionHandlerManager
      *
      * The exception handler must implement \UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface.
      *
-     * @param  string                    $exceptionClass The fully qualified class name of the exception to handle.
-     * @param  string                    $handlerClass   The fully qualified class name of the assigned handler.
+     * @param string $exceptionClass The fully qualified class name of the exception to handle.
+     * @param string $handlerClass   The fully qualified class name of the assigned handler.
+     *
      * @throws \InvalidArgumentException If the registered handler fails to implement ExceptionHandlerInterface
      */
     public function registerHandler($exceptionClass, $handlerClass)

@@ -13,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Facades;
 use UserFrosting\System\Facade;
 
 /**
- * Implements facade for the "seeder" service
+ * Implements facade for the "seeder" service.
  *
  * @author Louis Charette
  */

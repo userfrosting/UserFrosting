@@ -10,12 +10,12 @@
 
 namespace UserFrosting\Sprinkle\Core\Database\Seeder;
 
-use Interop\Container\ContainerInterface;
 use Illuminate\Support\Str;
+use Interop\Container\ContainerInterface;
 use UserFrosting\UniformResourceLocator\Resource as ResourceInstance;
 
 /**
- * Seeder Class
+ * Seeder Class.
  *
  * Finds all seeds class across sprinkles
  *
@@ -24,17 +24,17 @@ use UserFrosting\UniformResourceLocator\Resource as ResourceInstance;
 class Seeder
 {
     /**
-     * @var ContainerInterface $ci
+     * @var ContainerInterface
      */
     protected $ci;
 
     /**
-     * @var string $scheme The resource locator scheme
+     * @var string The resource locator scheme
      */
     protected $scheme = 'seeds://';
 
     /**
-     * Class Constructor
+     * Class Constructor.
      *
      * @param ContainerInterface $ci
      */
@@ -44,7 +44,7 @@ class Seeder
     }
 
     /**
-     * Loop all the available sprinkles and return a list of their seeds
+     * Loop all the available sprinkles and return a list of their seeds.
      *
      * @return array An array of all the seed classes found for every sprinkle
      */
@@ -56,11 +56,13 @@ class Seeder
     }
 
     /**
-     * Get a single seed info
+     * Get a single seed info.
      *
-     * @param  string     $name The seed name
+     * @param string $name The seed name
+     *
      * @throws \Exception If seed not found
-     * @return array      The details about a seed file [name, class, sprinkle]
+     *
+     * @return array The details about a seed file [name, class, sprinkle]
      */
     public function getSeed($name)
     {
@@ -77,10 +79,12 @@ class Seeder
     }
 
     /**
-     * Return the class instance of a seed
+     * Return the class instance of a seed.
      *
-     * @param  string        $name The seed name
-     * @throws \Exception    If class doesn't exist or is not right interface
+     * @param string $name The seed name
+     *
+     * @throws \Exception If class doesn't exist or is not right interface
+     *
      * @return SeedInterface The seed class instance
      */
     public function getSeedClass($name)
@@ -106,7 +110,7 @@ class Seeder
     }
 
     /**
-     * Execute a seed class
+     * Execute a seed class.
      *
      * @param SeedInterface $seed The seed to execute
      */
@@ -116,7 +120,7 @@ class Seeder
     }
 
     /**
-     * Execute a seed based on it's name
+     * Execute a seed based on it's name.
      *
      * @param string $seedName
      */
@@ -127,9 +131,10 @@ class Seeder
     }
 
     /**
-     * Process seeder Resource into info
+     * Process seeder Resource into info.
      *
-     * @param  array $seedFiles List of seeds file
+     * @param array $seedFiles List of seeds file
+     *
      * @return array
      */
     protected function loadSeeders(array $seedFiles)
@@ -143,10 +148,11 @@ class Seeder
     }
 
     /**
-     * Return an array of seed details inclusing the classname and the sprinkle name
+     * Return an array of seed details inclusing the classname and the sprinkle name.
      *
-     * @param  ResourceInstance $file The seed file
-     * @return array            The details about a seed file [name, class, sprinkle]
+     * @param ResourceInstance $file The seed file
+     *
+     * @return array The details about a seed file [name, class, sprinkle]
      */
     protected function getSeedDetails(ResourceInstance $file)
     {

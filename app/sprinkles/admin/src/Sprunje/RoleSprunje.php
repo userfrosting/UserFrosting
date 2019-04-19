@@ -14,7 +14,7 @@ use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * RoleSprunje
+ * RoleSprunje.
  *
  * Implements Sprunje for the roles API.
  *
@@ -50,8 +50,9 @@ class RoleSprunje extends Sprunje
     /**
      * Filter LIKE name OR description.
      *
-     * @param  Builder $query
-     * @param  mixed   $value
+     * @param Builder $query
+     * @param mixed   $value
+     *
      * @return self
      */
     protected function filterInfo($query, $value)

@@ -10,7 +10,7 @@
 
 use UserFrosting\Sprinkle\Core\Util\NoCache;
 
-/**
+/*
  * Routes for administrative role management.
  */
 $app->group('/roles', function () {

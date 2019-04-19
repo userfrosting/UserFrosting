@@ -11,8 +11,8 @@
 namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Interop\Container\ContainerInterface;
-use UserFrosting\Sprinkle\Core\Util\Util;
 use UserFrosting\Assets\AssetsTemplatePlugin;
+use UserFrosting\Sprinkle\Core\Util\Util;
 
 /**
  * Extends Twig functionality for the Core sprinkle.

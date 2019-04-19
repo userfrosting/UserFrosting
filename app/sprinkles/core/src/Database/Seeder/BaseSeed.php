@@ -14,19 +14,19 @@ use Interop\Container\ContainerInterface;
 
 /**
  * Seeder Class
- * Base class for seeds
+ * Base class for seeds.
  *
  * @author Louis Charette
  */
 abstract class BaseSeed implements SeedInterface
 {
     /**
-     * @var ContainerInterface $ci
+     * @var ContainerInterface
      */
     protected $ci;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param ContainerInterface $ci
      */
@@ -36,11 +36,13 @@ abstract class BaseSeed implements SeedInterface
     }
 
     /**
-     * Validate if a specific set of migrations have been ran
+     * Validate if a specific set of migrations have been ran.
      *
-     * @param  string|array $migrations List of migraiton or specific migration required
-     * @throws \Exception   If dependent migration is not available
-     * @return bool         True on success
+     * @param string|array $migrations List of migraiton or specific migration required
+     *
+     * @throws \Exception If dependent migration is not available
+     *
+     * @return bool True on success
      */
     protected function validateMigrationDependencies($migrations)
     {
@@ -65,7 +67,7 @@ abstract class BaseSeed implements SeedInterface
     }
 
     /**
-     * Function used to execute the seed
+     * Function used to execute the seed.
      */
     abstract public function run();
 }

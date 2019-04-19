@@ -15,7 +15,7 @@ use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
 
 /**
- * UserFrosting's custom Eloquent Builder Class
+ * UserFrosting's custom Eloquent Builder Class.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -24,7 +24,8 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to sum the relations.
      *
-     * @param  mixed $relations
+     * @param mixed $relations
+     *
      * @return self
      */
     public function withSum($relations)
@@ -37,7 +38,8 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to max the relations.
      *
-     * @param  mixed $relations
+     * @param mixed $relations
+     *
      * @return self
      */
     public function withMax($relations)
@@ -50,7 +52,8 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to min the relations.
      *
-     * @param  mixed $relations
+     * @param mixed $relations
+     *
      * @return self
      */
     public function withMin($relations)
@@ -63,7 +66,8 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to min the relations.
      *
-     * @param  mixed $relations
+     * @param mixed $relations
+     *
      * @return self
      */
     public function withAvg($relations)
@@ -76,8 +80,9 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * use the MySQL aggregate functions including AVG COUNT, SUM, MAX and MIN.
      *
-     * @param  array  $relations
-     * @param  string $function
+     * @param array  $relations
+     * @param string $function
+     *
      * @return self
      */
     public function withAggregate($relations, $function = 'COUNT')

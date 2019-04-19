@@ -17,6 +17,7 @@ use UserFrosting\Sprinkle\Account\Facades\Password;
  * Token repository class for password reset requests.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see https://learn.userfrosting.com/users/user-accounts
  */
 class PasswordResetRepository extends TokenRepository

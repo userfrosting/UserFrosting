@@ -11,16 +11,16 @@
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\System\Bakery\BaseCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Support\DotenvEditor\DotenvEditor;
 use UserFrosting\Support\Repository\Repository as Config;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
+use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * DB Setup Wizard CLI Tools.
- * Helper command to setup database config in .env file
+ * Helper command to setup database config in .env file.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -54,7 +54,7 @@ class SetupDbCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /**
-         * @var Config $config Get config
+         * @var Config Get config
          */
         $config = $this->ci->config;
 
@@ -136,10 +136,11 @@ class SetupDbCommand extends BaseCommand
     }
 
     /**
-     * Ask for database crendentials
+     * Ask for database crendentials.
      *
-     * @param  InputInterface $args Command arguments
-     * @return array          The databse credentials
+     * @param InputInterface $args Command arguments
+     *
+     * @return array The databse credentials
      */
     protected function askForDatabase(InputInterface $args)
     {
@@ -199,11 +200,12 @@ class SetupDbCommand extends BaseCommand
     }
 
     /**
-     * Test new database connecion
+     * Test new database connecion.
      *
-     * @param  array $dbParams       Database params
-     * @param  bool  $displayMessage Display io message
-     * @return bool  Return true if db is successful
+     * @param array $dbParams       Database params
+     * @param bool  $displayMessage Display io message
+     *
+     * @return bool Return true if db is successful
      */
     protected function testDatabase($dbParams, $displayMessage = true)
     {
@@ -265,7 +267,7 @@ class SetupDbCommand extends BaseCommand
     }
 
     /**
-     * Returns a list of available drivers
+     * Returns a list of available drivers.
      *
      * @return array
      */

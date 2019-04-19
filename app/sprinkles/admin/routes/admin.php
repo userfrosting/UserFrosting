@@ -10,7 +10,7 @@
 
 use UserFrosting\Sprinkle\Core\Util\NoCache;
 
-/**
+/*
  * Routes for administrative panel management.
  */
 $app->group('/dashboard', function () {

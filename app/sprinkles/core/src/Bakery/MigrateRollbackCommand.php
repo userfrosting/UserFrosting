@@ -11,12 +11,12 @@
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * migrate:rollback Bakery Command
- * Rollback the last migrations ran against the database
+ * Rollback the last migrations ran against the database.
  *
  * @author Louis Charette
  */

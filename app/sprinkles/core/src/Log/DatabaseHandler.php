@@ -10,8 +10,8 @@
 
 namespace UserFrosting\Sprinkle\Core\Log;
 
-use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Logger;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**

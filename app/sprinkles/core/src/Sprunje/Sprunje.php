@@ -18,7 +18,7 @@ use UserFrosting\Support\Exception\BadRequestException;
 use Valitron\Validator;
 
 /**
- * Sprunje
+ * Sprunje.
  *
  * Implements a versatile API for sorting, filtering, and paginating an Eloquent query builder.
  *
@@ -46,7 +46,7 @@ abstract class Sprunje
     protected $query;
 
     /**
-     * Default HTTP request parameters
+     * Default HTTP request parameters.
      *
      * @var array[string]
      */
@@ -148,6 +148,7 @@ abstract class Sprunje
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
@@ -164,7 +165,8 @@ abstract class Sprunje
     /**
      * Extend the query by providing a callback.
      *
-     * @param  callable $callback A callback which accepts and returns a Builder instance.
+     * @param callable $callback A callback which accepts and returns a Builder instance.
+     *
      * @return self
      */
     public function extendQuery(callable $callback)
@@ -177,7 +179,8 @@ abstract class Sprunje
     /**
      * Execute the query and build the results, and append them in the appropriate format to the response.
      *
-     * @param  Response $response
+     * @param Response $response
+     *
      * @return Response
      */
     public function toResponse(Response $response)
@@ -205,6 +208,7 @@ abstract class Sprunje
      *
      * Returns an array containing `count` (the total number of rows, before filtering), `count_filtered` (the total number of rows after filtering),
      * and `rows` (the filtered result set).
+     *
      * @return mixed[]
      */
     public function getArray()
@@ -281,6 +285,7 @@ abstract class Sprunje
      * Executes the sprunje query, applying all sorts, filters, and pagination.
      *
      * Returns the filtered, paginated result set and the counts.
+     *
      * @return mixed[]
      */
     public function getModels()
@@ -347,7 +352,8 @@ abstract class Sprunje
     /**
      * Set the underlying QueryBuilder object.
      *
-     * @param  Builder $query
+     * @param Builder $query
+     *
      * @return self
      */
     public function setQuery($query)
@@ -360,7 +366,8 @@ abstract class Sprunje
     /**
      * Apply any filters from the options, calling a custom filter callback when appropriate.
      *
-     * @param  Builder $query
+     * @param Builder $query
+     *
      * @return self
      */
     public function applyFilters($query)
@@ -370,6 +377,7 @@ abstract class Sprunje
             if (($name != '_all') && !in_array($name, $this->filterable)) {
                 $e = new BadRequestException();
                 $e->addUserMessage('VALIDATE.SPRUNJE.BAD_FILTER', ['name' => $name]);
+
                 throw $e;
             }
             // Since we want to match _all_ of the fields, we wrap the field callback in a 'where' callback
@@ -384,7 +392,8 @@ abstract class Sprunje
     /**
      * Apply any sorts from the options, calling a custom sorter callback when appropriate.
      *
-     * @param  Builder $query
+     * @param Builder $query
+     *
      * @return self
      */
     public function applySorts($query)
@@ -394,6 +403,7 @@ abstract class Sprunje
             if (!in_array($name, $this->sortable)) {
                 $e = new BadRequestException();
                 $e->addUserMessage('VALIDATE.SPRUNJE.BAD_SORT', ['name' => $name]);
+
                 throw $e;
             }
 
@@ -413,7 +423,8 @@ abstract class Sprunje
     /**
      * Apply pagination based on the `page` and `size` options.
      *
-     * @param  Builder $query
+     * @param Builder $query
+     *
      * @return self
      */
     public function applyPagination($query)
@@ -434,8 +445,9 @@ abstract class Sprunje
     /**
      * Match any filter in `filterable`.
      *
-     * @param  Builder $query
-     * @param  mixed   $value
+     * @param Builder $query
+     * @param mixed   $value
+     *
      * @return self
      */
     protected function filterAll($query, $value)
@@ -455,9 +467,10 @@ abstract class Sprunje
     /**
      * Build the filter query for a single field.
      *
-     * @param  Builder $query
-     * @param  string  $name
-     * @param  mixed   $value
+     * @param Builder $query
+     * @param string  $name
+     * @param mixed   $value
+     *
      * @return self
      */
     protected function buildFilterQuery($query, $name, $value)
@@ -478,9 +491,10 @@ abstract class Sprunje
      * Perform a 'like' query on a single field, separating the value string on the or separator and
      * matching any of the supplied values.
      *
-     * @param  Builder $query
-     * @param  string  $name
-     * @param  mixed   $value
+     * @param Builder $query
+     * @param string  $name
+     * @param mixed   $value
+     *
      * @return self
      */
     protected function buildFilterDefaultFieldQuery($query, $name, $value)
@@ -498,7 +512,8 @@ abstract class Sprunje
     /**
      * Set any transformations you wish to apply to the collection, after the query is executed.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection $collection
+     * @param \Illuminate\Database\Eloquent\Collection $collection
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     protected function applyTransformations($collection)
@@ -517,7 +532,8 @@ abstract class Sprunje
      * Returns a list of distinct values for a specified column.
      * Formats results to have a "value" and "text" attribute.
      *
-     * @param  string $column
+     * @param string $column
+     *
      * @return array
      */
     protected function getColumnValues($column)
@@ -537,7 +553,8 @@ abstract class Sprunje
     /**
      * Get the unpaginated count of items (before filtering) in this query.
      *
-     * @param  Builder $query
+     * @param Builder $query
+     *
      * @return int
      */
     protected function count($query)
@@ -548,7 +565,8 @@ abstract class Sprunje
     /**
      * Get the unpaginated count of items (after filtering) in this query.
      *
-     * @param  Builder $query
+     * @param Builder $query
+     *
      * @return int
      */
     protected function countFiltered($query)
@@ -561,7 +579,9 @@ abstract class Sprunje
      *
      * Returns an array containing `count` (the total number of rows, before filtering), `count_filtered` (the total number of rows after filtering),
      * and `rows` (the filtered result set).
+     *
      * @deprecated since 4.1.7  Use getArray() instead.
+     *
      * @return mixed[]
      */
     public function getResults()

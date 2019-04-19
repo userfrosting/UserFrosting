@@ -15,7 +15,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Body;
 
 /**
- * [abstract description]
+ * [abstract description].
+ *
  * @var [type]
  */
 abstract class ErrorRenderer implements ErrorRendererInterface

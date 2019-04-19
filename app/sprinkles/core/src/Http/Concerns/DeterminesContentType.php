@@ -20,7 +20,7 @@ use Psr\Http\Message\ServerRequestInterface;
 trait DeterminesContentType
 {
     /**
-     * Known handled content types
+     * Known handled content types.
      *
      * @var array
      */
@@ -33,14 +33,15 @@ trait DeterminesContentType
     ];
 
     /**
-     * Determine which content type we know about is wanted using Accept header
+     * Determine which content type we know about is wanted using Accept header.
      *
      * Note: This method is a bare-bones implementation designed specifically for
      * Slim's error handling requirements. Consider a fully-feature solution such
      * as willdurand/negotiation for any other situation.
      *
-     * @param  ServerRequestInterface $request
-     * @param  bool                   $ajaxDebug
+     * @param ServerRequestInterface $request
+     * @param bool                   $ajaxDebug
+     *
      * @return string
      */
     protected function determineContentType(ServerRequestInterface $request, $ajaxDebug = false)

@@ -10,8 +10,8 @@
 
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException;
 
 /**
@@ -39,9 +39,10 @@ class AuthGuard
     /**
      * Invoke the AuthGuard middleware, throwing an exception if there is no authenticated user in the session.
      *
-     * @param  Request  $request  PSR7 request
-     * @param  Response $response PSR7 response
-     * @param  callable $next     Next middleware
+     * @param Request  $request  PSR7 request
+     * @param Response $response PSR7 response
+     * @param callable $next     Next middleware
+     *
      * @return Response
      */
     public function __invoke(Request $request, Response $response, $next)

@@ -12,11 +12,11 @@ namespace UserFrosting\Sprinkle\Account\Account;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Interop\Container\ContainerInterface;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Support\Exception\HttpException;
-use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
 /**
  * Handles user registration tasks.
@@ -31,32 +31,32 @@ class Registration
     protected $ci;
 
     /**
-     * @var array $userdata The user profile data
+     * @var array The user profile data
      */
     protected $userdata;
 
     /**
-     * @var bool $verified Is the created user verified
+     * @var bool Is the created user verified
      */
     protected $verified;
 
     /**
-     * @var bool $requireEmailVerification Require email verification
+     * @var bool Require email verification
      */
     protected $requireEmailVerification;
 
     /**
-     * @var string $defaultGroup The default group slug
+     * @var string The default group slug
      */
     protected $defaultGroup;
 
     /**
-     * @var array $defaultRoles Default roles applied to a new user
+     * @var array Default roles applied to a new user
      */
     protected $defaultRoles = [];
 
     /**
-     * @var array $requiredProperties The minimum info required to register a new user
+     * @var array The minimum info required to register a new user
      */
     protected $requiredProperties = [
         'user_name',
@@ -67,7 +67,7 @@ class Registration
     ];
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param ContainerInterface $ci       The global container object
      * @param array              $userdata The user data
@@ -81,7 +81,7 @@ class Registration
     }
 
     /**
-     * Register a new user
+     * Register a new user.
      *
      * @return UserInterface The created user
      */
@@ -96,6 +96,7 @@ class Registration
         if (!$defaultGroup) {
             $e = new HttpException("Account registration is not working because the default group '{$this->defaultGroup}' does not exist.");
             $e->addUserMessage('ACCOUNT.REGISTRATION_BROKEN');
+
             throw $e;
         }
 
@@ -144,10 +145,11 @@ class Registration
     }
 
     /**
-     * Validate the user name and email is unique
+     * Validate the user name and email is unique.
      *
      * @throws HttpException If data doesn't validate
-     * @return bool          Returns true if the data is valid
+     *
+     * @return bool Returns true if the data is valid
      */
     public function validate()
     {
@@ -156,6 +158,7 @@ class Registration
             if (!isset($this->userdata[$property])) {
                 $e = new HttpException("Account can't be registrated as '$property' is required to create a new user.");
                 $e->addUserMessage('USERNAME.IN_USE');
+
                 throw $e;
             }
         }
@@ -164,6 +167,7 @@ class Registration
         if (!$this->usernameIsUnique($this->userdata['user_name'])) {
             $e = new HttpException('Username is already in use.');
             $e->addUserMessage('USERNAME.IN_USE', ['user_name' => $this->userdata['user_name']]);
+
             throw $e;
         }
 
@@ -171,6 +175,7 @@ class Registration
         if (!$this->emailIsUnique($this->userdata['email'])) {
             $e = new HttpException('Email is already in use.');
             $e->addUserMessage('EMAIL.IN_USE', ['email' => $this->userdata['email']]);
+
             throw $e;
         }
 
@@ -182,10 +187,11 @@ class Registration
 
     /**
      * Check Unique Username
-     * Make sure the username is not already in use
+     * Make sure the username is not already in use.
      *
-     * @param  string $username
-     * @return bool   Return true if username is unique
+     * @param string $username
+     *
+     * @return bool Return true if username is unique
      */
     public function usernameIsUnique($username)
     {
@@ -194,10 +200,11 @@ class Registration
 
     /**
      * Check Unique Email
-     * Make sure the email is not already in use
+     * Make sure the email is not already in use.
      *
-     * @param  string $email
-     * @return bool   Return true if email is unique
+     * @param string $email
+     *
+     * @return bool Return true if email is unique
      */
     public function emailIsUnique($email)
     {
@@ -205,7 +212,7 @@ class Registration
     }
 
     /**
-     * Hash the user password in the userdata array
+     * Hash the user password in the userdata array.
      */
     protected function hashPassword()
     {
@@ -213,7 +220,7 @@ class Registration
     }
 
     /**
-     * Set default value from config
+     * Set default value from config.
      */
     protected function setDefaults()
     {
@@ -224,7 +231,7 @@ class Registration
     }
 
     /**
-     * Send verification email for specified user
+     * Send verification email for specified user.
      *
      * @param UserInterface $user The user to send the email for
      */
@@ -255,7 +262,8 @@ class Registration
     }
 
     /**
-     * @param  bool   $requireEmailVerification
+     * @param bool $requireEmailVerification
+     *
      * @return static
      */
     public function setRequireEmailVerification($requireEmailVerification)
@@ -274,7 +282,8 @@ class Registration
     }
 
     /**
-     * @param  string $defaultGroup
+     * @param string $defaultGroup
+     *
      * @return static
      */
     public function setDefaultGroup($defaultGroup)
@@ -293,7 +302,8 @@ class Registration
     }
 
     /**
-     * @param  array  $defaultRoles
+     * @param array $defaultRoles
+     *
      * @return static
      */
     public function setDefaultRoles($defaultRoles)
@@ -324,7 +334,7 @@ class Registration
     }
 
     /**
-     * Define a user property
+     * Define a user property.
      *
      * @param string $property The property to set
      * @param mixed  $value    The property value

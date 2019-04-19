@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Util;
 
 /**
- * Util Class
+ * Util Class.
  *
  * Static utility functions.
  *
@@ -22,9 +22,10 @@ class Util
     /**
      * Extracts specific fields from one associative array, and places them into another.
      *
-     * @param  mixed[]  $inputArray
-     * @param  string[] $fieldArray
-     * @param  bool     $remove
+     * @param mixed[]  $inputArray
+     * @param string[] $fieldArray
+     * @param bool     $remove
+     *
      * @return mixed[]
      */
     public static function extractFields(&$inputArray, $fieldArray, $remove = true)
@@ -48,7 +49,8 @@ class Util
     /**
      * Extracts numeric portion of a string (for example, for normalizing phone numbers).
      *
-     * @param  string $str
+     * @param string $str
+     *
      * @return string
      */
     public static function extractDigits($str)
@@ -57,9 +59,10 @@ class Util
     }
 
     /**
-     * Formats a phone number as a standard 7- or 10-digit string (xxx) xxx-xxxx
+     * Formats a phone number as a standard 7- or 10-digit string (xxx) xxx-xxxx.
      *
-     * @param  string $phone
+     * @param string $phone
+     *
      * @return string
      */
     public static function formatPhoneNumber($phone)
@@ -79,9 +82,10 @@ class Util
 
     /**
      * Nicely format an array for printing.
-     * See https://stackoverflow.com/a/9776726/2970321
+     * See https://stackoverflow.com/a/9776726/2970321.
      *
-     * @param  array  $arr
+     * @param array $arr
+     *
      * @return string
      */
     public static function prettyPrintArray(array $arr)
@@ -149,10 +153,11 @@ class Util
     /**
      * Generate a random phrase, consisting of a specified number of adjectives, followed by a noun.
      *
-     * @param  int    $numAdjectives
-     * @param  int    $maxLength
-     * @param  int    $maxTries
-     * @param  string $separator
+     * @param int    $numAdjectives
+     * @param int    $maxLength
+     * @param int    $maxTries
+     * @param string $separator
+     *
      * @return string
      */
     public static function randomPhrase($numAdjectives, $maxLength = 9999999, $maxTries = 10, $separator = '-')
