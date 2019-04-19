@@ -53,7 +53,7 @@ trait HasRelationships
         return new HasManySyncable(
             $instance->newQuery(),
             $this,
-            $instance->getTable().'.'.$foreignKey,
+            $instance->getTable() . '.' . $foreignKey,
             $localKey
         );
     }
@@ -79,7 +79,7 @@ trait HasRelationships
         $table = $instance->getTable();
         $localKey = $localKey ?: $this->getKeyName();
 
-        return new MorphManySyncable($instance->newQuery(), $this, $table.'.'.$type, $table.'.'.$id, $localKey);
+        return new MorphManySyncable($instance->newQuery(), $this, $table . '.' . $type, $table . '.' . $id, $localKey);
     }
 
     /**
@@ -223,7 +223,7 @@ trait HasRelationships
         // First, we will need to determine the foreign key and "other key" for the
         // relationship. Once we have determined the keys we will make the query
         // instances, as well as the relationship instances we need for these.
-        $foreignKey = $foreignKey ?: $name.'_id';
+        $foreignKey = $foreignKey ?: $name . '_id';
 
         $instance = new $related();
 

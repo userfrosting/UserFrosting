@@ -27,7 +27,7 @@ class SetupEnvCommand extends BaseCommand
     /**
      * @var string Path to the .env file
      */
-    protected $envPath = \UserFrosting\APP_DIR. '/.env';
+    protected $envPath = \UserFrosting\APP_DIR . '/.env';
 
     /**
      * @var string Key for the env mode setting

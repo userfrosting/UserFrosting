@@ -89,7 +89,7 @@ class FilesystemTest extends TestCase
 
         // We'll delete the test file now
         $this->assertTrue($files->delete('file.txt'));
-        $this->assertFileNotExists($this->testDir.'/file.txt');
+        $this->assertFileNotExists($this->testDir . '/file.txt');
     }
 
     /**
@@ -117,7 +117,7 @@ class FilesystemTest extends TestCase
         $url = $files->url('file.txt');
         $this->assertEquals('files/testing/file.txt', $url);
         $this->assertTrue($files->delete('file.txt'));
-        $this->assertFileNotExists($this->testDir.'/file.txt');
+        $this->assertFileNotExists($this->testDir . '/file.txt');
     }
 
     /**

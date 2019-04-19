@@ -366,7 +366,7 @@ class CheckEnvironment
         } else {
             $this->resultsSuccess['phpVersion'] = [
                 'title'   => "<i class='fa fa-code fa-fw'></i> PHP version checks out!",
-                'message' => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION .  'or higher.  Great!',
+                'message' => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION . 'or higher.  Great!',
                 'success' => true
             ];
         }

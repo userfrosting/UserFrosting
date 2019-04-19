@@ -322,7 +322,7 @@ abstract class Sprunje
         foreach ($this->listable as $name) {
 
             // Determine if a custom filter method has been defined
-            $methodName = 'list'.studly_case($name);
+            $methodName = 'list' . studly_case($name);
 
             if (method_exists($this, $methodName)) {
                 $result[$name] = $this->$methodName();
@@ -398,7 +398,7 @@ abstract class Sprunje
             }
 
             // Determine if a custom sort method has been defined
-            $methodName = 'sort'.studly_case($name);
+            $methodName = 'sort' . studly_case($name);
 
             if (method_exists($this, $methodName)) {
                 $this->$methodName($query, $direction);
@@ -462,7 +462,7 @@ abstract class Sprunje
      */
     protected function buildFilterQuery($query, $name, $value)
     {
-        $methodName = 'filter'.studly_case($name);
+        $methodName = 'filter' . studly_case($name);
 
         // Determine if a custom filter method has been defined
         if (method_exists($this, $methodName)) {

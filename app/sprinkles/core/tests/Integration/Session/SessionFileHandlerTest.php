@@ -28,7 +28,7 @@ class SessionFileHandlerTest extends TestCase
         $fs = new Filesystem();
 
         // Define random session ID
-        $session_id = 'test'.rand(1, 100000);
+        $session_id = 'test' . rand(1, 100000);
 
         // Get session dir
         $session_dir = $this->ci->locator->findResource('session://');

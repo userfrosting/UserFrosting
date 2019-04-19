@@ -28,7 +28,7 @@ class SetupSmtpCommand extends BaseCommand
     /**
      * @var string Path to the .env file
      */
-    protected $envPath = \UserFrosting\APP_DIR. '/.env';
+    protected $envPath = \UserFrosting\APP_DIR . '/.env';
 
     /**
      * @var string SMTP setup string

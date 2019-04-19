@@ -137,10 +137,10 @@ class Util
             }
 
             if ($newLineLevel !== null) {
-                $result .= '<br>'.str_repeat('&nbsp;&nbsp;', $newLineLevel);
+                $result .= '<br>' . str_repeat('&nbsp;&nbsp;', $newLineLevel);
             }
 
-            $result .= $char.$post;
+            $result .= $char . $post;
         }
 
         return $result;
