@@ -9,6 +9,8 @@
 
 namespace UserFrosting\Sprinkle\Account\Repository;
 
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
+
 /**
  * Token repository class for new account verifications.
  *
@@ -25,7 +27,7 @@ class VerificationRepository extends TokenRepository
     /**
      * {@inheritdoc}
      */
-    protected function updateUser($user, $args)
+    protected function updateUser(UserInterface $user, $args)
     {
         $user->flag_verified = 1;
         // TODO: generate user activity? or do this in controller?

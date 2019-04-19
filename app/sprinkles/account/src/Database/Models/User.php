@@ -188,17 +188,18 @@ class User extends Model implements UserInterface
             // Remove all role associations
             $this->roles()->detach();
 
-            // Remove all user activities
-            $classMapper->staticMethod('activity', 'where', 'user_id', $this->id)->delete();
+            // Remove last activity association
+            $this->lastActivity()->dissociate();
+            $this->save();
 
             // Remove all user tokens
-            $classMapper->staticMethod('password_reset', 'where', 'user_id', $this->id)->delete();
+            $this->activities()->delete();
+            $this->passwordResets()->delete();
             $classMapper->staticMethod('verification', 'where', 'user_id', $this->id)->delete();
-
-            // TODO: remove any persistences
+            $classMapper->staticMethod('persistence', 'where', 'user_id', $this->id)->delete();
 
             // Delete the user
-            $result = parent::forceDelete();
+            $result = $this->forceDelete();
         } else {
             // Soft delete the user, leaving all associated records alone
             $result = parent::delete();
