@@ -10,8 +10,8 @@
 
 namespace UserFrosting\Sprinkle\Core\Util;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Middleware to catch requests that fail because they require user authentication.
@@ -23,9 +23,10 @@ class NoCache
     /**
      * Invoke the NoCache middleware, adding headers to the request to prevent caching.
      *
-     * @param  Request  $request  PSR7 request
-     * @param  Response $response PSR7 response
-     * @param  callable $next     Next middleware
+     * @param Request  $request  PSR7 request
+     * @param Response $response PSR7 response
+     * @param callable $next     Next middleware
+     *
      * @return Response
      */
     public function __invoke(Request $request, Response $response, $next)

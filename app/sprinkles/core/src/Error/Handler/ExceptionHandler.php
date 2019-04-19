@@ -166,7 +166,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
     }
 
     /**
-     * Write to the error log
+     * Write to the error log.
      */
     public function writeToErrorLog()
     {
@@ -190,9 +190,10 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     /**
      * Determine which renderer to use based on content type
-     * Overloaded $renderer from calling class takes precedence over all
+     * Overloaded $renderer from calling class takes precedence over all.
      *
      * @throws \RuntimeException
+     *
      * @return \UserFrosting\Sprinkle\Core\Error\Renderer\ErrorRendererInterface
      */
     protected function determineRenderer()
@@ -261,7 +262,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
     }
 
     /**
-     * Monolog logging for errors
+     * Monolog logging for errors.
      *
      * @param string $message
      */

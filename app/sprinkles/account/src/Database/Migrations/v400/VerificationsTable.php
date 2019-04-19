@@ -16,9 +16,10 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
 /**
  * Verifications table migration
  * Manages requests for email account verification.
- * Version 4.0.0
+ * Version 4.0.0.
  *
  * See https://laravel.com/docs/5.4/migrations#tables
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class VerificationsTable extends Migration

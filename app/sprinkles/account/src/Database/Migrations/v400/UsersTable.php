@@ -16,9 +16,10 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
 /**
  * Users table migration
  * Removed the 'display_name', 'title', 'secret_token', and 'flag_password_reset' fields, and added first and last name and 'last_activity_id'.
- * Version 4.0.0
+ * Version 4.0.0.
  *
  * See https://laravel.com/docs/5.4/migrations#tables
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class UsersTable extends Migration

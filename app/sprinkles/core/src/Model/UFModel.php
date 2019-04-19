@@ -14,9 +14,10 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 
 /**
- * UFModel Class
+ * UFModel Class.
  *
  * @deprecated since 4.1
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 abstract class UFModel extends Model

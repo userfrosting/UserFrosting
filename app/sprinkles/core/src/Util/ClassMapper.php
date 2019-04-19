@@ -44,7 +44,8 @@ class ClassMapper
     /**
      * Gets the fully qualified class name for a specified class identifier.
      *
-     * @param  string $identifier
+     * @param string $identifier
+     *
      * @return string
      */
     public function getClassMapping($identifier)
@@ -59,8 +60,9 @@ class ClassMapper
     /**
      * Assigns a fully qualified class name to a specified class identifier.
      *
-     * @param  string      $identifier
-     * @param  string      $className
+     * @param string $identifier
+     * @param string $className
+     *
      * @return ClassMapper
      */
     public function setClassMapping($identifier, $className)

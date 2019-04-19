@@ -10,13 +10,13 @@
 
 namespace UserFrosting\Sprinkle\Account\Database\Seeds;
 
-use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
+use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 use UserFrosting\Sprinkle\Core\Facades\Seeder;
 
 /**
- * Seeder for the default permissions
+ * Seeder for the default permissions.
  */
 class DefaultPermissions extends BaseSeed
 {
@@ -184,7 +184,8 @@ class DefaultPermissions extends BaseSeed
     }
 
     /**
-     * Save permissions
+     * Save permissions.
+     *
      * @param array $permissions
      */
     protected function savePermissions(array $permissions)
@@ -205,7 +206,8 @@ class DefaultPermissions extends BaseSeed
     }
 
     /**
-     * Sync permissions with default roles
+     * Sync permissions with default roles.
+     *
      * @param array $permissions
      */
     protected function syncPermissionsRole(array $permissions)

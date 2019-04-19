@@ -13,11 +13,12 @@ namespace UserFrosting\Sprinkle\Account\Database\Models;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
- * Group Class
+ * Group Class.
  *
  * Represents a group object as stored in the database.
  *
  * @author Alex Weissman
+ *
  * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  *
  * @property string slug
@@ -45,7 +46,7 @@ class Group extends Model
     public $timestamps = true;
 
     /**
-     * Delete this group from the database, along with any user associations
+     * Delete this group from the database, along with any user associations.
      *
      * @todo What do we do with users when their group is deleted?  Reassign them?  Or, can a user be "groupless"?
      */

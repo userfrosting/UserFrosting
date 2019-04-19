@@ -13,10 +13,12 @@ namespace UserFrosting\Sprinkle\Account\Database\Models;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
- * Password Reset Class
+ * Password Reset Class.
  *
  * Represents a password reset request for a specific user.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @property int user_id
  * @property hash token
  * @property bool completed
@@ -57,7 +59,8 @@ class PasswordReset extends Model
     }
 
     /**
-     * @param  string $value
+     * @param string $value
+     *
      * @return self
      */
     public function setToken($value)

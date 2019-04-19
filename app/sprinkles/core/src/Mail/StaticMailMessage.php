@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 /**
- * StaticMailMessage Class
+ * StaticMailMessage Class.
  *
  * Represents a basic mail message, containing a static subject and body.
  *

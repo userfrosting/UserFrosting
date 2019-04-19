@@ -10,16 +10,16 @@
 
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
-use UserFrosting\Support\DotenvEditor\DotenvEditor;
-use UserFrosting\System\Bakery\BaseCommand;
-use UserFrosting\Support\Repository\Repository as Config;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use UserFrosting\Support\DotenvEditor\DotenvEditor;
+use UserFrosting\Support\Repository\Repository as Config;
+use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * SMTP Setup Wizard CLI Tools.
- * Helper command to setup SMTP config in .env file
+ * Helper command to setup SMTP config in .env file.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -65,7 +65,7 @@ class SetupSmtpCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /**
-         * @var Config $config Get config
+         * @var Config Get config
          */
         $config = $this->ci->config;
 
@@ -121,10 +121,11 @@ class SetupSmtpCommand extends BaseCommand
     }
 
     /**
-     * Ask with setup method to use
+     * Ask with setup method to use.
      *
-     * @param  InputInterface $input
-     * @return array          The SMTP connection info
+     * @param InputInterface $input
+     *
+     * @return array The SMTP connection info
      */
     protected function askForSmtpMethod(InputInterface $input)
     {
@@ -153,10 +154,11 @@ class SetupSmtpCommand extends BaseCommand
     }
 
     /**
-     * Ask for SMTP credential
+     * Ask for SMTP credential.
      *
-     * @param  InputInterface $input Command arguments
-     * @return array          The SMTP connection info
+     * @param InputInterface $input Command arguments
+     *
+     * @return array The SMTP connection info
      */
     protected function askForSmtp(InputInterface $input)
     {
@@ -176,10 +178,11 @@ class SetupSmtpCommand extends BaseCommand
     }
 
     /**
-     * Ask for Gmail
+     * Ask for Gmail.
      *
-     * @param  InputInterface $input Command arguments
-     * @return array          The SMTP connection info
+     * @param InputInterface $input Command arguments
+     *
+     * @return array The SMTP connection info
      */
     protected function askForGmail(InputInterface $input)
     {
@@ -197,10 +200,11 @@ class SetupSmtpCommand extends BaseCommand
     }
 
     /**
-     * Process the "no email support" setup option
+     * Process the "no email support" setup option.
      *
-     * @param  InputInterface $input
-     * @return array          The SMTP connection info
+     * @param InputInterface $input
+     *
+     * @return array The SMTP connection info
      */
     protected function askForNone(InputInterface $input)
     {
@@ -221,8 +225,9 @@ class SetupSmtpCommand extends BaseCommand
     /**
      * Check if the app/.env SMTP portion is defined or not.
      *
-     * @param  DotenvEditor $dotenvEditor
-     * @return bool         true if SMTP is configured in .env file
+     * @param DotenvEditor $dotenvEditor
+     *
+     * @return bool true if SMTP is configured in .env file
      */
     protected function isSmtpConfigured(DotenvEditor $dotenvEditor)
     {

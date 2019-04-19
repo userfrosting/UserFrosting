@@ -14,10 +14,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Facades\Password;
@@ -34,6 +34,7 @@ use UserFrosting\Support\Exception\NotFoundException;
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see http://www.userfrosting.com/navigating/#structure
  */
 class AccountController extends SimpleController
@@ -48,9 +49,11 @@ class AccountController extends SimpleController
      * Route: /account/check-username
      * Route Name: {none}
      * Request type: GET
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws BadRequestException
      */
     public function checkUsername(Request $request, Response $response, $args)
@@ -78,6 +81,7 @@ class AccountController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
@@ -119,6 +123,7 @@ class AccountController extends SimpleController
      * Route: /account/set-password/deny
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -174,6 +179,7 @@ class AccountController extends SimpleController
      * Note that we have removed the requirement that a password reset request not already be in progress.
      * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
      * This route is "public access".
+     *
      * @todo require additional user information
      * @todo prevent password reset requests for root account?
      *
@@ -181,6 +187,7 @@ class AccountController extends SimpleController
      * Route: /account/forgot-password
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -277,6 +284,7 @@ class AccountController extends SimpleController
      * Route: /modals/account/tos
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -293,6 +301,7 @@ class AccountController extends SimpleController
      * Route: /account/captcha
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -323,6 +332,7 @@ class AccountController extends SimpleController
      * Route: /account/login
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -421,6 +431,7 @@ class AccountController extends SimpleController
      * Route: /account/logout
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -446,6 +457,7 @@ class AccountController extends SimpleController
      * Route: /account/forgot-password
      * Route Name: forgot-password
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -476,9 +488,11 @@ class AccountController extends SimpleController
      * Route: /account/register
      * Route Name: register
      * Request type: GET
-     * @param  Request           $request
-     * @param  Response          $response
-     * @param  array             $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException If site registration is disabled
      */
     public function pageRegister(Request $request, Response $response, $args)
@@ -543,6 +557,7 @@ class AccountController extends SimpleController
      * Route: /account/resend-verification
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -571,6 +586,7 @@ class AccountController extends SimpleController
      * Route: /account/set-password/confirm
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -604,6 +620,7 @@ class AccountController extends SimpleController
      * Route:
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -638,9 +655,11 @@ class AccountController extends SimpleController
      * Route: /account/settings
      * Route Name: {none}
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageSettings(Request $request, Response $response, $args)
@@ -702,6 +721,7 @@ class AccountController extends SimpleController
      * Route: /account/sign-in
      * Route Name: login
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -746,6 +766,7 @@ class AccountController extends SimpleController
      * Route: /account/settings/profile
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -846,9 +867,11 @@ class AccountController extends SimpleController
      * Route: /account/register
      * Route Name: {none}
      * Request type: POST
-     * @param  Request                $request
-     * @param  Response               $response
-     * @param  array                  $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws SpammyRequestException
      */
     public function register(Request $request, Response $response, $args)
@@ -974,6 +997,7 @@ class AccountController extends SimpleController
      * Route: /account/resend-verification
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1072,6 +1096,7 @@ class AccountController extends SimpleController
      * Route: /account/set-password
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1150,6 +1175,7 @@ class AccountController extends SimpleController
      * Route: /account/settings
      * Route Name: settings
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1251,12 +1277,14 @@ class AccountController extends SimpleController
      * Suggest an available username for a specified first/last name.
      *
      * This route is "public access".
+     *
      * @todo Can this route be abused for account enumeration?  If so we should throttle it as well.
      *
      * AuthGuard: false
      * Route: /account/suggest-username
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1290,6 +1318,7 @@ class AccountController extends SimpleController
      * Route: /account/verify
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args

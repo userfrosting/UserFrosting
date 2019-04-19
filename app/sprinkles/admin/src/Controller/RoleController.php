@@ -13,10 +13,10 @@ namespace UserFrosting\Sprinkle\Admin\Controller;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -40,10 +40,13 @@ class RoleController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: POST
+     *
      * @see getModalCreateRole
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function create(Request $request, Response $response, $args)
@@ -135,9 +138,11 @@ class RoleController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: DELETE
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If role is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -174,6 +179,7 @@ class RoleController extends SimpleController
         if (in_array($role->slug, $defaultRoleSlugs)) {
             $e = new BadRequestException();
             $e->addUserMessage('ROLE.DELETE_DEFAULT');
+
             throw $e;
         }
 
@@ -182,6 +188,7 @@ class RoleController extends SimpleController
         if ($countUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('ROLE.HAS_USERS');
+
             throw $e;
         }
 
@@ -215,9 +222,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      * @throws NotFoundException  If role is not found
      */
@@ -255,15 +264,17 @@ class RoleController extends SimpleController
     }
 
     /**
-     * Returns a list of Roles
+     * Returns a list of Roles.
      *
      * Generates a list of roles, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getList(Request $request, Response $response, $args)
@@ -293,11 +304,12 @@ class RoleController extends SimpleController
     }
 
     /**
-     * Display deletion confirmation modal
+     * Display deletion confirmation modal.
      *
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If role is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -337,6 +349,7 @@ class RoleController extends SimpleController
         if (in_array($role->slug, $defaultRoleSlugs)) {
             $e = new BadRequestException();
             $e->addUserMessage('ROLE.DELETE_DEFAULT', $role->toArray());
+
             throw $e;
         }
 
@@ -345,6 +358,7 @@ class RoleController extends SimpleController
         if ($countUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('ROLE.HAS_USERS', $role->toArray());
+
             throw $e;
         }
 
@@ -363,9 +377,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getModalCreate(Request $request, Response $response, $args)
@@ -424,9 +440,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -494,9 +512,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -538,9 +558,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -589,9 +611,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -643,9 +667,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageInfo(Request $request, Response $response, $args)
@@ -721,9 +747,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageList(Request $request, Response $response, $args)
@@ -752,10 +780,13 @@ class RoleController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: PUT
+     *
      * @see getModalRoleEdit
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -873,9 +904,11 @@ class RoleController extends SimpleController
      * This route requires authentication.
      *
      * Request type: PUT
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If role is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -939,6 +972,7 @@ class RoleController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
@@ -980,10 +1014,12 @@ class RoleController extends SimpleController
     }
 
     /**
-     * Get role instance from params
+     * Get role instance from params.
      *
-     * @param  array               $params
+     * @param array $params
+     *
      * @throws BadRequestException
+     *
      * @return Role
      */
     protected function getRoleFromParams($params)
@@ -1005,6 +1041,7 @@ class RoleController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 

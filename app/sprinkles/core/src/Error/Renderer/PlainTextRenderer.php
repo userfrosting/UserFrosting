@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 /**
- * Plain Text Error Renderer
+ * Plain Text Error Renderer.
  */
 class PlainTextRenderer extends ErrorRenderer
 {
@@ -25,7 +25,8 @@ class PlainTextRenderer extends ErrorRenderer
     }
 
     /**
-     * Format Exception Body
+     * Format Exception Body.
+     *
      * @return string
      */
     public function formatExceptionBody()
@@ -44,7 +45,8 @@ class PlainTextRenderer extends ErrorRenderer
     }
 
     /**
-     * @param  \Exception|\Throwable $e
+     * @param \Exception|\Throwable $e
+     *
      * @return string
      */
     public function formatExceptionFragment($e)

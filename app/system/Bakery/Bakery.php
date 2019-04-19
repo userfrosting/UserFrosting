@@ -26,7 +26,7 @@ use UserFrosting\UniformResourceLocator\ResourceLocator;
 class Bakery
 {
     /**
-     * @var \Symfony\Component\Console\Application $app
+     * @var \Symfony\Component\Console\Application
      */
     protected $app;
 
@@ -36,12 +36,12 @@ class Bakery
     protected $ci;
 
     /**
-     * @var string $scheme The resource locator scheme
+     * @var string The resource locator scheme
      */
     protected $scheme = 'bakery://';
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -75,7 +75,7 @@ class Bakery
     }
 
     /**
-     * Run the Symfony Console App
+     * Run the Symfony Console App.
      */
     public function run()
     {
@@ -83,12 +83,12 @@ class Bakery
     }
 
     /**
-     * Return the list of available commands for a specific sprinkle
+     * Return the list of available commands for a specific sprinkle.
      */
     protected function loadCommands()
     {
         /**
-         * @var ResourceLocator $locator
+         * @var ResourceLocator
          */
         $locator = $this->ci->locator;
 
@@ -118,10 +118,11 @@ class Bakery
     }
 
     /**
-     * Transform a Bakery Command Resource into a classpath
+     * Transform a Bakery Command Resource into a classpath.
      *
-     * @param  \UserFrosting\UniformResourceLocator\Resource $file The command resource
-     * @return string                                        The command class path
+     * @param \UserFrosting\UniformResourceLocator\Resource $file The command resource
+     *
+     * @return string The command class path
      */
     protected function getResourceClass(Resource $file)
     {
@@ -145,9 +146,10 @@ class Bakery
     }
 
     /**
-     * Return the classname from the file instance
+     * Return the classname from the file instance.
      *
-     * @param  \UserFrosting\UniformResourceLocator\Resource $file The command resource
+     * @param \UserFrosting\UniformResourceLocator\Resource $file The command resource
+     *
      * @return string
      */
     protected function getClassNameFromFile(Resource $file)

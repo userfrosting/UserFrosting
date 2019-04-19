@@ -10,9 +10,9 @@
 
 namespace UserFrosting\Sprinkle\Core\Util;
 
+use Illuminate\Cache\CacheManager;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Illuminate\Cache\CacheManager;
 use Slim\Views\Twig;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 
@@ -65,9 +65,10 @@ class CheckEnvironment
     /**
      * Invoke the CheckEnvironment middleware, performing all pre-flight checks and returning an error page if problems were found.
      *
-     * @param  Request                             $request  PSR7 request
-     * @param  Response                            $response PSR7 response
-     * @param  callable                            $next     Next middleware
+     * @param Request  $request  PSR7 request
+     * @param Response $response PSR7 response
+     * @param callable $next     Next middleware
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function __invoke(Request $request, Response $response, $next)

@@ -7,10 +7,22 @@
 [![Sponsors on Open Collective](https://opencollective.com/userfrosting/sponsors/badge.svg)](#sponsors)
 [![Donate](https://img.shields.io/badge/Open%20Collective-Donate-blue.svg)](https://opencollective.com/userfrosting#backer)
 
-| Branch | Status |
-| ------ | ------ |
-| master | [![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)](https://travis-ci.org/userfrosting/UserFrosting) [![codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting/branch/master) |
-| develop | [![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=develop)](https://travis-ci.org/userfrosting/UserFrosting) [![codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting/branch/develop) |
+| Branch | Build | Coverage | Style |
+| ------ |:-----:|:--------:|:-----:|
+| [master] | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)][UF-Codecov] | [![][style-master]][style] |
+| [hotfix] | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=hotfix)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
+| [develop] | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=develop)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
+
+<!-- Links -->
+[master]: https://github.com/userfrosting/UserFrosting
+[hotfix]: https://github.com/userfrosting/UserFrosting/tree/hotfix
+[develop]: https://github.com/userfrosting/UserFrosting/tree/develop
+[UF-Travis]: https://travis-ci.org/userfrosting/UserFrosting
+[UF-Codecov]: https://codecov.io/gh/userfrosting/userfrosting
+[style-master]: https://github.styleci.io/repos/18148206/shield?branch=master&style=flat
+[style-hotfix]: https://github.styleci.io/repos/18148206/shield?branch=hotfix&style=flat
+[style-develop]: https://github.styleci.io/repos/18148206/shield?branch=develop&style=flat
+[style]: https://github.styleci.io/repos/18148206
 
 [https://www.userfrosting.com](https://www.userfrosting.com)
 

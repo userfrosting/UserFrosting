@@ -12,13 +12,13 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Illuminate\Support\Collection;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * migrate:status Bakery Command
- * Show the list of installed and pending migration
+ * Show the list of installed and pending migration.
  *
  * @author Louis Charette
  */
@@ -81,11 +81,12 @@ class MigrateStatusCommand extends BaseCommand
 
     /**
      * Return an array of [migration, available] association.
-     * A migration is available if it's in the available stack (class is in the Filesystem)
+     * A migration is available if it's in the available stack (class is in the Filesystem).
      *
-     * @param  Collection $ran       The ran migrations
-     * @param  array      $available The available migrations
-     * @return array      An array of [migration, available] association
+     * @param Collection $ran       The ran migrations
+     * @param array      $available The available migrations
+     *
+     * @return array An array of [migration, available] association
      */
     protected function getStatusFor(Collection $ran, array $available)
     {

@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 /**
- * MailMessage Class
+ * MailMessage Class.
  *
  * Represents a basic mail message, containing a static subject and body.
  *
@@ -47,7 +47,8 @@ abstract class MailMessage
     /**
      * Gets the fully rendered text of the message body.
      *
-     * @param  array  $params
+     * @param array $params
+     *
      * @return string
      */
     abstract public function renderBody($params = []);
@@ -55,7 +56,8 @@ abstract class MailMessage
     /**
      * Gets the fully rendered text of the message subject.
      *
-     * @param  array  $params
+     * @param array $params
+     *
      * @return string
      */
     abstract public function renderSubject($params = []);
@@ -84,6 +86,7 @@ abstract class MailMessage
      * Set sender information for this message.
      *
      * This is a shortcut for calling setFromEmail, setFromName, setReplyEmail, and setReplyName.
+     *
      * @param string $fromInfo An array containing 'email', 'name', 'reply_email', and 'reply_name'.
      */
     public function from($fromInfo = [])

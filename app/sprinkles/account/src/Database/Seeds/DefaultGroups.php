@@ -10,11 +10,11 @@
 
 namespace UserFrosting\Sprinkle\Account\Database\Seeds;
 
-use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 
 /**
- * Seeder for the default groups
+ * Seeder for the default groups.
  */
 class DefaultGroups extends BaseSeed
 {

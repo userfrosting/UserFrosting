@@ -19,7 +19,7 @@ use UserFrosting\Support\Repository\Repository;
  * Implements a message stream for use between HTTP requests, with i18n
  * support via the MessageTranslator class using the cache system to store
  * the alerts. Note that the tags are added each time instead of the
- * constructor since the session_id can change when the user logs in or out
+ * constructor since the session_id can change when the user logs in or out.
  *
  * @author Louis Charette
  */
@@ -73,7 +73,7 @@ class CacheAlertStream extends AlertStream
     }
 
     /**
-     * Save messages to the stream
+     * Save messages to the stream.
      *
      * @param string $messages The message
      */

@@ -11,12 +11,12 @@
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 use ReflectionClass;
-use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 use UserFrosting\Sprinkle\Core\Facades\Config;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
 /**
- * MigrationDependencyAnalyser Class
+ * MigrationDependencyAnalyser Class.
  *
  * Helper class used to analyse migrations dependencies and return the
  * migrations classes in the correct order for migration to be run up without
@@ -52,7 +52,7 @@ class MigrationDependencyAnalyser
     protected $analysed = false;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $pending   The pending migrations
      * @param array $installed The installed migrations
@@ -64,7 +64,7 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     * Analyse the dependencies
+     * Analyse the dependencies.
      */
     public function analyse()
     {
@@ -90,8 +90,9 @@ class MigrationDependencyAnalyser
      * parent class will be automatocally placed after it's dependencies
      * in the `fullfillable` property.
      *
-     * @param  string $migrationName The migration classname
-     * @return bool   True/False if the migration is fulfillable
+     * @param string $migrationName The migration classname
+     *
+     * @return bool True/False if the migration is fulfillable
      */
     protected function validateClassDependencies($migrationName)
     {
@@ -136,7 +137,7 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     * Return the fulfillable list. Analyse the stack if not done already
+     * Return the fulfillable list. Analyse the stack if not done already.
      *
      * @return array
      */
@@ -150,7 +151,7 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     * Return the fulfillable list. Analyse the stack if not done already
+     * Return the fulfillable list. Analyse the stack if not done already.
      *
      * @return array
      */
@@ -164,10 +165,11 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     * Mark a dependency as fulfillable. Removes it from the pending list and add it to the fulfillable list
+     * Mark a dependency as fulfillable. Removes it from the pending list and add it to the fulfillable list.
      *
-     * @param  string $migration The migration classname
-     * @return bool   True, it's fulfillable
+     * @param string $migration The migration classname
+     *
+     * @return bool True, it's fulfillable
      */
     protected function markAsFulfillable($migration)
     {
@@ -177,11 +179,12 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     * Mark a dependency as unfulfillable. Removes it from the pending list and add it to the unfulfillable list
+     * Mark a dependency as unfulfillable. Removes it from the pending list and add it to the unfulfillable list.
      *
-     * @param  string       $migration  The migration classname
-     * @param  string|array $dependency The problematic dependecy
-     * @return bool         False, it's not fullfillable
+     * @param string       $migration  The migration classname
+     * @param string|array $dependency The problematic dependecy
+     *
+     * @return bool False, it's not fullfillable
      */
     protected function markAsUnfulfillable($migration, $dependency)
     {
@@ -196,10 +199,11 @@ class MigrationDependencyAnalyser
 
     /**
      * Returns the migration dependency list
-     * Also handles the old deprecated behaviour where dependencies where not in a static property
+     * Also handles the old deprecated behaviour where dependencies where not in a static property.
      *
-     * @param  string $migration The migration class
-     * @return array  The dependency list
+     * @param string $migration The migration class
+     *
+     * @return array The dependency list
      */
     protected function getMigrationDependencies($migration)
     {

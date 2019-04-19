@@ -60,7 +60,8 @@ class HtmlRenderer extends ErrorRenderer
     /**
      * Render a summary of the exception.
      *
-     * @param  \Exception $exception
+     * @param \Exception $exception
+     *
      * @return string
      */
     public function renderException(\Exception $exception)
@@ -136,7 +137,8 @@ class HtmlRenderer extends ErrorRenderer
     /**
      * Render HTML representation of a table of data.
      *
-     * @param  mixed[] $data the array of data to render.
+     * @param mixed[] $data the array of data to render.
+     *
      * @return string
      */
     protected function renderTable($data)

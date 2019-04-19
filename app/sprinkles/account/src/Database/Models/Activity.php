@@ -15,10 +15,12 @@ use Illuminate\Database\Eloquent\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
- * Activity Class
+ * Activity Class.
  *
  * Represents a single user activity at a specified point in time.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @property string ip_address
  * @property int user_id
  * @property string type
@@ -57,7 +59,8 @@ class Activity extends Model
     /**
      * Add clauses to select the most recent event of each type for each user, to the query.
      *
-     * @param  Builder $query
+     * @param Builder $query
+     *
      * @return Builder
      */
     public function scopeMostRecentEvents($query)
@@ -70,8 +73,9 @@ class Activity extends Model
     /**
      * Add clauses to select the most recent event of a given type for each user, to the query.
      *
-     * @param  Builder $query
-     * @param  string  $type  The type of event, matching the `event_type` field in the user_event table.
+     * @param Builder $query
+     * @param string  $type  The type of event, matching the `event_type` field in the user_event table.
+     *
      * @return Builder
      */
     public function scopeMostRecentEventsByType(Builder $query, $type)

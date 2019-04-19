@@ -19,11 +19,12 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 
 /**
- * User Class
+ * User Class.
  *
  * Represents a User object as stored in the database.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @property int id
  * @property string user_name
  * @property string first_name
@@ -75,6 +76,7 @@ class User extends Model implements UserInterface
      * A list of attributes to hide by default when using toArray() and toJson().
      *
      * @link https://laravel.com/docs/5.4/eloquent-serialization#hiding-attributes-from-json
+     *
      * @var string[]
      */
     protected $hidden = [
@@ -95,7 +97,8 @@ class User extends Model implements UserInterface
     ];
 
     /**
-     * Events used to handle the user object cache on update and deletion
+     * Events used to handle the user object cache on update and deletion.
+     *
      * @var array
      */
     protected $events = [
@@ -124,8 +127,9 @@ class User extends Model implements UserInterface
      * See http://stackoverflow.com/questions/29514081/cannot-access-eloquent-attributes-on-twig/35908957#35908957
      * Every property in __get must also be implemented here for Twig to recognize it.
      *
-     * @param  string $name the name of the property to check.
-     * @return bool   true if the property is defined, false otherwise.
+     * @param string $name the name of the property to check.
+     *
+     * @return bool true if the property is defined, false otherwise.
      */
     public function __isset($name)
     {
@@ -143,9 +147,11 @@ class User extends Model implements UserInterface
     /**
      * Get a property for this object.
      *
-     * @param  string     $name the name of the property to retrieve.
+     * @param string $name the name of the property to retrieve.
+     *
      * @throws \Exception the property does not exist for this object.
-     * @return string     the associated property.
+     *
+     * @return string the associated property.
      */
     public function __get($name)
     {
@@ -177,7 +183,8 @@ class User extends Model implements UserInterface
     /**
      * Delete this user from the database, along with any linked roles and activities.
      *
-     * @param  bool $hardDelete Set to true to completely remove the user and all associated objects.
+     * @param bool $hardDelete Set to true to completely remove the user and all associated objects.
+     *
      * @return bool true if the deletion was successful, false otherwise.
      */
     public function delete($hardDelete = false)
@@ -210,12 +217,14 @@ class User extends Model implements UserInterface
     }
 
     /**
-     * Determines whether a user exists, including checking soft-deleted records
+     * Determines whether a user exists, including checking soft-deleted records.
      *
      * @deprecated since 4.1.7 This method conflicts with and overrides the Builder::exists() method.  Use Model::findUnique instead.
-     * @param  mixed     $value
-     * @param  string    $identifier
-     * @param  bool      $checkDeleted set to true to include soft-deleted records
+     *
+     * @param mixed  $value
+     * @param string $identifier
+     * @param bool   $checkDeleted set to true to include soft-deleted records
+     *
      * @return User|null
      */
     public static function exists($value, $identifier = 'user_name', $checkDeleted = true)
@@ -224,7 +233,7 @@ class User extends Model implements UserInterface
     }
 
     /**
-     * Return a cache instance specific to that user
+     * Return a cache instance specific to that user.
      *
      * @return \Illuminate\Contracts\Cache\Store
      */
@@ -234,7 +243,7 @@ class User extends Model implements UserInterface
     }
 
     /**
-     * Allows you to get the full name of the user using `$user->full_name`
+     * Allows you to get the full name of the user using `$user->full_name`.
      *
      * @return string
      */
@@ -272,7 +281,8 @@ class User extends Model implements UserInterface
     /**
      * Get the amount of time, in seconds, that has elapsed since the last activity of a certain time for this user.
      *
-     * @param  string $type The type of activity to search for.
+     * @param string $type The type of activity to search for.
+     *
      * @return int
      */
     public function getSecondsSinceLastActivity($type)
@@ -326,7 +336,8 @@ class User extends Model implements UserInterface
     /**
      * Find the most recent activity for this user of a particular type.
      *
-     * @param  string                                $type
+     * @param string $type
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function lastActivityOfType($type = null)
@@ -346,7 +357,8 @@ class User extends Model implements UserInterface
     /**
      * Get the most recent time for a specified activity type for this user.
      *
-     * @param  string      $type
+     * @param string $type
+     *
      * @return string|null The last activity time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an activity of this type doesn't exist.
      */
     public function lastActivityTime($type)
@@ -362,7 +374,9 @@ class User extends Model implements UserInterface
      * Performs tasks to be done after this user has been successfully authenticated.
      *
      * By default, adds a new sign-in activity and updates any legacy hash.
+     *
      * @param mixed[] $params Optional array of parameters used for this event handler.
+     *
      * @todo Transition to Laravel Event dispatcher to handle this
      */
     public function onLogin($params = [])
@@ -400,7 +414,9 @@ class User extends Model implements UserInterface
      * Performs tasks to be done after this user has been logged out.
      *
      * By default, adds a new sign-out activity.
+     *
      * @param mixed[] $params Optional array of parameters used for this event handler.
+     *
      * @todo Transition to Laravel Event dispatcher to handle this
      */
     public function onLogout($params = [])
@@ -463,8 +479,9 @@ class User extends Model implements UserInterface
     /**
      * Query scope to get all users who have a specific role.
      *
-     * @param  Builder $query
-     * @param  int     $roleId
+     * @param Builder $query
+     * @param int     $roleId
+     *
      * @return Builder
      */
     public function scopeForRole($query, $roleId)
@@ -478,7 +495,8 @@ class User extends Model implements UserInterface
     /**
      * Joins the user's most recent activity directly, so we can do things like sort, search, paginate, etc.
      *
-     * @param  Builder $query
+     * @param Builder $query
+     *
      * @return Builder
      */
     public function scopeJoinLastActivity($query)

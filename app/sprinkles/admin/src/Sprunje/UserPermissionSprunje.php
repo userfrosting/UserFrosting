@@ -14,7 +14,7 @@ use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\NotFoundException;
 
 /**
- * UserPermissionSprunje
+ * UserPermissionSprunje.
  *
  * Implements Sprunje for retrieving a list of permissions for a specified user.
  *

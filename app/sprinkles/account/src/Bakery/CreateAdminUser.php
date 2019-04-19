@@ -13,9 +13,9 @@ namespace UserFrosting\Sprinkle\Account\Bakery;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
 use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -129,9 +129,10 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Ask for the username and return a valid one
+     * Ask for the username and return a valid one.
      *
-     * @param  string $username The base/default username
+     * @param string $username The base/default username
+     *
      * @return string The validated username
      */
     protected function askUsername($username = '')
@@ -146,8 +147,9 @@ class CreateAdminUser extends BaseCommand
     /**
      * Validate the username.
      *
-     * @param  string $username The input
-     * @return bool   Is the username validated ?
+     * @param string $username The input
+     *
+     * @return bool Is the username validated ?
      */
     protected function validateUsername($username)
     {
@@ -175,9 +177,10 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Ask for the email and return a valid one
+     * Ask for the email and return a valid one.
      *
-     * @param  string $email The base/default email
+     * @param string $email The base/default email
+     *
      * @return string The validated email
      */
     protected function askEmail($email = '')
@@ -192,8 +195,9 @@ class CreateAdminUser extends BaseCommand
     /**
      * Validate the email.
      *
-     * @param  string $email The input
-     * @return bool   Is the email validated ?
+     * @param string $email The input
+     *
+     * @return bool Is the email validated ?
      */
     protected function validateEmail($email)
     {
@@ -215,9 +219,10 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Ask for the first name and return a valid one
+     * Ask for the first name and return a valid one.
      *
-     * @param  string $firstName The base/default first name
+     * @param string $firstName The base/default first name
+     *
      * @return string The validated first name
      */
     protected function askFirstName($firstName = '')
@@ -230,10 +235,11 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Validate the first name
+     * Validate the first name.
      *
-     * @param  string $firstName The input
-     * @return bool   Is the input validated ?
+     * @param string $firstName The input
+     *
+     * @return bool Is the input validated ?
      */
     protected function validateFirstName($firstName)
     {
@@ -248,9 +254,10 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Ask for the last name and return a valid one
+     * Ask for the last name and return a valid one.
      *
-     * @param  string $lastName The base/default last name
+     * @param string $lastName The base/default last name
+     *
      * @return string The validated last name
      */
     protected function askLastName($lastName = '')
@@ -263,10 +270,11 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Validate the last name entered is valid
+     * Validate the last name entered is valid.
      *
-     * @param  string $lastName The lastname
-     * @return bool   Input is valid or not
+     * @param string $lastName The lastname
+     *
+     * @return bool Input is valid or not
      */
     protected function validateLastName($lastName)
     {
@@ -281,10 +289,11 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Ask for the password and return a valid one
+     * Ask for the password and return a valid one.
      *
-     * @param  string $password            The base/default password
-     * @param  bool   $requireConfirmation (default true)
+     * @param string $password            The base/default password
+     * @param bool   $requireConfirmation (default true)
+     *
      * @return string The validated password
      */
     protected function askPassword($password = '', $requireConfirmation = true)
@@ -297,10 +306,11 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Validate password input
+     * Validate password input.
      *
-     * @param  string $password The input
-     * @return bool   Is the password valid or not
+     * @param string $password The input
+     *
+     * @return bool Is the password valid or not
      */
     protected function validatePassword($password)
     {
@@ -315,11 +325,12 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Ask for password confirmation
+     * Ask for password confirmation.
      *
-     * @param  string $passwordToConfirm
-     * @param  bool   $requireConfirmation (default true)
-     * @return bool   Is the password confirmed or not
+     * @param string $passwordToConfirm
+     * @param bool   $requireConfirmation (default true)
+     *
+     * @return bool Is the password confirmed or not
      */
     protected function confirmPassword($passwordToConfirm, $requireConfirmation = true)
     {
@@ -335,11 +346,12 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Validate the confirmation password
+     * Validate the confirmation password.
      *
-     * @param  string $password          The confirmation
-     * @param  string $passwordToConfirm The password to confirm
-     * @return bool   Is the confirmation password valid or not
+     * @param string $password          The confirmation
+     * @param string $passwordToConfirm The password to confirm
+     *
+     * @return bool Is the confirmation password valid or not
      */
     protected function validatePasswordConfirmation($password, $passwordToConfirm)
     {

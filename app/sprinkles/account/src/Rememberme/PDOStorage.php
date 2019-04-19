@@ -15,7 +15,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Account\Database\Models\Persistence;
 
 /**
- * Store login tokens in database with PDO class
+ * Store login tokens in database with PDO class.
  *
  * @author Louis Charette
  */
@@ -33,9 +33,10 @@ class PDOStorage implements StorageInterface
     }
 
     /**
-     * @param  mixed  $credential
-     * @param  string $token
-     * @param  string $persistentToken
+     * @param mixed  $credential
+     * @param string $token
+     * @param string $persistentToken
+     *
      * @return int
      */
     public function findTriplet($credential, $token, $persistentToken)
@@ -84,7 +85,7 @@ class PDOStorage implements StorageInterface
     }
 
     /**
-     * Replace current token after successful authentication
+     * Replace current token after successful authentication.
      *
      * @param mixed  $credential
      * @param string $token

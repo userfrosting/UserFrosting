@@ -13,10 +13,10 @@ namespace UserFrosting\Sprinkle\Admin\Controller;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -40,10 +40,13 @@ class GroupController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: POST
+     *
      * @see getModalCreateGroup
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function create(Request $request, Response $response, $args)
@@ -135,9 +138,11 @@ class GroupController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: DELETE
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If group is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -172,6 +177,7 @@ class GroupController extends SimpleController
         if ($group->slug == $config['site.registration.user_defaults.group']) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.DELETE_DEFAULT', $group->toArray());
+
             throw $e;
         }
 
@@ -183,6 +189,7 @@ class GroupController extends SimpleController
         if ($countGroupUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.NOT_EMPTY', $group->toArray());
+
             throw $e;
         }
 
@@ -216,9 +223,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      * @throws NotFoundException  If group is not found
      */
@@ -256,15 +265,17 @@ class GroupController extends SimpleController
     }
 
     /**
-     * Returns a list of Groups
+     * Returns a list of Groups.
      *
      * Generates a list of groups, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getList(Request $request, Response $response, $args)
@@ -294,11 +305,12 @@ class GroupController extends SimpleController
     }
 
     /**
-     * Get deletetion confirmation modal
+     * Get deletetion confirmation modal.
      *
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If group is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -336,6 +348,7 @@ class GroupController extends SimpleController
         if ($countGroupUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.NOT_EMPTY', $group->toArray());
+
             throw $e;
         }
 
@@ -354,9 +367,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getModalCreate(Request $request, Response $response, $args)
@@ -417,9 +432,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If group is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -481,11 +498,12 @@ class GroupController extends SimpleController
     }
 
     /**
-     * Users List API
+     * Users List API.
      *
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If group is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -537,9 +555,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageInfo(Request $request, Response $response, $args)
@@ -615,9 +635,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageList(Request $request, Response $response, $args)
@@ -646,10 +668,13 @@ class GroupController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: PUT
+     *
      * @see getModalGroupEdit
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If group is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -759,10 +784,12 @@ class GroupController extends SimpleController
     }
 
     /**
-     * Get group from params
+     * Get group from params.
      *
-     * @param  array               $params
+     * @param array $params
+     *
      * @throws BadRequestException
+     *
      * @return Group
      */
     protected function getGroupFromParams($params)
@@ -784,6 +811,7 @@ class GroupController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 

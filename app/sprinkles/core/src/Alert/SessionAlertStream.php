@@ -16,7 +16,7 @@ use UserFrosting\Session\Session;
 /**
  * SessionAlertStream Class
  * Implements a message stream for use between HTTP requests, with i18n support via the MessageTranslator class
- * Using the session storage to store the alerts
+ * Using the session storage to store the alerts.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -59,7 +59,7 @@ class SessionAlertStream extends AlertStream
     }
 
     /**
-     * Save messages to the stream
+     * Save messages to the stream.
      *
      * @param string $messages The message
      */

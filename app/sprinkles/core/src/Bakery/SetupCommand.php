@@ -16,7 +16,7 @@ use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * Setup wizard CLI Tools.
- * Helper command to setup .env file
+ * Helper command to setup .env file.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */

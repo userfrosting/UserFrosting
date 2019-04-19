@@ -20,9 +20,10 @@ use UserFrosting\Sprinkle\Core\Database\Relations\MorphManySyncable;
 use UserFrosting\Sprinkle\Core\Database\Relations\MorphToManyUnique;
 
 /**
- * HasRelationships trait
+ * HasRelationships trait.
  *
  * Extends Laravel's Model class to add some additional relationships.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 trait HasRelationships
@@ -37,9 +38,10 @@ trait HasRelationships
     /**
      * Overrides the default Eloquent hasMany relationship to return a HasManySyncable.
      *
-     * @param  string          $related
-     * @param  string          $foreignKey
-     * @param  string          $localKey
+     * @param string $related
+     * @param string $foreignKey
+     * @param string $localKey
+     *
      * @return HasManySyncable
      */
     public function hasMany($related, $foreignKey = null, $localKey = null)
@@ -61,11 +63,12 @@ trait HasRelationships
     /**
      * Overrides the default Eloquent morphMany relationship to return a MorphManySyncable.
      *
-     * @param  string            $related
-     * @param  string            $name
-     * @param  string            $type
-     * @param  string            $id
-     * @param  string            $localKey
+     * @param string $related
+     * @param string $name
+     * @param string $type
+     * @param string $id
+     * @param string $localKey
+     *
      * @return MorphManySyncable
      */
     public function morphMany($related, $name, $type = null, $id = null, $localKey = null)
@@ -86,16 +89,17 @@ trait HasRelationships
      * Define a many-to-many 'through' relationship.
      * This is basically hasManyThrough for many-to-many relationships.
      *
-     * @param  string               $related
-     * @param  string               $through
-     * @param  string               $firstJoiningTable
-     * @param  string               $firstForeignKey
-     * @param  string               $firstRelatedKey
-     * @param  string               $secondJoiningTable
-     * @param  string               $secondForeignKey
-     * @param  string               $secondRelatedKey
-     * @param  string               $throughRelation
-     * @param  string               $relation
+     * @param string $related
+     * @param string $through
+     * @param string $firstJoiningTable
+     * @param string $firstForeignKey
+     * @param string $firstRelatedKey
+     * @param string $secondJoiningTable
+     * @param string $secondForeignKey
+     * @param string $secondRelatedKey
+     * @param string $throughRelation
+     * @param string $relation
+     *
      * @return BelongsToManyThrough
      */
     public function belongsToManyThrough(
@@ -163,11 +167,12 @@ trait HasRelationships
      * Define a unique many-to-many relationship.  Similar to a regular many-to-many relationship, but removes duplicate child objects.
      * Can also be used to implement ternary relationships.
      *
-     * @param  string              $related
-     * @param  string              $table
-     * @param  string              $foreignKey
-     * @param  string              $relatedKey
-     * @param  string              $relation
+     * @param string $related
+     * @param string $table
+     * @param string $foreignKey
+     * @param string $relatedKey
+     * @param string $relation
+     *
      * @return BelongsToManyUnique
      */
     public function belongsToManyUnique($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
@@ -208,12 +213,13 @@ trait HasRelationships
     /**
      * Define a unique morphs-to-many relationship.  Similar to a regular morphs-to-many relationship, but removes duplicate child objects.
      *
-     * @param  string            $related
-     * @param  string            $name
-     * @param  string            $table
-     * @param  string            $foreignKey
-     * @param  string            $otherKey
-     * @param  bool              $inverse
+     * @param string $related
+     * @param string $name
+     * @param string $table
+     * @param string $foreignKey
+     * @param string $otherKey
+     * @param bool   $inverse
+     *
      * @return MorphToManyUnique
      */
     public function morphToManyUnique($related, $name, $table = null, $foreignKey = null, $otherKey = null, $inverse = false)
@@ -254,12 +260,14 @@ trait HasRelationships
      * This has been superseded by the belongsToManyUnique relationship's `withTernary` method since 4.1.7.
      *
      * @deprecated since 4.1.6
-     * @param  string                   $related
-     * @param  string                   $constraintKey
-     * @param  string                   $table
-     * @param  string                   $foreignKey
-     * @param  string                   $relatedKey
-     * @param  string                   $relation
+     *
+     * @param string $related
+     * @param string $constraintKey
+     * @param string $table
+     * @param string $foreignKey
+     * @param string $relatedKey
+     * @param string $relation
+     *
      * @return BelongsToManyConstrained
      */
     public function belongsToManyConstrained($related, $constraintKey, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)

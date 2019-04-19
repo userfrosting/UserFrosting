@@ -17,6 +17,7 @@ use UserFrosting\Sprinkle\Core\Error\Handler\HttpExceptionHandler;
  * Handler for AuthExpiredExceptions.
  *
  * Forwards the user to the login page when their session has expired.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class AuthExpiredExceptionHandler extends HttpExceptionHandler

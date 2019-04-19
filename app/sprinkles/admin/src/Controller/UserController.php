@@ -14,10 +14,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
@@ -44,10 +44,13 @@ class UserController extends SimpleController
      * This route requires authentication.
      *
      * Request type: POST
+     *
      * @see getModalCreate
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function create(Request $request, Response $response, $args)
@@ -189,9 +192,11 @@ class UserController extends SimpleController
      * This route requires authentication.
      *
      * Request type: POST
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -261,9 +266,11 @@ class UserController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: DELETE
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If user is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -298,6 +305,7 @@ class UserController extends SimpleController
         if ($user->id == $config['reserved_user_ids.master']) {
             $e = new BadRequestException();
             $e->addUserMessage('DELETE_MASTER');
+
             throw $e;
         }
 
@@ -330,9 +338,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -381,9 +391,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -427,14 +439,16 @@ class UserController extends SimpleController
     }
 
     /**
-     * Returns a list of Users
+     * Returns a list of Users.
      *
      * Generates a list of users, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getList(Request $request, Response $response, $args)
@@ -469,9 +483,11 @@ class UserController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If user is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -509,6 +525,7 @@ class UserController extends SimpleController
         if ($user->id == $config['reserved_user_ids.master']) {
             $e = new BadRequestException();
             $e->addUserMessage('DELETE_MASTER');
+
             throw $e;
         }
 
@@ -529,9 +546,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getModalCreate(Request $request, Response $response, $args)
@@ -623,9 +642,11 @@ class UserController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -721,9 +742,11 @@ class UserController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -772,9 +795,11 @@ class UserController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -815,9 +840,11 @@ class UserController extends SimpleController
      * Generates a list of permissions, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -863,9 +890,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -917,9 +946,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageInfo(Request $request, Response $response, $args)
@@ -1057,9 +1088,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageList(Request $request, Response $response, $args)
@@ -1079,7 +1112,7 @@ class UserController extends SimpleController
     }
 
     /**
-     * Processes the request to update an existing user's basic details (first_name, last_name, email, locale, group_id)
+     * Processes the request to update an existing user's basic details (first_name, last_name, email, locale, group_id).
      *
      * Processes the request from the user update form, checking that:
      * 1. The target user's new email address, if specified, is not already in use;
@@ -1088,9 +1121,11 @@ class UserController extends SimpleController
      *
      * This route requires authentication.
      * Request type: PUT
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -1215,9 +1250,11 @@ class UserController extends SimpleController
      *
      * This route requires authentication.
      * Request type: PUT
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If user is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -1288,6 +1325,7 @@ class UserController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
@@ -1306,6 +1344,7 @@ class UserController extends SimpleController
             ) {
                 $e = new BadRequestException();
                 $e->addUserMessage('DISABLE_MASTER');
+
                 throw $e;
             } elseif (
                 ($user->id == $currentUser->id) &&
@@ -1313,6 +1352,7 @@ class UserController extends SimpleController
             ) {
                 $e = new BadRequestException();
                 $e->addUserMessage('DISABLE_SELF');
+
                 throw $e;
             }
         } elseif ($fieldName == 'password') {
@@ -1361,10 +1401,12 @@ class UserController extends SimpleController
     }
 
     /**
-     * Get User instance from params
+     * Get User instance from params.
      *
-     * @param  array               $params
+     * @param array $params
+     *
      * @throws BadRequestException
+     *
      * @return User
      */
     protected function getUserFromParams($params)
@@ -1386,6 +1428,7 @@ class UserController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 

@@ -100,7 +100,8 @@ class ShutdownHandler
     /**
      * Build the error message string.
      *
-     * @param  array  $error
+     * @param array $error
+     *
      * @return string
      */
     protected function buildErrorInfoMessage(array $error)
@@ -123,7 +124,8 @@ class ShutdownHandler
     /**
      * Build an error response of the appropriate type as determined by the request's Accept header.
      *
-     * @param  string $message
+     * @param string $message
+     *
      * @return string
      */
     protected function buildErrorPage($message)
@@ -148,7 +150,8 @@ class ShutdownHandler
     /**
      * Build an HTML error page from an error string.
      *
-     * @param  string $message
+     * @param string $message
+     *
      * @return string
      */
     protected function buildHtmlErrorPage($message)

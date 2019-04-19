@@ -14,7 +14,7 @@ use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * ActivitySprunje
+ * ActivitySprunje.
  *
  * Implements Sprunje for the activities API.
  *
@@ -49,8 +49,9 @@ class ActivitySprunje extends Sprunje
     /**
      * Filter LIKE the user info.
      *
-     * @param  Builder $query
-     * @param  mixed   $value
+     * @param Builder $query
+     * @param mixed   $value
+     *
      * @return self
      */
     protected function filterUser($query, $value)
@@ -71,8 +72,9 @@ class ActivitySprunje extends Sprunje
     /**
      * Sort based on user last name.
      *
-     * @param  Builder $query
-     * @param  string  $direction
+     * @param Builder $query
+     * @param string  $direction
+     *
      * @return self
      */
     protected function sortUser($query, $direction)

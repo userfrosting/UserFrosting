@@ -13,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Facades;
 use UserFrosting\System\Facade;
 
 /**
- * Implements facade for the "debugLogger" service
+ * Implements facade for the "debugLogger" service.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
