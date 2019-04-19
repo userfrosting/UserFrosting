@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -131,7 +132,7 @@ class SessionDatabaseHandlerTest extends TestCase
     }
 
     /**
-     * @param  Session $session
+     * @param Session $session
      */
     protected function sessionTests(Session $session)
     {

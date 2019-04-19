@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -54,7 +55,7 @@ class UserModelTest extends TestCase
         $this->assertInstanceOf(User::class, User::withTrashed()->find($user->id));
 
         //$user->activities - activities
-        $this->ci->userActivityLogger->info("test", [
+        $this->ci->userActivityLogger->info('test', [
             'type'    => 'group_create',
             'user_id' => $user->id
         ]);

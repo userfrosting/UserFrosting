@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -705,9 +706,9 @@ class RoleController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'pages/role.html.twig', [
-            'role'   => $role,
-            'fields' => $fields,
-            'tools'  => $editButtons,
+            'role'            => $role,
+            'fields'          => $fields,
+            'tools'           => $editButtons,
             'delete_redirect' => $this->ci->router->pathFor('uri_roles')
         ]);
     }

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -149,6 +150,5 @@ class Core extends Sprinkle
         // Register core sprinkle class streams
         $locator->registerStream('seeds', '', \UserFrosting\SEEDS_DIR);
         $locator->registerStream('migrations', '', \UserFrosting\MIGRATIONS_DIR);
-
     }
 }
