@@ -8,10 +8,10 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Core\Tests\Unit;
+namespace UserFrosting\Sprinkle\Core\Tests\Unit\Sprunje;
 
 use Mockery as m;
-use UserFrosting\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use UserFrosting\Sprinkle\Core\Database\Builder as Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
