@@ -8,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Core\Tests\Integration;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Filesystem;
 
 use Illuminate\Filesystem\FilesystemAdapter;
 use League\Flysystem\Adapter\Local as LocalAdapter;

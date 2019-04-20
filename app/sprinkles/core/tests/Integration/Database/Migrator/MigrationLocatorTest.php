@@ -8,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Core\Tests\Integration;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Database\Migrator;
 
 use Mockery as m;
 use UserFrosting\Tests\TestCase;
@@ -18,6 +18,9 @@ use UserFrosting\UniformResourceLocator\ResourceLocator;
 use UserFrosting\UniformResourceLocator\ResourceLocation;
 use UserFrosting\UniformResourceLocator\ResourceStream;
 
+/**
+ * MigrationLocator Tests
+ */
 class MigrationLocatorTest extends TestCase
 {
     public function tearDown()

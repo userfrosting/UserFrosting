@@ -8,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Account\Tests\Integration\Session;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
 
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;

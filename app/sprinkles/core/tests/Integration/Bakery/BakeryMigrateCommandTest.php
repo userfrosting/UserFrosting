@@ -8,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Core\Tests\Integration;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Bakery;
 
 use Mockery as m;
 use Symfony\Component\Console\Application;
@@ -16,6 +16,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 use UserFrosting\Sprinkle\Core\Bakery\MigrateCommand;
 use UserFrosting\Tests\TestCase;
 
+/**
+ * MigrateCommand Test
+ */
 class BakeryMigrateCommandTest extends TestCase
 {
     public function tearDown()
