@@ -8,15 +8,18 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Core\Tests\Integration;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Bakery;
 
 use Mockery as m;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use UserFrosting\Sprinkle\Core\Bakery\MigrateResetCommand;
+use UserFrosting\Sprinkle\Core\Bakery\MigrateRefreshCommand;
 use UserFrosting\Tests\TestCase;
 
-class BakeryMigrateResetCommandTest extends TestCase
+/**
+ * MigrateRefreshCommand Test
+ */
+class BakeryMigrateRefreshCommandTest extends TestCase
 {
     public function tearDown()
     {
@@ -26,17 +29,13 @@ class BakeryMigrateResetCommandTest extends TestCase
 
     public function testBasicMigrationsCallMigratorWithProperArguments()
     {
-        // Setup repository mock
-        $repository = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository');
-        $repository->shouldReceive('deleteRepository')->andReturn(null);
-
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
-        $migrator->shouldReceive('repositoryExists')->twice()->andReturn(true);
+        $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
         $migrator->shouldReceive('getRanMigrations')->once()->andReturn(['foo']);
-        $migrator->shouldReceive('reset')->once()->with(false)->andReturn(['foo']);
+        $migrator->shouldReceive('rollback')->once()->with(['pretend' => false, 'steps' => 1])->andReturn(['foo']);
+        $migrator->shouldReceive('run')->once()->with(['pretend' => false, 'step' => false])->andReturn([]);
         $migrator->shouldReceive('getNotes');
-        $migrator->shouldReceive('getRepository')->once()->andReturn($repository);
 
         // Run command
         $commandTester = $this->runCommand($migrator, []);
@@ -44,34 +43,30 @@ class BakeryMigrateResetCommandTest extends TestCase
 
     public function testBasicCallWithNotthingToRollback()
     {
-        // Setup repository mock
-        $repository = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository');
-        $repository->shouldReceive('deleteRepository')->andReturn(null);
-
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
-        $migrator->shouldReceive('repositoryExists')->twice()->andReturn(true);
+        $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
         $migrator->shouldReceive('getRanMigrations')->once()->andReturn(['foo']);
-        $migrator->shouldReceive('reset')->once()->with(false)->andReturn([]);
+        $migrator->shouldReceive('rollback')->once()->with(['pretend' => false, 'steps' => 1])->andReturn([]);
+        $migrator->shouldNotReceive('run');
         $migrator->shouldReceive('getNotes');
-        $migrator->shouldReceive('getRepository')->once()->andReturn($repository);
 
         // Run command
         $commandTester = $this->runCommand($migrator, []);
     }
 
-    public function testTheCommandMayBePretended()
+    public function testStepsMayBeSet()
     {
         // Setup migrator mock
         $migrator = m::mock('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator');
         $migrator->shouldReceive('repositoryExists')->once()->andReturn(true);
         $migrator->shouldReceive('getRanMigrations')->once()->andReturn(['foo']);
-        $migrator->shouldReceive('reset')->once()->with(true)->andReturn(['foo']);
+        $migrator->shouldReceive('rollback')->once()->with(['pretend' => false, 'steps' => 3])->andReturn(['foo']);
+        $migrator->shouldReceive('run')->once()->with(['pretend' => false, 'step' => false])->andReturn([]);
         $migrator->shouldReceive('getNotes');
-        $migrator->shouldNotReceive('getRepository');
 
         // Run command
-        $commandTester = $this->runCommand($migrator, ['--pretend' => true]);
+        $commandTester = $this->runCommand($migrator, ['--steps' => 3]);
     }
 
     protected function runCommand($migrator, $input = [])
@@ -82,7 +77,7 @@ class BakeryMigrateResetCommandTest extends TestCase
 
         // Create the app, create the command, replace $ci and add the command to the app
         $app = new Application();
-        $command = new MigrateResetCommand();
+        $command = new MigrateRefreshCommand();
         $command->setContainer($ci);
         $app->add($command);
 

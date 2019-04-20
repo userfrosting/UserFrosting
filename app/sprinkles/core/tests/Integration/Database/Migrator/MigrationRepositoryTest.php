@@ -8,13 +8,16 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Core\Tests\Integration;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Database\Migrator;
 
 use Mockery as m;
 use Illuminate\Support\Collection;
 use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
 use UserFrosting\Tests\TestCase;
 
+/**
+ * DatabaseMigrationRespository Test
+ */
 class MigrationRepositoryTest extends TestCase
 {
     public function tearDown()

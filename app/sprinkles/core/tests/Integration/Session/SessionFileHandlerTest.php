@@ -8,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Account\Tests\Integration\Session;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\FileSessionHandler;
