@@ -47,7 +47,7 @@ class SessionAlertStream extends AlertStream
      */
     public function messages()
     {
-        return $this->session[$this->messagesKey] ?: [];
+        return $this->session->get($this->messagesKey) ?: [];
     }
 
     /**
@@ -55,16 +55,16 @@ class SessionAlertStream extends AlertStream
      */
     public function resetMessageStream()
     {
-        $this->session[$this->messagesKey] = [];
+        $this->session->set($this->messagesKey, []);
     }
 
     /**
      * Save messages to the stream.
      *
-     * @param string $messages The message
+     * @param array $messages The message
      */
-    protected function saveMessages($messages)
+    protected function saveMessages(array $messages)
     {
-        $this->session[$this->messagesKey] = $messages;
+        $this->session->set($this->messagesKey, $messages);
     }
 }
