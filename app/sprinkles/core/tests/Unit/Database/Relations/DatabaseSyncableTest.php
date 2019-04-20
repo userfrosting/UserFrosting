@@ -15,9 +15,11 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-
 use UserFrosting\Sprinkle\Core\Database\Relations\HasManySyncable;
 
+/**
+ * Tests the HasManySyncable relation.
+ */
 class DatabaseSyncableTest extends TestCase
 {
     public function tearDown()
