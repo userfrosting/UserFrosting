@@ -57,7 +57,6 @@ use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Sprinkle\Core\Util\RawAssetBundles;
-use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\NotFoundException;
 use UserFrosting\Support\Repository\Loader\ArrayFileLoader;
 use UserFrosting\Support\Repository\Repository;
@@ -90,7 +89,7 @@ class ServicesProvider
             $config = $c->config;
 
             if ($config['alert.storage'] == 'cache') {
-                return new CacheAlertStream($config['alert.key'], $c->translator, $c->cache, $c->config);
+                return new CacheAlertStream($config['alert.key'], $c->translator, $c->cache, $c->session->getId());
             } elseif ($config['alert.storage'] == 'session') {
                 return new SessionAlertStream($config['alert.key'], $c->translator, $c->session);
             } else {
@@ -271,7 +270,7 @@ class ServicesProvider
          * Initialize CSRF guard middleware.
          *
          * @see https://github.com/slimphp/Slim-Csrf
-         * @throws BadRequestException
+         * @throws \UserFrosting\Support\Exception\BadRequestException
          * @return \Slim\Csrf\Guard
          */
         $container['csrf'] = function ($c) {
