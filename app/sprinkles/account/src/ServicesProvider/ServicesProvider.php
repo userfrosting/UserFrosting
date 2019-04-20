@@ -69,6 +69,7 @@ class ServicesProvider
             $classMapper->setClassMapping('activity', 'UserFrosting\Sprinkle\Account\Database\Models\Activity');
             $classMapper->setClassMapping('password_reset', 'UserFrosting\Sprinkle\Account\Database\Models\PasswordReset');
             $classMapper->setClassMapping('verification', 'UserFrosting\Sprinkle\Account\Database\Models\Verification');
+            $classMapper->setClassMapping('persistence', 'UserFrosting\Sprinkle\Account\Database\Models\Persistence');
 
             return $classMapper;
         });
