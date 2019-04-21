@@ -524,7 +524,7 @@ class AccountController extends SimpleController
                     'register' => $validatorRegister->rules('json', false)
                 ]
             ],
-            'fields' => $fields,
+            'fields'  => $fields,
             'locales' => [
                 'available' => $config['site.locales.available'],
                 'current'   => end($currentLocales)
@@ -679,7 +679,7 @@ class AccountController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
             'locales' => $locales,
-            'fields' => $fields,
+            'fields'  => $fields,
             'page'    => [
                 'validators' => [
                     'account_settings'    => $validatorAccountSettings->rules('json', false),

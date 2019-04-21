@@ -123,7 +123,7 @@ class SessionFileHandlerTest extends TestCase
     }
 
     /**
-     * @param  Session $session
+     * @param Session $session
      */
     protected function sessionTests(Session $session)
     {
