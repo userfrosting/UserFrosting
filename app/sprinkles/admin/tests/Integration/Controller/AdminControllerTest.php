@@ -8,11 +8,12 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Admin\Tests\Integration;
+namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\AdminController;
 use UserFrosting\Sprinkle\Core\Tests\ControllerTestCase;
+use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
  * Tests CoreController
@@ -34,17 +35,16 @@ class AdminControllerTest extends ControllerTestCase
 
     /**
      * @depends testControllerConstructor
-     * @expectedException \UserFrosting\Support\Exception\ForbiddenException
      */
     public function testPageDashboard_GuestUser()
     {
         $controller = $this->getController();
+        $this->expectException(ForbiddenException::class);
         $controller->pageDashboard($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
      * @depends testControllerConstructor
-     * @expectedException \UserFrosting\Support\Exception\ForbiddenException
      */
     public function testPageDashboard_ForbiddenException()
     {
@@ -53,6 +53,7 @@ class AdminControllerTest extends ControllerTestCase
 
         // Get controller
         $controller = $this->getController();
+        $this->expectException(ForbiddenException::class);
         $controller->pageDashboard($this->getRequest(), $this->getResponse(), []);
     }
 
@@ -107,6 +108,59 @@ class AdminControllerTest extends ControllerTestCase
 
         $actualMessage = $this->ci->translator->translate('CACHE.CLEARED');
         $this->assertSame($expectedMessage, $actualMessage);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     */
+    public function testClearCacheWithNoPermission()
+    {
+        // Normal user, WON'T have access
+        $testUser = $this->createTestUser(false, true);
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Set expectations
+        $this->expectException(ForbiddenException::class);
+
+        // Execute
+        $controller->clearCache($this->getRequest(), $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testClearCache
+     */
+    public function testGetModalConfirmClearCache()
+    {
+        // Admin user, WILL have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Get controller stuff
+        $result = $controller->getModalConfirmClearCache($this->getRequest(), $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testGetModalConfirmClearCache
+     */
+    public function testGetModalConfirmClearCacheWithNoPermission()
+    {
+        // Admin user, WILL have access
+        $testUser = $this->createTestUser(false, true);
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Set expectations
+        $this->expectException(ForbiddenException::class);
+
+        // Execute
+        $controller->getModalConfirmClearCache($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
