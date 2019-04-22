@@ -17,7 +17,7 @@ use UserFrosting\Tests\TestCase;
  * Integration tests for `authGuard` service.
  * Check to see if service returns what it's supposed to return
  */
-class AuthGuardServiceTest extends TestCase
+class AlertsServiceTest extends TestCase
 {
     public function testService()
     {
