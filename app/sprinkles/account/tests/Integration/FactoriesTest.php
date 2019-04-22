@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
 use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 
@@ -24,26 +25,17 @@ class FactoriesTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * Setup TestDatabase
-     */
-    public function setUp()
-    {
-        // Boot parent TestCase, which will set up the database and connections for us.
-        parent::setUp();
-
-        // Setup test database
-        $this->setupTestDatabase();
-        $this->refreshDatabase();
-    }
-
-    /**
-     *    Test the user factory
+     * Test the user factory
      */
     public function testUserFactory()
     {
+        // Setup test database
+        $this->setupTestDatabase();
+        $this->refreshDatabase();
+
         $fm = $this->ci->factory;
 
         $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
-        $this->assertInstanceOf('UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface', $user);
+        $this->assertInstanceOf(UserInterface::class, $user);
     }
 }
