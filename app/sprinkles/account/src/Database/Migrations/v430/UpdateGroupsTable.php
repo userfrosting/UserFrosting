@@ -36,7 +36,7 @@ class UpdateGroupsTable extends Migration
     {
         if ($this->schema->hasTable('groups')) {
             $this->schema->table('groups', function (Blueprint $table) {
-                $table->string('icon', 100)->default(null)->change();
+                $table->string('icon', 100)->default(null)->nullable(true)->change();
             });
         }
     }
@@ -47,7 +47,7 @@ class UpdateGroupsTable extends Migration
     public function down()
     {
         $this->schema->table('groups', function (Blueprint $table) {
-            $table->string('icon', 100)->default('fas fa-user')->change();
+            $table->string('icon', 100)->default('fas fa-user')->nullable(false)->change();
         });
     }
 }
