@@ -45,6 +45,7 @@ class CoreController extends SimpleController
      *
      * Request type: GET
      *
+     * @codeCoverageIgnore
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -59,6 +60,7 @@ class CoreController extends SimpleController
      *
      * Request type: GET
      *
+     * @codeCoverageIgnore
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -73,6 +75,7 @@ class CoreController extends SimpleController
      *
      * Request type: GET
      *
+     * @codeCoverageIgnore
      * @param Request  $request
      * @param Response $response
      * @param array    $args

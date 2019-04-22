@@ -29,14 +29,14 @@ class LocalePathBuilderServiceTest extends TestCase
     public function testServiceWithUnexpectedValueExceptionOnNonStringConfig()
     {
         $this->ci->config['site.locales.default'] = [];
-        $this->expectException(\UnexpectedValueException::Class);
+        $this->expectException(\UnexpectedValueException::class);
         $this->ci->localePathBuilder;
     }
 
     public function testServiceWithUnexpectedValueExceptionOnEmptyStringConfig()
     {
         $this->ci->config['site.locales.default'] = '';
-        $this->expectException(\UnexpectedValueException::Class);
+        $this->expectException(\UnexpectedValueException::class);
         $this->ci->localePathBuilder;
     }
 }

@@ -73,7 +73,7 @@ class CacheAlertStreamTest extends TestCase
         ];
         $tags->shouldReceive('has')->with($this->key)->once()->andReturn(false);
         $tags->shouldReceive('forever')->with($this->key, [$message])->once()->andReturn(null);
-        $cache->shouldReceive('tags')->with("_s".$this->session_id)->andReturn($tags);
+        $cache->shouldReceive('tags')->with('_s' . $this->session_id)->andReturn($tags);
 
         // Process
         $stream = new CacheAlertStream($this->key, $translator, $cache, $this->session_id);
@@ -98,7 +98,7 @@ class CacheAlertStreamTest extends TestCase
         $tags->shouldReceive('has')->with($this->key)->once()->andReturn(true);
         $tags->shouldReceive('get')->with($this->key)->once()->andReturn(false);
         $tags->shouldReceive('forever')->with($this->key, [$message])->once()->andReturn(null);
-        $cache->shouldReceive('tags')->with("_s".$this->session_id)->andReturn($tags);
+        $cache->shouldReceive('tags')->with('_s' . $this->session_id)->andReturn($tags);
 
         // Process
         $stream = new CacheAlertStream($this->key, $translator, $cache, $this->session_id);
@@ -123,7 +123,7 @@ class CacheAlertStreamTest extends TestCase
         $tags->shouldReceive('has')->with($this->key)->once()->andReturn(true);
         $tags->shouldReceive('get')->with($this->key)->once()->andReturn([$message]);
         $tags->shouldReceive('forever')->with($this->key, [$message, $message])->once()->andReturn(null);
-        $cache->shouldReceive('tags')->with("_s".$this->session_id)->andReturn($tags);
+        $cache->shouldReceive('tags')->with('_s' . $this->session_id)->andReturn($tags);
 
         // Process
         $stream = new CacheAlertStream($this->key, $translator, $cache, $this->session_id);
@@ -142,7 +142,7 @@ class CacheAlertStreamTest extends TestCase
 
         // Set expectations
         $tags->shouldReceive('forget')->with($this->key)->once()->andReturn(true);
-        $cache->shouldReceive('tags')->with("_s".$this->session_id)->andReturn($tags);
+        $cache->shouldReceive('tags')->with('_s' . $this->session_id)->andReturn($tags);
 
         // Process
         $stream = new CacheAlertStream($this->key, $translator, $cache, $this->session_id);
@@ -184,7 +184,7 @@ class CacheAlertStreamTest extends TestCase
         ];
         $tags->shouldReceive('has')->with($this->key)->once()->andReturn(false);
         $tags->shouldReceive('forever')->with($this->key, [$message])->once()->andReturn(null);
-        $cache->shouldReceive('tags')->with("_s".$this->session_id)->andReturn($tags);
+        $cache->shouldReceive('tags')->with('_s' . $this->session_id)->andReturn($tags);
 
         // Process
         $stream = new CacheAlertStream($this->key, $translator, $cache, $this->session_id);
@@ -210,7 +210,7 @@ class CacheAlertStreamTest extends TestCase
         $tags->shouldReceive('forget')->with($this->key)->once()->andReturn(true);
         $tags->shouldReceive('has')->with($this->key)->once()->andReturn(true);
         $tags->shouldReceive('get')->with($this->key)->once()->andReturn([$message]);
-        $cache->shouldReceive('tags')->with("_s".$this->session_id)->andReturn($tags);
+        $cache->shouldReceive('tags')->with('_s' . $this->session_id)->andReturn($tags);
 
         // Process
         $stream = new CacheAlertStream($this->key, $translator, $cache, $this->session_id);
@@ -247,7 +247,7 @@ class CacheAlertStreamTest extends TestCase
         $tags->shouldReceive('get')->with($this->key)->andReturn([$message1], [$message1, $message2]); // Save 2, Display both
         $tags->shouldReceive('forever')->with($this->key, [$message1])->once()->andReturn(null); // Save 1
         $tags->shouldReceive('forever')->with($this->key, [$message1, $message2])->once()->andReturn(null); // Save 2
-        $cache->shouldReceive('tags')->with("_s".$this->session_id)->andReturn($tags);
+        $cache->shouldReceive('tags')->with('_s' . $this->session_id)->andReturn($tags);
 
         // Process
         $stream = new CacheAlertStream($this->key, $translator, $cache, $this->session_id);
