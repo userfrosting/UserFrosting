@@ -154,15 +154,17 @@ class ServicesProvider
             } else {
 
                 // Register compiled assets stream in public folder + alias for vendor ones + build stream for CompiledAssetBundles
-                $c->locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
-                $c->locator->registerStream('assets', 'vendor', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
-                $c->locator->registerStream('build', '', \UserFrosting\BUILD_DIR_NAME, true);
+                $locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
+                $locator->registerStream('assets', 'vendor', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
+                $locator->registerStream('build', '', \UserFrosting\BUILD_DIR_NAME, true);
 
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.compiled.path'];
                 $assets = new Assets($locator, 'assets', $baseUrl);
 
                 // Load compiled asset bundle.
-                $assets->addAssetBundles(new CompiledAssetBundles($locator('build://' . $config['assets.compiled.schema'], true, true)));
+                $path = $locator->findResource('build://' . $config['assets.compiled.schema'], true, true);
+                $bundles = new CompiledAssetBundles($path);
+                $assets->addAssetBundles($bundles);
             }
 
             return $assets;
