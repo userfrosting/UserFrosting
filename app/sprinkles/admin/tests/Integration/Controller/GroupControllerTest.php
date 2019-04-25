@@ -543,7 +543,7 @@ class GroupControllerTest extends ControllerTestCase
         $this->expectException(NotFoundException::class);
 
         // Execute
-        $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => 0]);
+        $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => 'foobar']);
     }
 
     /**
