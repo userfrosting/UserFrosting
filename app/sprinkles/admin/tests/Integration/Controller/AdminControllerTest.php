@@ -104,9 +104,9 @@ class AdminControllerTest extends ControllerTestCase
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
-        $expectedMessage = end($messages)['message'];
+        $actualMessage = end($messages)['message'];
 
-        $actualMessage = $this->ci->translator->translate('CACHE.CLEARED');
+        $expectedMessage = $this->ci->translator->translate('CACHE.CLEARED');
         $this->assertSame($expectedMessage, $actualMessage);
     }
 

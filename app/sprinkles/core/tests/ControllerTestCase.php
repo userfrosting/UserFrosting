@@ -40,7 +40,7 @@ class ControllerTestCase extends TestCase
      * @param  array   $args Request arguments
      * @return Request
      */
-    protected function getRequest($args = [])
+    protected function getRequest(array $args = [])
     {
         $env = Environment::mock($args);
 
