@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [v4.2.2]
 
+### Added
+- Added Group factory (`'UserFrosting\Sprinkle\Account\Database\Models\Group'`)
+
 ### Fixed
 - Make group schema consistent between creation and edition.
-
+- Permission factory now declares slug as unique
 
 ## [v4.2.1]
 
