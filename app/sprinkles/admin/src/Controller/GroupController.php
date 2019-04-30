@@ -684,9 +684,6 @@ class GroupController extends SimpleController
             throw new NotFoundException();
         }
 
-        /** @var \UserFrosting\Support\Repository\Repository $config */
-        $config = $this->ci->config;
-
         // Get PUT parameters: (name, slug, icon, description)
         $params = $request->getParsedBody();
 
