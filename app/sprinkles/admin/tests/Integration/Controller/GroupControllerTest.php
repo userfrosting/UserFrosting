@@ -262,6 +262,32 @@ class GroupControllerTest extends ControllerTestCase
     /**
      * @depends testControllerConstructor
      */
+    public function testpageInfoWithPartialPermissions()
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Create test group
+        $fm = $this->ci->factory;
+        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'uri_group'); // Can view, but can't edit or delete
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Get controller stuff
+        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+
+        // Can't test edit / delete button not displayed ?
+    }
+
+    /**
+     * @depends testControllerConstructor
+     */
     public function testpageInfoWithBadSlug()
     {
         // Admin user, WILL have access
@@ -842,6 +868,267 @@ class GroupControllerTest extends ControllerTestCase
 
         // Execute
         $controller->getModalEdit($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     */
+    public function testUpdateInfo()
+    {
+        // Admin user, WILL have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Create a group
+        $fm = $this->ci->factory;
+        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+            'name' => 'bar',
+            'slug' => 'foo',
+        ]);
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Set post data
+        $data = [
+            'name' => 'foo',
+            'slug' => 'foo',
+            'icon' => 'foo'
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure group was update
+        $editedGroup = Group::where('slug', 'foo')->first();
+        $this->assertSame('foo', $editedGroup->name);
+        $this->assertNotSame($group->name, $editedGroup->name);
+        $this->assertSame($group->description, $editedGroup->description);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testUpdateInfo
+     */
+    public function testUpdateInfoWithNoPermission()
+    {
+        // Guest user, won't have access
+        $testUser = $this->createTestUser(false, true);
+
+        // Create a group
+        $fm = $this->ci->factory;
+        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Set post data
+        $data = [
+            'name' => 'foo',
+            'slug' => 'foo',
+            'icon' => 'foo'
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Set expectations
+        $this->expectException(ForbiddenException::class);
+
+        // Execute
+        $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
+    }
+
+    /**
+     * @depends testUpdateInfo
+     */
+    public function testUpdateInfoWithNoGroup()
+    {
+        // Guest user, WILL have access
+        $testUser = $this->createTestUser(false, true);
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Set expectations
+        $this->expectException(NotFoundException::class);
+
+        // Execute
+        $controller->updateInfo($this->getRequest(), $this->getResponse(), ['slug' => 'blah']);
+    }
+
+    /**
+     * @depends testUpdateInfo
+     */
+    public function testUpdateInfoWithMissingName()
+    {
+        // Admin user, WILL have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Create a group
+        $fm = $this->ci->factory;
+        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+            'name' => 'bar',
+            'slug' => 'foo',
+        ]);
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Set post data
+        $data = [
+            'name' => '',
+            'slug' => 'foo',
+            'icon' => 'foo'
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
+        $this->assertSame($result->getStatusCode(), 400);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure group was NOT update
+        $editedGroup = Group::where('slug', 'foo')->first();
+        $this->assertSame($group->name, $editedGroup->name);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testUpdateInfo
+     */
+    public function testUpdateInfoWithMissingSlug()
+    {
+        // Admin user, WILL have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Create a group
+        $fm = $this->ci->factory;
+        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+            'name' => 'bar',
+            'slug' => 'foo',
+        ]);
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Set post data
+        $data = [
+            'name' => 'bar',
+            'slug' => '',
+            'icon' => 'foo'
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
+        $this->assertSame($result->getStatusCode(), 400);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure group was NOT update
+        $editedGroup = Group::where('slug', 'foo')->first();
+        $this->assertNotNull($editedGroup);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testUpdateInfo
+     */
+    public function testUpdateInfoWithDuplicateSlug()
+    {
+        // Admin user, WILL have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Create a group
+        $fm = $this->ci->factory;
+        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+            'slug' => 'foo'
+        ]);
+        $group2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+            'slug' => 'bar'
+        ]);
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Set post data
+        $data = [
+            'name' => 'bar',
+            'slug' => 'bar',
+            'icon' => 'foo'
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
+        $this->assertSame($result->getStatusCode(), 400);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testUpdateInfo
+     */
+    public function testUpdateInfoWithDuplicateName()
+    {
+        // Admin user, WILL have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Create a group
+        $fm = $this->ci->factory;
+        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+            'name' => 'bar'
+        ]);
+        $group2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+            'name' => 'foo'
+        ]);
+
+        // Get controller
+        $controller = $this->getController();
+
+        // Set post data
+        $data = [
+            'name' => 'foo',
+            'slug' => 'foo',
+            'icon' => 'foo'
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
+        $this->assertSame($result->getStatusCode(), 400);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
     }
 
 
