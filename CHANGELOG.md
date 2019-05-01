@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added Group factory (`'UserFrosting\Sprinkle\Account\Database\Models\Group'`)
 
 ### Fixed
-- Make group schema consistent between creation and edition.
+- Make group & role schema consistent between creation and edition. Prevents group and role without a name or slug to be created during edition.
 - Permission factory now declares slug as unique
 
 ## [v4.2.1]
