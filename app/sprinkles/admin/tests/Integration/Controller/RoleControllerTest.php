@@ -11,25 +11,72 @@
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\RoleController;
-use UserFrosting\Sprinkle\Core\Tests\ControllerTestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
+use UserFrosting\Sprinkle\Core\Tests\withController;
 use UserFrosting\Support\Exception\BadRequestException;
-use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\NotFoundException;
+use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
+use UserFrosting\Tests\TestCase;
 
 /**
  * Tests RoleController
  */
-class RoleControllerTest extends ControllerTestCase
+class RoleControllerTest extends TestCase
 {
+    use TestDatabase;
+    use RefreshDatabase;
     use withTestUser;
+    use withController;
 
     /**
-     * @return RoleController
+     * @var bool DB is initialized for normal db
+     */
+    protected static $initialized = false;
+
+    /**
+     * Setup test database for controller tests
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->setupTestDatabase();
+
+        if ($this->usingInMemoryDatabase()) {
+
+            // Setup database, then setup User & default role
+            $this->refreshDatabase();
+            $this->setupUser();
+
+        } else if (!static::$initialized) {
+
+            // Only refresh db once
+            $this->refreshDatabase();
+            static::$initialized = true;
+        }
+    }
+
+    /**
      */
     public function testControllerConstructor()
     {
+        $controller = $this->getController();
+        $this->assertInstanceOf(RoleController::class, $controller);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @return RoleController
+     */
+    public function testControllerConstructorWithUser()
+    {
+        // Skip user setup if using in-memory db
+        if (!$this->usingInMemoryDatabase()) {
+            $this->setupUser();
+        }
+
         $controller = $this->getController();
         $this->assertInstanceOf(RoleController::class, $controller);
 
@@ -37,38 +84,15 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testCreateWithNoPermission()
+    public function testCreate(RoleController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->create($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testCreate()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set post data
         $data = [
-            'name' => 'bar',
-            'slug' => 'foo'
+            'name' => 'foo',
+            'slug' => 'bar'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -79,8 +103,8 @@ class RoleControllerTest extends ControllerTestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure role was created
-        $role = Role::where('slug', 'foo')->first();
-        $this->assertSame('bar', $role->name);
+        $role = Role::where('slug', 'bar')->first();
+        $this->assertSame('foo', $role->name);
 
         // Test message
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
@@ -90,16 +114,11 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
-     * @depends testCreate
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testCreateWithMissingName()
+    public function testCreateWithMissingName(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set post data
         $data = [
             'name' => '',
@@ -121,23 +140,12 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
-     * @depends testCreate
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testCreateWithDuplicateSlug()
+    public function testCreateWithDuplicateSlug(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create a role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
-            'slug' => 'foo'
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set post data
+        // Set post data. Foo has already been set by testCreate
         $data = [
             'name' => 'bar',
             'slug' => 'foo'
@@ -158,23 +166,12 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
-     * @depends testCreate
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testCreateWithDuplicateName()
+    public function testCreateWithDuplicateName(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create a role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
-            'name' => 'bar'
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set post data
+        // Set post data. Bar has already been set by testCreate
         $data = [
             'name' => 'bar',
             'slug' => 'foo'
@@ -195,19 +192,14 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testDelete()
+    public function testDelete(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
         // Create test role
         $fm = $this->ci->factory;
         $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
 
         // Get controller stuff
         $result = $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
@@ -226,39 +218,12 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testDelete
-     * @todo test individual permissions too
+     * @param  RoleController $controller
      */
-    public function testDeleteWithNoPermission()
+    public function testDeleteWithNotExistingRole(RoleController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
-    }
-
-    /**
-     * @depends testDelete
-     */
-    public function testDeleteWithNotExistingRole()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set expectations
         $this->expectException(NotFoundException::class);
 
@@ -267,39 +232,29 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testDelete
+     * @param  RoleController $controller
      */
-    public function testDeleteWithDefaultRole()
+    public function testDeleteWithDefaultRole(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
         // Change config
-        $this->ci->config['site.registration.user_defaults.roles'] = [$role->slug => true];
+        $this->ci->config['site.registration.user_defaults.roles'] = ['foo' => true];
 
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
-        $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
+        $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testDelete
+     * @param  RoleController $controller
      */
-    public function testDeleteWithUserInRole()
+    public function testDeleteWithUserInRole(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
+        $testUser = User::find(1)->first();
 
-        // Create test role
+        // Create a role
         $fm = $this->ci->factory;
         $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
 
@@ -307,110 +262,39 @@ class RoleControllerTest extends ControllerTestCase
         $testUser->roles()->attach($role);
         $testUser->save();
 
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
         $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testGetInfoWithGuestUser()
+    public function testGetInfoWithNotFoundException(RoleController $controller)
     {
-        $controller = $this->getController();
-        $this->expectException(ForbiddenException::class);
-        $controller->getInfo($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testGetInfoWithForbiddenException()
-    {
-        // Non admin user, won't have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-        $this->expectException(ForbiddenException::class);
-        $controller->getInfo($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testGetInfoWithNotFoundException()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
         $controller->getInfo($this->getRequest(), $this->getResponse(), ['slug' => '']);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testGetInfo()
+    public function testGetInfo(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
-        $result = $controller->getInfo($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
+        $result = $controller->getInfo($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertNotEmpty((string) $result->getBody());
-        $this->assertContains($role->description, (string) $result->getBody());
+        $this->assertContains('bar', (string) $result->getBody());
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testGetListWithNoPermission()
+    public function testGetList(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->getList($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testGetList()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
         $result = $controller->getList($this->getRequest(), $this->getResponse(), []);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
@@ -418,22 +302,13 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testGetModalConfirmDelete()
+    public function testGetModalConfirmDelete(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
         $request = $this->getRequest()->withQueryParams([
-            'slug' => $role->slug
+            'slug' => 'foo'
         ]);
 
         // Get controller stuff
@@ -443,78 +318,39 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
+     * @param  RoleController $controller
      */
-    public function testGetModalConfirmDeleteWithNoGetData()
+    public function testGetModalConfirmDeleteWithNoGetData(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
         $controller->getModalConfirmDelete($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
+     * @param  RoleController $controller
      */
-    public function testGetModalConfirmDeleteWithNonExistingRole()
+    public function testGetModalConfirmDeleteWithNonExistingRole(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo'
+            'slug' => 'foobar'
         ]);
 
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
         $controller->getModalConfirmDelete($request, $this->getResponse(), []);
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
+     * @param  RoleController $controller
      */
-    public function testGetModalConfirmDeleteWithNoPermission()
+    public function testGetModalConfirmDeleteWithUserInRole(RoleController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
-        $request = $this->getRequest()->withQueryParams([
-            'slug' => $role->slug
-        ]);
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->getModalConfirmDelete($request, $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testGetModalConfirmDelete
-     */
-    public function testGetModalConfirmDeleteWithUserInRole()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
+        $testUser = User::find(1)->first();
 
         // Create test role
         $fm = $this->ci->factory;
@@ -524,40 +360,26 @@ class RoleControllerTest extends ControllerTestCase
         $testUser->roles()->attach($role);
         $testUser->save();
 
-        // Get controller
-        $controller = $this->getController();
-
         $request = $this->getRequest()->withQueryParams([
             'slug' => $role->slug
         ]);
 
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
         $controller->getModalConfirmDelete($request, $this->getResponse(), []);
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
+     * @param  RoleController $controller
      */
-    public function testGetModalConfirmDeleteWithDefaultRole()
+    public function testGetModalConfirmDeleteWithDefaultRole(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
         // Change config
-        $this->ci->config['site.registration.user_defaults.roles'] = [$role->slug => true];
-
-        // Get controller
-        $controller = $this->getController();
+        $this->ci->config['site.registration.user_defaults.roles'] = ['foo' => true];
 
         $request = $this->getRequest()->withQueryParams([
-            'slug' => $role->slug
+            'slug' => 'foo'
         ]);
 
         // Set expectations
@@ -568,57 +390,24 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testGetModalCreate()
+    public function testGetModalCreate(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
         $result = $controller->getModalCreate($this->getRequest(), $this->getResponse(), []);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertNotSame('', (string) $result->getBody());
     }
 
     /**
-     * @depends testGetModalCreate
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testGetModalCreateWithNoPermission()
+    public function testGetModalEdit(RoleController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->getModalCreate($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testGetModalEdit()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
         $request = $this->getRequest()->withQueryParams([
-            'slug' => $role->slug
+            'slug' => 'foo'
         ]);
 
         // Get controller stuff
@@ -628,295 +417,112 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalEdit
+     * @param  RoleController $controller
      */
-    public function testGetModalEditWithNoGetData()
+    public function testGetModalEditWithNoGetData(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
         $controller->getModalEdit($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalEdit
+     * @param  RoleController $controller
      */
-    public function testGetModalEditWithNonExistingRole()
+    public function testGetModalEditWithNonExistingRole(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo'
+            'slug' => 'foobar'
         ]);
 
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
         $controller->getModalEdit($request, $this->getResponse(), []);
     }
 
     /**
-     * @depends testGetModalEdit
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testGetModalEditWithNoPermission()
+    public function testGetUsersWithBadSlug(RoleController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
-        $request = $this->getRequest()->withQueryParams([
-            'slug' => $role->slug
-        ]);
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->getModalEdit($request, $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testGetUsersWithBadSlug()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
-        $controller->getUsers($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
+        $controller->getUsers($this->getRequest(), $this->getResponse(), ['slug' => 'foobar']);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testGetUsersWithNoSlug()
+    public function testGetUsersWithNoSlug(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
         $controller->getUsers($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testGetUsers()
+    public function testGetUsers(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
-        $result = $controller->getUsers($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
+        $result = $controller->getUsers($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertNotEmpty((string) $result->getBody());
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testGetUsersWithNoPermission()
+    public function testpageInfo(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->getUsers($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testpageInfo()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
-        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
+        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertNotSame('', (string) $result->getBody());
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testpageInfoWithNoPermission()
+    public function testpageInfoWithBadSlug(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testpageInfoWithPartialPermissions()
-    {
-        // Guest user
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Give user partial permissions
-        $this->giveUserTestPermission($testUser, 'uri_role'); // Can view, but can't edit or delete
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
-        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertNotSame('', (string) $result->getBody());
-
-        // Can't test edit / delete button not displayed ?
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testpageInfoWithBadSlug()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
-        $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
+        $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => 'foobar']);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testpageList()
+    public function testpageList(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
         $result = $controller->pageList($this->getRequest(), $this->getResponse(), []);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertNotSame('', (string) $result->getBody());
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
      */
-    public function testpageListWithNoPermission()
+    public function testUpdateInfo(RoleController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->pageList($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testUpdateInfo()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
         // Create a role
         $fm = $this->ci->factory;
         $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
-            'name' => 'bar',
-            'slug' => 'foo',
+            'name' => 'barbar',
+            'slug' => 'foofoo',
         ]);
-
-        // Get controller
-        $controller = $this->getController();
 
         // Set post data
         $data = [
-            'name' => 'foo',
-            'slug' => 'foo'
+            'name' => 'foofoo',
+            'slug' => 'foofoo'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -927,9 +533,9 @@ class RoleControllerTest extends ControllerTestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure role was update
-        $editedRole = Role::where('slug', 'foo')->first();
-        $this->assertSame('foo', $editedRole->name);
-        $this->assertNotSame($role->name, $editedRole->name);
+        $editedRole = Role::where('slug', 'foofoo')->first();
+        $this->assertSame('foofoo', $editedRole->name);
+        $this->assertNotSame('barbar', $editedRole->name);
         $this->assertSame($role->description, $editedRole->description);
 
         // Test message
@@ -940,70 +546,12 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
+     * @param  RoleController $controller
      */
-    public function testUpdateInfoWithNoPermission()
+    public function testUpdateInfoWithMissingName(RoleController $controller)
     {
-        // Guest user, won't have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create a role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set post data
-        $data = [
-            'name' => 'foo',
-            'slug' => 'foo'
-        ];
-        $request = $this->getRequest()->withParsedBody($data);
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->updateInfo($request, $this->getResponse(), ['slug' => $role->slug]);
-    }
-
-    /**
-     * @depends testUpdateInfo
-     */
-    public function testUpdateInfoWithNoRole()
-    {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(NotFoundException::class);
-
-        // Execute
-        $controller->updateInfo($this->getRequest(), $this->getResponse(), ['slug' => 'blah']);
-    }
-
-    /**
-     * @depends testUpdateInfo
-     */
-    public function testUpdateInfoWithMissingName()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create a role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
-            'name' => 'bar',
-            'slug' => 'foo',
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set post data
         $data = [
             'name' => '',
@@ -1012,14 +560,14 @@ class RoleControllerTest extends ControllerTestCase
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $role->slug]);
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 400);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure role was NOT update
         $editedRole = Role::where('slug', 'foo')->first();
-        $this->assertSame($role->name, $editedRole->name);
+        $this->assertSame('bar', $editedRole->name);
 
         // Test message
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
@@ -1029,23 +577,12 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
+     * @param  RoleController $controller
      */
-    public function testUpdateInfoWithMissingSlug()
+    public function testUpdateInfoWithMissingSlug(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create a role
-        $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
-            'name' => 'bar',
-            'slug' => 'foo',
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set post data
         $data = [
             'name' => 'bar',
@@ -1054,7 +591,7 @@ class RoleControllerTest extends ControllerTestCase
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $role->slug]);
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 400);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
@@ -1071,34 +608,24 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
+     * @param  RoleController $controller
      */
-    public function testUpdateInfoWithDuplicateSlug()
+    public function testUpdateInfoWithDuplicateSlug(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
         // Create a role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
-            'slug' => 'foo'
-        ]);
-        $role2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
-            'slug' => 'bar'
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
+        $role2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
 
         // Set post data
         $data = [
-            'name' => 'bar',
-            'slug' => 'bar'
+            'slug' => $role2->slug
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $role->slug]);
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 400);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
@@ -1111,34 +638,24 @@ class RoleControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
+     * @param  RoleController $controller
      */
-    public function testUpdateInfoWithDuplicateName()
+    public function testUpdateInfoWithDuplicateName(RoleController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
         // Create a role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
-            'name' => 'bar'
-        ]);
-        $role2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
-            'name' => 'foo'
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
+        $role2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
 
         // Set post data
         $data = [
-            'name' => 'foo',
-            'slug' => 'foo'
+            'name' => $role2->name,
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $role->slug]);
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 400);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
@@ -1156,5 +673,20 @@ class RoleControllerTest extends ControllerTestCase
     private function getController()
     {
         return new RoleController($this->ci);
+    }
+
+    /**
+     */
+    private function setupUser()
+    {
+        // Admin user, WILL have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Create test role
+        $fm = $this->ci->factory;
+        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
+            'slug' => 'foo',
+            'name' => 'bar'
+        ]);
     }
 }
