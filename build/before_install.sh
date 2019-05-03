@@ -43,5 +43,5 @@ fi
 #
 if [ "$DB" == "memory" ] ; then
     echo "Setting up in memory sqlite ..."
-    printf "" > app/.env
+    printf "UF_MODE=\"debug\"\nDB_DRIVER=\"mysql\"\nDB_HOST=\"localhost\"\nDB_PORT=\"3306\"\nDB_NAME=\"userfrosting\"\nDB_USER=\"travis\"\nDB_PASSWORD=\"\"\n" > app/.env
 fi
