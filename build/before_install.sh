@@ -37,3 +37,11 @@ if [ "$DB" == "sqlite" ] ; then
     touch userfrosting.db
     printf "UF_MODE=\"debug\"\nDB_DRIVER=\"sqlite\"\nDB_NAME=\"userfrosting.db\"\nTEST_DB=\"default\"\n" > app/.env
 fi
+
+#
+# set up memory
+#
+if [ "$DB" == "memory" ] ; then
+    echo "Setting up in memory sqlite ..."
+    printf "" > app/.env
+fi

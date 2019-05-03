@@ -20,6 +20,7 @@ env:
     - DB=mysql
     - DB=sqlite
     - DB=pgsql
+    - DB=memory
 
 cache:
   directories:
