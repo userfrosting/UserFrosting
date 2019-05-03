@@ -40,8 +40,11 @@ fi
 
 #
 # set up memory
+# Need to setup MySQL for the debug part
 #
 if [ "$DB" == "memory" ] ; then
     echo "Setting up in memory sqlite ..."
+    mysql -u root -e "CREATE DATABASE userfrosting;"
+    mysql -u root -e "GRANT ALL ON userfrosting.* TO 'travis'@'localhost';"
     printf "UF_MODE=\"debug\"\nDB_DRIVER=\"mysql\"\nDB_HOST=\"localhost\"\nDB_PORT=\"3306\"\nDB_NAME=\"userfrosting\"\nDB_USER=\"travis\"\nDB_PASSWORD=\"\"\n" > app/.env
 fi
