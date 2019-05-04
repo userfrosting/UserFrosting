@@ -55,7 +55,7 @@ trait withTestUser
         if ($isMaster) {
             $user_id = $this->ci->config['reserved_user_ids.master'];
         } else {
-            $user_id = rand(0, 1222);
+            $user_id = rand(0, 999999);
         }
 
         $params = array_merge(['id' => $user_id], $params);
