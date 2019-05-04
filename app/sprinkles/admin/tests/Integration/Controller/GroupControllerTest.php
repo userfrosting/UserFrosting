@@ -11,25 +11,71 @@
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\GroupController;
-use UserFrosting\Sprinkle\Core\Tests\ControllerTestCase;
+use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
+use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
+use UserFrosting\Sprinkle\Core\Tests\withController;
 use UserFrosting\Support\Exception\BadRequestException;
-use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\NotFoundException;
+use UserFrosting\Tests\TestCase;
 
 /**
  * Tests GroupController
  */
-class GroupControllerTest extends ControllerTestCase
+class GroupControllerTest extends TestCase
 {
+    use TestDatabase;
+    use RefreshDatabase;
     use withTestUser;
+    use withController;
+
+    /**
+     * @var bool DB is initialized for normal db
+     */
+    protected static $initialized = false;
+
+    /**
+     * Setup test database for controller tests
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->setupTestDatabase();
+
+        if ($this->usingInMemoryDatabase()) {
+
+            // Setup database, then setup User & default role
+            $this->refreshDatabase();
+            $this->setupUser();
+
+        } else if (!static::$initialized) {
+
+            // Only refresh db once
+            $this->refreshDatabase();
+            static::$initialized = true;
+        }
+    }
+
+    /**
+     */
+    public function testControllerConstructor()
+    {
+        $controller = $this->getController();
+        $this->assertInstanceOf(GroupController::class, $controller);
+    }
 
     /**
      * @return GroupController
      */
-    public function testControllerConstructor()
+    public function testControllerConstructorWithUser()
     {
+        // Skip user setup if using in-memory db
+        if (!$this->usingInMemoryDatabase()) {
+            $this->setupUser();
+        }
+
         $controller = $this->getController();
         $this->assertInstanceOf(GroupController::class, $controller);
 
@@ -37,99 +83,34 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testGetInfo_GuestUser()
+    public function testGetInfoWithNotFoundException(GroupController $controller)
     {
-        $controller = $this->getController();
-        $this->expectException(ForbiddenException::class);
-        $controller->getInfo($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testGetInfo_ForbiddenException()
-    {
-        // Non admin user, won't have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-        $this->expectException(ForbiddenException::class);
-        $controller->getInfo($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testGetInfoWithNotFoundException()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
         $controller->getInfo($this->getRequest(), $this->getResponse(), ['slug' => '']);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testGetInfo()
+    public function testGetInfo(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
-        $result = $controller->getInfo($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
+        $result = $controller->getInfo($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertNotEmpty((string) $result->getBody());
-        $this->assertContains($group->description, (string) $result->getBody());
+        $this->assertContains('bar', (string) $result->getBody());
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testGetListWithNoPermission()
+    public function testGetList(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->getList($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testGetList()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
         $result = $controller->getList($this->getRequest(), $this->getResponse(), []);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
@@ -137,241 +118,80 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testGetUsersWithBadSlug()
+    public function testGetUsersWithBadSlug(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
-        $controller->getUsers($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
+        $controller->getUsers($this->getRequest(), $this->getResponse(), ['slug' => 'foobar']);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testGetUsersWithNoSlug()
+    public function testGetUsersWithNoSlug(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
         $controller->getUsers($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testGetUsers()
+    public function testGetUsers(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
-        $result = $controller->getUsers($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
+        $result = $controller->getUsers($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertNotEmpty((string) $result->getBody());
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testGetUsersWithNoPermission()
+    public function testpageInfo(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->getUsers($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testpageInfo()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
-        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
+        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertNotSame('', (string) $result->getBody());
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testpageInfoWithNoPermission()
+    public function testpageInfoWithBadSlug(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testpageInfoWithPartialPermissions()
-    {
-        // Guest user
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Give user partial permissions
-        $this->giveUserTestPermission($testUser, 'uri_group'); // Can view, but can't edit or delete
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
-        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertNotSame('', (string) $result->getBody());
-
-        // Can't test edit / delete button not displayed ?
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testpageInfoWithBadSlug()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
-        $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
+        $controller->pageInfo($this->getRequest(), $this->getResponse(), ['slug' => 'foobar']);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testpageList()
+    public function testpageList(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
         $result = $controller->pageList($this->getRequest(), $this->getResponse(), []);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertNotSame('', (string) $result->getBody());
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testpageListWithNoPermission()
+    public function testCreate(GroupController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->pageList($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testCreateWithNoPermission()
-    {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->create($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testCreate()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set post data
         $data = [
-            'name' => 'bar',
-            'slug' => 'foo',
-            'icon' => 'foo'
+            'name' => 'foo',
+            'slug' => 'bar',
+            'icon' => 'icon'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -382,8 +202,8 @@ class GroupControllerTest extends ControllerTestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure group was created
-        $group = Group::where('slug', 'foo')->first();
-        $this->assertSame('bar', $group->name);
+        $group = Group::where('slug', 'bar')->first();
+        $this->assertSame('foo', $group->name);
 
         // Test message
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
@@ -393,20 +213,16 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testCreate
+     * @param  GroupController $controller
      */
-    public function testCreateWithMissingName()
+    public function testCreateWithMissingName(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set post data
         $data = [
             'name' => '',
-            'slug' => 'foo',
+            'slug' => 'missingName',
             'icon' => 'foo'
         ];
         $request = $this->getRequest()->withParsedBody($data);
@@ -417,6 +233,10 @@ class GroupControllerTest extends ControllerTestCase
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
+        // Make sure group was created
+        $group = Group::where('slug', 'missingName')->first();
+        $this->assertNull($group);
+
         // Test message
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
@@ -425,22 +245,12 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testCreate
+     * @param  GroupController $controller
      */
-    public function testCreateWithDuplicateSlug()
+    public function testCreateWithDuplicateSlug(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create a group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
-            'slug' => 'foo'
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set post data
         $data = [
             'name' => 'bar',
@@ -463,26 +273,16 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testCreate
+     * @param  GroupController $controller
      */
-    public function testCreateWithDuplicateName()
+    public function testCreateWithDuplicateName(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create a group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
-            'name' => 'bar'
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set post data
         $data = [
             'name' => 'bar',
-            'slug' => 'foo',
+            'slug' => 'duplicateName',
             'icon' => 'foo'
         ];
         $request = $this->getRequest()->withParsedBody($data);
@@ -493,6 +293,10 @@ class GroupControllerTest extends ControllerTestCase
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
+        // Make sure group was created
+        $group = Group::where('slug', 'duplicateName')->first();
+        $this->assertNull($group);
+
         // Test message
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
@@ -501,19 +305,14 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testDelete()
+    public function testDelete(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
         // Create test group
         $fm = $this->ci->factory;
         $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
 
         // Get controller stuff
         $result = $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
@@ -532,78 +331,52 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testDelete
-     * @todo test individual permission with the delete_group permission too
+     * @param  GroupController $controller
      */
-    public function testDeleteWithNoPermission()
+    public function testDeleteWithNotExistingGroup(GroupController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
-    }
-
-    /**
-     * @depends testDelete
-     */
-    public function testDeleteWithNotExistingGroup()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
         $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => 'foobar']);
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testDelete
+     * @param  GroupController $controller
      */
-    public function testDeleteWithDefaultGroup()
+    public function testDeleteWithDefaultGroup(GroupController $controller)
     {
         // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $testUser = User::find(1)->first();
+        $this->loginUser($testUser);
 
         // Change config
-        $this->ci->config['site.registration.user_defaults.group'] = $group->slug;
+        $this->ci->config['site.registration.user_defaults.group'] = 'foo';
 
-        // Get controller
+        // Recreate controller so config is accepted
         $controller = $this->getController();
 
-        // Set expectations
-        $this->expectException(BadRequestException::class);
+        // Make sure group exist
+        $this->assertNotNull(Group::where('slug', 'foo')->first());
 
-        // Execute
-        $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
+        // Assert
+        $this->expectException(BadRequestException::class);
+        $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
+
+        // Make sure group is still there
+        $this->assertNotNull(Group::where('slug', 'foo')->first());
     }
 
     /**
-     * @depends testDelete
+     * @depends testControllerConstructorWithUser
+     * @depends testDeleteWithDefaultGroup
+     * @param  GroupController $controller
      */
-    public function testDeleteWithUserInGroup()
+    public function testDeleteWithUserInGroup(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
+        $testUser = User::find(1)->first();
 
         // Create test group
         $fm = $this->ci->factory;
@@ -613,33 +386,19 @@ class GroupControllerTest extends ControllerTestCase
         $testUser->group()->associate($group);
         $testUser->save();
 
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
         $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @depends testDeleteWithUserInGroup
+     * @param  GroupController $controller
      */
-    public function testGetModalConfirmDelete()
+    public function testGetModalConfirmDelete(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
         $request = $this->getRequest()->withQueryParams([
-            'slug' => $group->slug
+            'slug' => 'foo'
         ]);
 
         // Get controller stuff
@@ -649,78 +408,39 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
+     * @param  GroupController $controller
      */
-    public function testGetModalConfirmDeleteWithNoGetData()
+    public function testGetModalConfirmDeleteWithNoGetData(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
         $controller->getModalConfirmDelete($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
+     * @param  GroupController $controller
      */
-    public function testGetModalConfirmDeleteWithNonExistingGroup()
+    public function testGetModalConfirmDeleteWithNonExistingGroup(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo'
+            'slug' => 'foobar'
         ]);
 
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
         $controller->getModalConfirmDelete($request, $this->getResponse(), []);
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
+     * @param  GroupController $controller
      */
-    public function testGetModalConfirmDeleteWithNoPermission()
+    public function testGetModalConfirmDeleteWithUserInGroup(GroupController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
-        $request = $this->getRequest()->withQueryParams([
-            'slug' => $group->slug
-        ]);
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->getModalConfirmDelete($request, $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testGetModalConfirmDelete
-     */
-    public function testGetModalConfirmDeleteWithUserInGroup()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
+        $testUser = User::find(1)->first();
 
         // Create test group
         $fm = $this->ci->factory;
@@ -730,72 +450,33 @@ class GroupControllerTest extends ControllerTestCase
         $testUser->group()->associate($group);
         $testUser->save();
 
-        // Get controller
-        $controller = $this->getController();
-
         $request = $this->getRequest()->withQueryParams([
             'slug' => $group->slug
         ]);
 
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
         $controller->getModalConfirmDelete($request, $this->getResponse(), []);
     }
 
     /**
-     * @depends testControllerConstructor
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testGetModalCreate()
+    public function testGetModalCreate(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Get controller stuff
         $result = $controller->getModalCreate($this->getRequest(), $this->getResponse(), []);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertNotSame('', (string) $result->getBody());
     }
 
     /**
-     * @depends testGetModalCreate
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testGetModalCreateWithNoPermission()
+    public function testGetModalEdit(GroupController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->getModalCreate($this->getRequest(), $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testGetModalEdit()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
         $request = $this->getRequest()->withQueryParams([
-            'slug' => $group->slug
+            'slug' => 'foo'
         ]);
 
         // Get controller stuff
@@ -805,94 +486,49 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalEdit
+     * @param  GroupController $controller
      */
-    public function testGetModalEditWithNoGetData()
+    public function testGetModalEditWithNoGetData(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
         $this->expectException(BadRequestException::class);
-
-        // Execute
         $controller->getModalEdit($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testGetModalEdit
+     * @param  GroupController $controller
      */
-    public function testGetModalEditWithNonExistingGroup()
+    public function testGetModalEditWithNonExistingGroup(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Get controller
-        $controller = $this->getController();
-
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo'
+            'slug' => 'foobar'
         ]);
 
-        // Set expectations
         $this->expectException(NotFoundException::class);
-
-        // Execute
         $controller->getModalEdit($request, $this->getResponse(), []);
     }
 
     /**
-     * @depends testGetModalEdit
+     * @depends testControllerConstructorWithUser
+     * @param  GroupController $controller
      */
-    public function testGetModalEditWithNoPermission()
+    public function testUpdateInfo(GroupController $controller)
     {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create test group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
-        $request = $this->getRequest()->withQueryParams([
-            'slug' => $group->slug
-        ]);
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->getModalEdit($request, $this->getResponse(), []);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     */
-    public function testUpdateInfo()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
         // Create a group
         $fm = $this->ci->factory;
         $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
-            'name' => 'bar',
-            'slug' => 'foo',
+            'name' => 'barbar',
+            'slug' => 'foofoo',
         ]);
-
-        // Get controller
-        $controller = $this->getController();
 
         // Set post data
         $data = [
-            'name' => 'foo',
-            'slug' => 'foo',
-            'icon' => 'foo'
+            'name' => 'barbarbar',
+            'slug' => 'foofoo',
+            'icon' => 'icon'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -903,8 +539,8 @@ class GroupControllerTest extends ControllerTestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure group was update
-        $editedGroup = Group::where('slug', 'foo')->first();
-        $this->assertSame('foo', $editedGroup->name);
+        $editedGroup = Group::where('slug', 'foofoo')->first();
+        $this->assertSame('barbarbar', $editedGroup->name);
         $this->assertNotSame($group->name, $editedGroup->name);
         $this->assertSame($group->description, $editedGroup->description);
 
@@ -916,71 +552,12 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
+     * @param  GroupController $controller
      */
-    public function testUpdateInfoWithNoPermission()
+    public function testUpdateInfoWithMissingName(GroupController $controller)
     {
-        // Guest user, won't have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Create a group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set post data
-        $data = [
-            'name' => 'foo',
-            'slug' => 'foo',
-            'icon' => 'foo'
-        ];
-        $request = $this->getRequest()->withParsedBody($data);
-
-        // Set expectations
-        $this->expectException(ForbiddenException::class);
-
-        // Execute
-        $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
-    }
-
-    /**
-     * @depends testUpdateInfo
-     */
-    public function testUpdateInfoWithNoGroup()
-    {
-        // Guest user, WILL have access
-        $testUser = $this->createTestUser(false, true);
-
-        // Get controller
-        $controller = $this->getController();
-
-        // Set expectations
-        $this->expectException(NotFoundException::class);
-
-        // Execute
-        $controller->updateInfo($this->getRequest(), $this->getResponse(), ['slug' => 'blah']);
-    }
-
-    /**
-     * @depends testUpdateInfo
-     */
-    public function testUpdateInfoWithMissingName()
-    {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create a group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
-            'name' => 'bar',
-            'slug' => 'foo',
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set post data
         $data = [
             'name' => '',
@@ -990,14 +567,14 @@ class GroupControllerTest extends ControllerTestCase
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 400);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure group was NOT update
         $editedGroup = Group::where('slug', 'foo')->first();
-        $this->assertSame($group->name, $editedGroup->name);
+        $this->assertSame('bar', $editedGroup->name);
 
         // Test message
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
@@ -1007,23 +584,12 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
+     * @param  GroupController $controller
      */
-    public function testUpdateInfoWithMissingSlug()
+    public function testUpdateInfoWithMissingSlug(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create a group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
-            'name' => 'bar',
-            'slug' => 'foo',
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
-
         // Set post data
         $data = [
             'name' => 'bar',
@@ -1033,7 +599,7 @@ class GroupControllerTest extends ControllerTestCase
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 400);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
@@ -1050,35 +616,24 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
+     * @param  GroupController $controller
      */
-    public function testUpdateInfoWithDuplicateSlug()
+    public function testUpdateInfoWithDuplicateSlug(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
         // Create a group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
-            'slug' => 'foo'
-        ]);
-        $group2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
-            'slug' => 'bar'
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
+        $group2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
 
         // Set post data
         $data = [
-            'name' => 'bar',
-            'slug' => 'bar',
-            'icon' => 'foo'
+            'slug' => $group2->slug
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 400);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
@@ -1091,35 +646,24 @@ class GroupControllerTest extends ControllerTestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
+     * @param  GroupController $controller
      */
-    public function testUpdateInfoWithDuplicateName()
+    public function testUpdateInfoWithDuplicateName(GroupController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
         // Create a group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
-            'name' => 'bar'
-        ]);
-        $group2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
-            'name' => 'foo'
-        ]);
-
-        // Get controller
-        $controller = $this->getController();
+        $group2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
 
         // Set post data
         $data = [
-            'name' => 'foo',
-            'slug' => 'foo',
-            'icon' => 'foo'
+            'name' => $group2->name
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => $group->slug]);
+        $result = $controller->updateInfo($request, $this->getResponse(), ['slug' => 'foo']);
         $this->assertSame($result->getStatusCode(), 400);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
@@ -1138,5 +682,20 @@ class GroupControllerTest extends ControllerTestCase
     private function getController()
     {
         return new GroupController($this->ci);
+    }
+
+    /**
+     */
+    private function setupUser()
+    {
+        // Admin user, WILL have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Create test role
+        $fm = $this->ci->factory;
+        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+            'slug' => 'foo',
+            'name' => 'bar'
+        ]);
     }
 }
