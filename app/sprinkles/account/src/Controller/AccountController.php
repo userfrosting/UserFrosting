@@ -38,6 +38,101 @@ use UserFrosting\Support\Exception\NotFoundException;
 class AccountController extends SimpleController
 {
     /**
+     * Check a password SHA1 hash against an array of compromised password hashes.
+     *
+     * @param  string $hash  The hash of the potential password to be used.
+     * @param  array  $array Array of password hashes in the format c2d18a7d49b0d4260769eb03d027066d29a:181 - or <hash>:<number of breaches.
+     * @return string $result The number of breaches password has been exposed in.
+     */
+    private function checkHash($hash, $array)
+    {
+        foreach ($array as $index => $pwHash) {
+            $breachedItemParts = explode(':', $pwHash);
+
+            $breachedItemHash = $breachedItemParts[0];
+            $numberOfBreaches = $breachedItemParts[1];
+
+            // compare the hash suffix from Have I Been Pwned with password hash suffix.
+            if ($breachedItemHash == substr($hash, 5)) {
+                // if a match is found just return the response.
+                return $result = trim($numberOfBreaches);
+            } else {
+                $result = '0';
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Generates a list of compromised passwords.
+     *
+     * First check the cache to see if the hash suffix is stored.
+     * If not found in cache, query Have I Been Pwned API and store response in cache.
+     * @param  string $password
+     * @return array  $result An array containing the password checked and the number of breaches.
+     */
+    private function checkPassword($password)
+    {
+        // Setup the variable that will be returned.
+        $result = ['password' => $password];
+
+        // Get the SHA1 hash of our password.
+        // The first 5 characters are sent to Have I Been Pwned.
+        $passwordHash = strtoupper(sha1($password));
+        $hashSuffix = substr($passwordHash, 0, 5);
+
+        // We can return our comparison list directly from cache if it exists. Otherwise, we query Have I Been Pwned API.
+        if ($this->ci->cache->has($hashSuffix)) {
+            $hashArray = $this->ci->cache->get($hashSuffix);
+            $result['breaches'] = $this->checkHash($passwordHash, $hashArray);
+
+            return $result;
+        } else {
+
+          // Query Have I Been Pwned API and save response to cache.
+            $ch = curl_init();
+            $optionsArray = [
+            CURLOPT_URL            => 'https://api.pwnedpasswords.com/range/' . $hashSuffix,
+            CURLOPT_RETURNTRANSFER => true
+        ];
+
+            curl_setopt_array($ch, $optionsArray);
+
+            // execute request, get and cache response.
+            $query = curl_exec($ch);
+            $hashArray = preg_split("/[\n,]+/", $query);
+            $this->ci->cache->add($hashSuffix, $hashArray, 10);
+
+            $result['breaches'] = $this->checkHash($passwordHash, $hashArray);
+
+            return $result;
+        }
+    }
+
+    /**
+     * The route used to check passwords against a list of compromised passwords.
+     *
+     * AuthGuard: false
+     * Route: /account/check-password
+     * Route Name: {none}
+     * Request Type: POST
+     * @see https://haveibeenpwned.com/API/v2
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     */
+    public function checkPasswordApi(Request $request, Response $response, $args)
+    {
+        // Grab the password from request, and get SHA1 hash.
+        $password = $request->getParsedBodyParam('password');
+
+        $result = $this->checkPassword($password);
+
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
      * Check a username for availability.
      *
      * This route is throttled by default, to discourage abusing it for account enumeration.
@@ -405,12 +500,52 @@ class AccountController extends SimpleController
 
         $currentUser = $authenticator->attempt(($isEmail ? 'email' : 'user_name'), $userIdentifier, $data['password'], $data['rememberme']);
 
-        $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
+        $enforcePasswordUpdate = $this->ci->config['site.password_security.enforce_update_passwords'];
 
-        // Set redirect, if relevant
-        $redirectOnLogin = $this->ci->get('redirect.onLogin');
+        if ($enforcePasswordUpdate == true) {
+            $allowedPassword = true;
 
-        return $redirectOnLogin($request, $response, $args);
+            $password = $data['password'];
+
+            $result = $this->checkPassword($password);
+
+            if ($result['breaches'] > $this->ci->config['site.password_security.enforce_no_compromised']) {
+                $allowedPassword = false;
+            }
+        }
+
+        if ($allowedPassword == false) {
+
+            // Try to generate a new password reset request.
+            // Use timeout for "reset password"
+            $passwordReset = $this->ci->repoPasswordReset->create($currentUser, $config['password_reset.timeouts.reset']);
+
+            // Load validation rules - note this uses the same schema as "set password"
+            $schema = new RequestSchema('schema://requests/set-password.yaml');
+            $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+            $token = ['token'=> $passwordReset->getToken()];
+
+            $target = $this->ci->router->pathFor('set-password', [
+              'page' => [
+                'validators' => [
+                    'set_password'    => $validator->rules('json', false)
+                ]
+            ]
+          ], $token);
+
+            $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED');
+
+            return $response->withRedirect($target);
+            exit;
+        } else {
+            $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
+
+            // Set redirect, if relevant
+            $redirectOnLogin = $this->ci->get('redirect.onLogin');
+
+            return $redirectOnLogin($request, $response, $args);
+        }
     }
 
     /**
@@ -524,7 +659,7 @@ class AccountController extends SimpleController
                     'register' => $validatorRegister->rules('json', false)
                 ]
             ],
-            'fields' => $fields,
+            'fields'  => $fields,
             'locales' => [
                 'available' => $config['site.locales.available'],
                 'current'   => end($currentLocales)
@@ -679,7 +814,7 @@ class AccountController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
             'locales' => $locales,
-            'fields' => $fields,
+            'fields'  => $fields,
             'page'    => [
                 'validators' => [
                     'account_settings'    => $validatorAccountSettings->rules('json', false),
