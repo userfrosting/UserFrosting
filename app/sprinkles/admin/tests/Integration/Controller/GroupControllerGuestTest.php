@@ -401,7 +401,7 @@ class GroupControllerGuestTest extends TestCase
 
         // Create test role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+        $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
             'slug' => 'foo',
             'name' => 'bar'
         ]);
