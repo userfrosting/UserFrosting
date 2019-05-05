@@ -170,7 +170,9 @@ class AuthenticatorTest extends TestCase
     {
         $testUser = $this->createTestUser();
         $user = $this->invokeMethod($authenticator, 'validateUserAccount', [$testUser->id]);
-        $this->assertSame($testUser->id, $user->id);
+        $testUserId = $testUser->id;
+        $userId = $user->id;
+        $this->assertSame($testUserId, $userId);
     }
 
     /**
