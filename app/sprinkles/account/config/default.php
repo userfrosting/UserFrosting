@@ -113,7 +113,14 @@ return [
                     'user' => true
                 ]
             ]
-        ]
+        ],
+        'password_security' => [
+             'enforce_no_compromised'   => '5', // Set to false to turn off this feature. Otherwise, provide a numeric string, which sets the maximum number
+                                       // of times that is "acceptable" for a password to have appeared in breaches. The recommended and most secure
+                                       // option is '0' - meaning only passwords that are not on the list of compromised passwords will be allowed.
+
+             'enforce_update_passwords' => true // Settings this to true will check user's passwords against list of known compromised passwords at each log on.
+]
     ],
 
     /*
