@@ -134,6 +134,9 @@ return [
             'PAGE'              => 'Choose a new password for your account.',
             'SEND'              => 'Set New Password and Sign In'
         ],
+        'SECURITY'  => [
+            'RESET_REQUIRED'    => 'The password security policy does not allow use of known compromised passwords. Either this feature has been activated after you originally set up your accounty or your password has recently been added to the list.'
+        ],
 
         'UPDATED'           => 'Account password updated'
     ],
