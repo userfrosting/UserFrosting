@@ -113,6 +113,9 @@ class TestCase extends BaseTestCase
             // Force destroy test sessions
             $this->ci->session->destroy();
 
+            // Close DB connection
+            $this->ci->db->getDatabaseManager()->disconnect();
+
             $this->ci = null;
         }
 
