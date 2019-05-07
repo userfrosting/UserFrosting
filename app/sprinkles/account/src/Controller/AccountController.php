@@ -28,6 +28,7 @@ use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\NotFoundException;
+use UserFrosting\Sprinkle\Account\Authenticate\PasswordSecurity;
 
 /**
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
@@ -37,79 +38,6 @@ use UserFrosting\Support\Exception\NotFoundException;
  */
 class AccountController extends SimpleController
 {
-    /**
-     * Check a password SHA1 hash against an array of compromised password hashes.
-     *
-     * @param  string $hash  The hash of the potential password to be used.
-     * @param  array  $array Array of password hashes in the format c2d18a7d49b0d4260769eb03d027066d29a:181 - or <hash>:<number of breaches.
-     * @return string $result The number of breaches password has been exposed in.
-     */
-    private function checkHash($hash, $array)
-    {
-        foreach ($array as $index => $pwHash) {
-            $breachedItemParts = explode(':', $pwHash);
-
-            $breachedItemHash = $breachedItemParts[0];
-            $numberOfBreaches = $breachedItemParts[1];
-
-            // compare the hash suffix from Have I Been Pwned with password hash suffix.
-            if ($breachedItemHash == substr($hash, 5)) {
-                // if a match is found just return the response.
-                return $result = trim($numberOfBreaches);
-            } else {
-                $result = '0';
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Generates a list of compromised passwords.
-     *
-     * First check the cache to see if the hash suffix is stored.
-     * If not found in cache, query Have I Been Pwned API and store response in cache.
-     * @param  string $password
-     * @return array  $result An array containing the password checked and the number of breaches.
-     */
-    private function checkPassword($password)
-    {
-        // Setup the variable that will be returned.
-        $result = ['password' => $password];
-
-        // Get the SHA1 hash of our password.
-        // The first 5 characters are sent to Have I Been Pwned.
-        $passwordHash = strtoupper(sha1($password));
-        $hashSuffix = substr($passwordHash, 0, 5);
-
-        // We can return our comparison list directly from cache if it exists. Otherwise, we query Have I Been Pwned API.
-        if ($this->ci->cache->has($hashSuffix)) {
-            $hashArray = $this->ci->cache->get($hashSuffix);
-            $result['breaches'] = $this->checkHash($passwordHash, $hashArray);
-
-            return $result;
-        } else {
-
-          // Query Have I Been Pwned API and save response to cache.
-            $ch = curl_init();
-            $optionsArray = [
-            CURLOPT_URL            => 'https://api.pwnedpasswords.com/range/' . $hashSuffix,
-            CURLOPT_RETURNTRANSFER => true
-        ];
-
-            curl_setopt_array($ch, $optionsArray);
-
-            // execute request, get and cache response.
-            $query = curl_exec($ch);
-            $hashArray = preg_split("/[\n,]+/", $query);
-            $this->ci->cache->add($hashSuffix, $hashArray, 10);
-
-            $result['breaches'] = $this->checkHash($passwordHash, $hashArray);
-
-            return $result;
-        }
-    }
-
     /**
      * The route used to check passwords against a list of compromised passwords.
      *
@@ -124,10 +52,10 @@ class AccountController extends SimpleController
      */
     public function checkPasswordApi(Request $request, Response $response, $args)
     {
-        // Grab the password from request, and get SHA1 hash.
+        // Grab the password from request.
         $password = $request->getParsedBodyParam('password');
 
-        $result = $this->checkPassword($password);
+        $result = PasswordSecuruity::checkPassword($password);
 
         return $response->withJson($result, 200, JSON_PRETTY_PRINT);
     }
@@ -500,52 +428,42 @@ class AccountController extends SimpleController
 
         $currentUser = $authenticator->attempt(($isEmail ? 'email' : 'user_name'), $userIdentifier, $data['password'], $data['rememberme']);
 
-        $enforcePasswordUpdate = $this->ci->config['site.password_security.enforce_update_passwords'];
-
-        if ($enforcePasswordUpdate == true) {
-            $allowedPassword = true;
-
-            $password = $data['password'];
-
-            $result = $this->checkPassword($password);
+        // Check if the enforced password update setting is configured.
+        if ($this->ci->config['site.password_security.enforce_update_passwords'] == true) {
+            // Check if the password is on the compromised password list.
+            $result = PasswordSecurity::checkPassword($data['password']);
 
             if ($result['breaches'] > $this->ci->config['site.password_security.enforce_no_compromised']) {
-                $allowedPassword = false;
+
+              // Try to generate a new password reset request.
+                // Use timeout for "reset password"
+                $passwordReset = $this->ci->repoPasswordReset->create($currentUser, $config['password_reset.timeouts.reset']);
+                $token = ['token'=> $passwordReset->getToken()];
+
+                // Load validation rules - note this uses the same schema as "set password"
+                $schema = new RequestSchema('schema://requests/set-password.yaml');
+                $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+                $target = $this->ci->router->pathFor('set-password', [
+                'page' => [
+                  'validators' => [
+                      'set_password'    => $validator->rules('json', false)
+                  ]
+                ]
+              ], $token);
+
+                $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED');
+
+                return $response->withRedirect($target);
             }
         }
 
-        if ($allowedPassword == false) {
+        $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
 
-            // Try to generate a new password reset request.
-            // Use timeout for "reset password"
-            $passwordReset = $this->ci->repoPasswordReset->create($currentUser, $config['password_reset.timeouts.reset']);
+        // Set redirect, if relevant
+        $redirectOnLogin = $this->ci->get('redirect.onLogin');
 
-            // Load validation rules - note this uses the same schema as "set password"
-            $schema = new RequestSchema('schema://requests/set-password.yaml');
-            $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-
-            $token = ['token'=> $passwordReset->getToken()];
-
-            $target = $this->ci->router->pathFor('set-password', [
-              'page' => [
-                'validators' => [
-                    'set_password'    => $validator->rules('json', false)
-                ]
-            ]
-          ], $token);
-
-            $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED');
-
-            return $response->withRedirect($target);
-            exit;
-        } else {
-            $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
-
-            // Set redirect, if relevant
-            $redirectOnLogin = $this->ci->get('redirect.onLogin');
-
-            return $redirectOnLogin($request, $response, $args);
-        }
+        return $redirectOnLogin($request, $response, $args);
     }
 
     /**
