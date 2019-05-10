@@ -15,13 +15,14 @@ use UserFrosting\Sprinkle\Admin\Controller\PermissionController;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\withController;
+use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\NotFoundException;
 use UserFrosting\Tests\TestCase;
 
 /**
  * Tests CoreController
  */
-class PermissionControllerTest extends TestCase
+class PermissionControllerGuestTest extends TestCase
 {
     use TestDatabase;
     use RefreshDatabase;
@@ -32,9 +33,6 @@ class PermissionControllerTest extends TestCase
      * @var bool DB is initialized for normal db
      */
     protected static $initialized = false;
-
-    /** @var int Shared permission ID */
-    protected static $permissionID;
 
     /**
      * Setup test database for controller tests
@@ -85,81 +83,62 @@ class PermissionControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  PermissionController $controller
      */
-    public function testGetInfoWithNotFoundException(PermissionController $controller)
+    public function testGetInfo_GuestUser()
     {
-        $this->expectException(NotFoundException::class);
-        $controller->getInfo($this->getRequest(), $this->getResponse(), ['id' => 0]);
+        $controller = $this->getController();
+        $this->expectException(ForbiddenException::class);
+        $controller->getInfo($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
      * @depends testControllerConstructorWithUser
      * @param  PermissionController $controller
      */
-    public function testGetInfo(PermissionController $controller)
+    public function testGetInfo_ForbiddenException(PermissionController $controller)
     {
-        $result = $controller->getInfo($this->getRequest(), $this->getResponse(), ['id' => self::$permissionID]);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertJson((string) $result->getBody());
-        $this->assertNotEmpty((string) $result->getBody());
-        $this->assertContains('bar', (string) $result->getBody());
+        $this->expectException(ForbiddenException::class);
+        $controller->getInfo($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
      * @depends testControllerConstructorWithUser
      * @param  PermissionController $controller
      */
-    public function testGetList(PermissionController $controller)
+    public function testGetListWithNoPermission(PermissionController $controller)
     {
-        $result = $controller->getList($this->getRequest(), $this->getResponse(), []);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertJson((string) $result->getBody());
-        $this->assertNotEmpty((string) $result->getBody());
+        $this->expectException(ForbiddenException::class);
+        $controller->getList($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
      * @depends testControllerConstructorWithUser
      * @param  PermissionController $controller
      */
-    public function testGetUsers(PermissionController $controller)
+    public function testGetUsersWithNoPermission(PermissionController $controller)
     {
-        $result = $controller->getUsers($this->getRequest(), $this->getResponse(), ['id' => self::$permissionID]);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertJson((string) $result->getBody());
-        $this->assertNotEmpty((string) $result->getBody());
+        $this->expectException(ForbiddenException::class);
+        $controller->getUsers($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
      * @depends testControllerConstructorWithUser
      * @param  PermissionController $controller
      */
-    public function testpageInfo(PermissionController $controller)
+    public function testpageInfoWithNoPermission(PermissionController $controller)
     {
-        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['id' => self::$permissionID]);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertNotSame('', (string) $result->getBody());
+        $this->expectException(ForbiddenException::class);
+        $controller->pageInfo($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
      * @depends testControllerConstructorWithUser
      * @param  PermissionController $controller
      */
-    public function testpageInfoWithNotFoundPermission(PermissionController $controller)
+    public function testpageListWithNoPermission(PermissionController $controller)
     {
-        $this->expectException(NotFoundException::class);
-        $controller->pageInfo($this->getRequest(), $this->getResponse(), ['id' => 0]);
-    }
-
-    /**
-     * @depends testControllerConstructorWithUser
-     * @param  PermissionController $controller
-     */
-    public function testpageList(PermissionController $controller)
-    {
-        $result = $controller->pageList($this->getRequest(), $this->getResponse(), []);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertNotSame('', (string) $result->getBody());
+        $this->expectException(ForbiddenException::class);
+        $controller->pageList($this->getRequest(), $this->getResponse(), []);
     }
 
     /**
@@ -174,16 +153,6 @@ class PermissionControllerTest extends TestCase
      */
     private function setupUser()
     {
-        // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
-
-        // Create test Permission
-        $fm = $this->ci->factory;
-        $permission = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Permission', [
-            'slug' => 'foo',
-            'name' => 'bar'
-        ]);
-
-        self::$permissionID = $permission->id;
+        $this->createTestUser(false, true);
     }
 }
