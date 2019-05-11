@@ -19,5 +19,5 @@ $fm->define('UserFrosting\Sprinkle\Account\Database\Models\Permission')->setDefi
     'conditions'  => Faker::word(),
     'slug'        => function ($object, $saved) {
         return uniqid();
-    }
+    },
 ]);
