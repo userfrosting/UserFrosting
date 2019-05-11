@@ -14,8 +14,10 @@ use League\FactoryMuffin\Faker\Facade as Faker;
  * General factory for the Permission Model
  */
 $fm->define('UserFrosting\Sprinkle\Account\Database\Models\Permission')->setDefinitions([
-    'slug'        => Faker::text(10),
     'name'        => Faker::word(),
     'description' => Faker::paragraph(),
     'conditions'  => Faker::word(),
+    'slug'        => function ($object, $saved) {
+        return uniqid();
+    }
 ]);
