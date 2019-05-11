@@ -18,5 +18,5 @@ $fm->define('UserFrosting\Sprinkle\Account\Database\Models\Group')->setDefinitio
     'description'   => Faker::paragraph(),
     'slug'          => function ($object, $saved) {
         return uniqid();
-    }
+    },
 ]);
