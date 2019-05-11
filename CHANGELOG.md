@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Make group & role schema consistent between creation and edition. Prevents group and role without a name or slug to be created during edition.
 - Permission factory now declares slug as unique
 
+### Changed
+- Recommended PHP version is now 7.2, as 7.1 will be EOL in less than 6 months
+
 ## [v4.2.1]
 
 ### Added
