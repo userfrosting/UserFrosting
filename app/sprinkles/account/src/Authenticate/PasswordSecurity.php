@@ -12,7 +12,7 @@ namespace UserFrosting\Sprinkle\Account\Authenticate;
 use UserFrosting\Sprinkle\Core\Facades\Cache;
 
 /**
- * Handles enhanced password security methods for integration with Have I Been pwnedpasswords
+ * Handles enhanced password security methods for integration with Have I Been Pwned.
  *
  * @see https://haveibeenpwned.com/API/v2
  * @author Amos Folz
@@ -24,7 +24,7 @@ class PasswordSecurity
      *
      * @param  string $hash  The hash of the potential password to be used.
      * @param  array  $array Array of password hashes in the format c2d18a7d49b0d4260769eb03d027066d29a:181 - or <hash>:<number of breaches.
-     * @return string $result The number of breaches password has been exposed in.
+     * @return string A numeric string representing the number of times a password has been compromised.
      */
     private static function checkHash($hash, $array)
     {
@@ -37,13 +37,13 @@ class PasswordSecurity
             // compare the hash suffix from Have I Been Pwned with password hash suffix.
             if ($breachedItemHash == substr($hash, 5)) {
                 // if a match is found just return the response.
-                return $result = trim($numberOfBreaches);
+                return $breaches = trim($numberOfBreaches);
             } else {
-                $result = '0';
+                $breaches = '0';
             }
         }
 
-        return $result;
+        return $breaches;
     }
 
     /**
@@ -53,14 +53,10 @@ class PasswordSecurity
      * If not found in cache, query Have I Been Pwned API and store response in cache.
      * @see https://haveibeenpwned.com/API/v2
      * @param  string $password
-     * @return array  $result An array containing the password checked and the number of breaches.
+     * @return string A numeric string representing the number of times a password has been compromised.
      */
     public static function checkPassword($password)
     {
-
-        // Setup the variable that will be returned.
-        $result = ['password' => $password];
-
         // Get the SHA1 hash of our password.
         // The first 5 characters (hash prefix) are sent to Have I Been Pwned.
         $passwordHash = strtoupper(sha1($password));
@@ -70,9 +66,7 @@ class PasswordSecurity
         if (Cache::has($hashPrefix)) {
             $hashArray = Cache::get($hashPrefix);
 
-            $result['breaches'] = PasswordSecurity::checkHash($passwordHash, $hashArray);
-
-            return $result;
+            return PasswordSecurity::checkHash($passwordHash, $hashArray);
         } else {
 
         // Query Have I Been Pwned API and save response to cache.
@@ -89,9 +83,7 @@ class PasswordSecurity
             $hashArray = preg_split("/[\n,]+/", $query);
             Cache::add($hashPrefix, $hashArray, 10);
 
-            $result['breaches'] = PasswordSecurity::checkHash($passwordHash, $hashArray);
-
-            return $result;
+            return PasswordSecurity::checkHash($passwordHash, $hashArray);
         }
     }
 }
