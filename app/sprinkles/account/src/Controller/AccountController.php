@@ -39,7 +39,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\PasswordSecurity;
 class AccountController extends SimpleController
 {
     /**
-     * The route used to check passwords against a list of compromised passwords.
+     * Check password use eligibility.
      *
      * AuthGuard: false
      * Route: /account/check-password
@@ -50,7 +50,7 @@ class AccountController extends SimpleController
      * @param Response $response
      * @param array    $args
      */
-    public function checkPasswordApi(Request $request, Response $response, $args)
+    public function checkPassword(Request $request, Response $response, $args)
     {
         // Grab the password from request.
         $password = $request->getParsedBodyParam('password');
@@ -431,9 +431,9 @@ class AccountController extends SimpleController
         // Check if the enforced password update setting is configured.
         if ($this->ci->config['site.password_security.enforce_update_passwords'] == true) {
             // Check if the password is on the compromised password list.
-            $result = PasswordSecurity::checkPassword($data['password']);
+            $numberOfBreaches = PasswordSecurity::checkPassword($data['password']);
 
-            if ($result['breaches'] > $this->ci->config['site.password_security.enforce_no_compromised']) {
+            if ($numberOfBreaches > $this->ci->config['site.password_security.enforce_no_compromised']) {
 
               // Try to generate a new password reset request.
                 // Use timeout for "reset password"
@@ -444,7 +444,7 @@ class AccountController extends SimpleController
                 $schema = new RequestSchema('schema://requests/set-password.yaml');
                 $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-                $target = $this->ci->router->pathFor('set-password', [
+                $forcePasswordChange = $this->ci->router->pathFor('set-password', [
                 'page' => [
                   'validators' => [
                       'set_password'    => $validator->rules('json', false)
@@ -454,7 +454,7 @@ class AccountController extends SimpleController
 
                 $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED');
 
-                return $response->withRedirect($target);
+                return $response->withRedirect($forcePasswordChange);
             }
         }
 
