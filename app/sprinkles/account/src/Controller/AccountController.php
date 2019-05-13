@@ -429,13 +429,13 @@ class AccountController extends SimpleController
         $currentUser = $authenticator->attempt(($isEmail ? 'email' : 'user_name'), $userIdentifier, $data['password'], $data['rememberme']);
 
         // Check if the enforced password update setting is configured.
-        if ($this->ci->config['site.password_security.enforce_update_passwords'] == true) {
+        if ($this->ci->config['site.login.enforce_reset_compromised'] == true) {
             // Check if the password is on the compromised password list.
             $numberOfBreaches = PasswordSecurity::checkPassword($data['password']);
 
             if ($numberOfBreaches > $this->ci->config['site.password_security.enforce_no_compromised']) {
 
-              // Try to generate a new password reset request.
+                // Try to generate a new password reset request.
                 // Use timeout for "reset password"
                 $passwordReset = $this->ci->repoPasswordReset->create($currentUser, $config['password_reset.timeouts.reset']);
                 $token = ['token'=> $passwordReset->getToken()];
