@@ -99,7 +99,8 @@ return [
     */
     'site' => [
         'login' => [
-            'enable_email' => true // Set to false to allow login by username only
+            'enable_email'              => true, // Set to false to allow login by username only
+            'enforce_reset_compromised' => true // Settings this to true will check user's passwords against list of known compromised passwords at each log on. If this option is enabled then enforce_no_compromised should also be enabled.
         ],
         'registration' => [
             'enabled'                    => true, //if this set to false, you probably want to also set require_email_verification to false as well to disable the link on the signup page
@@ -115,11 +116,9 @@ return [
             ]
         ],
         'password_security' => [
-             'enforce_no_compromised'   => '5', // Set to false to turn off this feature. Otherwise, provide a numeric string, which sets the maximum number
-                                       // of times that is "acceptable" for a password to have appeared in breaches. The recommended and most secure
-                                       // option is '0' - meaning only passwords that are not on the list of compromised passwords will be allowed.
-
-             'enforce_update_passwords' => true // Settings this to true will check user's passwords against list of known compromised passwords at each log on.
+             'enforce_no_compromised'   => '0' // Set to false to turn off this feature. Otherwise, provide a numeric string, which sets the maximum number
+                                               // of times that is "acceptable" for a password to have appeared in breaches. The recommended and most secure
+                                               // option is '0' - meaning only passwords that are not on the list of compromised passwords will be allowed.
 ]
     ],
 
