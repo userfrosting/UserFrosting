@@ -10,9 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests;
 
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -20,11 +17,13 @@ use UserFrosting\Tests\TestCase;
  *
  * @see https://akrabat.com/testing-slim-framework-actions/
  * @author Louis Charette
+ * @deprecated Use `withController` Trait instead
  */
 class ControllerTestCase extends TestCase
 {
     use TestDatabase;
     use RefreshDatabase;
+    use withController;
 
     /**
      * Setup test database for controller tests
@@ -34,24 +33,5 @@ class ControllerTestCase extends TestCase
         parent::setUp();
         $this->setupTestDatabase();
         $this->refreshDatabase();
-    }
-
-    /**
-     * @param  array   $args Request arguments
-     * @return Request
-     */
-    protected function getRequest(array $args = [])
-    {
-        $env = Environment::mock($args);
-
-        return Request::createFromEnvironment($env);
-    }
-
-    /**
-     * @return Response
-     */
-    protected function getResponse()
-    {
-        return new Response();
     }
 }
