@@ -8,14 +8,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v4.2.2]
 
 ### Added
-- Added Group factory (`'UserFrosting\Sprinkle\Account\Database\Models\Group'`)
+- Group factory (`'UserFrosting\Sprinkle\Account\Database\Models\Group'`)
+- `withController` Trait, as an alternative for `ControllerTestCase`
+- StyleCI config
+- [Travis] SQLite in-memory DB testing
+- [Travis] memcache & Redis service
 
 ### Fixed
 - Make group & role schema consistent between creation and edition. Prevents group and role without a name or slug to be created during edition.
-- Permission factory now declares slug as unique
+- Factories changed to make sure slugs are unique
 
 ### Changed
 - Recommended PHP version is now 7.2, as 7.1 will be EOL in less than 6 months
+- Improved controllers test coverage & tests efficiency
+- Applied styling rules from StyleCI & updated php-cs-fixer rules to match StyleCI config
+
+### Deprecated
+- `ControllerTestCase`. Use `withController` Trait instead.
+
 
 ## [v4.2.1]
 
