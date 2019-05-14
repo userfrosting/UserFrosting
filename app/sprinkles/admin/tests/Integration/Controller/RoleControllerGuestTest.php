@@ -10,13 +10,10 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
-use UserFrosting\Sprinkle\Account\Database\Models\Role;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\RoleController;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\withController;
-use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\NotFoundException;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
@@ -164,6 +161,40 @@ class RoleControllerGuestTest extends TestCase
 
         $this->expectException(ForbiddenException::class);
         $controller->getModalEdit($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
+     */
+    public function testGetModalEditPermissionsWithNoPermission(RoleController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'slug' => 'foo'
+        ]);
+
+        $this->expectException(ForbiddenException::class);
+        $controller->getModalEditPermissions($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
+     */
+    public function testGetPermissionsWithNoPermission(RoleController $controller)
+    {
+        $this->expectException(ForbiddenException::class);
+        $controller->getPermissions($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
+     */
+    public function testUpdateFieldWithNoPermission(RoleController $controller)
+    {
+        $this->expectException(ForbiddenException::class);
+        $controller->updateField($this->getRequest(), $this->getResponse(), ['slug' => 'foo', 'field' => 'name']);
     }
 
     /**

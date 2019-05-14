@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
+use League\FactoryMuffin\Faker\Facade as Faker;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
@@ -666,6 +667,205 @@ class RoleControllerTest extends TestCase
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
     }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
+     */
+    public function testGetModalEditPermissions(RoleController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'slug' => 'foo'
+        ]);
+
+        // Get controller stuff
+        $result = $controller->getModalEditPermissions($request, $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testGetModalEditPermissions
+     * @param  RoleController $controller
+     */
+    public function testGetModalEditPermissionsWithNoGetData(RoleController $controller)
+    {
+        $this->expectException(BadRequestException::class);
+        $controller->getModalEditPermissions($this->getRequest(), $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testGetModalEditPermissions
+     * @param  RoleController $controller
+     */
+    public function testGetModalEditPermissionsWithNonExistingRole(RoleController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'slug' => 'foobar'
+        ]);
+
+        $this->expectException(NotFoundException::class);
+        $controller->getModalEditPermissions($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
+     */
+    public function testGetPermissions(RoleController $controller)
+    {
+        $result = $controller->getPermissions($this->getRequest(), $this->getResponse(), ['slug' => 'foo']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertNotEmpty((string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testGetPermissions
+     * @param  RoleController $controller
+     */
+    public function testGetPermissionsWithNoArgs(RoleController $controller)
+    {
+        $this->expectException(BadRequestException::class);
+        $controller->getPermissions($this->getRequest(), $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testGetPermissions
+     * @param  RoleController $controller
+     */
+    public function testGetPermissionsWithNonExistingRole(RoleController $controller)
+    {
+        $this->expectException(NotFoundException::class);
+        $controller->getPermissions($this->getRequest(), $this->getResponse(), ['slug' => 'foobar']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
+     */
+    public function testupdateField(RoleController $controller)
+    {
+        // Create a role
+        $fm = $this->ci->factory;
+        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
+            'name' => 'bar123',
+            'slug' => 'foo123',
+        ]);
+
+        // Set post data
+        $data = [
+            'value' => 'foo123'
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateField($request, $this->getResponse(), ['slug' => $role->slug, 'field' => 'name']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure role was update
+        $editedRole = Role::where('slug', 'foo123')->first();
+        $this->assertSame('foo123', $editedRole->name);
+        $this->assertNotSame('bar123', $editedRole->name);
+        $this->assertSame($role->description, $editedRole->description);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
+     */
+    public function testupdateFieldWithNonExistingRole(RoleController $controller)
+    {
+        $this->expectException(NotFoundException::class);
+        $controller->updateField($this->getRequest(), $this->getResponse(), ['slug' => 'foobar']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  RoleController $controller
+     */
+    public function testupdateFieldNoValue(RoleController $controller)
+    {
+        $this->expectException(BadRequestException::class);
+        $controller->updateField($this->getRequest(), $this->getResponse(), ['slug' => 'foo', 'field' => 'name']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testupdateField
+     * @param  RoleController $controller
+     */
+    public function testupdateFieldWithFailedValidation(RoleController $controller)
+    {
+        // Create a string wich will be too long for validation
+        $faker = Faker::getGenerator();
+        $value = $faker->text(500);
+
+        // Set post data
+        $data = [
+            'value' => $value
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $this->expectException(BadRequestException::class);
+        $controller->updateField($request, $this->getResponse(), ['slug' => 'foo', 'field' => 'name']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testupdateField
+     * @param  RoleController $controller
+     */
+    public function testupdateFieldWithPermissionField(RoleController $controller)
+    {
+        // Create a role
+        $fm = $this->ci->factory;
+        $permission = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Permission');
+
+        // Expected input :
+        // value[0][permission_id]: 2
+        // value[1][permission_id]: 9
+
+        // Set post data
+        $data = [
+            'value' => [['permission_id' => $permission->id]]
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Check the default role has how many permisions
+        $role = Role::where('slug', 'foo')->first();
+        $this->assertEmpty($role->permissions);
+
+        // Get controller stuff
+        $result = $controller->updateField($request, $this->getResponse(), ['slug' => 'foo', 'field' => 'permissions']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure role permisions was updated
+        $role = Role::where('slug', 'foo')->first();
+        $this->assertCount(1, $role->permissions);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
 
     /**
      * @return RoleController
