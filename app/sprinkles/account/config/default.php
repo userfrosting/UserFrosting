@@ -116,10 +116,13 @@ return [
             ]
         ],
         'password_security' => [
-             'enforce_no_compromised'   => '0' // Set to false to turn off this feature. Otherwise, provide a numeric string, which sets the maximum number
-                                               // of times that is "acceptable" for a password to have appeared in breaches. The recommended and most secure
-                                               // option is '0' - meaning only passwords that are not on the list of compromised passwords will be allowed.
-]
+             'enforce_no_compromised'   => [
+              'breaches' => '0', // Set to '-1' to turn off this feature. Otherwise, provide a numeric string, which sets the maximum number
+                                 // of times that is "acceptable" for a password to have appeared in breaches. The recommended and most secure
+                                // option is '0' - meaning only passwords that are not on the list of compromised passwords will be allowed.
+              'cache'    => 10080 // Duration in minutes to store HIBP API responses in cache.
+               ]
+          ]
     ],
 
     /*
