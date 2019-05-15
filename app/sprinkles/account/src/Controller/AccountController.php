@@ -430,11 +430,11 @@ class AccountController extends SimpleController
         $passwordSecurity = $this->ci->passwordSecurity;
 
         // Check if the enforce password update setting is configured.
-        if ($passwordSecurity->isEnabled()) {
+        if ($passwordSecurity->resetCompromisedEnabled()) {
             // Check if the password is on the compromised password list.
             $numberOfBreaches = $passwordSecurity->checkPassword($data['password']);
 
-            if ($numberOfBreaches > $passwordSecurity->breachThreshold()) {
+            if ($passwordSecurity->breachThreshold() != '-1' && $numberOfBreaches > $passwordSecurity->breachThreshold()) {
 
                 // Try to generate a new password reset request.
                 // Use timeout for "reset password"
