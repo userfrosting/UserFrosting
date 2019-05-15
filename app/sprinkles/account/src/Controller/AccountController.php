@@ -28,7 +28,6 @@ use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\NotFoundException;
-use UserFrosting\Sprinkle\Account\Authenticate\PasswordSecurity;
 
 /**
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
@@ -428,12 +427,14 @@ class AccountController extends SimpleController
 
         $currentUser = $authenticator->attempt(($isEmail ? 'email' : 'user_name'), $userIdentifier, $data['password'], $data['rememberme']);
 
-        // Check if the enforced password update setting is configured.
-        if ($this->ci->config['site.login.enforce_reset_compromised'] == true) {
-            // Check if the password is on the compromised password list.
-            $numberOfBreaches = PasswordSecurity::checkPassword($data['password']);
+        $passwordSecurity = $this->ci->passwordSecurity;
 
-            if ($numberOfBreaches > $this->ci->config['site.password_security.enforce_no_compromised']) {
+        // Check if the enforce password update setting is configured.
+        if ($passwordSecurity->isEnabled()) {
+            // Check if the password is on the compromised password list.
+            $numberOfBreaches = $passwordSecurity->checkPassword($data['password']);
+
+            if ($numberOfBreaches > $passwordSecurity->breachThreshold()) {
 
                 // Try to generate a new password reset request.
                 // Use timeout for "reset password"
@@ -452,7 +453,7 @@ class AccountController extends SimpleController
                 ]
               ], $token);
 
-                $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED');
+                $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED.COMPROMISED');
 
                 return $response->withRedirect($forcePasswordChange);
             }
