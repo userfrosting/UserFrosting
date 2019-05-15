@@ -18,6 +18,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
 use UserFrosting\Sprinkle\Account\Authenticate\Hasher;
+use UserFrosting\Sprinkle\Account\Authenticate\PasswordSecurity;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Log\UserActivityDatabaseHandler;
@@ -173,6 +174,19 @@ class ServicesProvider
             return $authenticator;
         };
 
+        /**
+         * PasswordSecurity service.
+         *
+         * Handles password security features.
+         *
+         * @return \UserFrosting\Sprinkle\Account\Authenticate\PasswordSecurity
+         */
+        $container['passwordSecurity'] = function ($c) {
+            $cache = $c->cache;
+            $config = $c->config;
+
+            return new PasswordSecurity($cache, $config);
+        };
         /**
          * Sets up the AuthGuard middleware, used to limit access to authenticated users for certain routes.
          *

@@ -116,11 +116,21 @@ class PasswordSecurity
         return $hashArray;
     }
 
-    public function isEnabled()
+    /**
+     * Checks if compromised password reset feature is enabeld.
+     *
+     * @return bool True if the feature is enabled.
+     */
+    public function resetCompromisedEnabled()
     {
         return $this->config['site.login.enforce_reset_compromised'];
     }
 
+    /**
+     * Checks the maximum number of times that is acceptable for a password to have appeared in breaches.
+     *
+     * @return string Numeric string with -1 meaning disabled.
+     */
     public function breachThreshold()
     {
         return $this->config['site.password_security.enforce_no_compromised.breaches'];
