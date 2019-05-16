@@ -99,13 +99,13 @@ class UserController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        // Check if username or email already exists
-        if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
+        // Check if username or email already exists. If not set, validator will pick it up
+        if (isset($data['user_name']) && $classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
             $ms->addMessageTranslated('danger', 'USERNAME.IN_USE', $data);
             $error = true;
         }
 
-        if ($classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
+        if (isset($data['email']) && $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
@@ -555,9 +555,6 @@ class UserController extends SimpleController
      */
     public function getModalCreate(Request $request, Response $response, $args)
     {
-        // GET parameters
-        $params = $request->getQueryParams();
-
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
