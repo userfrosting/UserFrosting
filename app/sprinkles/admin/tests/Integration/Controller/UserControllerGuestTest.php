@@ -111,6 +111,58 @@ class UserControllerGuestTest extends TestCase
     }
 
     /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalConfirmDeleteWithNoPermission(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $this->expectException(ForbiddenException::class);
+        $controller->getModalConfirmDelete($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalCreateWithNoPermission(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $this->expectException(ForbiddenException::class);
+        $controller->getModalCreate($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditRolesWithNoPermission(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $this->expectException(ForbiddenException::class);
+        $controller->getModalEditRoles($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testPageListWithNoPermission(UserController $controller)
+    {
+        $this->expectException(ForbiddenException::class);
+        $controller->pageList($this->getRequest(), $this->getResponse(), []);
+    }
+
+    /**
      * @return UserController
      */
     private function getController()

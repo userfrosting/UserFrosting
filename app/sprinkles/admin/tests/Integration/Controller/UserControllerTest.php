@@ -124,7 +124,6 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @depends testCreate
      * @param  UserController $controller
      */
     public function testCreateWithNoUsername(UserController $controller)
@@ -152,7 +151,6 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @depends testCreate
      * @param  UserController $controller
      */
     public function testCreateWithNoEmail(UserController $controller)
@@ -180,7 +178,6 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @depends testCreate
      * @param  UserController $controller
      */
     public function testCreateWithDuplicateUsername(UserController $controller)
@@ -209,7 +206,6 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @depends testCreate
      * @param  UserController $controller
      */
     public function testCreateWithDuplicateEmail(UserController $controller)
@@ -371,6 +367,247 @@ class UserControllerTest extends TestCase
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertNotEmpty((string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalConfirmDelete(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        // Get controller stuff
+        $result = $controller->getModalConfirmDelete($request, $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testGetModalConfirmDelete
+     * @param  UserController $controller
+     */
+    public function testGetModalConfirmDeleteWithNoUser(UserController $controller)
+    {
+        $this->expectException(BadRequestException::class);
+        $controller->getModalConfirmDelete($this->getRequest(), $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testGetModalConfirmDelete
+     * @param  UserController $controller
+     */
+    public function testGetModalConfirmDeleteWithNonExistingUser(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'foobar'
+        ]);
+
+        $this->expectException(NotFoundException::class);
+        $controller->getModalConfirmDelete($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testGetModalConfirmDelete
+     * @param  UserController $controller
+     */
+    public function testGetModalConfirmDeleteWithReservedId(UserController $controller)
+    {
+        // Default should be the existing admin user.
+        $user = User::find($this->ci->config['reserved_user_ids.master']);
+
+        // In case the user don't exist
+        if (!$user) {
+            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+                'id' => $this->ci->config['reserved_user_ids.master']
+            ]);
+        }
+
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => $user->user_name
+        ]);
+
+        $this->expectException(BadRequestException::class);
+        $controller->getModalConfirmDelete($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalCreate(UserController $controller)
+    {
+        $result = $controller->getModalCreate($this->getRequest(), $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEdit(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $result = $controller->getModalEdit($request, $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditWithNoUser(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'foobar'
+        ]);
+
+        $this->expectException(NotFoundException::class);
+        $controller->getModalEdit($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditPassword(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $result = $controller->getModalEditPassword($request, $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditPasswordWithNoUser(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'foobar'
+        ]);
+
+        $this->expectException(NotFoundException::class);
+        $controller->getModalEditPassword($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditRoles(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $result = $controller->getModalEditRoles($request, $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditRolesWithNoUser(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'foobar'
+        ]);
+
+        $this->expectException(NotFoundException::class);
+        $controller->getModalEditRoles($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetPermissions(UserController $controller)
+    {
+        $result = $controller->getPermissions($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertNotEmpty((string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetPermissionsWithNoUser(UserController $controller)
+    {
+        $this->expectException(NotFoundException::class);
+        $controller->getPermissions($this->getRequest(), $this->getResponse(), ['user_name' => 'foobar']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetRoles(UserController $controller)
+    {
+        $result = $controller->getRoles($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertNotEmpty((string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetRolesWithNoUser(UserController $controller)
+    {
+        $this->expectException(NotFoundException::class);
+        $controller->getRoles($this->getRequest(), $this->getResponse(), ['user_name' => 'foobar']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testPageInfo(UserController $controller)
+    {
+        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testPageInfoWithNoUser(UserController $controller)
+    {
+        $this->expectException(NotFoundException::class);
+        $controller->pageInfo($this->getRequest(), $this->getResponse(), ['user_name' => 'foobar']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testPageList(UserController $controller)
+    {
+        $result = $controller->pageList($this->getRequest(), $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
     }
 
     /**
