@@ -10,8 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
-use League\FactoryMuffin\Faker\Facade as Faker;
-use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\UserController;
@@ -262,7 +260,9 @@ class UserControllerTest extends TestCase
     {
         // Create test user
         $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+            'id' => 2 // Hardcoded because pgsql is dumb
+        ]);
 
         // Get controller stuff
         $result = $controller->delete($this->getRequest(), $this->getResponse(), ['user_name' => $user->user_name]);
