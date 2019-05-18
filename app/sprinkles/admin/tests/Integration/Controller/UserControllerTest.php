@@ -449,10 +449,58 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
+     * @depends testGetModalCreate
+     * @param  UserController $controller
+     */
+    public function testGetModalCreateWithNoLocale(UserController $controller)
+    {
+        // Admin user, WILL have access
+        $testUser = User::find(1)->first();
+        $this->loginUser($testUser);
+
+        // Change config
+        $this->ci->config['site.locales.available'] = [];
+
+        // Get new controller to propagate new config
+        $controller = $this->getController();
+
+        $result = $controller->getModalCreate($this->getRequest(), $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
      * @param  UserController $controller
      */
     public function testGetModalEdit(UserController $controller)
     {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $result = $controller->getModalEdit($request, $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testGetModalEdit
+     * @param  UserController $controller
+     */
+    public function testGetModalEditWithNoLocale(UserController $controller)
+    {
+        // Admin user, WILL have access
+        $testUser = User::find(1)->first();
+        $this->loginUser($testUser);
+
+        // Change config
+        $this->ci->config['site.locales.available'] = [];
+
+        // Get new controller to propagate new config
+        $controller = $this->getController();
+
         $request = $this->getRequest()->withQueryParams([
             'user_name' => 'userfoo'
         ]);
@@ -584,6 +632,27 @@ class UserControllerTest extends TestCase
      */
     public function testPageInfo(UserController $controller)
     {
+        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testPageInfoWithNoLocale(UserController $controller)
+    {
+        // Admin user, WILL have access
+        $testUser = User::find(1)->first();
+        $this->loginUser($testUser);
+
+        // Change config
+        $this->ci->config['site.locales.available'] = [];
+
+        // Get new controller to propagate new config
+        $controller = $this->getController();
+
         $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertNotSame('', (string) $result->getBody());

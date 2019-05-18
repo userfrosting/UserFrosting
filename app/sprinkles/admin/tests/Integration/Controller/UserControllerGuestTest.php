@@ -104,6 +104,68 @@ class UserControllerGuestTest extends TestCase
      * @depends testControllerConstructorWithUser
      * @param  UserController $controller
      */
+    public function testGetActivitiesWithNoPermission(UserController $controller)
+    {
+        $this->expectException(ForbiddenException::class);
+        $controller->getActivities($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetActivitiesWithPartialPermission(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'view_user_field');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        $result = $controller->getActivities($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertNotEmpty((string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetInfoWithNoPermission(UserController $controller)
+    {
+        $this->expectException(ForbiddenException::class);
+        $controller->getInfo($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetInfoWithPartialPermission(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'uri_user');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        $result = $controller->getInfo($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertNotEmpty((string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
     public function testGetListWithNoPermission(UserController $controller)
     {
         $this->expectException(ForbiddenException::class);
@@ -142,6 +204,126 @@ class UserControllerGuestTest extends TestCase
      * @depends testControllerConstructorWithUser
      * @param  UserController $controller
      */
+    public function testGetModalCreateWithNoUserGroup(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'create_user');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        $result = $controller->getModalCreate($this->getRequest(), $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditWithNoPermissions(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $this->expectException(ForbiddenException::class);
+        $controller->getModalEdit($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditWithPartialPermissions(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'update_user_field');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $result = $controller->getModalEdit($request, $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditWithNoGroupPermissions(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'update_user_field', "subset(fields,['name','email','locale','flag_enabled','flag_verified','password'])");
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $result = $controller->getModalEdit($request, $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditPasswordWithNoPermissions(UserController $controller)
+    {
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $this->expectException(ForbiddenException::class);
+        $controller->getModalEditPassword($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetModalEditPasswordWithPartialPermissions(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'update_user_field');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        $request = $this->getRequest()->withQueryParams([
+            'user_name' => 'userfoo'
+        ]);
+
+        $result = $controller->getModalEditPassword($request, $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
     public function testGetModalEditRolesWithNoPermission(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
@@ -150,6 +332,98 @@ class UserControllerGuestTest extends TestCase
 
         $this->expectException(ForbiddenException::class);
         $controller->getModalEditRoles($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetPermissionsWithNoPermissions(UserController $controller)
+    {
+        $this->expectException(ForbiddenException::class);
+        $controller->getPermissions($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetPermissionsWithPartialPermissions(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'view_user_field');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        $result = $controller->getPermissions($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertNotEmpty((string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetRolesWithNoPermissions(UserController $controller)
+    {
+        $this->expectException(ForbiddenException::class);
+        $controller->getRoles($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testGetRolesWithPartialPermissions(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'view_user_field');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        $result = $controller->getRoles($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertNotEmpty((string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testPageInfoWithNoPermissions(UserController $controller)
+    {
+        $this->expectException(ForbiddenException::class);
+        $controller->pageInfo($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testPageInfoWithPartialPermissions(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'uri_user');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
     }
 
     /**
