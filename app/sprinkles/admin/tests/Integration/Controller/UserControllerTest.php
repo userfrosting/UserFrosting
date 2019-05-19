@@ -260,10 +260,7 @@ class UserControllerTest extends TestCase
     public function testDelete(UserController $controller)
     {
         // Create test user
-        $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-            'id' => 2 // Hardcoded because pgsql is dumb
-        ]);
+        $user = $this->createTestUser();
 
         // Get controller stuff
         $result = $controller->delete($this->getRequest(), $this->getResponse(), ['user_name' => $user->user_name]);
@@ -711,13 +708,10 @@ class UserControllerTest extends TestCase
     public function testUpdateInfo(UserController $controller)
     {
         // Create a user
-        $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-            'user_name' => 'testUpdateInfo',
-            'first_name' => 'foo',
-        ]);
+        $user = $this->createTestUser();
 
         // Also create a group
+        $fm = $this->ci->factory;
         $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
 
         // Set post data
@@ -799,10 +793,7 @@ class UserControllerTest extends TestCase
     public function testUpdateInfoWithDuplicateEmail(UserController $controller)
     {
         // Create a user
-        $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-            'user_name' => 'testUpdateInfoWithDuplicateEmail',
-        ]);
+        $user = $this->createTestUser();
 
         // Set post data
         $data = [
@@ -811,13 +802,13 @@ class UserControllerTest extends TestCase
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateInfo($request, $this->getResponse(), ['user_name' => 'testUpdateInfoWithDuplicateEmail']);
+        $result = $controller->updateInfo($request, $this->getResponse(), ['user_name' => $user->user_name]);
         $this->assertSame($result->getStatusCode(), 400);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure user was NOT update
-        $editedUser = User::where('user_name', 'testUpdateInfoWithDuplicateEmail')->first();
+        $editedUser = User::where('user_name', $user->user_name)->first();
         $this->assertNotSame('bar@foo.com', $editedUser->email);
         $this->assertSame($user->email, $editedUser->email);
 
@@ -876,11 +867,7 @@ class UserControllerTest extends TestCase
     public function testUpdateField(UserController $controller)
     {
         // Create a user
-        $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-            'user_name' => 'testUpdateField',
-            'first_name' => 'foo',
-        ]);
+        $user = $this->createTestUser();
 
         // Set post data
         $data = [
@@ -1000,12 +987,6 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateFieldForFlagEnabled(UserController $controller)
     {
-        // Create a user
-        $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-            'user_name' => 'testUpdateFieldForFlagEnabled',
-        ]);
-
         // Set post data
         $data = [
             'value' => '1',
@@ -1013,13 +994,13 @@ class UserControllerTest extends TestCase
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'flag_enabled']);
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => 'userfoo', 'field' => 'flag_enabled']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure user was update
-        $editedUser = User::where('user_name', $user->user_name)->first();
+        $editedUser = User::where('user_name', 'userfoo')->first();
         $this->assertSame('1', (string) $editedUser->flag_enabled);
 
         // Test message
@@ -1036,10 +1017,6 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateFieldForFlagEnabledDisabled(UserController $controller)
     {
-        // Create a user
-        $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
-
         // Set post data
         $data = [
             'value' => '0',
@@ -1047,14 +1024,14 @@ class UserControllerTest extends TestCase
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'flag_enabled']);
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => 'userfoo', 'field' => 'flag_enabled']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure user was update
-        $editedUser = User::where('user_name', $user->user_name)->first();
-        $this->assertSame('0', (string) $editedUser->flag_enabled);
+        $editedUser = User::where('user_name', 'userfoo')->first();
+        $this->assertEquals(0, $editedUser->flag_enabled);
 
         // Test message
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
@@ -1070,10 +1047,6 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateFieldForFlagVerified(UserController $controller)
     {
-        // Create a user
-        $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
-
         // Set post data
         $data = [
             'value' => '1',
@@ -1081,13 +1054,13 @@ class UserControllerTest extends TestCase
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'flag_verified']);
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => 'userfoo', 'field' => 'flag_verified']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure user was update
-        $editedUser = User::where('user_name', $user->user_name)->first();
+        $editedUser = User::where('user_name', 'userfoo')->first();
         $this->assertSame('1', (string) $editedUser->flag_verified);
 
         // Test message
@@ -1132,10 +1105,6 @@ class UserControllerTest extends TestCase
      */
     public function testUpdateFieldForPassword(UserController $controller)
     {
-        // Create a user
-        $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
-
         // Set post data
         $data = [
             'value' => '1234567890abc',
@@ -1143,13 +1112,13 @@ class UserControllerTest extends TestCase
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'password']);
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => 'userfoo', 'field' => 'password']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure user was update
-        $editedUser = User::where('user_name', $user->user_name)->first();
+        $editedUser = User::where('user_name', 'userfoo')->first();
         $this->assertNotSame('blablabla', $editedUser->password);
 
         // Test message
@@ -1168,7 +1137,6 @@ class UserControllerTest extends TestCase
     {
         // Create a user
         $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
         $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
 
         // Expected input :
@@ -1182,13 +1150,13 @@ class UserControllerTest extends TestCase
         $request = $this->getRequest()->withParsedBody($data);
 
         // Get controller stuff
-        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'roles']);
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => 'userfoo', 'field' => 'roles']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
         // Make sure user was update
-        $editedUser = User::where('user_name', $user->user_name)->first();
+        $editedUser = User::where('user_name', 'userfoo')->first();
         $this->assertSame($role->id, $editedUser->roles->first()->id);
 
         // Test message
