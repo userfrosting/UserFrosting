@@ -43,6 +43,51 @@ class PasswordSecurity
     }
 
     /**
+     * Generates a list of compromised passwords stored in cache or by querying Have I Been Pwned API.
+     *
+     * First check the cache to see if the hash prefix is stored.
+     * If not found in cache, query Have I Been Pwned API and store response in cache.
+     * @param  string $password
+     * @return string A numeric string representing the number of times a password has been compromised.
+     */
+    public function checkPassword($password)
+    {
+        // Get the SHA1 hash of our password.
+        // The first 5 characters (hash prefix) are sent to Have I Been Pwned.
+        $passwordHash = strtoupper(sha1($password));
+        $hashPrefix = substr($passwordHash, 0, 5);
+
+        $cacheMinutes = $this->config['site.password_security.enforce_no_compromised.cache'];
+
+        // We can use the comparison list directly from cache if it is found. Otherwise, we query Have I Been Pwned API and then save response to cache.
+        $hashArray = $this->cache->remember($hashPrefix, $cacheMinutes, function () use ($hashPrefix) {
+            return $this->getHashArrayFromAPI($hashPrefix);
+        });
+
+        return $this->checkHash($passwordHash, $hashArray);
+    }
+
+    /**
+     * Checks the maximum number of times that is acceptable for a password to have appeared in breaches.
+     *
+     * @return string Numeric string with -1 meaning disabled.
+     */
+    public function breachThreshold()
+    {
+        return $this->config['site.password_security.enforce_no_compromised.breaches'];
+    }
+
+    /**
+     * Checks if compromised password reset feature is enabeld.
+     *
+     * @return bool True if the feature is enabled.
+     */
+    public function resetCompromisedEnabled()
+    {
+        return $this->config['site.login.enforce_reset_compromised'];
+    }
+
+    /**
      * Check a password SHA1 hash against an array of compromised password hashes.
      *
      * @param  string $hash  The hash of the potential password to be used.
@@ -70,31 +115,6 @@ class PasswordSecurity
     }
 
     /**
-     * Generates a list of compromised passwords stored in cache or by querying Have I Been Pwned API.
-     *
-     * First check the cache to see if the hash prefix is stored.
-     * If not found in cache, query Have I Been Pwned API and store response in cache.
-     * @param  string $password
-     * @return string A numeric string representing the number of times a password has been compromised.
-     */
-    public function checkPassword($password)
-    {
-        // Get the SHA1 hash of our password.
-        // The first 5 characters (hash prefix) are sent to Have I Been Pwned.
-        $passwordHash = strtoupper(sha1($password));
-        $hashPrefix = substr($passwordHash, 0, 5);
-
-        $cacheMinutes = $this->config['site.password_security.enforce_no_compromised.cache'];
-
-        // We can use the comparison list directly from cache if it is found. Otherwise, we query Have I Been Pwned API and then save response to cache.
-        $hashArray = $this->cache->remember($hashPrefix, $cacheMinutes, function () use ($hashPrefix) {
-            return $this->getHashArrayFromAPI($hashPrefix);
-        });
-
-        return $this->checkHash($passwordHash, $hashArray);
-    }
-
-    /**
      * Queries Have I been Pwned API to generate list of hashed compromised password suffixes.
      *
      * @param  string $hashPrefix The prefix (first 5 characters) of hashed password.
@@ -114,25 +134,5 @@ class PasswordSecurity
         $hashArray = preg_split("/[\n,]+/", $query);
 
         return $hashArray;
-    }
-
-    /**
-     * Checks if compromised password reset feature is enabeld.
-     *
-     * @return bool True if the feature is enabled.
-     */
-    public function resetCompromisedEnabled()
-    {
-        return $this->config['site.login.enforce_reset_compromised'];
-    }
-
-    /**
-     * Checks the maximum number of times that is acceptable for a password to have appeared in breaches.
-     *
-     * @return string Numeric string with -1 meaning disabled.
-     */
-    public function breachThreshold()
-    {
-        return $this->config['site.password_security.enforce_no_compromised.breaches'];
     }
 }
