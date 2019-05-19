@@ -996,7 +996,7 @@ class UserControllerTest extends TestCase
 
         // Make sure user was update
         $editedUser = User::where('user_name', $user->user_name)->first();
-        $this->assertSame(1, $editedUser->flag_enabled);
+        $this->assertSame('1', (string) $editedUser->flag_enabled);
 
         // Test message
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
@@ -1030,7 +1030,7 @@ class UserControllerTest extends TestCase
 
         // Make sure user was update
         $editedUser = User::where('user_name', $user->user_name)->first();
-        $this->assertSame(0, $editedUser->flag_enabled);
+        $this->assertSame('0', (string) $editedUser->flag_enabled);
 
         // Test message
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
@@ -1064,7 +1064,7 @@ class UserControllerTest extends TestCase
 
         // Make sure user was update
         $editedUser = User::where('user_name', $user->user_name)->first();
-        $this->assertSame(1, $editedUser->flag_verified);
+        $this->assertSame('1', (string) $editedUser->flag_verified);
 
         // Test message
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
