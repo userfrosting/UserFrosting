@@ -627,6 +627,7 @@ class UserControllerGuestTest extends TestCase
 
         // In case the user don't exist
         if (!$user) {
+            $fm = $this->ci->factory;
             $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
                 'id' => $this->ci->config['reserved_user_ids.master']
             ]);
