@@ -55,7 +55,7 @@ trait withTestUser
         if ($isMaster) {
             $user_id = $this->ci->config['reserved_user_ids.master'];
         } else {
-            $user_id = rand(0, 999999);
+            $user_id = $this->getRandomUserId($this->ci->config['reserved_user_ids.master']);
         }
 
         $params = array_merge(['id' => $user_id], $params);
@@ -68,6 +68,20 @@ trait withTestUser
         }
 
         return $user;
+    }
+
+    /**
+     * Returns a random user id, exclusing th master id
+     * @param  int $masterId
+     * @return int
+     */
+    protected function getRandomUserId($masterId)
+    {
+        do {
+            $id = mt_rand(1, 9999);
+        } while (in_array($id, [$masterId]));
+
+        return $id;
     }
 
     /**
