@@ -455,9 +455,17 @@ class UserControllerTest extends TestCase
      */
     public function testGetModalCreateWithNoLocale(UserController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = User::find(1)->first();
-        $this->loginUser($testUser);
+        // Default should be the existing admin user.
+        $user = User::find($this->ci->config['reserved_user_ids.master']);
+
+        // In case the user don't exist
+        if (!$user) {
+            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+                'id' => $this->ci->config['reserved_user_ids.master']
+            ]);
+        }
+
+        $this->loginUser($user);
 
         // Change config
         $this->ci->config['site.locales.available'] = [];
@@ -492,9 +500,17 @@ class UserControllerTest extends TestCase
      */
     public function testGetModalEditWithNoLocale(UserController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = User::find(1)->first();
-        $this->loginUser($testUser);
+        // Default should be the existing admin user.
+        $user = User::find($this->ci->config['reserved_user_ids.master']);
+
+        // In case the user don't exist
+        if (!$user) {
+            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+                'id' => $this->ci->config['reserved_user_ids.master']
+            ]);
+        }
+
+        $this->loginUser($user);
 
         // Change config
         $this->ci->config['site.locales.available'] = [];
@@ -644,9 +660,17 @@ class UserControllerTest extends TestCase
      */
     public function testPageInfoWithNoLocale(UserController $controller)
     {
-        // Admin user, WILL have access
-        $testUser = User::find(1)->first();
-        $this->loginUser($testUser);
+        // Default should be the existing admin user.
+        $user = User::find($this->ci->config['reserved_user_ids.master']);
+
+        // In case the user don't exist
+        if (!$user) {
+            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+                'id' => $this->ci->config['reserved_user_ids.master']
+            ]);
+        }
+
+        $this->loginUser($user);
 
         // Change config
         $this->ci->config['site.locales.available'] = [];
