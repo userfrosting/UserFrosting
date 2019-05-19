@@ -54,9 +54,11 @@ class AccountController extends SimpleController
         // Grab the password from request.
         $password = $request->getParsedBodyParam('password');
 
-        $result = PasswordSecuruity::checkPassword($password);
+        $passwordSecurity = $this->ci->passwordSecurity;
 
-        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+        $breaches = $passwordSecurity->checkPassword($password);
+
+        return $response->withJson($breaches, 200, JSON_PRETTY_PRINT);
     }
 
     /**
