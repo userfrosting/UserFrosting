@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
+use League\FactoryMuffin\Faker\Facade as Faker;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\UserController;
@@ -677,6 +678,500 @@ class UserControllerTest extends TestCase
         $result = $controller->pageList($this->getRequest(), $this->getResponse(), []);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testUpdateInfo(UserController $controller)
+    {
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+            'user_name' => 'testUpdateInfo',
+            'first_name' => 'foo',
+        ]);
+
+        // Also create a group
+        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+
+        // Set post data
+        $data = [
+            'first_name' => 'bar',
+            'group_id'   => $group->id,
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateInfo($request, $this->getResponse(), ['user_name' => $user->user_name]);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame('bar', $editedUser->first_name);
+        $this->assertNotSame($user->first_name, $editedUser->first_name);
+        $this->assertSame($user->last_name, $editedUser->last_name);
+        $this->assertSame($group->id, $editedUser->group->id);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateInfo
+     * @param  UserController $controller
+     */
+    public function testUpdateInfoWithNoUser(UserController $controller)
+    {
+        $this->expectException(NotFoundException::class);
+        $controller->updateInfo($this->getRequest(), $this->getResponse(), ['user_name' => 'foobar']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateInfo
+     * @param  UserController $controller
+     */
+    public function testUpdateInfoWithValidationError(UserController $controller)
+    {
+        // Create a string wich will be too long for validation
+        $faker = Faker::getGenerator();
+        $value = $faker->text(100);
+
+        // Set post data
+        $data = [
+            'first_name' => $value
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateInfo($request, $this->getResponse(), ['user_name' => 'userfoo']);
+        $this->assertSame($result->getStatusCode(), 400);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was NOT update
+        $editedUser = User::where('user_name', 'userfoo')->first();
+        $this->assertNotSame($value, $editedUser->first_name);
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateInfo
+     * @param  UserController $controller
+     */
+    public function testUpdateInfoWithDuplicateEmail(UserController $controller)
+    {
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+            'user_name' => 'testUpdateInfoWithDuplicateEmail',
+        ]);
+
+        // Set post data
+        $data = [
+            'email' => 'bar@foo.com',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateInfo($request, $this->getResponse(), ['user_name' => 'testUpdateInfoWithDuplicateEmail']);
+        $this->assertSame($result->getStatusCode(), 400);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was NOT update
+        $editedUser = User::where('user_name', 'testUpdateInfoWithDuplicateEmail')->first();
+        $this->assertNotSame('bar@foo.com', $editedUser->email);
+        $this->assertSame($user->email, $editedUser->email);
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateInfo
+     * @param  UserController $controller
+     */
+    public function testUpdateInfoForMasterUser(UserController $controller)
+    {
+        // Default should be the existing admin user.
+        $user = User::find($this->ci->config['reserved_user_ids.master']);
+
+        // In case the user don't exist
+        if (!$user) {
+            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+                'id' => $this->ci->config['reserved_user_ids.master']
+            ]);
+        }
+
+        // Set post data
+        $data = [
+            'first_name' => 'bar',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateInfo($request, $this->getResponse(), ['user_name' => $user->user_name]);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame('bar', $editedUser->first_name);
+        $this->assertNotSame($user->first_name, $editedUser->first_name);
+        $this->assertSame($user->last_name, $editedUser->last_name);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testUpdateField(UserController $controller)
+    {
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+            'user_name' => 'testUpdateField',
+            'first_name' => 'foo',
+        ]);
+
+        // Set post data
+        $data = [
+            'value' => 'bar',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'first_name']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame('bar', $editedUser->first_name);
+        $this->assertNotSame($user->first_name, $editedUser->first_name);
+        $this->assertSame($user->last_name, $editedUser->last_name);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateField
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldWithNoUser(UserController $controller)
+    {
+        $this->expectException(NotFoundException::class);
+        $controller->updateField($this->getRequest(), $this->getResponse(), ['user_name' => 'foobar']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateField
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldWithNoUserWithNoValue(UserController $controller)
+    {
+        $this->expectException(BadRequestException::class);
+        $controller->updateField($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo', 'field' => 'first_name']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateField
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldWithMasterUser(UserController $controller)
+    {
+        // Default should be the existing admin user.
+        $user = User::find($this->ci->config['reserved_user_ids.master']);
+
+        // In case the user don't exist
+        if (!$user) {
+            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+                'id' => $this->ci->config['reserved_user_ids.master']
+            ]);
+        }
+
+        // Set post data
+        $data = [
+            'value' => 'barbar',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'first_name']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame('barbar', $editedUser->first_name);
+        $this->assertNotSame($user->first_name, $editedUser->first_name);
+        $this->assertSame($user->last_name, $editedUser->last_name);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateField
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldWithValidationError(UserController $controller)
+    {
+        // Create a string wich will be too long for validation
+        $faker = Faker::getGenerator();
+        $value = $faker->text(100);
+
+        // Set post data
+        $data = [
+            'value' => $value,
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $this->expectException(BadRequestException::class);
+        $controller->updateField($request, $this->getResponse(), ['user_name' => 'userfoo', 'field' => 'first_name']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateField
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldForFlagEnabled(UserController $controller)
+    {
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+            'user_name' => 'testUpdateFieldForFlagEnabled',
+        ]);
+
+        // Set post data
+        $data = [
+            'value' => '1',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'flag_enabled']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame(1, $editedUser->flag_enabled);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateFieldForFlagEnabled
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldForFlagEnabledDisabled(UserController $controller)
+    {
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
+
+        // Set post data
+        $data = [
+            'value' => '0',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'flag_enabled']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame(0, $editedUser->flag_enabled);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateField
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldForFlagVerified(UserController $controller)
+    {
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
+
+        // Set post data
+        $data = [
+            'value' => '1',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'flag_verified']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame(1, $editedUser->flag_verified);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateField
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldForFlagEnabledWithMasterUser(UserController $controller)
+    {
+        // Default should be the existing admin user.
+        $user = User::find($this->ci->config['reserved_user_ids.master']);
+
+        // In case the user don't exist
+        if (!$user) {
+            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+                'id' => $this->ci->config['reserved_user_ids.master']
+            ]);
+        }
+
+        // Set post data
+        $data = [
+            'value' => '0',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $this->expectException(BadRequestException::class);
+        $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'flag_enabled']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateField
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldForPassword(UserController $controller)
+    {
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
+
+        // Set post data
+        $data = [
+            'value' => '1234567890abc',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'password']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertNotSame('blablabla', $editedUser->password);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @depends testUpdateField
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldForRoles(UserController $controller)
+    {
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
+        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+
+        // Expected input :
+        // value[0][role_id]: 2
+        // value[1][role_id]: 9
+
+        // Set post data
+        $data = [
+            'value' => [['role_id' => $role->id]]
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'roles']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame($role->id, $editedUser->roles->first()->id);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
     }
 
     /**

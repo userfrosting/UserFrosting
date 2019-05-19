@@ -10,11 +10,13 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\UserController;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\withController;
+use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Tests\TestCase;
 
@@ -434,6 +436,237 @@ class UserControllerGuestTest extends TestCase
     {
         $this->expectException(ForbiddenException::class);
         $controller->pageList($this->getRequest(), $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testUpdateInfoWithNoPermissions(UserController $controller)
+    {
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+            'user_name' => 'testUpdateInfoWithNoPermissions',
+            'first_name' => 'foo',
+        ]);
+
+        // Set post data
+        $data = [
+            'first_name' => 'bar',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        $this->expectException(ForbiddenException::class);
+        $controller->updateInfo($request, $this->getResponse(), ['user_name' => $user->user_name]);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testUpdateInfoWithPartialPermissions(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'update_user_field');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+            'user_name' => 'testUpdateInfoWithPartialPermissions',
+            'first_name' => 'foo',
+        ]);
+
+        // Also create a group
+        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+
+        // Set post data
+        $data = [
+            'first_name' => 'bar',
+            'group_id'   => $group->id,
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateInfo($request, $this->getResponse(), ['user_name' => $user->user_name]);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame('bar', $editedUser->first_name);
+        $this->assertNotSame($user->first_name, $editedUser->first_name);
+        $this->assertSame($user->last_name, $editedUser->last_name);
+        $this->assertSame($group->id, $editedUser->group->id);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testUpdateInfoForMasterUserWithNoPermissions(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'update_user_field');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        // Default should be the existing admin user.
+        $user = User::find($this->ci->config['reserved_user_ids.master']);
+
+        // In case the user don't exist
+        if (!$user) {
+            $fm = $this->ci->factory;
+            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+                'id' => $this->ci->config['reserved_user_ids.master']
+            ]);
+        }
+
+        // Set post data
+        $data = [
+            'first_name' => 'bar',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $this->expectException(ForbiddenException::class);
+        $controller->updateInfo($request, $this->getResponse(), ['user_name' => $user->user_name]);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldWithNoPermissions(UserController $controller)
+    {
+        $this->expectException(ForbiddenException::class);
+        $controller->updateField($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo', 'field' => 'first_name']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldWithPartialPermissions(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'update_user_field');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        // Create a user
+        $fm = $this->ci->factory;
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+            'user_name' => 'testUpdateFieldWithPartialPermissions',
+            'first_name' => 'foo',
+        ]);
+
+        // Set post data
+        $data = [
+            'value' => 'bar',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'first_name']);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame('bar', $editedUser->first_name);
+        $this->assertNotSame($user->first_name, $editedUser->first_name);
+        $this->assertSame($user->last_name, $editedUser->last_name);
+
+        // Test message
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldWithMasterUserWithNoPermissions(UserController $controller)
+    {
+        // Guest user
+        $testUser = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($testUser, 'update_user_field');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        // Default should be the existing admin user.
+        $user = User::find($this->ci->config['reserved_user_ids.master']);
+
+        // In case the user don't exist
+        if (!$user) {
+            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+                'id' => $this->ci->config['reserved_user_ids.master']
+            ]);
+        }
+
+        // Set post data
+        $data = [
+            'value' => 'bar',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $this->expectException(ForbiddenException::class);
+        $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'first_name']);
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testUpdateFieldForFlagEnabledWithCurrentUser(UserController $controller)
+    {
+        // Guest user
+        $user = $this->createTestUser(false, true);
+
+        // Give user partial permissions
+        $this->giveUserTestPermission($user, 'update_user_field');
+
+        // Get new controller to propagate new user
+        $controller = $this->getController();
+
+        // Set post data
+        $data = [
+            'value' => '0',
+        ];
+        $request = $this->getRequest()->withParsedBody($data);
+
+        // Get controller stuff
+        $this->expectException(BadRequestException::class);
+        $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'flag_enabled']);
     }
 
     /**
