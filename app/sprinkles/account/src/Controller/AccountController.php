@@ -156,6 +156,7 @@ class AccountController extends SimpleController
             return $response->withRedirect($loginPage);
         }
 
+        /** @var \UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository $passwordReset */
         $passwordReset = $this->ci->repoPasswordReset->cancel($data['token']);
 
         if (!$passwordReset) {
