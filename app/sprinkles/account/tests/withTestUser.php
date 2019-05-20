@@ -58,10 +58,13 @@ trait withTestUser
             $user_id = $this->getRandomUserId($this->ci->config['reserved_user_ids.master']);
         }
 
-        $params = array_merge(['id' => $user_id], $params);
+        // If user exist, returns it, otherwise create a new one
+        if (!$user = User::find($user_id)) {
+            $params = array_merge(['id' => $user_id], $params);
 
-        $fm = $this->ci->factory;
-        $user = $fm->create(User::class, $params);
+            $fm = $this->ci->factory;
+            $user = $fm->create(User::class, $params);
+        }
 
         if ($login) {
             $this->loginUser($user);
