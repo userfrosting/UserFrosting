@@ -10,10 +10,13 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
+use Mockery as m;
 use League\FactoryMuffin\Faker\Facade as Faker;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\UserController;
+use UserFrosting\Sprinkle\Core\Mail\Mailer;
+use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\withController;
@@ -58,6 +61,12 @@ class UserControllerTest extends TestCase
         }
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
+
     /**
      */
     public function testControllerConstructor()
@@ -87,9 +96,18 @@ class UserControllerTest extends TestCase
      * @depends testControllerConstructorWithUser
      * @param  UserController $controller
      */
-    // WILL NEED TO MOCK MAILLING SYSTEM FOR THIS TEST TO PROPERLY WORK
-    /*public function testCreate(UserController $controller)
+    public function testCreate(UserController $controller)
     {
+        // Create fake mailer
+        $mailer = m::mock(Mailer::class);
+        $mailer->shouldReceive('send')->once()->with(\Mockery::type(TwigMailMessage::class));
+        $this->ci->mailer = $mailer;
+
+        // Recreate controller to use the fake mailer
+        $user = User::find($this->ci->config['reserved_user_ids.master']);
+        $this->loginUser($user);
+        $controller = $this->getController();
+
         // Create a fake group
         $fm = $this->ci->factory;
         $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
@@ -119,7 +137,7 @@ class UserControllerTest extends TestCase
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
-    }*/
+    }
 
     /**
      * @depends testControllerConstructorWithUser
