@@ -96,53 +96,6 @@ class UserControllerTest extends TestCase
      * @depends testControllerConstructorWithUser
      * @param  UserController $controller
      */
-    public function testCreate(UserController $controller)
-    {
-        // Create fake mailer
-        $mailer = m::mock(Mailer::class);
-        $mailer->shouldReceive('send')->once()->with(\Mockery::type(TwigMailMessage::class));
-        $this->ci->mailer = $mailer;
-
-        // Recreate controller to use the fake mailer
-        $user = User::find($this->ci->config['reserved_user_ids.master']);
-        $this->loginUser($user);
-        $controller = $this->getController();
-
-        // Create a fake group
-        $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
-
-        // Set post data
-        $data = [
-            'user_name'  => 'foo',
-            'first_name' => 'foo name',
-            'last_name'  => 'foo last',
-            'email'      => 'foo@bar.com',
-            'group_id'   => $group->id
-        ];
-        $request = $this->getRequest()->withParsedBody($data);
-
-        // Get controller stuff
-        $result = $controller->create($request, $this->getResponse(), []);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertJson((string) $result->getBody());
-        $this->assertSame('[]', (string) $result->getBody());
-
-        // Make sure role was created
-        $user = User::where('user_name', 'foo')->first();
-        $this->assertSame('foo name', $user->first_name);
-        $this->assertSame($group->id, $user->group->id);
-
-        // Test message
-        $ms = $this->ci->alerts;
-        $messages = $ms->getAndClearMessages();
-        $this->assertSame('success', end($messages)['type']);
-    }
-
-    /**
-     * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
-     */
     public function testCreateWithNoUsername(UserController $controller)
     {
         // Set post data
@@ -251,25 +204,40 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
      */
-    /*public function testCreatePasswordReset(UserController $controller)
+    public function testCreatePasswordReset()
     {
+        // Create fake mailer
+        $mailer = m::mock(Mailer::class);
+        $mailer->shouldReceive('send')->once()->with(\Mockery::type(TwigMailMessage::class));
+        $this->ci->mailer = $mailer;
+
+        // Recreate controller to use the fake mailer
+        $this->createTestUser(true, true);
+        $controller = $this->getController();
+
         // Get controller stuff
         $result = $controller->createPasswordReset($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
-        // role is deleted
-        $this->assertNull(Role::where('slug', $role->slug)->first());
-
         // Test message
-
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
-    }*/
+    }
+
+    /**
+     * @depends testControllerConstructorWithUser
+     * @param  UserController $controller
+     */
+    public function testCreatePasswordResetWithNotExistingUser(UserController $controller)
+    {
+        $this->expectException(NotFoundException::class);
+        $result = $controller->createPasswordReset($this->getRequest(), $this->getResponse(), ['user_name' => 'potato']);
+
+    }
 
     /**
      * @depends testControllerConstructorWithUser
@@ -313,16 +281,7 @@ class UserControllerTest extends TestCase
      */
     public function testDeleteWithReservedIds(UserController $controller)
     {
-        // Default should be the existing admin user.
         $user = User::find($this->ci->config['reserved_user_ids.master']);
-
-        // In case the user don't exist
-        if (!$user) {
-            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-                'id' => $this->ci->config['reserved_user_ids.master']
-            ]);
-        }
-
         $this->expectException(BadRequestException::class);
         $controller->delete($this->getRequest(), $this->getResponse(), ['user_name' => $user->user_name]);
     }
@@ -434,15 +393,7 @@ class UserControllerTest extends TestCase
      */
     public function testGetModalConfirmDeleteWithReservedId(UserController $controller)
     {
-        // Default should be the existing admin user.
         $user = User::find($this->ci->config['reserved_user_ids.master']);
-
-        // In case the user don't exist
-        if (!$user) {
-            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-                'id' => $this->ci->config['reserved_user_ids.master']
-            ]);
-        }
 
         $request = $this->getRequest()->withQueryParams([
             'user_name' => $user->user_name
@@ -470,22 +421,11 @@ class UserControllerTest extends TestCase
      */
     public function testGetModalCreateWithNoLocale(UserController $controller)
     {
-        // Default should be the existing admin user.
-        $user = User::find($this->ci->config['reserved_user_ids.master']);
-
-        // In case the user don't exist
-        if (!$user) {
-            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-                'id' => $this->ci->config['reserved_user_ids.master']
-            ]);
-        }
-
-        $this->loginUser($user);
-
         // Change config
         $this->ci->config['site.locales.available'] = [];
 
         // Get new controller to propagate new config
+        $user = $this->createTestUser(true, true);
         $controller = $this->getController();
 
         $result = $controller->getModalCreate($this->getRequest(), $this->getResponse(), []);
@@ -515,22 +455,11 @@ class UserControllerTest extends TestCase
      */
     public function testGetModalEditWithNoLocale(UserController $controller)
     {
-        // Default should be the existing admin user.
-        $user = User::find($this->ci->config['reserved_user_ids.master']);
-
-        // In case the user don't exist
-        if (!$user) {
-            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-                'id' => $this->ci->config['reserved_user_ids.master']
-            ]);
-        }
-
-        $this->loginUser($user);
-
         // Change config
         $this->ci->config['site.locales.available'] = [];
 
         // Get new controller to propagate new config
+        $user = $this->createTestUser(true, true);
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
@@ -675,22 +604,11 @@ class UserControllerTest extends TestCase
      */
     public function testPageInfoWithNoLocale(UserController $controller)
     {
-        // Default should be the existing admin user.
-        $user = User::find($this->ci->config['reserved_user_ids.master']);
-
-        // In case the user don't exist
-        if (!$user) {
-            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-                'id' => $this->ci->config['reserved_user_ids.master']
-            ]);
-        }
-
-        $this->loginUser($user);
-
         // Change config
         $this->ci->config['site.locales.available'] = [];
 
         // Get new controller to propagate new config
+        $user = $this->createTestUser(true, true);
         $controller = $this->getController();
 
         $result = $controller->pageInfo($this->getRequest(), $this->getResponse(), ['user_name' => 'userfoo']);
@@ -846,13 +764,6 @@ class UserControllerTest extends TestCase
         // Default should be the existing admin user.
         $user = User::find($this->ci->config['reserved_user_ids.master']);
 
-        // In case the user don't exist
-        if (!$user) {
-            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-                'id' => $this->ci->config['reserved_user_ids.master']
-            ]);
-        }
-
         // Set post data
         $data = [
             'first_name' => 'bar',
@@ -943,13 +854,6 @@ class UserControllerTest extends TestCase
     {
         // Default should be the existing admin user.
         $user = User::find($this->ci->config['reserved_user_ids.master']);
-
-        // In case the user don't exist
-        if (!$user) {
-            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-                'id' => $this->ci->config['reserved_user_ids.master']
-            ]);
-        }
 
         // Set post data
         $data = [
@@ -1098,13 +1002,6 @@ class UserControllerTest extends TestCase
         // Default should be the existing admin user.
         $user = User::find($this->ci->config['reserved_user_ids.master']);
 
-        // In case the user don't exist
-        if (!$user) {
-            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-                'id' => $this->ci->config['reserved_user_ids.master']
-            ]);
-        }
-
         // Set post data
         $data = [
             'value' => '0',
@@ -1200,9 +1097,7 @@ class UserControllerTest extends TestCase
         $testUser = $this->createTestUser(true, true);
 
         // Create test user
-        $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-            'id'        => '9999',
+        $this->createTestUser(false, false, [
             'user_name' => 'userfoo',
             'email'     => 'bar@foo.com'
         ]);
