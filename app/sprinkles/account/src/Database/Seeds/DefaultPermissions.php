@@ -186,7 +186,7 @@ class DefaultPermissions extends BaseSeed
      * Save permissions
      * @param array $permissions
      */
-    protected function savePermissions(array $permissions)
+    protected function savePermissions(array &$permissions)
     {
         foreach ($permissions as $slug => $permission) {
 
