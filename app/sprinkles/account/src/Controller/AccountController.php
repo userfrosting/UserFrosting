@@ -223,7 +223,6 @@ class AccountController extends SimpleController
         }
 
         // Throttle requests
-
         /** @var \UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
         $throttler = $this->ci->throttler;
 
