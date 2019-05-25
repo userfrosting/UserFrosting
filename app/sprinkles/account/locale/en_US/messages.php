@@ -112,7 +112,7 @@ return [
 
         'SECURITY'  => [
              'RESET_REQUIRED' => [
-                 'COMPROMISED'      => 'The password security policy does not allow use of known compromised passwords. Either this feature has been activated after you originally set up your accounty or your password has recently been added to the list.'
+                 'COMPROMISED'      => 'The password security policy does not allow use of passwords that have been exposed by a data breach. Please reset your password to continue.'
             ]
         ],
 

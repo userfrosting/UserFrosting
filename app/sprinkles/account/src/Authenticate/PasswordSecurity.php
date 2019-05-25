@@ -13,7 +13,7 @@ use Illuminate\Cache\Repository as Cache;
 use UserFrosting\Support\Repository\Repository as Config;
 
 /**
- * Handles enhanced password security methods for integration with Have I Been Pwned.
+ * Handles advanced password security methods for integration with Have I Been Pwned.
  *
  * @see https://haveibeenpwned.com/API/v2
  * @author Amos Folz
@@ -48,7 +48,7 @@ class PasswordSecurity
      * First check the cache to see if the hash prefix is stored.
      * If not found in cache, query Have I Been Pwned API and store response in cache.
      * @param  string $password
-     * @return string A numeric string representing the number of times a password has been compromised.
+     * @return int    The number of times a password has been exposed in data breaches.
      */
     public function checkPassword($password)
     {
@@ -68,9 +68,9 @@ class PasswordSecurity
     }
 
     /**
-     * Checks the maximum number of times that is acceptable for a password to have appeared in breaches.
+     * Checks the maximum number of times that is acceptable for a password to have appeared in breaches with -1 meaning disabled.
      *
-     * @return string Numeric string with -1 meaning disabled.
+     * @return int
      */
     public function breachThreshold()
     {
@@ -92,7 +92,7 @@ class PasswordSecurity
      *
      * @param  string $hash  The hash of the potential password to be used.
      * @param  array  $array Array of password hashes in the format c2d18a7d49b0d4260769eb03d027066d29a:181 - or <hash>:<number of breaches.
-     * @return string A numeric string representing the number of times a password has been compromised.
+     * @return int    The number of times a password has been exposed in data breaches.
      */
     private function checkHash($hash, $array)
     {
@@ -102,12 +102,11 @@ class PasswordSecurity
             $breachedItemHash = $breachedItemParts[0];
             $numberOfBreaches = $breachedItemParts[1];
 
-            // compare the hash suffix from Have I Been Pwned with password hash suffix.
+            // compare the hash suffix from array of hash suffix with password hash suffix.
             if ($breachedItemHash == substr($hash, 5)) {
-                // if a match is found just return the response.
-                return $breaches = trim($numberOfBreaches);
+                return $breaches = (int) trim($numberOfBreaches);
             } else {
-                $breaches = '0';
+                $breaches = 0;
             }
         }
 
