@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Travis] memcache & Redis service
 
 ### Fixed
+- DefaultPermissions seed results in SQL errors ([#981]; [#983])
 - Make group & role schema consistent between creation and edition. Prevents group and role without a name or slug to be created during edition.
 - Factories changed to make sure slugs are unique
 
@@ -753,6 +754,8 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#958]: https://github.com/userfrosting/UserFrosting/issues/958
 [#963]: https://github.com/userfrosting/UserFrosting/issues/963
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
+[#981]: https://github.com/userfrosting/UserFrosting/issues/981
+[#983]: https://github.com/userfrosting/UserFrosting/issues/983
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
