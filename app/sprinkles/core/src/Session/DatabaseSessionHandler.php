@@ -36,7 +36,7 @@ class DatabaseSessionHandler extends LaravelDatabaseSessionHandler
 
             return base64_decode($session->payload);
         }
-        
+
         return '';
     }
 }
