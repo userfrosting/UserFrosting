@@ -12,6 +12,9 @@ namespace UserFrosting\Sprinkle\Account\Tests\Integration\Controller;
 
 use Mockery as m;
 use UserFrosting\Sprinkle\Account\Controller\AccountController;
+use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
@@ -21,8 +24,10 @@ use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\withController;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
+use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\NotFoundException;
+use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -535,6 +540,628 @@ class AccountControllerTest extends TestCase
         $this->assertSame($result->getStatusCode(), 302);
         $this->assertEquals($this->ci->config['site.uri.public'], $result->getHeaderLine('Location'));
     }
+
+    /**
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testpageForgotPassword(AccountController $controller)
+    {
+        $result = $controller->pageForgotPassword($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testpageRegister(AccountController $controller)
+    {
+        $result = $controller->pageRegister($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testpageRegister
+     */
+    public function testpageRegisterWithDisabledRegistration()
+    {
+        // Force config
+        $this->ci->config['site.registration.enabled'] = false;
+
+        // Recreate controller to use new config
+        $controller = $this->getController();
+
+        $this->expectException(NotFoundException::class);
+        $controller->pageRegister($this->getRequest(), $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testpageRegister
+     */
+    public function testpageRegisterWithNoLocales()
+    {
+        // Force config
+        $this->ci->config['site.locales.available'] = [];
+
+        // Recreate controller to use new config
+        $controller = $this->getController();
+
+        $result = $controller->pageRegister($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testpageRegister
+     */
+    public function testpageRegisterWithLoggedInUser()
+    {
+        // Create a test user
+        $testUser = $this->createTestUser(false, true);
+
+        // Recreate controller to use fake throttler
+        $controller = $this->getController();
+
+        $result = $controller->pageRegister($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 302);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testpageResendVerification(AccountController $controller)
+    {
+        $result = $controller->pageResendVerification($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testpageResetPassword(AccountController $controller)
+    {
+        $result = $controller->pageResetPassword($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testpageSetPassword(AccountController $controller)
+    {
+        $result = $controller->pageSetPassword($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructor
+     */
+    public function testpageSettings()
+    {
+        // Create admin user. He will have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Recreate controller to use user
+        $controller = $this->getController();
+
+        $this->actualpageSettings($controller);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testpageSettings
+     */
+    public function testpageSettingsWithPartialPermissions()
+    {
+        // Create a user and give him permissions
+        $testUser = $this->createTestUser(false, true);
+        $this->giveUserTestPermission($testUser, 'uri_account_settings');
+
+        // Force config
+        $this->ci->config['site.locales.available'] = [];
+
+        // Recreate controller to use config & user
+        $controller = $this->getController();
+
+        $this->actualpageSettings($controller);
+    }
+
+    /**
+     * @param  AccountController $controller
+     */
+    protected function actualpageSettings(AccountController $controller)
+    {
+        $result = $controller->pageSettings($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testpageSettingsWithNoPermissions(AccountController $controller)
+    {
+        $this->expectException(ForbiddenException::class);
+        $controller->pageSettings($this->getRequest(), $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testpageSignIn(AccountController $controller)
+    {
+        $result = $controller->pageSignIn($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertNotSame('', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testpageSignIn
+     */
+    public function testpageSignInWithLoggedInUser()
+    {
+        // Create a test user
+        $testUser = $this->createTestUser(false, true);
+
+        // Recreate controller to use fake throttler
+        $controller = $this->getController();
+
+        $result = $controller->pageSignIn($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 302);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     */
+    public function testProfile()
+    {
+        // Create admin user. He will have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Force config
+        $this->ci->config['site.locales.available'] = [
+            'en_US' => 'English',
+            'fr_FR' => 'Français',
+        ];
+
+        // Recreate controller to use user
+        $controller = $this->getController();
+
+        $this->performActualProfileTests($controller, $testUser);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testProfile
+     */
+    public function testProfileWithPartialPermissions()
+    {
+        // Create a user and give him permissions
+        $testUser = $this->createTestUser(false, true);
+        $this->giveUserTestPermission($testUser, 'update_account_settings');
+
+        // Force config
+        $this->ci->config['site.locales.available'] = [
+            'en_US' => 'English',
+        ];
+
+        // Recreate controller to use config & user
+        $controller = $this->getController();
+
+        $this->performActualProfileTests($controller, $testUser);
+    }
+
+    /**
+     * @param  AccountController $controller
+     * @param  UserInterface     $user
+     */
+    protected function performActualProfileTests(AccountController $controller, UserInterface $user)
+    {
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'first_name' => 'foo',
+            //'last_name'  => 'bar', // don't change this one
+            'locale'     => 'en_US',
+        ]);
+
+        $result = $controller->profile($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was update
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertSame('foo', $editedUser->first_name);
+        $this->assertSame($user->last_name, $editedUser->last_name);
+        $this->assertSame($user->locale, $editedUser->locale);
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testProfile
+     * @param  AccountController $controller
+     */
+    public function testProfileWithNoPermissions(AccountController $controller)
+    {
+        $result = $controller->profile($this->getRequest(), $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 403);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testProfile
+     */
+    public function testProfileWithFailedValidation()
+    {
+        // Create admin user. He will have access
+        $testUser = $this->createTestUser(true, true);
+
+        // Force config
+        $this->ci->config['site.locales.available'] = [
+            'en_US' => 'English',
+            'fr_FR' => 'Français',
+        ];
+
+        // Recreate controller to use user
+        $controller = $this->getController();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([]);
+
+        $result = $controller->profile($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 400);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testProfile
+     */
+    public function testProfileWithInvalidLocale()
+    {
+        // Create admin user. He will have access
+        $user = $this->createTestUser(true, true);
+
+        // Force config
+        $this->ci->config['site.locales.available'] = [
+            'en_US' => 'English',
+            'fr_FR' => 'Français',
+        ];
+
+        // Recreate controller to use user
+        $controller = $this->getController();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'first_name' => 'foobarfoo',
+            'locale'     => 'foobarfoo',
+        ]);
+
+        $result = $controller->profile($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 400);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure user was NOT updated
+        $editedUser = User::where('user_name', $user->user_name)->first();
+        $this->assertNotSame('foobarfoo', $editedUser->first_name);
+        $this->assertSame($user->first_name, $editedUser->first_name);
+        $this->assertSame($user->last_name, $editedUser->last_name);
+        $this->assertSame($user->locale, $editedUser->locale);
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testRegisterWithHoneypot(AccountController $controller)
+    {
+        $this->expectException(SpammyRequestException::class);
+        $controller->register($this->getRequest(), $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testRegisterWithRegistrationDisabled(AccountController $controller)
+    {
+        // Force config
+        $this->ci->config['site.registration.enabled'] = false;
+
+        // Recreate controller to use fake config
+        $controller = $this->getController();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'spiderbro' => 'http://',
+        ]);
+
+        $result = $controller->register($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 403);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     */
+    public function testRegisterWithLoggedInUser()
+    {
+        // Create test user
+        $user = $this->createTestUser(false, true);
+
+        // Recreate controller to use user
+        $controller = $this->getController();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'spiderbro' => 'http://',
+        ]);
+
+        $result = $controller->register($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 403);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testRegisterWithLoggedInUser
+     */
+    public function testRegisterWithFailedThrottle()
+    {
+        // Create fake throttler
+        $throttler = m::mock(Throttler::class);
+        $throttler->shouldReceive('getDelay')->once()->with('registration_attempt')->andReturn(90);
+        $this->ci->throttler = $throttler;
+
+        // Recreate controller to use fake throttler
+        $controller = $this->getController();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'spiderbro' => 'http://',
+        ]);
+
+        $result = $controller->register($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 429);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testRegisterWithFailedThrottle
+     * @param  AccountController $controller
+     */
+    public function testRegisterWithFailedCaptcha(AccountController $controller)
+    {
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'spiderbro' => 'http://',
+        ]);
+
+        $result = $controller->register($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 400);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testRegisterWithFailedCaptcha
+     * @param  AccountController $controller
+     */
+    public function testRegisterWithFailedValidation(AccountController $controller)
+    {
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'spiderbro' => 'http://',
+            'captcha'   => '',
+        ]);
+
+        $result = $controller->register($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 400);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testRegisterWithFailedValidation
+     * @see UserFrosting\Sprinkle\Account\Tests\Integration\RegistrationTest for complete registration exception (for example duplicate email) testing
+     */
+    public function testRegister()
+    {
+        // Force config
+        $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
+        $this->ci->config['site.locales.available'] = [
+            'en_US' => 'English',
+        ];
+
+        // Create fake mailer
+        $mailer = m::mock(Mailer::class);
+        $mailer->shouldReceive('send')->once()->with(\Mockery::type(TwigMailMessage::class));
+        $this->ci->mailer = $mailer;
+
+        // Recreate controller to use fake config
+        $controller = $this->getController();
+
+        // Perfrom common test code
+        $this->performActualRegisterTest($controller);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testRegister
+     */
+    public function testRegisterWithNoEmailVerification()
+    {
+        // Delete previous attempt
+        if ($user = User::where('email', 'testRegister@test.com')->first()) {
+            $user->delete(true);
+        }
+
+        // Force config
+        $this->ci->config['site.registration.require_email_verification'] = false;
+        $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
+        $this->ci->config['site.locales.available'] = [
+            'en_US' => 'English',
+        ];
+
+
+        // Recreate controller to use fake config
+        $controller = $this->getController();
+
+        // Perfrom common test code
+        $this->performActualRegisterTest($controller);
+    }
+
+    /**
+     * @param  AccountController $controller
+     */
+    protected function performActualRegisterTest(AccountController $controller)
+    {
+        // Genereate a captcha for next request.
+        $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
+        $captcha->generateRandomCode();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'spiderbro'     => 'http://',
+            'captcha'       => $captcha->getCaptcha(),
+            'user_name'     => 'RegisteredUser',
+            'first_name'    => 'Testing',
+            'last_name'     => 'Register',
+            'email'         => 'testRegister@test.com',
+            'password'      => 'FooBarFooBar123',
+            'passwordc'     => 'FooBarFooBar123',
+            'locale'        => '',
+        ]);
+
+        $result = $controller->register($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure the user is added to the db by querying it
+        $users = User::where('email', 'testRegister@test.com')->get();
+        $this->assertCount(1, $users);
+        $this->assertSame('RegisteredUser', $users->first()['user_name']);
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testRegisterWithNoMasterUser(AccountController $controller)
+    {
+        // Delete any master user, just in case
+        if ($user = User::find($this->ci->config['reserved_user_ids.master'])) {
+            $user->delete(true);
+        }
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'spiderbro' => 'http://',
+        ]);
+
+        $result = $controller->register($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 403);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
 
     /**
      * @return AccountController

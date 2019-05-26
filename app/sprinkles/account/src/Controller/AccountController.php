@@ -822,7 +822,7 @@ class AccountController extends SimpleController
 
         // Check that locale is valid
         $locales = $config->getDefined('site.locales.available');
-        if (!array_key_exists($data['locale'], $locales)) {
+        if (isset($data['locale']) && !array_key_exists($data['locale'], $locales)) {
             $ms->addMessageTranslated('danger', 'LOCALE.INVALID', $data);
             $error = true;
         }
@@ -950,7 +950,7 @@ class AccountController extends SimpleController
         // Check captcha, if required
         if ($config['site.registration.captcha']) {
             $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
-            if (!$data['captcha'] || !$captcha->verifyCode($data['captcha'])) {
+            if (!isset($data['captcha']) || !$captcha->verifyCode($data['captcha'])) {
                 $ms->addMessageTranslated('danger', 'CAPTCHA.FAIL');
                 $error = true;
             }
