@@ -79,6 +79,131 @@ class AccountControllerTest extends TestCase
     }
 
     /**
+     * N.B.: Must be first test, before any master user is created
+     * @depends testControllerConstructor
+     * @param  AccountController $controller
+     */
+    public function testRegisterWithNoMasterUser(AccountController $controller)
+    {
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'spiderbro' => 'http://',
+        ]);
+
+        $result = $controller->register($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 403);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * N.B.: Run this register second, as it's easier if no test user is present.
+     * @depends testControllerConstructor
+     * @see UserFrosting\Sprinkle\Account\Tests\Integration\RegistrationTest for complete registration exception (for example duplicate email) testing
+     */
+    public function testRegister()
+    {
+        // Force locale config
+        $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
+        $this->ci->config['site.locales.available'] = [
+            'en_US' => 'English',
+        ];
+
+        // Create fake mailer
+        $mailer = m::mock(Mailer::class);
+        $mailer->shouldReceive('send')->once()->with(\Mockery::type(TwigMailMessage::class));
+        $this->ci->mailer = $mailer;
+
+        // Register will fail on PGSQL if a user is created with forced id
+        // before registration occurs because the forced id mess the auto_increment
+        // @see https://stackoverflow.com/questions/36157029/laravel-5-2-eloquent-save-auto-increment-pgsql-exception-on-same-id
+        // So we create a dummy user and assign the master id config to it's id
+        // to bypass the "no registration if no master user" security feature.
+        // (Note the dummy should by default be id n°1, but we still assign the config
+        // in case the default config does not return 1)
+        $fm = $this->ci->factory;
+        $dummyUser = $fm->create(User::class);
+        $this->ci->config['reserved_user_ids.master'] = $dummyUser->id;
+
+        // Recreate controller to use fake config
+        $controller = $this->getController();
+
+        // Perfrom common test code
+        $this->performActualRegisterTest($controller);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     * @depends testRegister
+     */
+    public function testRegisterWithNoEmailVerification()
+    {
+        // Delete previous attempt so we can reuse the same shared test code
+        if ($user = User::where('email', 'testRegister@test.com')->first()) {
+            $user->delete(true);
+        }
+
+        // Force locale config, disable email verification
+        $this->ci->config['site.registration.require_email_verification'] = false;
+        $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
+        $this->ci->config['site.locales.available'] = [
+            'en_US' => 'English',
+        ];
+
+        // Recreate controller to use fake config
+        $controller = $this->getController();
+
+        // Perfrom common test code
+        $this->performActualRegisterTest($controller);
+    }
+
+    /**
+     * @param  AccountController $controller
+     */
+    protected function performActualRegisterTest(AccountController $controller)
+    {
+        // Genereate a captcha for next request.
+        $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
+        $captcha->generateRandomCode();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'spiderbro'     => 'http://',
+            'captcha'       => $captcha->getCaptcha(),
+            'user_name'     => 'RegisteredUser',
+            'first_name'    => 'Testing',
+            'last_name'     => 'Register',
+            'email'         => 'testRegister@test.com',
+            'password'      => 'FooBarFooBar123',
+            'passwordc'     => 'FooBarFooBar123',
+            'locale'        => '',
+        ]);
+
+        $result = $controller->register($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Make sure the user is added to the db by querying it
+        $users = User::where('email', 'testRegister@test.com')->get();
+        $this->assertCount(1, $users);
+        $this->assertSame('RegisteredUser', $users->first()['user_name']);
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+    }
+
+
+    /**
      * @depends testControllerConstructor
      * @param  AccountController $controller
      */
@@ -1043,125 +1168,6 @@ class AccountControllerTest extends TestCase
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
     }
-
-    /**
-     * @depends testControllerConstructor
-     * @depends testRegisterWithFailedValidation
-     * @see UserFrosting\Sprinkle\Account\Tests\Integration\RegistrationTest for complete registration exception (for example duplicate email) testing
-     */
-    public function testRegister()
-    {
-        // Force config
-        $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
-        $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
-        ];
-
-        // Create fake mailer
-        $mailer = m::mock(Mailer::class);
-        $mailer->shouldReceive('send')->once()->with(\Mockery::type(TwigMailMessage::class));
-        $this->ci->mailer = $mailer;
-
-        // Recreate controller to use fake config
-        $controller = $this->getController();
-
-        // Perfrom common test code
-        $this->performActualRegisterTest($controller);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     * @depends testRegister
-     */
-    public function testRegisterWithNoEmailVerification()
-    {
-        // Delete previous attempt
-        if ($user = User::where('email', 'testRegister@test.com')->first()) {
-            $user->delete(true);
-        }
-
-        // Force config
-        $this->ci->config['site.registration.require_email_verification'] = false;
-        $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
-        $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
-        ];
-
-
-        // Recreate controller to use fake config
-        $controller = $this->getController();
-
-        // Perfrom common test code
-        $this->performActualRegisterTest($controller);
-    }
-
-    /**
-     * @param  AccountController $controller
-     */
-    protected function performActualRegisterTest(AccountController $controller)
-    {
-        // Genereate a captcha for next request.
-        $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
-        $captcha->generateRandomCode();
-
-        // Set POST
-        $request = $this->getRequest()->withParsedBody([
-            'spiderbro'     => 'http://',
-            'captcha'       => $captcha->getCaptcha(),
-            'user_name'     => 'RegisteredUser',
-            'first_name'    => 'Testing',
-            'last_name'     => 'Register',
-            'email'         => 'testRegister@test.com',
-            'password'      => 'FooBarFooBar123',
-            'passwordc'     => 'FooBarFooBar123',
-            'locale'        => '',
-        ]);
-
-        $result = $controller->register($request, $this->getResponse(), []);
-        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertJson((string) $result->getBody());
-        $this->assertSame('[]', (string) $result->getBody());
-
-        // Make sure the user is added to the db by querying it
-        $users = User::where('email', 'testRegister@test.com')->get();
-        $this->assertCount(1, $users);
-        $this->assertSame('RegisteredUser', $users->first()['user_name']);
-
-        // Test message
-        $ms = $this->ci->alerts;
-        $messages = $ms->getAndClearMessages();
-        $this->assertSame('success', end($messages)['type']);
-    }
-
-    /**
-     * @depends testControllerConstructor
-     * @param  AccountController $controller
-     */
-    public function testRegisterWithNoMasterUser(AccountController $controller)
-    {
-        // Delete any master user, just in case
-        if ($user = User::find($this->ci->config['reserved_user_ids.master'])) {
-            $user->delete(true);
-        }
-
-        // Set POST
-        $request = $this->getRequest()->withParsedBody([
-            'spiderbro' => 'http://',
-        ]);
-
-        $result = $controller->register($request, $this->getResponse(), []);
-        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
-        $this->assertSame($result->getStatusCode(), 403);
-        $this->assertJson((string) $result->getBody());
-        $this->assertSame('[]', (string) $result->getBody());
-
-        // Test message
-        $ms = $this->ci->alerts;
-        $messages = $ms->getAndClearMessages();
-        $this->assertSame('danger', end($messages)['type']);
-    }
-
 
     /**
      * @return AccountController

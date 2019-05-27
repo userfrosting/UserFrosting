@@ -106,7 +106,6 @@ class UserControllerCreateTest extends TestCase
 
     /**
      * @depends testCreate
-     * @param  UserController $controller
      */
     public function testCreateWithNoLocale()
     {
@@ -116,7 +115,6 @@ class UserControllerCreateTest extends TestCase
 
     /**
      * @depends testCreate
-     * @param  UserController $controller
      */
     public function testCreateWithNoGroupId()
     {
