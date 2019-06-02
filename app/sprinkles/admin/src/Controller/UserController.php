@@ -523,6 +523,7 @@ class UserController extends SimpleController
         // Check that we are not deleting the master account
         // Need to use loose comparison for now, because some DBs return `id` as a string
         if ($user->id == $config['reserved_user_ids.master']) {
+            $e = new BadRequestException();
             $e->addUserMessage('DELETE_MASTER');
 
             throw $e;
@@ -1433,7 +1434,7 @@ class UserController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Get the user to delete
-        $user = $classMapper->getClassMapping('User')
+        $user = $classMapper->getClassMapping('user')
             ::where('user_name', $data['user_name'])
             ->first();
 
