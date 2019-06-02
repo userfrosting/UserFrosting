@@ -74,7 +74,7 @@ class AdminController extends SimpleController
             'counter' => [
                 'users'  => $classMapper->getClassMapping('user')::count(),
                 'roles'  => $classMapper->getClassMapping('role')::count(),
-                'groups' => $classMapper->getClassMapping('group')::count()
+                'groups' => $classMapper->getClassMapping('group')::count(),
             ],
             'info' => [
                 'version' => [
