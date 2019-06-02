@@ -203,8 +203,8 @@ class User extends Model implements UserInterface
             // Remove all user tokens
             $this->activities()->delete();
             $this->passwordResets()->delete();
-            $classMapper->staticMethod('verification', 'where', 'user_id', $this->id)->delete();
-            $classMapper->staticMethod('persistence', 'where', 'user_id', $this->id)->delete();
+            $classMapper->getClassMapping('verification')::where('user_id', $this->id)->delete();
+            $classMapper->getClassMapping('persistence')::where('user_id', $this->id)->delete();
 
             // Delete the user
             $result = $this->forceDelete();

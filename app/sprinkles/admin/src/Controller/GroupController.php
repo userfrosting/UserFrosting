@@ -88,12 +88,12 @@ class GroupController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Check if name or slug already exists
-        if ($classMapper->staticMethod('group', 'where', 'name', $data['name'])->first()) {
+        if ($classMapper->getClassMapping('group')::where('name', $data['name'])->first()) {
             $ms->addMessageTranslated('danger', 'GROUP.NAME.IN_USE', $data);
             $error = true;
         }
 
-        if ($classMapper->staticMethod('group', 'where', 'slug', $data['slug'])->first()) {
+        if ($classMapper->getClassMapping('group')::where('slug', $data['slug'])->first()) {
             $ms->addMessageTranslated('danger', 'GROUP.SLUG.IN_USE', $data);
             $error = true;
         }
@@ -185,7 +185,7 @@ class GroupController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Check if there are any users in this group
-        $countGroupUsers = $classMapper->staticMethod('user', 'where', 'group_id', $group->id)->count();
+        $countGroupUsers = $classMapper->getClassMapping('user')::where('group_id', $group->id)->count();
         if ($countGroupUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.NOT_EMPTY', $group->toArray());
@@ -249,7 +249,7 @@ class GroupController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $group = $classMapper->staticMethod('group', 'where', 'slug', $slug)->first();
+        $group = $classMapper->getClassMapping('group')::where('slug', $slug)->first();
 
         // If the group doesn't exist, return 404
         if (!$group) {
@@ -344,7 +344,7 @@ class GroupController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Check if there are any users in this group
-        $countGroupUsers = $classMapper->staticMethod('user', 'where', 'group_id', $group->id)->count();
+        $countGroupUsers = $classMapper->getClassMapping('user')::where('group_id', $group->id)->count();
         if ($countGroupUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.NOT_EMPTY', $group->toArray());
@@ -733,7 +733,7 @@ class GroupController extends SimpleController
         if (
             isset($data['name']) &&
             $data['name'] != $group->name &&
-            $classMapper->staticMethod('group', 'where', 'name', $data['name'])->first()
+            $classMapper->getClassMapping('group')::where('name', $data['name'])->first()
         ) {
             $ms->addMessageTranslated('danger', 'GROUP.NAME.IN_USE', $data);
             $error = true;
@@ -742,7 +742,7 @@ class GroupController extends SimpleController
         if (
             isset($data['slug']) &&
             $data['slug'] != $group->slug &&
-            $classMapper->staticMethod('group', 'where', 'slug', $data['slug'])->first()
+            $classMapper->getClassMapping('group')::where('slug', $data['slug'])->first()
         ) {
             $ms->addMessageTranslated('danger', 'GROUP.SLUG.IN_USE', $data);
             $error = true;
@@ -813,7 +813,7 @@ class GroupController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Get the group
-        $group = $classMapper->staticMethod('group', 'where', 'slug', $data['slug'])
+        $group = $classMapper->getClassMapping('group')::where('slug', $data['slug'])
             ->first();
 
         return $group;

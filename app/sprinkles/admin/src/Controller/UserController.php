@@ -100,12 +100,12 @@ class UserController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Check if username or email already exists. If not set, validator will pick it up
-        if (isset($data['user_name']) && $classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
+        if (isset($data['user_name']) && $classMapper->getClassMapping('user')::findUnique($data['user_name'], 'user_name')) {
             $ms->addMessageTranslated('danger', 'USERNAME.IN_USE', $data);
             $error = true;
         }
 
-        if (isset($data['email']) && $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
+        if (isset($data['email']) && $classMapper->getClassMapping('user')::findUnique($data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
@@ -152,8 +152,8 @@ class UserController extends SimpleController
             ]);
 
             // Load default roles
-            $defaultRoleSlugs = $classMapper->staticMethod('role', 'getDefaultSlugs');
-            $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
+            $defaultRoleSlugs = $classMapper->getClassMapping('role')::getDefaultSlugs();
+            $defaultRoles = $classMapper->getClassMapping('role')::whereIn('slug', $defaultRoleSlugs)->get();
             $defaultRoleIds = $defaultRoles->pluck('id')->all();
 
             // Attach default roles
@@ -591,7 +591,7 @@ class UserController extends SimpleController
             'fields' => ['group'],
         ])) {
             // Get a list of all groups
-            $groups = $classMapper->staticMethod('group', 'all');
+            $groups = $classMapper->getClassMapping('group')::all();
         } else {
             // Get the current user's group
             $groups = $currentUser->group()->get();
@@ -663,7 +663,8 @@ class UserController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Get the user to edit
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $user->user_name)
+        $user = $classMapper->getClassMapping('user')
+            ::where('user_name', $user->user_name)
             ->with('group')
             ->first();
 
@@ -683,7 +684,7 @@ class UserController extends SimpleController
         }
 
         // Get a list of all groups
-        $groups = $classMapper->staticMethod('group', 'all');
+        $groups = $classMapper->getClassMapping('group')::all();
 
         /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
@@ -1201,7 +1202,7 @@ class UserController extends SimpleController
         if (
             isset($data['email']) &&
             $data['email'] != $user->email &&
-            $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')
+            $classMapper->getClassMapping('user')::findUnique($data['email'], 'email')
         ) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
@@ -1433,7 +1434,8 @@ class UserController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Get the user to delete
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])
+        $user = $classMapper->getClassMapping('user')
+            ::where('user_name', $data['user_name'])
             ->first();
 
         return $user;
