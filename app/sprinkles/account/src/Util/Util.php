@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,7 +14,7 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Sprinkle\Core\Util\Util as CoreUtil;
 
 /**
- * Util Class
+ * Util Class.
  *
  * Static utility functions for the account Sprinkle.
  *
@@ -24,9 +25,10 @@ class Util
     /**
      * Generate a random, unique username from a list of adjectives and nouns.
      *
-     * @param  ClassMapper $classMapper
-     * @param  int         $maxLength
-     * @param  int         $maxTries
+     * @param ClassMapper $classMapper
+     * @param int         $maxLength
+     * @param int         $maxTries
+     *
      * @return string
      */
     public static function randomUniqueUsername(ClassMapper $classMapper, $maxLength, $maxTries = 10)

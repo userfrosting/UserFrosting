@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -19,18 +20,18 @@ return [
 
         'LAST' => 'Última actividad',
         'PAGE' => 'Una lista de las actividades del usuario',
-        'TIME' => 'Tiempo de Actividad'
+        'TIME' => 'Tiempo de Actividad',
     ],
 
     'ADMIN' => [
-        'PANEL' => 'Panel de administración'
+        'PANEL' => 'Panel de administración',
     ],
 
     'CACHE' => [
         'CLEAR'             => 'Limpiar cache',
         'CLEAR_CONFIRM'     => '¿Estás seguro de que deseas borrar la caché del sitio?',
         'CLEAR_CONFIRM_YES' => 'Sí, borrar caché',
-        'CLEARED'           => '¡Cache borrado correctamente!'
+        'CLEARED'           => '¡Cache borrado correctamente!',
     ],
 
     'DASHBOARD'           => 'Tablero',
@@ -65,13 +66,13 @@ return [
         'NOT_EMPTY'           => 'No puedes hacerlo porque todavía hay usuarios asociados con el grupo <strong> {{name}} </strong>.',
         'PAGE_DESCRIPTION'    => 'Un listado de los grupos para tu sitio. Proporciona herramientas de administración para editar y eliminar grupos.',
         'SUMMARY'             => 'Resumen del grupo',
-        'UPDATE'              => 'Detalles actualizados para el grupo <strong> {{name}} </strong>'
+        'UPDATE'              => 'Detalles actualizados para el grupo <strong> {{name}} </strong>',
     ],
 
     'MANUALLY_ACTIVATED'    => 'La cuenta de {{user_name}} se ha activado manualmente',
     'MASTER_ACCOUNT_EXISTS' => '¡La cuenta maestra ya existe!',
     'MIGRATION'             => [
-        'REQUIRED' => 'Se requiere actualizar la base de datos'
+        'REQUIRED' => 'Se requiere actualizar la base de datos',
     ],
 
     'PERMISSION' => [
@@ -87,7 +88,7 @@ return [
         'PAGE_DESCRIPTION' => 'Una lista de los permisos para tu sitio. Proporciona herramientas de administración para editar y eliminar permisos.',
         'SUMMARY'          => 'Resumen del permiso',
         'UPDATE'           => 'Actualizar permisos',
-        'VIA_ROLES'        => 'Tiene permiso para los roles'
+        'VIA_ROLES'        => 'Tiene permiso para los roles',
     ],
 
     'ROLE' => [
@@ -112,7 +113,7 @@ return [
         'PAGE_DESCRIPTION'    => 'Una lista de las funciones de tu sitio. Proporciona herramientas de administración para editar y eliminar roles.',
         'PERMISSIONS_UPDATED' => 'Permisos actualizados para el rol <strong> {{name}} </strong>',
         'SUMMARY'             => 'Resumen del rol',
-        'UPDATED'             => 'Detalles actualizados para el rol <strong> {{name}} </strong>'
+        'UPDATED'             => 'Detalles actualizados para el rol <strong> {{name}} </strong>',
     ],
 
     'SYSTEM_INFO' => [
@@ -125,7 +126,7 @@ return [
         'SERVER'      => 'Software de servidor Web',
         'SPRINKLES'   => 'Sprinkles cargados',
         'UF_VERSION'  => 'UserFrosting versión',
-        'URL'         => 'URL root del sitio'
+        'URL'         => 'URL root del sitio',
     ],
 
     'TOGGLE_COLUMNS' => 'Alternar columnas',
@@ -138,7 +139,7 @@ return [
         'ADMIN' => [
             'CHANGE_PASSWORD'    => 'Cambiar contraseña de usuario',
             'SEND_PASSWORD_LINK' => 'Enviar al usuario un enlace que les permita elegir su propia contraseña',
-            'SET_PASSWORD'       => 'Establece la contraseña del usuario como'
+            'SET_PASSWORD'       => 'Establece la contraseña del usuario como',
         ],
 
         'ACTIVATE'         => 'Activar usuario',
@@ -155,11 +156,11 @@ return [
         'PAGE_DESCRIPTION' => 'Una lista de los usuarios para tu sitio. Proporciona herramientas de administración que incluyen la capacidad de editar detalles de usuario, activar manualmente usuarios, habilitar / deshabilitar usuarios y más.',
         'SUMMARY'          => 'Resumen de la cuenta',
         'VIEW_ALL'         => 'Ver todos los usuarios',
-        'WITH_PERMISSION'  => 'Usuarios con este permiso'
+        'WITH_PERMISSION'  => 'Usuarios con este permiso',
     ],
     'X_USER' => [
         0 => 'No hay usuarios',
         1 => '{{plural}} usuario',
-        2 => '{{plural}} usuarios'
-    ]
+        2 => '{{plural}} usuarios',
+    ],
 ];

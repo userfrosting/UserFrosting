@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.2.2]
+
+### Added
+- New group factory (`'UserFrosting\Sprinkle\Account\Database\Models\Group'`)
+- New `withController` Trait, as an alternative for deprecated `ControllerTestCase`
+- StyleCI config
+- [Travis] SQLite in-memory DB testing
+- [Travis] enabled memcache & Redis service
+
+### Fixed
+- DefaultPermissions seed results in SQL errors ([#981]; [#983])
+- Make group & role schema consistent between creation and edition. Prevents group and role without a name or slug to be created during edition.
+- Factories changed to make sure slugs are unique
+- Fix `WithTestUser` Trait returning a user with id of zero or reserve master id when a non-master user was asked. If master user already exist, will return it instead of trying to create a new one (with the same id)
+- Force close db connection on test `tearDown` procedure
+
+### Changed
+- Recommended PHP version is now 7.2, as 7.1 will be EOL in less than 6 months
+- Added tests coverage for all build-in controllers
+- Applied styling rules from StyleCI & updated php-cs-fixer rules to match StyleCI config
+
+### Deprecated
+- `ControllerTestCase`. Use `withController` Trait instead.
+
+
+## [v4.2.1]
+
+### Added
+- `UserFrosting\Sprinkle\Core\Database\Models\Session` model for the `sessions` db table.
+- `TEST_SESSION_HANDLER` environment variable to set the session save handler to use for Testing.
+- `withDatabaseSessionHandler` Trait for testing. Use `$this->useDatabaseSessionHandler()` to use database session handler in tests.
+
+### Fixed
+- Italian translation ([#950])
+- User Registration failing when trying to register two accounts with the same email address ([#953])
+- Bad test case for `CoreController::getAsset`.
+- User Model `forceDelete` doesn't remove the record from the DB ([#951])
+- Fix PHP Fatal error that can be thrown when registering a new User
+- Session not working with database handler ([#952])
+- Remove any persistences when forceDeleting user to prevent Foreign Key Constraints issue ([#963])
+- More helpful error message in checkEnvironment.php (Thanks @amosfolz; [#958])
+- Hide locale select from UI if only one locale is available (Thanks @avsdev-cw; [#968])
+- Download CSV filename error ([#893])
+
 ## [v4.2.0]
 ### Changed Requirements
 - Changed minimum Node.js version to **v10.12.0**
@@ -702,7 +746,19 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#869]: https://github.com/userfrosting/UserFrosting/issues/869
 [#872]: https://github.com/userfrosting/UserFrosting/issues/872
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
+[#893]: https://github.com/userfrosting/UserFrosting/issues/893
 [#919]: https://github.com/userfrosting/UserFrosting/issues/919
 [#940]: https://github.com/userfrosting/UserFrosting/issues/940
+[#950]: https://github.com/userfrosting/UserFrosting/issues/950
+[#951]: https://github.com/userfrosting/UserFrosting/issues/951
+[#952]: https://github.com/userfrosting/UserFrosting/issues/952
+[#953]: https://github.com/userfrosting/UserFrosting/issues/953
+[#958]: https://github.com/userfrosting/UserFrosting/issues/958
+[#963]: https://github.com/userfrosting/UserFrosting/issues/963
+[#968]: https://github.com/userfrosting/UserFrosting/issues/968
+[#981]: https://github.com/userfrosting/UserFrosting/issues/981
+[#983]: https://github.com/userfrosting/UserFrosting/issues/983
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
+[v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
+[v4.2.2]: https://github.com/userfrosting/UserFrosting/compare/v.4.2.1...v4.2.2

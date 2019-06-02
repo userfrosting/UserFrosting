@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,7 +14,7 @@ use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * RoleSprunje
+ * RoleSprunje.
  *
  * Implements Sprunje for the roles API.
  *
@@ -25,17 +26,17 @@ class RoleSprunje extends Sprunje
 
     protected $sortable = [
         'name',
-        'description'
+        'description',
     ];
 
     protected $filterable = [
         'name',
         'description',
-        'info'
+        'info',
     ];
 
     protected $excludeForAll = [
-        'info'
+        'info',
     ];
 
     /**
@@ -49,8 +50,9 @@ class RoleSprunje extends Sprunje
     /**
      * Filter LIKE name OR description.
      *
-     * @param  Builder $query
-     * @param  mixed   $value
+     * @param Builder $query
+     * @param mixed   $value
+     *
      * @return self
      */
     protected function filterInfo($query, $value)

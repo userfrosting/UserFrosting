@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,11 +16,12 @@ use PhpParser\NodeVisitorAbstract;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 
 /**
- * ParserNodeFunctionEvaluator class
+ * ParserNodeFunctionEvaluator class.
  *
  * This class parses access control condition expressions.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see http://www.userfrosting.com/components/#authorization
  */
 class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
@@ -83,7 +85,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
 
                 // Debugger info
                 $currentArgInfo = [
-                    'expression' => $argString
+                    'expression' => $argString,
                 ];
                 // Resolve parameter placeholders ('variable' names (either single-word or array-dot identifiers))
                 if (($arg->value instanceof \PhpParser\Node\Expr\BinaryOp\Concat) || ($arg->value instanceof \PhpParser\Node\Expr\ConstFetch)) {
@@ -144,7 +146,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     }
 
     /**
-     * Set params
+     * Set params.
      *
      * @param array $params
      */
@@ -156,7 +158,8 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     /**
      * Resolve an array expression in a condition expression into an actual array.
      *
-     * @param  string       $arg the array, represented as a string.
+     * @param string $arg the array, represented as a string.
+     *
      * @return array[mixed] the array, as a plain ol' PHP array.
      */
     private function resolveArray($arg)
@@ -177,9 +180,11 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     /**
      * Resolve a parameter path (e.g. "user.id", "post", etc) into its value.
      *
-     * @param  string     $path the name of the parameter to resolve, based on the parameters set in this object.
+     * @param string $path the name of the parameter to resolve, based on the parameters set in this object.
+     *
      * @throws \Exception the path could not be resolved.  Path is malformed or key does not exist.
-     * @return mixed      the value of the specified parameter.
+     *
+     * @return mixed the value of the specified parameter.
      */
     private function resolveParamPath($path)
     {

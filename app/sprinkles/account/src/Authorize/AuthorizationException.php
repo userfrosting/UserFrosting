@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,11 +13,12 @@ namespace UserFrosting\Sprinkle\Account\Authorize;
 use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
- * AuthorizationException class
+ * AuthorizationException class.
  *
  * Exception for AccessConditionExpression.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see http://www.userfrosting.com/components/#authorization
  */
 class AuthorizationException extends ForbiddenException

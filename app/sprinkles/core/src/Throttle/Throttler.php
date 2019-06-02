@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -61,8 +62,9 @@ class Throttler
     /**
      * Check the current request against a specified throttle rule.
      *
-     * @param  string  $type        The type of throttle event to check against.
-     * @param  mixed[] $requestData Any additional request parameters to use in checking the throttle.
+     * @param string  $type        The type of throttle event to check against.
+     * @param mixed[] $requestData Any additional request parameters to use in checking the throttle.
+     *
      * @return bool
      */
     public function getDelay($type, $requestData = [])
@@ -111,8 +113,10 @@ class Throttler
     /**
      * Get a registered rule of a particular type.
      *
-     * @param  string             $type
+     * @param string $type
+     *
      * @throws ThrottlerException
+     *
      * @return ThrottleRule[]
      */
     public function getRule($type)
@@ -152,7 +156,7 @@ class Throttler
         $event = $this->classMapper->createInstance('throttle', [
             'type'         => $type,
             'ip'           => $_SERVER['REMOTE_ADDR'],
-            'request_data' => json_encode($requestData)
+            'request_data' => json_encode($requestData),
         ]);
 
         $event->save();
@@ -163,9 +167,10 @@ class Throttler
     /**
      * Returns the current delay for a specified throttle rule.
      *
-     * @param  Collection   $events       a Collection of throttle events.
-     * @param  ThrottleRule $throttleRule a rule representing the strategy to use for throttling a particular type of event.
-     * @return int          seconds remaining until a particular event is permitted to be attempted again.
+     * @param Collection   $events       a Collection of throttle events.
+     * @param ThrottleRule $throttleRule a rule representing the strategy to use for throttling a particular type of event.
+     *
+     * @return int seconds remaining until a particular event is permitted to be attempted again.
      */
     protected function computeDelay(Collection $events, ThrottleRule $throttleRule)
     {

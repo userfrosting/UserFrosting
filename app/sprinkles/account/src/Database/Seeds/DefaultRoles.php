@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,11 +10,11 @@
 
 namespace UserFrosting\Sprinkle\Account\Database\Seeds;
 
-use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
+use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 
 /**
- * Seeder for the default roles
+ * Seeder for the default roles.
  */
 class DefaultRoles extends BaseSeed
 {
@@ -41,18 +42,18 @@ class DefaultRoles extends BaseSeed
             new Role([
                 'slug'        => 'user',
                 'name'        => 'User',
-                'description' => 'This role provides basic user functionality.'
+                'description' => 'This role provides basic user functionality.',
             ]),
             new Role([
                 'slug'        => 'site-admin',
                 'name'        => 'Site Administrator',
-                'description' => 'This role is meant for "site administrators", who can basically do anything except create, edit, or delete other administrators.'
+                'description' => 'This role is meant for "site administrators", who can basically do anything except create, edit, or delete other administrators.',
             ]),
             new Role([
                 'slug'        => 'group-admin',
                 'name'        => 'Group Administrator',
-                'description' => 'This role is meant for "group administrators", who can basically do anything with users in their own group, except other administrators of that group.'
-            ])
+                'description' => 'This role is meant for "group administrators", who can basically do anything with users in their own group, except other administrators of that group.',
+            ]),
         ];
     }
 }

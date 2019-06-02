@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -28,7 +29,7 @@ class UserActivityDatabaseHandler extends DatabaseHandler
 
         if (isset($record['extra']['user_id'])) {
             $user = $this->classMapper->getClassMapping('user')::find($record['extra']['user_id']);
-            $user->last_activity_id = $log->id;
+            $user->lastActivity()->associate($log);
             $user->save();
         }
     }

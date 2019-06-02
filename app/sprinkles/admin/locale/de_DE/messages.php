@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -21,14 +22,14 @@ return [
 
        'LAST'                           => 'Letzte Aktivität',
        'PAGE'                           => 'Eine Auflistung der Benutzeraktivitäten',
-       'TIME'                           => 'Aktivitätszeit'
+       'TIME'                           => 'Aktivitätszeit',
     ],
 
     'CACHE' => [
         'CLEAR'                         => 'Cache löschen',
         'CLEAR_CONFIRM'                 => 'Sind Sie sicher, dass Sie den Seiten-Cache löschen möchten?',
         'CLEAR_CONFIRM_YES'             => 'Ja, Cache löschen',
-        'CLEARED'                       => 'Cache wurde erfolgreich gelöscht!'
+        'CLEARED'                       => 'Cache wurde erfolgreich gelöscht!',
     ],
 
     'DASHBOARD'                         => 'Übersicht',
@@ -63,13 +64,13 @@ return [
         'NOT_EMPTY'                     => 'Sie können das nicht tun, denn es sind noch Benutzer mit der Gruppe <strong>{{name}}</strong> verbunden.',
         'PAGE_DESCRIPTION'              => 'Eine Liste der Gruppen für Ihre Website. Bietet Verwaltungstools für das Bearbeiten und Löschen von Gruppen.',
         'SUMMARY'                       => 'Gruppen Zusammenfassung',
-        'UPDATE'                        => 'Details für die Gruppe <strong>{{name}}</strong> aktualisiert'
+        'UPDATE'                        => 'Details für die Gruppe <strong>{{name}}</strong> aktualisiert',
     ],
 
     'MANUALLY_ACTIVATED'                => "{{user_name}}'s Konto wurde manuell aktiviert.",
     'MASTER_ACCOUNT_EXISTS'             => 'Das Root-Konto existiert bereits!',
     'MIGRATION'                         => [
-        'REQUIRED'                      => 'Datenbankaktualisierung erforderlich'
+        'REQUIRED'                      => 'Datenbankaktualisierung erforderlich',
     ],
 
     'PERMISSION' => [
@@ -85,7 +86,7 @@ return [
         'PAGE_DESCRIPTION'              => 'Eine Liste der Berechtigungen für Ihre Website. Bietet Verwaltungstools zum Bearbeiten und Löschen von Berechtigungen.',
         'SUMMARY'                       => 'Berechtigungs Zusammenfassung',
         'UPDATE'                        => 'Berechtigungen aktualisieren',
-        'VIA_ROLES'                     => 'Besitzt die Berechtigung durch die Rolle'
+        'VIA_ROLES'                     => 'Besitzt die Berechtigung durch die Rolle',
     ],
 
     'ROLE' => [
@@ -110,7 +111,7 @@ return [
         'PAGE_DESCRIPTION'              => 'Eine Liste der Rollen für Ihre Website. Bietet Verwaltungstools zum Bearbeiten und Löschen von Rollen.',
         'PERMISSIONS_UPDATED'           => 'Berechtigungen für die Rolle <strong>{{name}}</strong> aktualisiert',
         'SUMMARY'                       => 'Rollen Zusammenfassung',
-        'UPDATED'                       => 'Rollen aktualisieren'
+        'UPDATED'                       => 'Rollen aktualisieren',
     ],
 
     'SYSTEM_INFO' => [
@@ -123,7 +124,7 @@ return [
         'SERVER'                        => 'Web-Server-Software',
         'SPRINKLES'                     => 'Geladene Sprinkles',
         'UF_VERSION'                    => 'UserFrosting Version',
-        'URL'                           => 'Website-Stamm-Url'
+        'URL'                           => 'Website-Stamm-Url',
     ],
 
     'TOGGLE_COLUMNS' => 'Spalten anpassen',
@@ -135,7 +136,7 @@ return [
         'ADMIN' => [
             'CHANGE_PASSWORD'           => 'Benutzerpasswort ändern',
             'SEND_PASSWORD_LINK'        => 'Senden Sie dem Benutzer einen Link, der ihnen erlaubt, ihr eigenes Passwort zu wählen',
-            'SET_PASSWORD'              => 'Setzen Sie das Passwort des Benutzers als'
+            'SET_PASSWORD'              => 'Setzen Sie das Passwort des Benutzers als',
         ],
 
         'ACTIVATE'                      => 'Benutzer aktivieren',
@@ -152,11 +153,11 @@ return [
         'PAGE_DESCRIPTION'              => 'Eine Liste der Benutzer für Ihre Website. Bietet Management-Tools, einschließlich der Möglichkeit, Benutzerdaten bearbeiten, manuell aktivieren, Benutzer aktivieren/deaktivieren, und vieles mehr.',
         'SUMMARY'                       => 'Benutzer Zusammenfassung',
         'VIEW_ALL'                      => 'Alle Benutzer anzeigen',
-        'WITH_PERMISSION'               => 'Benutzer mit dieser Berechtigung'
+        'WITH_PERMISSION'               => 'Benutzer mit dieser Berechtigung',
     ],
     'X_USER' => [
         0                               => 'Keine Benutzer',
         1                               => '{{plural}} Benutzer',
-        2                               => '{{plural}} Benutzer'
-    ]
+        2                               => '{{plural}} Benutzer',
+    ],
 ];

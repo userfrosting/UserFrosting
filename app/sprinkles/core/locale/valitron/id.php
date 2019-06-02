@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -36,5 +37,5 @@ return [
     'lengthBetween' => 'harus diantara karakter %d dan %d',
     'creditCard'    => 'nomor kartu kredit harus valid',
     'lengthMin'     => 'minimal berisi %d karakter',
-    'lengthMax'     => 'maksimal berisi %d karakter'
+    'lengthMax'     => 'maksimal berisi %d karakter',
 ];

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -90,7 +91,7 @@ class SprinkleManagerTest extends TestCase
         $this->assertEquals([
             'foo'  => null,
             'bar'  => null,
-            'test' => new \UserFrosting\Sprinkle\Test\Test()
+            'test' => new \UserFrosting\Sprinkle\Test\Test(),
         ], $sprinkles);
     }
 
