@@ -157,6 +157,11 @@ class AccountControllerTest extends TestCase
             'en_US' => 'English',
         ];
 
+        // Bypass security feature
+        $fm = $this->ci->factory;
+        $dummyUser = $fm->create(User::class);
+        $this->ci->config['reserved_user_ids.master'] = $dummyUser->id;
+
         // Recreate controller to use fake config
         $controller = $this->getController();
 
@@ -1106,6 +1111,11 @@ class AccountControllerTest extends TestCase
         $throttler->shouldReceive('getDelay')->once()->with('registration_attempt')->andReturn(90);
         $this->ci->throttler = $throttler;
 
+        // Bypass security feature
+        $fm = $this->ci->factory;
+        $dummyUser = $fm->create(User::class);
+        $this->ci->config['reserved_user_ids.master'] = $dummyUser->id;
+
         // Recreate controller to use fake throttler
         $controller = $this->getController();
 
@@ -1128,6 +1138,11 @@ class AccountControllerTest extends TestCase
      */
     public function testRegisterWithFailedCaptcha(AccountController $controller)
     {
+        // Bypass security feature
+        $fm = $this->ci->factory;
+        $dummyUser = $fm->create(User::class);
+        $this->ci->config['reserved_user_ids.master'] = $dummyUser->id;
+
         // Set POST
         $request = $this->getRequest()->withParsedBody([
             'spiderbro' => 'http://',
@@ -1152,6 +1167,11 @@ class AccountControllerTest extends TestCase
      */
     public function testRegisterWithFailedValidation(AccountController $controller)
     {
+        // Bypass security feature
+        $fm = $this->ci->factory;
+        $dummyUser = $fm->create(User::class);
+        $this->ci->config['reserved_user_ids.master'] = $dummyUser->id;
+
         // Set POST
         $request = $this->getRequest()->withParsedBody([
             'spiderbro' => 'http://',
