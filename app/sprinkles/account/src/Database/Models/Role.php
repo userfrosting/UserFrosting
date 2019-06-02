@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,10 +14,12 @@ use Illuminate\Database\Eloquent\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
- * Role Class
+ * Role Class.
  *
  * Represents a role, which aggregates permissions and to which a user can be assigned.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @property string slug
  * @property string name
  * @property string description
@@ -31,7 +34,7 @@ class Role extends Model
     protected $fillable = [
         'slug',
         'name',
-        'description'
+        'description',
     ];
 
     /**
@@ -81,8 +84,9 @@ class Role extends Model
     /**
      * Query scope to get all roles assigned to a specific user.
      *
-     * @param  Builder $query
-     * @param  int     $userId
+     * @param Builder $query
+     * @param int     $userId
+     *
      * @return Builder
      */
     public function scopeForUser($query, $userId)

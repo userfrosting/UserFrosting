@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -37,5 +38,5 @@ return [
     'creditCard'    => 'trebuie sa fie un card de credit valid',
     'lengthMin'     => 'trebuie sa contina mai mult de %d caractere',
     'lengthMax'     => 'trebuie sa contina mai putin de %d caractere',
-    'instanceOf'    => "trebuie sa fie o instanta a '%s'"
+    'instanceOf'    => "trebuie sa fie o instanta a '%s'",
 ];

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -21,6 +22,6 @@ return [
         'LENGTH_RANGE'  => '{{label}} لابد ان تكون بين {{min}} و {{max}} حورف',
         'NO_LEAD_WS'    => 'القيم ل <strong>{{label}}</strong> لا يمكن أن تبدأ المساحات، علامات، أو بيضاء أخرى',
         'NO_TRAIL_WS'   => 'القيم ل <strong>{{label}}</strong> لا يمكن أن ينتهي مع مسافات، علامات، أو بيضاء أخرى',
-        'REQUIRED'      => ' تحديد قيمة ل <strong>{{label}}</strong>'
-    ]
+        'REQUIRED'      => ' تحديد قيمة ل <strong>{{label}}</strong>',
+    ],
 ];

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -16,6 +17,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Syncable;
  * A HasMany relationship that supports a `sync` method.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/HasMany.php
  */
 class HasManySyncable extends HasMany

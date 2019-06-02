@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -63,7 +64,7 @@ class ShutdownHandler
             E_PARSE,
             E_CORE_ERROR,
             E_COMPILE_ERROR,
-            E_RECOVERABLE_ERROR
+            E_RECOVERABLE_ERROR,
         ];
 
         // Handle fatal errors and parse errors
@@ -99,7 +100,8 @@ class ShutdownHandler
     /**
      * Build the error message string.
      *
-     * @param  array  $error
+     * @param array $error
+     *
      * @return string
      */
     protected function buildErrorInfoMessage(array $error)
@@ -113,7 +115,7 @@ class ShutdownHandler
             E_PARSE             => 'Parse error',
             E_CORE_ERROR        => 'PHP core error',
             E_COMPILE_ERROR     => 'Zend compile error',
-            E_RECOVERABLE_ERROR => 'Catchable fatal error'
+            E_RECOVERABLE_ERROR => 'Catchable fatal error',
         ];
 
         return '<strong>' . $errorTypes[$error['type']] . "</strong>: $errstr in <strong>$errfile</strong> on line <strong>$errline</strong>";
@@ -122,7 +124,8 @@ class ShutdownHandler
     /**
      * Build an error response of the appropriate type as determined by the request's Accept header.
      *
-     * @param  string $message
+     * @param string $message
+     *
      * @return string
      */
     protected function buildErrorPage($message)
@@ -147,7 +150,8 @@ class ShutdownHandler
     /**
      * Build an HTML error page from an error string.
      *
-     * @param  string $message
+     * @param string $message
+     *
      * @return string
      */
     protected function buildHtmlErrorPage($message)
