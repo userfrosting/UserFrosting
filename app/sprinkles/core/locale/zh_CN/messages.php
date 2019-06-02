@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -21,7 +22,7 @@ return [
         '@TRANSLATION' => '验证码',
         'FAIL'         => 'Y验证码输入错误.',
         'SPECIFY'      => '输入验证码',
-        'VERIFY'       => '验证'
+        'VERIFY'       => '验证',
     ],
 
     'CSRF_MISSING' => ' CSRF 标记丢失.  请尝试重新加载页面?',
@@ -30,12 +31,12 @@ return [
     'DESCRIPTION'   => '描述',
     'DOWNLOAD'      => [
         '@TRANSLATION' => '下载',
-        'CSV'          => '下载 CSV 文件'
+        'CSV'          => '下载 CSV 文件',
     ],
 
     'EMAIL' => [
         '@TRANSLATION' => '邮件',
-        'YOUR'         => '你的邮件地址'
+        'YOUR'         => '你的邮件地址',
     ],
 
     'HOME'  => '首页',
@@ -43,7 +44,7 @@ return [
     'LEGAL' => '法律政策',
 
     'LOCALE' => [
-        '@TRANSLATION' => '本地'
+        '@TRANSLATION' => '本地',
     ],
 
     'MAIL_ERROR' => '尝试发送邮件发送致命错误, 联系网站管理员.  如果你是管理员，请检查UF邮件错误日志.',
@@ -53,7 +54,7 @@ return [
 
     'PAGINATION' => [
         'GOTO' => '跳到页',
-        'SHOW' => '显示'
+        'SHOW' => '显示',
     ],
     'PRIVACY' => '隐私政策',
 
@@ -102,5 +103,5 @@ return [
 
     // Misc.
     'BUILT_WITH_UF'     => '使用 <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY' => '主题作者 <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong>保留所有权'
+    'ADMINLTE_THEME_BY' => '主题作者 <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong>保留所有权',
 ];

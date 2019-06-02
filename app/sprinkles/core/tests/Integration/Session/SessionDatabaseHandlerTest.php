@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -7,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Account\Tests\Integration\Session;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
 
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;
@@ -60,7 +61,7 @@ class SessionDatabaseHandlerTest extends TestCase
         $connection = $this->ci->db->connection();
 
         // Define random session ID
-        $session_id = 'test'.rand(1, 100000);
+        $session_id = 'test' . rand(1, 100000);
 
         // Make sure db is empty at first
         $this->assertEquals(0, SessionTable::count());

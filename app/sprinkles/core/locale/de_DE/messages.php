@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -23,7 +24,7 @@ return [
         '@TRANSLATION'                  => 'Sicherheitscode',
         'FAIL'                          => 'Sie haben den Sicherheitscode nicht korrekt eingegeben.',
         'SPECIFY'                       => 'Geben Sie den Sicherheitscode ein',
-        'VERIFY'                        => 'Überprüfen Sie den Sicherheitscode'
+        'VERIFY'                        => 'Überprüfen Sie den Sicherheitscode',
     ],
 
     'CSRF_MISSING'                      => 'Fehlender CSRF-Token. Versuchen, die Seite zu aktualisieren und erneut zu senden?',
@@ -32,23 +33,23 @@ return [
     'DESCRIPTION'                       => 'Beschreibung',
     'DOWNLOAD'                          => [
         '@TRANSLATION'                  => 'Herunterladen',
-        'CSV'                           => 'CSV herunterladen'
+        'CSV'                           => 'CSV herunterladen',
     ],
 
     'EMAIL' => [
         '@TRANSLATION'                  => 'E-Mail',
-        'YOUR'                          => 'Ihre E-Mail-Adresse'
+        'YOUR'                          => 'Ihre E-Mail-Adresse',
     ],
 
     'HOME'                              => 'Startseite',
 
     'LEGAL' => [
         '@TRANSLATION'                  => 'Rechtsgrundsatz',
-        'DESCRIPTION'                   => 'Unser Rechtsgrundsatz gilt für die Benutzung dieser Internetseite und unserer Dienste.'
+        'DESCRIPTION'                   => 'Unser Rechtsgrundsatz gilt für die Benutzung dieser Internetseite und unserer Dienste.',
     ],
 
     'LOCALE' => [
-        '@TRANSLATION'                  => 'Sprache'
+        '@TRANSLATION'                  => 'Sprache',
     ],
 
     'NAME'                              => 'Name',
@@ -67,11 +68,11 @@ return [
         'NEXT'                          => 'Nächste Seite',
         'PREVIOUS'                      => 'Vorherige Seite',
         'FIRST'                         => 'Erste Seite',
-        'LAST'                          => 'Letzte Seite'
+        'LAST'                          => 'Letzte Seite',
     ],
     'PRIVACY' => [
         '@TRANSLATION'                  => 'Datenschutzbestimmungen',
-        'DESCRIPTION'                   => 'In unsere Datenschutzbestimmungen erklären wir Ihnen, welche Daten wir sammeln und wozu wir diese benutzen.'
+        'DESCRIPTION'                   => 'In unsere Datenschutzbestimmungen erklären wir Ihnen, welche Daten wir sammeln und wozu wir diese benutzen.',
     ],
 
     'SLUG'                              => 'Schnecke',
@@ -120,5 +121,5 @@ return [
     // Misc.
     'BUILT_WITH_UF'                     => 'Errichtet mit <a href="http://www.userfrosting.com">UserFrosting</a>',
     'ADMINLTE_THEME_BY'                 => 'Theme von <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> Alle Rechte vorbehalten',
-    'WELCOME_TO'                        => 'Willkommen auf {{title}}!'
+    'WELCOME_TO'                        => 'Willkommen auf {{title}}!',
 ];

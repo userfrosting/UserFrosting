@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,7 +16,7 @@ use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * Bake command.
- * Shortcut to run multiple commands at once
+ * Shortcut to run multiple commands at once.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */

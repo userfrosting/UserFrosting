@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,7 +16,7 @@ use UserFrosting\Session\Session;
 /**
  * SessionAlertStream Class
  * Implements a message stream for use between HTTP requests, with i18n support via the MessageTranslator class
- * Using the session storage to store the alerts
+ * Using the session storage to store the alerts.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -46,7 +47,7 @@ class SessionAlertStream extends AlertStream
      */
     public function messages()
     {
-        return $this->session[$this->messagesKey] ?: [];
+        return $this->session->get($this->messagesKey) ?: [];
     }
 
     /**
@@ -54,16 +55,16 @@ class SessionAlertStream extends AlertStream
      */
     public function resetMessageStream()
     {
-        $this->session[$this->messagesKey] = [];
+        $this->session->set($this->messagesKey, []);
     }
 
     /**
-     * Save messages to the stream
+     * Save messages to the stream.
      *
-     * @param string $messages The message
+     * @param array $messages The message
      */
-    protected function saveMessages($messages)
+    protected function saveMessages(array $messages)
     {
-        $this->session[$this->messagesKey] = $messages;
+        $this->session->set($this->messagesKey, $messages);
     }
 }

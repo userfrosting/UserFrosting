@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,10 +14,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
@@ -43,10 +44,13 @@ class UserController extends SimpleController
      * This route requires authentication.
      *
      * Request type: POST
+     *
      * @see getModalCreate
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function create(Request $request, Response $response, $args)
@@ -95,13 +99,13 @@ class UserController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        // Check if username or email already exists
-        if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
+        // Check if username or email already exists. If not set, validator will pick it up
+        if (isset($data['user_name']) && $classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
             $ms->addMessageTranslated('danger', 'USERNAME.IN_USE', $data);
             $error = true;
         }
 
-        if ($classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
+        if (isset($data['email']) && $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
@@ -116,7 +120,7 @@ class UserController extends SimpleController
         // If currentUser does not have permission to set the group, but they try to set it to something other than their own group,
         // throw an exception.
         if (!$authorizer->checkAccess($currentUser, 'create_user_field', [
-            'fields' => ['group']
+            'fields' => ['group'],
         ])) {
             if (isset($data['group_id']) && $data['group_id'] != $currentUser->group_id) {
                 throw new ForbiddenException();
@@ -144,7 +148,7 @@ class UserController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} created a new account for {$user->user_name}.", [
                 'type'    => 'account_create',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
 
             // Load default roles
@@ -166,7 +170,7 @@ class UserController extends SimpleController
                     ->addParams([
                         'user'                       => $user,
                         'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . ' hours',
-                        'token'                      => $passwordRequest->getToken()
+                        'token'                      => $passwordRequest->getToken(),
                     ]);
 
             $this->ci->mailer->send($message);
@@ -188,9 +192,11 @@ class UserController extends SimpleController
      * This route requires authentication.
      *
      * Request type: POST
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -212,7 +218,7 @@ class UserController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit "password" for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['password']
+            'fields' => ['password'],
         ])) {
             throw new ForbiddenException();
         }
@@ -237,14 +243,14 @@ class UserController extends SimpleController
                     ->addParams([
                         'user'         => $user,
                         'token'        => $passwordReset->getToken(),
-                        'request_date' => Carbon::now()->format('Y-m-d H:i:s')
+                        'request_date' => Carbon::now()->format('Y-m-d H:i:s'),
                     ]);
 
             $this->ci->mailer->send($message);
         });
 
         $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_SENT', [
-            'email' => $user->email
+            'email' => $user->email,
         ]);
 
         return $response->withJson([], 200);
@@ -260,9 +266,11 @@ class UserController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: DELETE
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If user is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -284,7 +292,7 @@ class UserController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_user', [
-            'user' => $user
+            'user' => $user,
         ])) {
             throw new ForbiddenException();
         }
@@ -297,6 +305,7 @@ class UserController extends SimpleController
         if ($user->id == $config['reserved_user_ids.master']) {
             $e = new BadRequestException();
             $e->addUserMessage('DELETE_MASTER');
+
             throw $e;
         }
 
@@ -310,7 +319,7 @@ class UserController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted the account for {$userName}.", [
                 'type'    => 'account_delete',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
@@ -318,7 +327,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'DELETION_SUCCESSFUL', [
-            'user_name' => $userName
+            'user_name' => $userName,
         ]);
 
         return $response->withJson([], 200);
@@ -329,9 +338,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -359,7 +370,7 @@ class UserController extends SimpleController
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
             'user' => $user,
-            'property' => 'activities'
+            'property' => 'activities',
         ])) {
             throw new ForbiddenException();
         }
@@ -380,9 +391,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -413,7 +426,7 @@ class UserController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_user', [
-            'user' => $user
+            'user' => $user,
         ])) {
             throw new ForbiddenException();
         }
@@ -426,14 +439,16 @@ class UserController extends SimpleController
     }
 
     /**
-     * Returns a list of Users
+     * Returns a list of Users.
      *
      * Generates a list of users, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getList(Request $request, Response $response, $args)
@@ -468,9 +483,11 @@ class UserController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If user is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -495,7 +512,7 @@ class UserController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_user', [
-            'user' => $user
+            'user' => $user,
         ])) {
             throw new ForbiddenException();
         }
@@ -508,6 +525,7 @@ class UserController extends SimpleController
         if ($user->id == $config['reserved_user_ids.master']) {
             $e = new BadRequestException();
             $e->addUserMessage('DELETE_MASTER');
+
             throw $e;
         }
 
@@ -515,7 +533,7 @@ class UserController extends SimpleController
             'user' => $user,
             'form' => [
                 'action' => "api/users/u/{$user->user_name}",
-            ]
+            ],
         ]);
     }
 
@@ -528,16 +546,15 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getModalCreate(Request $request, Response $response, $args)
     {
-        // GET parameters
-        $params = $request->getQueryParams();
-
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
@@ -562,7 +579,7 @@ class UserController extends SimpleController
         // TODO: come back to this when we finish implementing theming
         $fields = [
             'hidden'   => ['theme'],
-            'disabled' => []
+            'disabled' => [],
         ];
 
         // Get a list of all locales
@@ -571,7 +588,7 @@ class UserController extends SimpleController
         // Determine if currentUser has permission to modify the group.  If so, show the 'group' dropdown.
         // Otherwise, set to the currentUser's group and disable the dropdown.
         if ($authorizer->checkAccess($currentUser, 'create_user_field', [
-            'fields' => ['group']
+            'fields' => ['group'],
         ])) {
             // Get a list of all groups
             $groups = $classMapper->staticMethod('group', 'all');
@@ -590,7 +607,7 @@ class UserController extends SimpleController
         $data = [
             'group_id' => $currentUser->group_id,
             'locale'   => $config['site.registration.user_defaults.locale'],
-            'theme'    => ''
+            'theme'    => '',
         ];
 
         $user = $classMapper->createInstance('user', $data);
@@ -607,11 +624,11 @@ class UserController extends SimpleController
                 'action'      => 'api/users',
                 'method'      => 'POST',
                 'fields'      => $fields,
-                'submit_text' => $translator->translate('CREATE')
+                'submit_text' => $translator->translate('CREATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -622,9 +639,11 @@ class UserController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -658,7 +677,7 @@ class UserController extends SimpleController
         $fieldNames = ['name', 'email', 'locale'];
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => $fieldNames
+            'fields' => $fieldNames,
         ])) {
             throw new ForbiddenException();
         }
@@ -675,13 +694,13 @@ class UserController extends SimpleController
         // Generate form
         $fields = [
             'hidden'   => ['theme'],
-            'disabled' => ['user_name']
+            'disabled' => ['user_name'],
         ];
 
         // Disable group field if currentUser doesn't have permission to modify group
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['group']
+            'fields' => ['group'],
         ])) {
             $fields['disabled'][] = 'group';
         }
@@ -705,11 +724,11 @@ class UserController extends SimpleController
                 'action'      => "api/users/u/{$user->user_name}",
                 'method'      => 'PUT',
                 'fields'      => $fields,
-                'submit_text' => $translator->translate('UPDATE')
+                'submit_text' => $translator->translate('UPDATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -720,9 +739,11 @@ class UserController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -747,7 +768,7 @@ class UserController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit "password" field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['password']
+            'fields' => ['password'],
         ])) {
             throw new ForbiddenException();
         }
@@ -759,8 +780,8 @@ class UserController extends SimpleController
         return $this->ci->view->render($response, 'modals/user-set-password.html.twig', [
             'user' => $user,
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -771,9 +792,11 @@ class UserController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -798,13 +821,13 @@ class UserController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit "roles" field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['roles']
+            'fields' => ['roles'],
         ])) {
             throw new ForbiddenException();
         }
 
         return $this->ci->view->render($response, 'modals/user-manage-roles.html.twig', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
@@ -814,9 +837,11 @@ class UserController extends SimpleController
      * Generates a list of permissions, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -841,7 +866,7 @@ class UserController extends SimpleController
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
             'user' => $user,
-            'property' => 'permissions'
+            'property' => 'permissions',
         ])) {
             throw new ForbiddenException();
         }
@@ -862,9 +887,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -892,7 +919,7 @@ class UserController extends SimpleController
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
             'user' => $user,
-            'property' => 'roles'
+            'property' => 'roles',
         ])) {
             throw new ForbiddenException();
         }
@@ -916,9 +943,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageInfo(Request $request, Response $response, $args)
@@ -938,7 +967,7 @@ class UserController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_user', [
-                'user' => $user
+                'user' => $user,
             ])) {
             throw new ForbiddenException();
         }
@@ -955,14 +984,14 @@ class UserController extends SimpleController
         // Generate form
         $fields = [
             // Always hide these
-            'hidden' => ['theme']
+            'hidden' => ['theme'],
         ];
 
         // Determine which fields should be hidden
         foreach ($fieldNames as $field) {
             if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
                 'user' => $user,
-                'property' => $field
+                'property' => $field,
             ])) {
                 $fields['hidden'][] = $field;
             }
@@ -975,65 +1004,65 @@ class UserController extends SimpleController
 
         // Determine buttons to display
         $editButtons = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['name', 'email', 'locale']
+            'fields' => ['name', 'email', 'locale'],
         ])) {
             $editButtons['hidden'][] = 'edit';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['flag_enabled']
+            'fields' => ['flag_enabled'],
         ])) {
             $editButtons['hidden'][] = 'enable';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['flag_verified']
+            'fields' => ['flag_verified'],
         ])) {
             $editButtons['hidden'][] = 'activate';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['password']
+            'fields' => ['password'],
         ])) {
             $editButtons['hidden'][] = 'password';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['roles']
+            'fields' => ['roles'],
         ])) {
             $editButtons['hidden'][] = 'roles';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'delete_user', [
-            'user' => $user
+            'user' => $user,
         ])) {
             $editButtons['hidden'][] = 'delete';
         }
 
         // Determine widgets to display
         $widgets = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
             'user' => $user,
-            'property' => 'permissions'
+            'property' => 'permissions',
         ])) {
             $widgets['hidden'][] = 'permissions';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
             'user' => $user,
-            'property' => 'activities'
+            'property' => 'activities',
         ])) {
             $widgets['hidden'][] = 'activities';
         }
@@ -1044,7 +1073,7 @@ class UserController extends SimpleController
             'fields'          => $fields,
             'tools'           => $editButtons,
             'widgets'         => $widgets,
-            'delete_redirect' => $this->ci->router->pathFor('uri_users')
+            'delete_redirect' => $this->ci->router->pathFor('uri_users'),
         ]);
     }
 
@@ -1056,9 +1085,11 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageList(Request $request, Response $response, $args)
@@ -1078,7 +1109,7 @@ class UserController extends SimpleController
     }
 
     /**
-     * Processes the request to update an existing user's basic details (first_name, last_name, email, locale, group_id)
+     * Processes the request to update an existing user's basic details (first_name, last_name, email, locale, group_id).
      *
      * Processes the request from the user update form, checking that:
      * 1. The target user's new email address, if specified, is not already in use;
@@ -1087,9 +1118,11 @@ class UserController extends SimpleController
      *
      * This route requires authentication.
      * Request type: PUT
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -1148,7 +1181,7 @@ class UserController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => array_values(array_unique($fieldNames))
+            'fields' => array_values(array_unique($fieldNames)),
         ])) {
             throw new ForbiddenException();
         }
@@ -1192,12 +1225,12 @@ class UserController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated basic account info for user {$user->user_name}.", [
                 'type'    => 'account_update_info',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
         $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
-            'user_name' => $user->user_name
+            'user_name' => $user->user_name,
         ]);
 
         return $response->withJson([], 200);
@@ -1214,9 +1247,11 @@ class UserController extends SimpleController
      *
      * This route requires authentication.
      * Request type: PUT
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If user is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -1242,7 +1277,7 @@ class UserController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit the specified field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => [$fieldName]
+            'fields' => [$fieldName],
         ])) {
             throw new ForbiddenException();
         }
@@ -1267,7 +1302,7 @@ class UserController extends SimpleController
 
         // Create and validate key -> value pair
         $params = [
-            $fieldName => $put['value']
+            $fieldName => $put['value'],
         ];
 
         // Load the request schema
@@ -1287,6 +1322,7 @@ class UserController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
@@ -1305,6 +1341,7 @@ class UserController extends SimpleController
             ) {
                 $e = new BadRequestException();
                 $e->addUserMessage('DISABLE_MASTER');
+
                 throw $e;
             } elseif (
                 ($user->id == $currentUser->id) &&
@@ -1312,6 +1349,7 @@ class UserController extends SimpleController
             ) {
                 $e = new BadRequestException();
                 $e->addUserMessage('DISABLE_SELF');
+
                 throw $e;
             }
         } elseif ($fieldName == 'password') {
@@ -1331,7 +1369,7 @@ class UserController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for user {$user->user_name}.", [
                 'type'    => 'account_update_field',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
@@ -1339,20 +1377,20 @@ class UserController extends SimpleController
         if ($fieldName == 'flag_enabled') {
             if ($fieldValue == '1') {
                 $ms->addMessageTranslated('success', 'ENABLE_SUCCESSFUL', [
-                    'user_name' => $user->user_name
+                    'user_name' => $user->user_name,
                 ]);
             } else {
                 $ms->addMessageTranslated('success', 'DISABLE_SUCCESSFUL', [
-                    'user_name' => $user->user_name
+                    'user_name' => $user->user_name,
                 ]);
             }
         } elseif ($fieldName == 'flag_verified') {
             $ms->addMessageTranslated('success', 'MANUALLY_ACTIVATED', [
-                'user_name' => $user->user_name
+                'user_name' => $user->user_name,
             ]);
         } else {
             $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
-                'user_name' => $user->user_name
+                'user_name' => $user->user_name,
             ]);
         }
 
@@ -1360,10 +1398,12 @@ class UserController extends SimpleController
     }
 
     /**
-     * Get User instance from params
+     * Get User instance from params.
      *
-     * @param  array               $params
+     * @param array $params
+     *
      * @throws BadRequestException
+     *
      * @return User
      */
     protected function getUserFromParams($params)
@@ -1385,6 +1425,7 @@ class UserController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 

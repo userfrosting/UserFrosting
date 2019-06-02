@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -8,9 +9,9 @@
  */
 
 /**
- * Greek message token translations for the 'core' sprinkle.
+ * Standard Greek message token translations for the 'core' sprinkle.
  *
- * @author Lena Stergatou (lenasterg)
+ * @author Lena Stergatou
  */
 
 return [
@@ -29,7 +30,7 @@ return [
             'SPRUNJE'       => [
                 'BAD_FILTER' => 'Το <strong>{{name}}</strong> δεν είναι έγκυρο φίλτρο για αυτό το Sprunje.',
                 'BAD_LIST'   => 'Το <strong>{{name}}</strong> δεν είναι έγκυρη λίστα για αυτό το Sprunje.',
-                'BAD_SORT'   => 'Το <strong>{{name}}</strong> δεν είναι έγκυρο πεδίο ταξινόμησης για αυτό το Sprunje.'
-            ]
-        ]
+                'BAD_SORT'   => 'Το <strong>{{name}}</strong> δεν είναι έγκυρο πεδίο ταξινόμησης για αυτό το Sprunje.',
+            ],
+        ],
     ];

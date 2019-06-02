@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,7 +14,8 @@ use Illuminate\Session\DatabaseSessionHandler as LaravelDatabaseSessionHandler;
 
 /**
  * Temp class until we update to Laravel 5.5.
- * A bug was fixed in 5.5, which caused https://github.com/userfrosting/UserFrosting/issues/952
+ * A bug was fixed in 5.5, which caused https://github.com/userfrosting/UserFrosting/issues/952.
+ *
  * @see https://github.com/laravel/framework/commit/24356a8ca677ba589b8f2d00f24ce3e9a7a1e02d#diff-9a772ff9941d635b86a27ca1ea149e73
  */
 class DatabaseSessionHandler extends LaravelDatabaseSessionHandler

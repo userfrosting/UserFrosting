@@ -1,16 +1,11 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
  * @copyright Copyright (c) 2019 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
- */
-
-/**
- * Greek message token translations for the 'core' sprinkle.
- *
- * @author Lena Stergatou (lenasterg)
  */
 
 return [
@@ -34,7 +29,7 @@ return [
             'TITLE'       => 'Πρόβλημα ρύθμισης παραμέτρων του UserFrosting!',
             'DESCRIPTION' => 'Ορισμένες απαιτήσεις διαμόρφωσης του UserFrosting δεν πληρούνται.',
             'DETAIL'      => 'Κάτι δεν είναι εδώ.',
-            'RETURN'      => 'Παρακαλούμε διορθώστε τα ακόλουθα σφάλματα και στη συνέχεια, <a href="{{url}}">επαναλάβετε τη φόρτωση</a>.'
+            'RETURN'      => 'Παρακαλούμε διορθώστε τα ακόλουθα σφάλματα και στη συνέχεια, <a href="{{url}}">επαναλάβετε τη φόρτωση</a>.',
         ],
 
         'DESCRIPTION' => 'Έχουμε αισθανθεί μια μεγάλη διαταραχή στη Δύναμη.',
@@ -48,6 +43,6 @@ return [
 
         'SERVER' => 'Ωχ, φαίνεται ότι ο διακομιστής μας μπορεί να έχει μπερδευτεί. Αν είστε ο διαχειριστής, ελέγξτε τα αρχεία καταγραφής PHP ή UserFrosting.',
 
-        'TITLE' => 'Διαταραχή της Δύναμης'
-    ]
+        'TITLE' => 'Διαταραχή της Δύναμης',
+    ],
 ];

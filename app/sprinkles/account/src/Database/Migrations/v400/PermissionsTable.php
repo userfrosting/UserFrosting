@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -18,9 +19,10 @@ use UserFrosting\Sprinkle\Core\Facades\Seeder;
  * Permissions table migration
  * Permissions now replace the 'authorize_group' and 'authorize_user' tables.
  * Also, they now map many-to-many to roles.
- * Version 4.0.0
+ * Version 4.0.0.
  *
  * See https://laravel.com/docs/5.4/migrations#tables
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class PermissionsTable extends Migration
@@ -30,7 +32,7 @@ class PermissionsTable extends Migration
      */
     public static $dependencies = [
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RolesTable',
-        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PermissionRolesTable'
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PermissionRolesTable',
     ];
 
     /**

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,6 +16,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
  * Token repository class for new account verifications.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see https://learn.userfrosting.com/users/user-accounts
  */
 class VerificationRepository extends TokenRepository

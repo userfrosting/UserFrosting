@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,7 +13,7 @@ namespace UserFrosting\Sprinkle\Account\Authenticate;
 use UserFrosting\Sprinkle\Account\Util\HashFailedException;
 
 /**
- * Password hashing and validation class
+ * Password hashing and validation class.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -29,7 +30,9 @@ class Hasher
      * Returns the hashing type for a specified password hash.
      *
      * Automatically detects the hash type: "sha1" (for UserCake legacy accounts), "legacy" (for 0.1.x accounts), and "modern" (used for new accounts).
-     * @param  string $password the hashed password.
+     *
+     * @param string $password the hashed password.
+     *
      * @return string "sha1"|"legacy"|"modern".
      */
     public function getHashType($password)
@@ -47,10 +50,12 @@ class Hasher
     /**
      * Hashes a plaintext password using bcrypt.
      *
-     * @param  string              $password the plaintext password.
-     * @param  array               $options
+     * @param string $password the plaintext password.
+     * @param array  $options
+     *
      * @throws HashFailedException
-     * @return string              the hashed password.
+     *
+     * @return string the hashed password.
      */
     public function hash($password, array $options = [])
     {
@@ -68,10 +73,11 @@ class Hasher
     /**
      * Verify a plaintext password against the user's hashed password.
      *
-     * @param  string $password The plaintext password to verify.
-     * @param  string $hash     The hash to compare against.
-     * @param  array  $options
-     * @return bool   True if the password matches, false otherwise.
+     * @param string $password The plaintext password to verify.
+     * @param string $hash     The hash to compare against.
+     * @param array  $options
+     *
+     * @return bool True if the password matches, false otherwise.
      */
     public function verify($password, $hash, array $options = [])
     {
@@ -101,7 +107,8 @@ class Hasher
     /**
      * Extract the cost value from the options array.
      *
-     * @param  array $options
+     * @param array $options
+     *
      * @return int
      */
     protected function cost(array $options = [])

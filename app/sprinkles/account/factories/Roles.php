@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,7 +14,9 @@ use League\FactoryMuffin\Faker\Facade as Faker;
  * General factory for the Role Model
  */
 $fm->define('UserFrosting\Sprinkle\Account\Database\Models\Role')->setDefinitions([
-    'slug'        => Faker::unique()->word(),
     'name'        => Faker::word(),
-    'description' => Faker::paragraph()
+    'description' => Faker::paragraph(),
+    'slug'        => function ($object, $saved) {
+        return uniqid();
+    },
 ]);

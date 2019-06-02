@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -7,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Account\Tests\Integration\Session;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\FileSessionHandler;
@@ -27,7 +28,7 @@ class SessionFileHandlerTest extends TestCase
         $fs = new Filesystem();
 
         // Define random session ID
-        $session_id = 'test'.rand(1, 100000);
+        $session_id = 'test' . rand(1, 100000);
 
         // Get session dir
         $session_dir = $this->ci->locator->findResource('session://');

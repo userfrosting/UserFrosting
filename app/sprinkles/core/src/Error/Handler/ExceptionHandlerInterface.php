@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -45,7 +46,7 @@ interface ExceptionHandlerInterface
     public function renderGenericResponse();
 
     /**
-     * Write to the error log
+     * Write to the error log.
      */
     public function writeToErrorLog();
 

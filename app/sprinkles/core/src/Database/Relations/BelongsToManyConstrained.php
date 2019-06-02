@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,9 +10,9 @@
 
 namespace UserFrosting\Sprinkle\Core\Database\Relations;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -19,7 +20,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * This has been superseded by the BelongsToTernary relationship since 4.1.6.
  *
  * @deprecated since 4.1.6
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
  */
 class BelongsToManyConstrained extends BelongsToMany
@@ -63,8 +66,9 @@ class BelongsToManyConstrained extends BelongsToMany
     /**
      * Gets a list of unique pivot key values from an array of models.
      *
-     * @param  array  $models
-     * @param  string $pivotKey
+     * @param array  $models
+     * @param string $pivotKey
+     *
      * @return array
      */
     protected function getPivotKeys(array $models, $pivotKey)
@@ -82,9 +86,11 @@ class BelongsToManyConstrained extends BelongsToMany
      * in the parent object to the child objects.
      *
      * @see Called in https://github.com/laravel/framework/blob/2f4135d8db5ded851d1f4f611124c53b768a3c08/src/Illuminate/Database/Eloquent/Builder.php
-     * @param  array                                    $models
-     * @param  \Illuminate\Database\Eloquent\Collection $results
-     * @param  string                                   $relation
+     *
+     * @param array                                    $models
+     * @param \Illuminate\Database\Eloquent\Collection $results
+     * @param string                                   $relation
+     *
      * @return array
      */
     public function match(array $models, Collection $results, $relation)
@@ -112,8 +118,9 @@ class BelongsToManyConstrained extends BelongsToMany
     /**
      * Filter an array of models, only taking models whose $constraintKey value matches $pivotValue.
      *
-     * @param  array $items
-     * @param  mixed $pivotValue
+     * @param array $items
+     * @param mixed $pivotValue
+     *
      * @return array
      */
     protected function findMatchingPivots($items, $pivotValue)

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,6 +16,7 @@ use UserFrosting\Sprinkle\Core\Error\Handler\HttpExceptionHandler;
  * Handler for AuthCompromisedExceptions.
  *
  * Warns the user that their account may have been compromised due to a stolen "remember me" cookie.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class AuthCompromisedExceptionHandler extends HttpExceptionHandler
