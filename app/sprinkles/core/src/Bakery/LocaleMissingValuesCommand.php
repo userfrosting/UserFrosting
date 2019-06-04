@@ -78,6 +78,7 @@ class LocalMissingValuesCommand extends BaseCommand
 
     /**
      * Returns filenames and paths for en_US locale files.
+     *
      * @return array en_US locale filenames and paths.
      */
     private function getEnglishUS()
