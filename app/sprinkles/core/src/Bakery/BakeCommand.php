@@ -52,24 +52,72 @@ class BakeCommand extends BaseCommand
     {
         $this->io->writeln("<info>{$this->title}</info>");
 
+        $this->executeSetup($input, $output);
+        $this->executeDebug($input, $output);
+        $this->executeConfiguration($input, $output);
+        $this->executeAsset($input, $output);
+        $this->executeCleanup($input, $output);
+    }
+
+    /**
+     * Core setup group of task
+     *
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
+     */
+    protected function executeSetup(InputInterface $input, OutputInterface $output)
+    {
         $command = $this->getApplication()->find('setup:db');
         $command->run($input, $output);
 
         $command = $this->getApplication()->find('setup:smtp');
         $command->run($input, $output);
+    }
 
+    /**
+     * Debug group of task
+     *
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
+     */
+    protected function executeDebug(InputInterface $input, OutputInterface $output)
+    {
         $command = $this->getApplication()->find('debug');
         $command->run($input, $output);
+    }
 
+    /**
+     * Configuration group of task
+     *
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
+     */
+    protected function executeConfiguration(InputInterface $input, OutputInterface $output)
+    {
         $command = $this->getApplication()->find('migrate');
         $command->run($input, $output);
+    }
 
-        $command = $this->getApplication()->find('create-admin');
-        $command->run($input, $output);
-
+    /**
+     * Assets setup group of task
+     *
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
+     */
+    protected function executeAsset(InputInterface $input, OutputInterface $output)
+    {
         $command = $this->getApplication()->find('build-assets');
         $command->run($input, $output);
+    }
 
+    /**
+     * Cleanup group of task
+     *
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
+     */
+    protected function executeCleanup(InputInterface $input, OutputInterface $output)
+    {
         $command = $this->getApplication()->find('clear-cache');
         $command->run($input, $output);
     }

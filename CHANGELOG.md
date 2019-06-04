@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.3.0]
+
+### Changed Requirements
+- Changed minimum PHP Version to 7.1
+
+### Added
+- Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
+
+### Fix
+- `bake` command return error if account sprinkle is not included ([#944])
+
+### Changed
+- Account sprinkle now extend the Core `BakeCommand` class to add the `create-admin` to the general bake command. Any sprinkle already extending the Core `BakeCommand` might need adjustments.
+
+
 ## [v4.2.2]
 
 ### Added
