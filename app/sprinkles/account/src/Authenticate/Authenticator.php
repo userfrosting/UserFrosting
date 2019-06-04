@@ -122,6 +122,11 @@ class Authenticator
             $this->rememberMe->getCookie()->setExpireTime($this->config['remember_me.expire_time']);
         }
 
+        // Set domain, if specified
+        if ($this->config->has('remember_me.domain') && ($this->config->has('remember_me.domain') != null)) {
+            $this->rememberMe->getCookie()->setDomain($this->config['remember_me.domain']);
+        }
+
         $this->user = null;
         $this->viaRemember = false;
     }
