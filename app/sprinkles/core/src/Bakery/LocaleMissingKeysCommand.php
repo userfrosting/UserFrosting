@@ -12,60 +12,91 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\System\Bakery\BaseCommand;
 
 class LocaleMissingKeysCommand extends BaseCommand
 {
-    protected $locales = [
-        'zh_CN',
-        'es_ES',
-        'ar',
-        'pt_PT',
-        'ru_RU',
-        'de_DE',
-        'fr_FR',
-        'tr',
-        'it_IT',
-        'th_TH',
-        'fa',
-        'el',
-      ];
+    protected $missing = [];
 
     protected function configure()
     {
-        // the name of the command (the part after "php bakery")
-        $this->setName('localeUtil:missing-keys');
+        $this->setName('locale:missing-keys')
+        ->addOption('locale', 'l', InputOption::VALUE_REQUIRED, 'The locale to compare against.', 'en_US');
 
-        // the short description shown while running "php bakery list"
-        $this->setDescription('Identifies missing locale keys by comparing en_US with other locale files.');
+        $this->setDescription('Identify missing locale keys through comparison.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $localesArray = $this->locales;
+        // The locale that other locales are compared to. Defaults to en_US if not set.
+        $baseLocale = $input->getOption('locale');
 
-        $enUS = $this->getEnglishUS();
+        $baseLocaleFileNames = $this->getBaseFileNames($baseLocale);
+        //  print_r($baseLocaleFileNames);
+        $localesAvailable = $this->getAvailableLocales();
 
-        foreach ($enUS as $filename => $path) {
-            $enUSFile = $this->fetchArray($path);
+        foreach ($localesAvailable as $altLocale) {
+            //    print_r($altLocale);
+            $test[$altLocale] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
+        }
+        //print_r($test);
 
-            foreach ($localesArray as $index => $localeDirectory) {
-                $altLocale = $this->fetchArray($this->ci->locator->getResource("locale://{$localeDirectory}/{$filename}"));
+        $difference[$localeDirectory][$path] = array_diff_key($baseFile, $altFile);
 
-                if (!empty(array_diff_key($enUSFile, $altLocale))) {
-                    $difference[$localeDirectory][$path] = array_diff_key($enUSFile, $altLocale);
+        $table = new Table($output);
 
-                    $table = new Table($output);
+        foreach ($difference[$localeDirectory][$path] as $k => $v) {
+            //    print_r(gettype($k) . "\r\n");
+            //    print_r($v . "\r\n");
+            $table->setHeaders([$localeDirectory, key($difference[$localeDirectory])]);
+            $table->addRow([$k]);
+        }
+        $table->render();
+    }
 
-                    foreach ($difference[$localeDirectory][$path] as $k => $v) {
-                        $table->setHeaders([$localeDirectory, key($difference[$localeDirectory])]);
-                        $table->addRow([$k]);
+    public function getDifference($array1, $array2)
+    {
+        foreach ($array1 as $key => $value) {
+            if (is_array($value)) {
+                if (!isset($array2[$key])) {
+                    $difference[$key] = $key;
+                } elseif (!is_array($array2[$key])) {
+                    $difference[$key] = $key;
+                } else {
+                    $new_diff = $this->getDifference($value, $array2[$key]);
+                    if ($new_diff != false) {
+                        $difference[$key] = $new_diff;
                     }
-                    $table->render();
                 }
+            } elseif (!isset($array2[$key])) {
+                $difference[$key] = $key;
             }
         }
+
+        return !isset($difference) ? 0 : $difference;
+    }
+
+    /**
+     * Returns filenames and paths for a locale type.
+     *
+     * @param string The locale to get filenames and paths for. This should be a locale as listed in config['site']['locales']['available']
+     * @return array Locale filenames and paths.
+     */
+    private function compareFiles($baseLocale, $altLocale, $filenames)
+    {
+        //    print_r($filenames);
+        foreach ($filenames as $file) {
+            //    print_r($file);
+            $base = $this->getFile($this->ci->locator->getResource("locale://{$baseLocale}/{$file}"));
+
+            $alt = $this->getFile($this->ci->locator->getResource("locale://{$altLocale}/{$file}"));
+
+            $difference[$file] = $this->getDifference($base, $alt);
+        }
+
+        return $difference;
     }
 
     /**
@@ -73,24 +104,25 @@ class LocaleMissingKeysCommand extends BaseCommand
      *
      * @param string $path The path of file to be included.
      */
-    private function fetchArray($path)
+    private function getFile($path)
     {
         return include "$path";
     }
 
-    /**
-     * Returns filenames and paths for en_US locale files.
-     *
-     * @return array en_US locale filenames and paths.
-     */
-    private function getEnglishUS()
+    private function getBaseFileNames($locale)
     {
-        $en = $this->ci->locator->listResources('locale://en_US');
-
-        foreach ($en as $filename => $path) {
-            $enUS[$path->getBasename()] = $path->getAbsolutePath();
+        $file = ($this->ci->locator->listResources("locale://{$locale}", true));
+        //  print_r($file);
+        foreach ($file as $filename => $path) {
+            print_r($path->getLocatorBasePath());
+            $files[$path->getAbsolutePath()] = $path->getBaseName();
         }
 
-        return $enUS;
+        return $files;
+    }
+
+    private function getAvailableLocales()
+    {
+        return array_keys($this->ci->config['site']['locales']['available']);
     }
 }
