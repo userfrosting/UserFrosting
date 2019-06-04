@@ -16,7 +16,7 @@ use UserFrosting\Sprinkle\Core\Bakery\BakeCommand as CoreBakeCommand;
 
 /**
  * Bake command extension.
- * Adding Account provided `create-admin` to the bake command
+ * Adding Account provided `create-admin` to the bake command.
  */
 class BakeCommand extends CoreBakeCommand
 {

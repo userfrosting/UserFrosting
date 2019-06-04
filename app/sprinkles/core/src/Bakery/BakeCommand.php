@@ -60,10 +60,10 @@ class BakeCommand extends BaseCommand
     }
 
     /**
-     * Core setup group of task
+     * Core setup group of task.
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      */
     protected function executeSetup(InputInterface $input, OutputInterface $output)
     {
@@ -75,10 +75,10 @@ class BakeCommand extends BaseCommand
     }
 
     /**
-     * Debug group of task
+     * Debug group of task.
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      */
     protected function executeDebug(InputInterface $input, OutputInterface $output)
     {
@@ -87,10 +87,10 @@ class BakeCommand extends BaseCommand
     }
 
     /**
-     * Configuration group of task
+     * Configuration group of task.
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      */
     protected function executeConfiguration(InputInterface $input, OutputInterface $output)
     {
@@ -99,10 +99,10 @@ class BakeCommand extends BaseCommand
     }
 
     /**
-     * Assets setup group of task
+     * Assets setup group of task.
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      */
     protected function executeAsset(InputInterface $input, OutputInterface $output)
     {
@@ -111,10 +111,10 @@ class BakeCommand extends BaseCommand
     }
 
     /**
-     * Cleanup group of task
+     * Cleanup group of task.
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      */
     protected function executeCleanup(InputInterface $input, OutputInterface $output)
     {
