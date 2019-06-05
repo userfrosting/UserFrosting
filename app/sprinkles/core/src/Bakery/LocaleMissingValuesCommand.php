@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\System\Bakery\BaseCommand;
 
-class LocalMissingValuesCommand extends BaseCommand
+class LocaleMissingValuesCommand extends BaseCommand
 {
     protected $locales = [
         'en_US',
@@ -35,9 +35,9 @@ class LocalMissingValuesCommand extends BaseCommand
 
     protected function configure()
     {
-        $this->setName('localeUtil:missing-values');
+        $this->setName('locale:missing-values');
         // A missing value is equal to an empty string.
-        $this->setDescription('Identifies missing locale values by comparing en_US with other locale files.');
+        $this->setDescription('Identify missing locale values through comparison.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
