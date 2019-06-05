@@ -19,6 +19,7 @@ use UserFrosting\System\Bakery\BaseCommand;
 class LocaleMissingKeysCommand extends BaseCommand
 {
     protected $missing = [];
+    protected $table = [];
 
     protected function configure()
     {
@@ -30,6 +31,8 @@ class LocaleMissingKeysCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->$table = new Table($output);
+
         // The locale that other locales are compared to. Defaults to en_US if not set.
         $baseLocale = $input->getOption('locale');
 
@@ -37,40 +40,61 @@ class LocaleMissingKeysCommand extends BaseCommand
         //  print_r($baseLocaleFileNames);
         $localesAvailable = $this->getAvailableLocales();
 
-        foreach ($localesAvailable as $altLocale) {
+        foreach ($localesAvailable as $key => $altLocale) {
             //    print_r($altLocale);
-            $test[$altLocale] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
+            //  $difference['base_locale'] = $baseLocale;
+            $difference[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
         }
-        //print_r($test);
+        //print_r($difference);
 
-        $difference[$localeDirectory][$path] = array_diff_key($baseFile, $altFile);
+        $this->$table->setHeaders([$baseLocale, null]);
 
-        $table = new Table($output);
+        return $this->buildTable($difference);
+    }
 
-        foreach ($difference[$localeDirectory][$path] as $k => $v) {
-            //    print_r(gettype($k) . "\r\n");
-            //    print_r($v . "\r\n");
-            $table->setHeaders([$localeDirectory, key($difference[$localeDirectory])]);
-            $table->addRow([$k]);
+    public function buildTable($difference)
+    {
+        //  print_r($difference);
+
+        foreach ($difference as $key => $value) {
+            {
+              foreach ($value as $k => $v) {
+                  if (!is_array($v) && $v != '0') {
+                      $this->$table->addRow([$v]);
+                  } else {
+                      foreach ($v as $a => $b) {
+                          if (!is_array($b) && $b != '0') {
+                              $this->$table->addRow([$k, $b]);
+                          }
+                      }
+                  }
+              }
+           }
         }
-        $table->render();
+
+        return $this->$table->render();
     }
 
     public function getDifference($array1, $array2)
     {
         foreach ($array1 as $key => $value) {
             if (is_array($value)) {
+                //      print_r("1:\r\n" . $value);
                 if (!isset($array2[$key])) {
                     $difference[$key] = $key;
+                //  print_r('Number 1 triggered:' . $key . "\r\n");
                 } elseif (!is_array($array2[$key])) {
                     $difference[$key] = $key;
+                //    print_r('Number 2 triggered:' . $key . "\r\n");
                 } else {
                     $new_diff = $this->getDifference($value, $array2[$key]);
                     if ($new_diff != false) {
+                        //      print_r('Number 3 triggered:' . $key . "\r\n");
                         $difference[$key] = $new_diff;
                     }
                 }
             } elseif (!isset($array2[$key])) {
+                //  print_r('Number 4 triggered:' . $key . "\r\n");
                 $difference[$key] = $key;
             }
         }
@@ -86,14 +110,16 @@ class LocaleMissingKeysCommand extends BaseCommand
      */
     private function compareFiles($baseLocale, $altLocale, $filenames)
     {
-        //    print_r($filenames);
-        foreach ($filenames as $file) {
-            //    print_r($file);
-            $base = $this->getFile($this->ci->locator->getResource("locale://{$baseLocale}/{$file}"));
+        //  print_r($filenames);
+        foreach ($filenames as $sprinkle => $files) {
+            foreach ($files as $key => $file) {
+                //    print_r($sprinkle . "\r\n");
+                $base = $this->getFile($this->ci->locator->getResource("locale://{$baseLocale}/{$file}"));
 
-            $alt = $this->getFile($this->ci->locator->getResource("locale://{$altLocale}/{$file}"));
+                $alt = $this->getFile($this->ci->locator->getResource("locale://{$altLocale}/{$file}"));
 
-            $difference[$file] = $this->getDifference($base, $alt);
+                $difference[$sprinkle . '/locale' . '/' . $altLocale . '/' . $file] = $this->getDifference($base, $alt);
+            }
         }
 
         return $difference;
@@ -114,8 +140,7 @@ class LocaleMissingKeysCommand extends BaseCommand
         $file = ($this->ci->locator->listResources("locale://{$locale}", true));
         //  print_r($file);
         foreach ($file as $filename => $path) {
-            print_r($path->getLocatorBasePath());
-            $files[$path->getAbsolutePath()] = $path->getBaseName();
+            $files[$path->getLocation()->getName()][] = $path->getBaseName();
         }
 
         return $files;
