@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -10,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 /**
- * EmailRecipient Class
+ * EmailRecipient Class.
  *
  * A class representing a recipient for a MailMessage, with associated parameters.
  *
@@ -67,7 +68,7 @@ class EmailRecipient
     {
         $this->cc[] = [
             'email' => $email,
-            'name'  => $name
+            'name'  => $name,
         ];
     }
 
@@ -81,7 +82,7 @@ class EmailRecipient
     {
         $this->bcc[] = [
             'email' => $email,
-            'name'  => $name
+            'name'  => $name,
         ];
     }
 

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,7 +13,7 @@ namespace UserFrosting\Sprinkle\Account\Facades;
 use UserFrosting\System\Facade;
 
 /**
- * Implements facade for the "password" service
+ * Implements facade for the "password" service.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */

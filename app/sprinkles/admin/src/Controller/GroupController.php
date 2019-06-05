@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,10 +13,10 @@ namespace UserFrosting\Sprinkle\Admin\Controller;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -39,10 +40,13 @@ class GroupController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: POST
+     *
      * @see getModalCreateGroup
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function create(Request $request, Response $response, $args)
@@ -113,7 +117,7 @@ class GroupController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} created group {$group->name}.", [
                 'type'    => 'group_create',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
 
             $ms->addMessageTranslated('success', 'GROUP.CREATION_SUCCESSFUL', $data);
@@ -134,9 +138,11 @@ class GroupController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: DELETE
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If group is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -158,7 +164,7 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_group', [
-            'group' => $group
+            'group' => $group,
         ])) {
             throw new ForbiddenException();
         }
@@ -171,6 +177,7 @@ class GroupController extends SimpleController
         if ($group->slug == $config['site.registration.user_defaults.group']) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.DELETE_DEFAULT', $group->toArray());
+
             throw $e;
         }
 
@@ -182,6 +189,7 @@ class GroupController extends SimpleController
         if ($countGroupUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.NOT_EMPTY', $group->toArray());
+
             throw $e;
         }
 
@@ -195,7 +203,7 @@ class GroupController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted group {$groupName}.", [
                 'type'    => 'group_delete',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
@@ -203,7 +211,7 @@ class GroupController extends SimpleController
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'GROUP.DELETION_SUCCESSFUL', [
-            'name' => $groupName
+            'name' => $groupName,
         ]);
 
         return $response->withJson([], 200);
@@ -215,9 +223,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      * @throws NotFoundException  If group is not found
      */
@@ -255,15 +265,17 @@ class GroupController extends SimpleController
     }
 
     /**
-     * Returns a list of Groups
+     * Returns a list of Groups.
      *
      * Generates a list of groups, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getList(Request $request, Response $response, $args)
@@ -293,11 +305,12 @@ class GroupController extends SimpleController
     }
 
     /**
-     * Get deletetion confirmation modal
+     * Get deletetion confirmation modal.
      *
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If group is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -322,7 +335,7 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_group', [
-            'group' => $group
+            'group' => $group,
         ])) {
             throw new ForbiddenException();
         }
@@ -335,6 +348,7 @@ class GroupController extends SimpleController
         if ($countGroupUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.NOT_EMPTY', $group->toArray());
+
             throw $e;
         }
 
@@ -342,7 +356,7 @@ class GroupController extends SimpleController
             'group' => $group,
             'form'  => [
                 'action' => "api/groups/g/{$group->slug}",
-            ]
+            ],
         ]);
     }
 
@@ -353,16 +367,15 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getModalCreate(Request $request, Response $response, $args)
     {
-        // GET parameters
-        $params = $request->getQueryParams();
-
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
@@ -388,7 +401,7 @@ class GroupController extends SimpleController
         $fieldNames = ['name', 'slug', 'icon', 'description'];
         $fields = [
             'hidden'   => [],
-            'disabled' => []
+            'disabled' => [],
         ];
 
         // Load validation rules
@@ -401,11 +414,11 @@ class GroupController extends SimpleController
                 'action'      => 'api/groups',
                 'method'      => 'POST',
                 'fields'      => $fields,
-                'submit_text' => $translator->translate('CREATE')
+                'submit_text' => $translator->translate('CREATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -416,9 +429,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If group is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -450,7 +465,7 @@ class GroupController extends SimpleController
         $fieldNames = ['name', 'slug', 'icon', 'description'];
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
             'group' => $group,
-            'fields' => $fieldNames
+            'fields' => $fieldNames,
         ])) {
             throw new ForbiddenException();
         }
@@ -458,7 +473,7 @@ class GroupController extends SimpleController
         // Generate form
         $fields = [
             'hidden'   => [],
-            'disabled' => []
+            'disabled' => [],
         ];
 
         // Load validation rules
@@ -471,20 +486,21 @@ class GroupController extends SimpleController
                 'action'      => "api/groups/g/{$group->slug}",
                 'method'      => 'PUT',
                 'fields'      => $fields,
-                'submit_text' => $translator->translate('UPDATE')
+                'submit_text' => $translator->translate('UPDATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
     /**
-     * Users List API
+     * Users List API.
      *
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If group is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -509,7 +525,7 @@ class GroupController extends SimpleController
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
             'group' => $group,
-            'property' => 'users'
+            'property' => 'users',
         ])) {
             throw new ForbiddenException();
         }
@@ -536,9 +552,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageInfo(Request $request, Response $response, $args)
@@ -558,7 +576,7 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_group', [
-                'group' => $group
+                'group' => $group,
             ])) {
             throw new ForbiddenException();
         }
@@ -568,13 +586,13 @@ class GroupController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         foreach ($fieldNames as $field) {
             if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
                 'group' => $group,
-                'property' => $field
+                'property' => $field,
             ])) {
                 $fields['hidden'][] = $field;
             }
@@ -582,27 +600,27 @@ class GroupController extends SimpleController
 
         // Determine buttons to display
         $editButtons = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
             'group' => $group,
-            'fields' => ['name', 'slug', 'icon', 'description']
+            'fields' => ['name', 'slug', 'icon', 'description'],
         ])) {
             $editButtons['hidden'][] = 'edit';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'delete_group', [
-            'group' => $group
+            'group' => $group,
         ])) {
             $editButtons['hidden'][] = 'delete';
         }
 
         return $this->ci->view->render($response, 'pages/group.html.twig', [
-            'group'  => $group,
-            'fields' => $fields,
-            'tools'  => $editButtons,
-            'delete_redirect' => $this->ci->router->pathFor('uri_groups')
+            'group'           => $group,
+            'fields'          => $fields,
+            'tools'           => $editButtons,
+            'delete_redirect' => $this->ci->router->pathFor('uri_groups'),
         ]);
     }
 
@@ -614,9 +632,11 @@ class GroupController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageList(Request $request, Response $response, $args)
@@ -645,10 +665,13 @@ class GroupController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: PUT
+     *
      * @see getModalGroupEdit
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If group is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -660,9 +683,6 @@ class GroupController extends SimpleController
         if (!$group) {
             throw new NotFoundException();
         }
-
-        /** @var \UserFrosting\Support\Repository\Repository $config */
-        $config = $this->ci->config;
 
         // Get PUT parameters: (name, slug, icon, description)
         $params = $request->getParsedBody();
@@ -701,7 +721,7 @@ class GroupController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this group
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
             'group' => $group,
-            'fields' => array_values(array_unique($fieldNames))
+            'fields' => array_values(array_unique($fieldNames)),
         ])) {
             throw new ForbiddenException();
         }
@@ -746,22 +766,24 @@ class GroupController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated details for group {$group->name}.", [
                 'type'    => 'group_update_info',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
         $ms->addMessageTranslated('success', 'GROUP.UPDATE', [
-            'name' => $group->name
+            'name' => $group->name,
         ]);
 
         return $response->withJson([], 200);
     }
 
     /**
-     * Get group from params
+     * Get group from params.
      *
-     * @param  array               $params
+     * @param array $params
+     *
      * @throws BadRequestException
+     *
      * @return Group
      */
     protected function getGroupFromParams($params)
@@ -783,6 +805,7 @@ class GroupController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 

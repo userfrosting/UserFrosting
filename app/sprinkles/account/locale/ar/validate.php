@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,6 +16,6 @@
  */
 return [
     'VALIDATE' => [
-        'PASSWORD_MISMATCH' => 'يجب أن تكون كلمة المرور وكلمة المرور التأكيدية نفس'
-    ]
+        'PASSWORD_MISMATCH' => 'يجب أن تكون كلمة المرور وكلمة المرور التأكيدية نفس',
+    ],
 ];

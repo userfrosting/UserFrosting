@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,10 +14,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Facades\Password;
@@ -33,6 +34,7 @@ use UserFrosting\Support\Exception\NotFoundException;
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see http://www.userfrosting.com/navigating/#structure
  */
 class AccountController extends SimpleController
@@ -47,9 +49,11 @@ class AccountController extends SimpleController
      * Route: /account/check-username
      * Route Name: {none}
      * Request type: GET
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws BadRequestException
      */
     public function checkUsername(Request $request, Response $response, $args)
@@ -77,6 +81,7 @@ class AccountController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
@@ -118,6 +123,7 @@ class AccountController extends SimpleController
      * Route: /account/set-password/deny
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -150,6 +156,7 @@ class AccountController extends SimpleController
             return $response->withRedirect($loginPage);
         }
 
+        /** @var \UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository $passwordReset */
         $passwordReset = $this->ci->repoPasswordReset->cancel($data['token']);
 
         if (!$passwordReset) {
@@ -173,6 +180,7 @@ class AccountController extends SimpleController
      * Note that we have removed the requirement that a password reset request not already be in progress.
      * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
      * This route is "public access".
+     *
      * @todo require additional user information
      * @todo prevent password reset requests for root account?
      *
@@ -180,6 +188,7 @@ class AccountController extends SimpleController
      * Route: /account/forgot-password
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -214,12 +223,11 @@ class AccountController extends SimpleController
         }
 
         // Throttle requests
-
         /** @var \UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
         $throttler = $this->ci->throttler;
 
         $throttleData = [
-            'email' => $data['email']
+            'email' => $data['email'],
         ];
         $delay = $throttler->getDelay('password_reset_request', $throttleData);
 
@@ -253,7 +261,7 @@ class AccountController extends SimpleController
                         ->addParams([
                             'user'         => $user,
                             'token'        => $passwordReset->getToken(),
-                            'request_date' => Carbon::now()->format('Y-m-d H:i:s')
+                            'request_date' => Carbon::now()->format('Y-m-d H:i:s'),
                         ]);
 
                 $this->ci->mailer->send($message);
@@ -276,6 +284,7 @@ class AccountController extends SimpleController
      * Route: /modals/account/tos
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -292,6 +301,7 @@ class AccountController extends SimpleController
      * Route: /account/captcha
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -322,6 +332,7 @@ class AccountController extends SimpleController
      * Route: /account/login
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -376,13 +387,13 @@ class AccountController extends SimpleController
         $userIdentifier = $data['user_name'];
 
         $throttleData = [
-            'user_identifier' => $userIdentifier
+            'user_identifier' => $userIdentifier,
         ];
 
         $delay = $throttler->getDelay('sign_in_attempt', $throttleData);
         if ($delay > 0) {
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', [
-                'delay' => $delay
+                'delay' => $delay,
             ]);
 
             return $response->withJson([], 429);
@@ -420,6 +431,7 @@ class AccountController extends SimpleController
      * Route: /account/logout
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -445,6 +457,7 @@ class AccountController extends SimpleController
      * Route: /account/forgot-password
      * Route Name: forgot-password
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -458,9 +471,9 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/forgot-password.html.twig', [
             'page' => [
                 'validators' => [
-                    'forgot_password'    => $validator->rules('json', false)
-                ]
-            ]
+                    'forgot_password'    => $validator->rules('json', false),
+                ],
+            ],
         ]);
     }
 
@@ -475,9 +488,11 @@ class AccountController extends SimpleController
      * Route: /account/register
      * Route Name: register
      * Request type: GET
-     * @param  Request           $request
-     * @param  Response          $response
-     * @param  array             $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException If site registration is disabled
      */
     public function pageRegister(Request $request, Response $response, $args)
@@ -509,16 +524,26 @@ class AccountController extends SimpleController
         // Get locale information
         $currentLocales = $localePathBuilder->getLocales();
 
+        // Hide the locale field if there is only 1 locale available
+        $fields = [
+            'hidden'   => [],
+            'disabled' => [],
+        ];
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $fields['hidden'][] = 'locale';
+        }
+
         return $this->ci->view->render($response, 'pages/register.html.twig', [
             'page' => [
                 'validators' => [
-                    'register' => $validatorRegister->rules('json', false)
-                ]
+                    'register' => $validatorRegister->rules('json', false),
+                ],
             ],
+            'fields'  => $fields,
             'locales' => [
                 'available' => $config['site.locales.available'],
-                'current'   => end($currentLocales)
-            ]
+                'current'   => end($currentLocales),
+            ],
         ]);
     }
 
@@ -532,6 +557,7 @@ class AccountController extends SimpleController
      * Route: /account/resend-verification
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -545,9 +571,9 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/resend-verification.html.twig', [
             'page' => [
                 'validators' => [
-                    'resend_verification'    => $validator->rules('json', false)
-                ]
-            ]
+                    'resend_verification'    => $validator->rules('json', false),
+                ],
+            ],
         ]);
     }
 
@@ -560,6 +586,7 @@ class AccountController extends SimpleController
      * Route: /account/set-password/confirm
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -576,8 +603,8 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
             'page' => [
                 'validators' => [
-                    'set_password'    => $validator->rules('json', false)
-                ]
+                    'set_password'    => $validator->rules('json', false),
+                ],
             ],
             'token' => isset($params['token']) ? $params['token'] : '',
         ]);
@@ -593,6 +620,7 @@ class AccountController extends SimpleController
      * Route:
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -609,8 +637,8 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/set-password.html.twig', [
             'page' => [
                 'validators' => [
-                    'set_password'    => $validator->rules('json', false)
-                ]
+                    'set_password'    => $validator->rules('json', false),
+                ],
             ],
             'token' => isset($params['token']) ? $params['token'] : '',
         ]);
@@ -627,9 +655,11 @@ class AccountController extends SimpleController
      * Route: /account/settings
      * Route Name: {none}
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageSettings(Request $request, Response $response, $args)
@@ -658,15 +688,25 @@ class AccountController extends SimpleController
         // Get a list of all locales
         $locales = $config->getDefined('site.locales.available');
 
+        // Hide the locale field if there is only 1 locale available
+        $fields = [
+            'hidden'   => [],
+            'disabled' => [],
+        ];
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $fields['hidden'][] = 'locale';
+        }
+
         return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
             'locales' => $locales,
+            'fields'  => $fields,
             'page'    => [
                 'validators' => [
                     'account_settings'    => $validatorAccountSettings->rules('json', false),
-                    'profile_settings'    => $validatorProfileSettings->rules('json', false)
+                    'profile_settings'    => $validatorProfileSettings->rules('json', false),
                 ],
-                'visibility' => ($authorizer->checkAccess($currentUser, 'update_account_settings') ? '' : 'disabled')
-            ]
+                'visibility' => ($authorizer->checkAccess($currentUser, 'update_account_settings') ? '' : 'disabled'),
+            ],
         ]);
     }
 
@@ -681,6 +721,7 @@ class AccountController extends SimpleController
      * Route: /account/sign-in
      * Route Name: login
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -707,9 +748,9 @@ class AccountController extends SimpleController
         return $this->ci->view->render($response, 'pages/sign-in.html.twig', [
             'page' => [
                 'validators' => [
-                    'login'    => $validatorLogin->rules('json', false)
-                ]
-            ]
+                    'login'    => $validatorLogin->rules('json', false),
+                ],
+            ],
         ]);
     }
 
@@ -725,6 +766,7 @@ class AccountController extends SimpleController
      * Route: /account/settings/profile
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -766,6 +808,11 @@ class AccountController extends SimpleController
 
         $error = false;
 
+        // Ensure that in the case of using a single locale, that the locale is set
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $data['locale'] = $currentUser->locale;
+        }
+
         // Validate, and halt on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
@@ -775,7 +822,7 @@ class AccountController extends SimpleController
 
         // Check that locale is valid
         $locales = $config->getDefined('site.locales.available');
-        if (!array_key_exists($data['locale'], $locales)) {
+        if (isset($data['locale']) && !array_key_exists($data['locale'], $locales)) {
             $ms->addMessageTranslated('danger', 'LOCALE.INVALID', $data);
             $error = true;
         }
@@ -792,7 +839,7 @@ class AccountController extends SimpleController
 
         // Create activity record
         $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated their profile settings.", [
-            'type' => 'update_profile_settings'
+            'type' => 'update_profile_settings',
         ]);
 
         $ms->addMessageTranslated('success', 'PROFILE.UPDATED');
@@ -820,9 +867,11 @@ class AccountController extends SimpleController
      * Route: /account/register
      * Route Name: {none}
      * Request type: POST
-     * @param  Request                $request
-     * @param  Response               $response
-     * @param  array                  $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws SpammyRequestException
      */
     public function register(Request $request, Response $response, $args)
@@ -877,6 +926,11 @@ class AccountController extends SimpleController
 
         $error = false;
 
+        // Ensure that in the case of using a single locale, that the locale is set
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $data['locale'] = $config['site.registration.user_defaults.locale'];
+        }
+
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
@@ -896,7 +950,7 @@ class AccountController extends SimpleController
         // Check captcha, if required
         if ($config['site.registration.captcha']) {
             $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
-            if (!$data['captcha'] || !$captcha->verifyCode($data['captcha'])) {
+            if (!isset($data['captcha']) || !$captcha->verifyCode($data['captcha'])) {
                 $ms->addMessageTranslated('danger', 'CAPTCHA.FAIL');
                 $error = true;
             }
@@ -943,6 +997,7 @@ class AccountController extends SimpleController
      * Route: /account/resend-verification
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -982,7 +1037,7 @@ class AccountController extends SimpleController
         $throttler = $this->ci->throttler;
 
         $throttleData = [
-            'email' => $data['email']
+            'email' => $data['email'],
         ];
         $delay = $throttler->getDelay('verification_request', $throttleData);
 
@@ -1015,7 +1070,7 @@ class AccountController extends SimpleController
                         ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                         ->addParams([
                             'user'  => $user,
-                            'token' => $verification->getToken()
+                            'token' => $verification->getToken(),
                         ]);
 
                 $this->ci->mailer->send($message);
@@ -1041,6 +1096,7 @@ class AccountController extends SimpleController
      * Route: /account/set-password
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1078,7 +1134,7 @@ class AccountController extends SimpleController
 
         // Ok, try to complete the request with the specified token and new password
         $passwordReset = $this->ci->repoPasswordReset->complete($data['token'], [
-            'password' => $data['password']
+            'password' => $data['password'],
         ]);
 
         if (!$passwordReset) {
@@ -1119,6 +1175,7 @@ class AccountController extends SimpleController
      * Route: /account/settings
      * Route Name: settings
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1159,6 +1216,11 @@ class AccountController extends SimpleController
         $data = $transformer->transform($params);
 
         $error = false;
+
+        // Ensure that in the case of using a single locale, that the locale is set
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $data['locale'] = $currentUser->locale;
+        }
 
         // Validate, and halt on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
@@ -1203,7 +1265,7 @@ class AccountController extends SimpleController
 
         // Create activity record
         $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated their account settings.", [
-            'type' => 'update_account_settings'
+            'type' => 'update_account_settings',
         ]);
 
         $ms->addMessageTranslated('success', 'ACCOUNT.SETTINGS.UPDATED');
@@ -1215,12 +1277,14 @@ class AccountController extends SimpleController
      * Suggest an available username for a specified first/last name.
      *
      * This route is "public access".
+     *
      * @todo Can this route be abused for account enumeration?  If so we should throttle it as well.
      *
      * AuthGuard: false
      * Route: /account/suggest-username
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1238,7 +1302,7 @@ class AccountController extends SimpleController
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
         return $response->withJson([
-            'user_name' => $suggestion
+            'user_name' => $suggestion,
         ], 200, JSON_PRETTY_PRINT);
     }
 
@@ -1254,6 +1318,7 @@ class AccountController extends SimpleController
      * Route: /account/verify
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args

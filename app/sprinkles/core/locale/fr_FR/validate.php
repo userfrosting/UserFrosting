@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -28,7 +29,7 @@ return [
         'SPRUNJE'       => [
             'BAD_FILTER' => '<strong>{{name}}</strong> ne peut pas être utilisé pour filtrer ce Sprunje.',
             'BAD_LIST'   => '<strong>{{name}}</strong> is not a valid list for this Sprunje.',
-            'BAD_SORT'   => '<strong>{{name}}</strong> ne peut pas être utilisé pour trier Sprunje.'
-        ]
-    ]
+            'BAD_SORT'   => '<strong>{{name}}</strong> ne peut pas être utilisé pour trier Sprunje.',
+        ],
+    ],
 ];

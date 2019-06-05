@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,8 +10,8 @@
 
 namespace UserFrosting\Sprinkle\Core\Log;
 
-use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Logger;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -23,7 +24,7 @@ return [
         '@TRANSLATION' => 'Captcha',
         'FAIL'         => 'Captcha errato',
         'SPECIFY'      => 'Inserisci il captcha',
-        'VERIFY'       => 'Verifica captcha'
+        'VERIFY'       => 'Verifica captcha',
     ],
 
     'CSRF_MISSING' => 'Token CSRF mancante. Prova ad aggiornare la pagina e poi invia nuovamente la richiesta.',
@@ -32,23 +33,23 @@ return [
     'DESCRIPTION'   => 'Descrizione',
     'DOWNLOAD'      => [
         '@TRANSLATION' => 'Scarica',
-        'CSV'          => 'Scarica CSV'
+        'CSV'          => 'Scarica CSV',
     ],
 
     'EMAIL' => [
         '@TRANSLATION' => 'Email',
-        'YOUR'         => 'La tua email'
+        'YOUR'         => 'La tua email',
     ],
 
     'HOME'  => 'Home',
 
     'LEGAL' => [
         '@TRANSLATION' => 'Politica legale',
-        'DESCRIPTION'  => 'La nostra politica legale si applica al tuo utilizzo di questo sito e dei nostri servizi.'
+        'DESCRIPTION'  => 'La nostra politica legale si applica al tuo utilizzo di questo sito e dei nostri servizi.',
     ],
 
     'LOCALE' => [
-        '@TRANSLATION' => 'Lingua'
+        '@TRANSLATION' => 'Lingua',
     ],
 
     'NAME'       => 'Nome',
@@ -66,11 +67,11 @@ return [
         'NEXT'     => 'Pagina successiva',
         'PREVIOUS' => 'Pagina precedente',
         'FIRST'    => 'Prima pagina',
-        'LAST'     => 'Ultima pagina'
+        'LAST'     => 'Ultima pagina',
     ],
     'PRIVACY' => [
         '@TRANSLATION' => 'Politica sulla riservatezza',
-        'DESCRIPTION'  => 'La nostra politica sulla privacy descrive quali tipi di informazioni raccoglieremo da te e come le useremo.'
+        'DESCRIPTION'  => 'La nostra politica sulla privacy descrive quali tipi di informazioni raccoglieremo da te e come le useremo.',
     ],
 
     'SLUG'           => 'Slug',
@@ -120,5 +121,5 @@ return [
     // Misc.
     'BUILT_WITH_UF'     => 'Construito con <a href="http://www.userfrosting.com">UserFrosting</a>',
     'ADMINLTE_THEME_BY' => 'Tema di <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> Tutti i diritti riservati',
-    'WELCOME_TO'        => 'Benvenuto su {{title}}!'
+    'WELCOME_TO'        => 'Benvenuto su {{title}}!',
 ];

@@ -17,7 +17,7 @@ slug:
       message: VALIDATE.LENGTH_RANGE
   transformations:
   - trim
-description: 
+description:
 permissions:
   validators:
     array:

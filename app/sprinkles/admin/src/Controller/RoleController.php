@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,10 +13,10 @@ namespace UserFrosting\Sprinkle\Admin\Controller;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -39,10 +40,13 @@ class RoleController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: POST
+     *
      * @see getModalCreateRole
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function create(Request $request, Response $response, $args)
@@ -113,7 +117,7 @@ class RoleController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} created role {$role->name}.", [
                 'type'    => 'role_create',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
 
             $ms->addMessageTranslated('success', 'ROLE.CREATION_SUCCESSFUL', $data);
@@ -134,9 +138,11 @@ class RoleController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: DELETE
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If role is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -158,7 +164,7 @@ class RoleController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_role', [
-            'role' => $role
+            'role' => $role,
         ])) {
             throw new ForbiddenException();
         }
@@ -173,6 +179,7 @@ class RoleController extends SimpleController
         if (in_array($role->slug, $defaultRoleSlugs)) {
             $e = new BadRequestException();
             $e->addUserMessage('ROLE.DELETE_DEFAULT');
+
             throw $e;
         }
 
@@ -181,6 +188,7 @@ class RoleController extends SimpleController
         if ($countUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('ROLE.HAS_USERS');
+
             throw $e;
         }
 
@@ -194,7 +202,7 @@ class RoleController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted role {$roleName}.", [
                 'type'    => 'role_delete',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
@@ -202,7 +210,7 @@ class RoleController extends SimpleController
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'ROLE.DELETION_SUCCESSFUL', [
-            'name' => $roleName
+            'name' => $roleName,
         ]);
 
         return $response->withJson([], 200);
@@ -214,9 +222,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      * @throws NotFoundException  If role is not found
      */
@@ -254,15 +264,17 @@ class RoleController extends SimpleController
     }
 
     /**
-     * Returns a list of Roles
+     * Returns a list of Roles.
      *
      * Generates a list of roles, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getList(Request $request, Response $response, $args)
@@ -292,11 +304,12 @@ class RoleController extends SimpleController
     }
 
     /**
-     * Display deletion confirmation modal
+     * Display deletion confirmation modal.
      *
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If role is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -321,7 +334,7 @@ class RoleController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_role', [
-            'role' => $role
+            'role' => $role,
         ])) {
             throw new ForbiddenException();
         }
@@ -336,6 +349,7 @@ class RoleController extends SimpleController
         if (in_array($role->slug, $defaultRoleSlugs)) {
             $e = new BadRequestException();
             $e->addUserMessage('ROLE.DELETE_DEFAULT', $role->toArray());
+
             throw $e;
         }
 
@@ -344,6 +358,7 @@ class RoleController extends SimpleController
         if ($countUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('ROLE.HAS_USERS', $role->toArray());
+
             throw $e;
         }
 
@@ -351,7 +366,7 @@ class RoleController extends SimpleController
             'role' => $role,
             'form' => [
                 'action' => "api/roles/r/{$role->slug}",
-            ]
+            ],
         ]);
     }
 
@@ -362,9 +377,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getModalCreate(Request $request, Response $response, $args)
@@ -395,7 +412,7 @@ class RoleController extends SimpleController
         $fieldNames = ['name', 'slug', 'description'];
         $fields = [
             'hidden'   => [],
-            'disabled' => []
+            'disabled' => [],
         ];
 
         // Load validation rules
@@ -408,11 +425,11 @@ class RoleController extends SimpleController
                 'action'      => 'api/roles',
                 'method'      => 'POST',
                 'fields'      => $fields,
-                'submit_text' => $translator->translate('CREATE')
+                'submit_text' => $translator->translate('CREATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -423,9 +440,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -457,7 +476,7 @@ class RoleController extends SimpleController
         $fieldNames = ['name', 'slug', 'description'];
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
             'role' => $role,
-            'fields' => $fieldNames
+            'fields' => $fieldNames,
         ])) {
             throw new ForbiddenException();
         }
@@ -465,7 +484,7 @@ class RoleController extends SimpleController
         // Generate form
         $fields = [
             'hidden'   => [],
-            'disabled' => []
+            'disabled' => [],
         ];
 
         // Load validation rules
@@ -478,11 +497,11 @@ class RoleController extends SimpleController
                 'action'      => "api/roles/r/{$role->slug}",
                 'method'      => 'PUT',
                 'fields'      => $fields,
-                'submit_text' => $translator->translate('UPDATE')
+                'submit_text' => $translator->translate('UPDATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -493,9 +512,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -520,13 +541,13 @@ class RoleController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit "permissions" field for this role
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
             'role' => $role,
-            'fields' => ['permissions']
+            'fields' => ['permissions'],
         ])) {
             throw new ForbiddenException();
         }
 
         return $this->ci->view->render($response, 'modals/role-manage-permissions.html.twig', [
-            'role' => $role
+            'role' => $role,
         ]);
     }
 
@@ -537,9 +558,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -564,7 +587,7 @@ class RoleController extends SimpleController
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
             'role' => $role,
-            'property' => 'permissions'
+            'property' => 'permissions',
         ])) {
             throw new ForbiddenException();
         }
@@ -588,9 +611,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -618,7 +643,7 @@ class RoleController extends SimpleController
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
             'role' => $role,
-            'property' => 'users'
+            'property' => 'users',
         ])) {
             throw new ForbiddenException();
         }
@@ -642,9 +667,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageInfo(Request $request, Response $response, $args)
@@ -664,7 +691,7 @@ class RoleController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_role', [
-                'role' => $role
+                'role' => $role,
             ])) {
             throw new ForbiddenException();
         }
@@ -674,13 +701,13 @@ class RoleController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         foreach ($fieldNames as $field) {
             if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
                 'role' => $role,
-                'property' => $field
+                'property' => $field,
             ])) {
                 $fields['hidden'][] = $field;
             }
@@ -688,27 +715,27 @@ class RoleController extends SimpleController
 
         // Determine buttons to display
         $editButtons = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
             'role' => $role,
-            'fields' => ['name', 'slug', 'description']
+            'fields' => ['name', 'slug', 'description'],
         ])) {
             $editButtons['hidden'][] = 'edit';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'delete_role', [
-            'role' => $role
+            'role' => $role,
         ])) {
             $editButtons['hidden'][] = 'delete';
         }
 
         return $this->ci->view->render($response, 'pages/role.html.twig', [
-            'role'   => $role,
-            'fields' => $fields,
-            'tools'  => $editButtons,
-            'delete_redirect' => $this->ci->router->pathFor('uri_roles')
+            'role'            => $role,
+            'fields'          => $fields,
+            'tools'           => $editButtons,
+            'delete_redirect' => $this->ci->router->pathFor('uri_roles'),
         ]);
     }
 
@@ -720,9 +747,11 @@ class RoleController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageList(Request $request, Response $response, $args)
@@ -751,10 +780,13 @@ class RoleController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      *
      * Request type: PUT
+     *
      * @see getModalRoleEdit
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException  If role is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
@@ -807,7 +839,7 @@ class RoleController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this role
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
             'role' => $role,
-            'fields' => array_values(array_unique($fieldNames))
+            'fields' => array_values(array_unique($fieldNames)),
         ])) {
             throw new ForbiddenException();
         }
@@ -852,12 +884,12 @@ class RoleController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated details for role {$role->name}.", [
                 'type'    => 'role_update_info',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
         $ms->addMessageTranslated('success', 'ROLE.UPDATED', [
-            'name' => $role->name
+            'name' => $role->name,
         ]);
 
         return $response->withJson([], 200);
@@ -872,9 +904,11 @@ class RoleController extends SimpleController
      * This route requires authentication.
      *
      * Request type: PUT
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException   If role is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
@@ -900,7 +934,7 @@ class RoleController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit the specified field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
             'role' => $role,
-            'fields' => [$fieldName]
+            'fields' => [$fieldName],
         ])) {
             throw new ForbiddenException();
         }
@@ -916,7 +950,7 @@ class RoleController extends SimpleController
         }
 
         $params = [
-            $fieldName => $put['value']
+            $fieldName => $put['value'],
         ];
 
         // Validate key -> value pair
@@ -938,6 +972,7 @@ class RoleController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
@@ -960,18 +995,18 @@ class RoleController extends SimpleController
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for role {$role->name}.", [
                 'type'    => 'role_update_field',
-                'user_id' => $currentUser->id
+                'user_id' => $currentUser->id,
             ]);
         });
 
         // Add success messages
         if ($fieldName == 'permissions') {
             $ms->addMessageTranslated('success', 'ROLE.PERMISSIONS_UPDATED', [
-                'name' => $role->name
+                'name' => $role->name,
             ]);
         } else {
             $ms->addMessageTranslated('success', 'ROLE.UPDATED', [
-                'name' => $role->name
+                'name' => $role->name,
             ]);
         }
 
@@ -979,10 +1014,12 @@ class RoleController extends SimpleController
     }
 
     /**
-     * Get role instance from params
+     * Get role instance from params.
      *
-     * @param  array               $params
+     * @param array $params
+     *
      * @throws BadRequestException
+     *
      * @return Role
      */
     protected function getRoleFromParams($params)
@@ -1004,6 +1041,7 @@ class RoleController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
