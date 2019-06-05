@@ -96,7 +96,7 @@ return [
     * Account Site Settings
     * ----------------------------------------------------------------------
     * "Site" settings that are automatically passed to Twig. Use theses
-    * settings to control the login, password (re)set and registration 
+    * settings to control the login, password (re)set and registration
     * processes
     */
     'site' => [
@@ -119,8 +119,8 @@ return [
         'password' => [
             'length' => [
                 'min' => 8,
-                'max' => 25
-            ]
+                'max' => 25,
+            ],
         ],
     ],
 

@@ -778,10 +778,10 @@ class UserController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/user/edit-password.yaml');
-        $schema->set("value.validators.length.min", $config['site.password.length.min']);
-        $schema->set("value.validators.length.max", $config['site.password.length.max']);
-        $schema->set("passwordc.validators.length.min", $config['site.password.length.min']);
-        $schema->set("passwordc.validators.length.max", $config['site.password.length.max']);
+        $schema->set('value.validators.length.min', $config['site.password.length.min']);
+        $schema->set('value.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'modals/user-set-password.html.twig', [
@@ -1314,8 +1314,8 @@ class UserController extends SimpleController
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/user/edit-field.yaml');
-        $schema->set("password.validators.length.min", $config['site.password.length.min']);
-        $schema->set("password.validators.length.max", $config['site.password.length.max']);
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
