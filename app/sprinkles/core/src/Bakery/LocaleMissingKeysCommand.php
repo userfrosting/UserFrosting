@@ -18,6 +18,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\System\Bakery\BaseCommand;
 
+/**
+ * locale:missing-keys command.
+ * Find missing keys in locale translation files.
+ *
+ * @author Amos Folz
+ */
 class LocaleMissingKeysCommand extends BaseCommand
 {
     protected $missing = [];
@@ -110,11 +116,13 @@ class LocaleMissingKeysCommand extends BaseCommand
      */
     private function compareFiles($baseLocale, $altLocale, $filenames)
     {
-        foreach ($filenames as $sprinkle => $files) {
+        foreach ($filenames as $sprinklePath => $files) {
             foreach ($files as $key => $file) {
-                $base = $this->getFile($this->ci->locator->getResource("locale://{$baseLocale}/{$file}"));
-                $alt = $this->getFile($this->ci->locator->getResource("locale://{$altLocale}/{$file}"));
-                $difference[$sprinkle . '/locale' . '/' . $altLocale . '/' . $file] = $this->getDifference($base, $alt);
+                $base = $this->getFile("$sprinklePath/locale/{$baseLocale}/{$file}");
+                $alt = $this->getFile("$sprinklePath/locale/{$altLocale}/{$file}");
+                //  print_r($this->ci->locator->getResource("locale://{$altLocale}/{$file}"));
+
+                $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->getDifference($base, $alt);
             }
         }
 
@@ -128,6 +136,8 @@ class LocaleMissingKeysCommand extends BaseCommand
      */
     private function getFile($path)
     {
+        print_r($path . "\r\n");
+
         return include "$path";
     }
 
@@ -141,8 +151,10 @@ class LocaleMissingKeysCommand extends BaseCommand
     {
         $file = ($this->ci->locator->listResources("locale://{$locale}", true));
         foreach ($file as $filename => $path) {
-            $files[$path->getLocation()->getName()][] = $path->getBaseName();
+            $files[$path->getLocation()->getPath()][] = $path->getBaseName();
+            //  print_r($path->getLocation()->getPath());
         }
+        //  print_r($files);
 
         return $files;
     }
