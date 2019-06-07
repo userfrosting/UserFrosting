@@ -26,34 +26,49 @@ use UserFrosting\System\Bakery\BaseCommand;
  */
 class LocaleMissingKeysCommand extends BaseCommand
 {
-    protected $missing = [];
-
-    protected $table = [];
-
+    /**
+     * @var string
+     */
     protected $auxLocale;
 
+    /**
+     * @var string
+     */
+    protected static $path;
+
+    /**
+     * @var array
+     */
+    protected static $table = [];
+
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this->setName('locale:missing-keys')
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale to compare against.', 'en_US')
         ->addOption('compare', 'c', InputOption::VALUE_REQUIRED, 'A optional second locale to compare against', null);
 
-        $this->setDescription('Identify missing locale keys through comparison.');
+        $this->setDescription('Generate a table of missing locale keys.');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->$table = new Table($output);
 
-        // The locale that other locales are compared to. Defaults to en_US if not set.
+        // The "base" locale to compare other locales against. Defaults to en_US if not set.
         $baseLocale = $input->getOption('base');
 
+        // Option -c. Set to only compare two locales.
         $this->auxLocale = $input->getOption('compare');
-        //print_r($this->auxLocale = $input->getOption('compare'));
 
         $baseLocaleFileNames = $this->getBaseFileNames($baseLocale);
 
-        $localesAvailable = $this->getAvailableLocales();
+        $localesAvailable = $this->getLocales();
 
         foreach ($localesAvailable as $key => $altLocale) {
             $difference[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
@@ -62,31 +77,45 @@ class LocaleMissingKeysCommand extends BaseCommand
         $this->$table->setHeaders([new TableCell('COMPARING AGAINST: ' . $baseLocale, ['colspan' => 2])]);
         $this->$table->addRows([['FILE PATH', 'MISSING KEY'], new TableSeparator()]);
 
-        return $this->buildTable($difference);
-    }
-
-    public function buildTable($difference)
-    {
-        foreach ($difference as $key => $value) {
-            {
-              foreach ($value as $k => $v) {
-                  if (!is_array($v) && $v != '0') {
-                      $this->$table->addRow([$v]);
-                  } else {
-                      foreach ($v as $a => $b) {
-                          if (!is_array($b) && $b != '0') {
-                              $this->$table->addRow([$k, $b]);
-                          }
-                      }
-                  }
-              }
-           }
-        }
+        // Build the table.
+        $this->buildTable($difference);
 
         return $this->$table->render();
     }
 
-    public function getDifference($array1, $array2)
+    /**
+     * Populate table with file paths and missing keys.
+     *
+     * @param array $array File paths and missing keys.
+     * @param int   $level Nested array depth.
+     */
+    protected function buildTable(array $array, $level = 1)
+    {
+        foreach ($array as $key => $value) {
+            //Level 2 has the filepath.
+            if ($level == 2) {
+                // Make path easier to read by removing anything before 'app'
+                $this->path = strstr($key, 'app');
+            }
+            if (is_array($value)) {
+                //We need to loop through it.
+                $this->buildTable($value, ($level + 1));
+            } elseif ($value != '0') {
+                //It is not an array and not '0', so add the row.
+                $this->$table->addRow([$this->path, $value]);
+            }
+        }
+    }
+
+    /**
+     * Find the missing keys between two arrays.
+     *
+     * @param array $array1
+     * @param array $array2
+     *
+     * @return array [description]
+     */
+    protected function getDifference($array1, $array2)
     {
         foreach ($array1 as $key => $value) {
             if (is_array($value)) {
@@ -109,19 +138,20 @@ class LocaleMissingKeysCommand extends BaseCommand
     }
 
     /**
-     * Returns filenames and paths for a locale type.
+     * Iterate over sprinkle locale files and find the difference for two locales.
      *
-     * @param string The locale to get filenames and paths for. This should be a locale as listed in config['site']['locales']['available']
-     * @return array
+     * @param string $baseLocale Locale being compared against.
+     * @param string $altLocale  Locale to find missing keys for.
+     * @param array  $filenames  Sprinkle locale files that will be compared.
+     *
+     * @return array The keys in $baseLocale that do not exist in $altLocale.
      */
-    private function compareFiles($baseLocale, $altLocale, $filenames)
+    public function compareFiles($baseLocale, $altLocale, $filenames)
     {
         foreach ($filenames as $sprinklePath => $files) {
             foreach ($files as $key => $file) {
                 $base = $this->getFile("$sprinklePath/locale/{$baseLocale}/{$file}");
                 $alt = $this->getFile("$sprinklePath/locale/{$altLocale}/{$file}");
-                //  print_r($this->ci->locator->getResource("locale://{$altLocale}/{$file}"));
-
                 $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->getDifference($base, $alt);
             }
         }
@@ -136,31 +166,32 @@ class LocaleMissingKeysCommand extends BaseCommand
      */
     private function getFile($path)
     {
-        print_r($path . "\r\n");
-
         return include "$path";
     }
 
     /**
      * Gets all locale files for a specific locale.
      *
-     * @param  string $locale The locale to get files for.
-     * @return array  Locale files per sprinkle.
+     * @param string $locale The locale being compared against.
+     *
+     * @return array Locale files and locations for the locale being compared against.
      */
-    private function getBaseFileNames($locale)
+    public function getBaseFileNames($locale)
     {
         $file = ($this->ci->locator->listResources("locale://{$locale}", true));
         foreach ($file as $filename => $path) {
             $files[$path->getLocation()->getPath()][] = $path->getBaseName();
-            //  print_r($path->getLocation()->getPath());
         }
-        //  print_r($files);
 
         return $files;
     }
 
-    private function getAvailableLocales()
+    /**
+     * @return array Locales to check for missing keys.
+     */
+    public function getLocales()
     {
+        // If set, use the locale from the -c option.
         if ($this->auxLocale) {
             return [$this->auxLocale];
         } else {
