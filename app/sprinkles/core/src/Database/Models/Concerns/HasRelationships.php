@@ -172,13 +172,13 @@ trait HasRelationships
      * Define a unique many-to-many relationship.  Similar to a regular many-to-many relationship, but removes duplicate child objects.
      * Can also be used to implement ternary relationships.
      *
-     * @param  string  $related
-     * @param  string  $table
-     * @param  string  $foreignPivotKey
-     * @param  string  $relatedPivotKey
-     * @param  string  $parentKey
-     * @param  string  $relatedKey
-     * @param  string  $relation
+     * @param string $related
+     * @param string $table
+     * @param string $foreignPivotKey
+     * @param string $relatedPivotKey
+     * @param string $parentKey
+     * @param string $relatedKey
+     * @param string $relation
      *
      * @return BelongsToManyUnique
      */
@@ -222,14 +222,14 @@ trait HasRelationships
     /**
      * Define a unique morphs-to-many relationship.  Similar to a regular morphs-to-many relationship, but removes duplicate child objects.
      *
-     * @param  string  $related
-     * @param  string  $name
-     * @param  string  $table
-     * @param  string  $foreignPivotKey
-     * @param  string  $relatedPivotKey
-     * @param  string  $parentKey
-     * @param  string  $relatedKey
-     * @param  bool  $inverse
+     * @param string $related
+     * @param string $name
+     * @param string $table
+     * @param string $foreignPivotKey
+     * @param string $relatedPivotKey
+     * @param string $parentKey
+     * @param string $relatedKey
+     * @param bool   $inverse
      *
      * @return MorphToManyUnique
      */
@@ -242,19 +242,19 @@ trait HasRelationships
         // instances, as well as the relationship instances we need for these.
         $instance = $this->newRelatedInstance($related);
 
-        $foreignPivotKey = $foreignPivotKey ?: $name.'_id';
+        $foreignPivotKey = $foreignPivotKey ?: $name . '_id';
 
         $relatedPivotKey = $relatedPivotKey ?: $instance->getForeignKey();
 
         // Now we're ready to create a new query builder for this related model and
         // the relationship instances for this relation. This relations will set
         // appropriate query constraints then entirely manages the hydrations.
-        if (! $table) {
+        if (!$table) {
             $words = preg_split('/(_)/u', $name, -1, PREG_SPLIT_DELIM_CAPTURE);
 
             $lastWord = array_pop($words);
 
-            $table = implode('', $words).Str::plural($lastWord);
+            $table = implode('', $words) . Str::plural($lastWord);
         }
 
         return new MorphToManyUnique(
