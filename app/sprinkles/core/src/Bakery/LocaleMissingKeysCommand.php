@@ -66,7 +66,7 @@ class LocaleMissingKeysCommand extends BaseCommand
         // Option -c. Set to only compare two locales.
         $this->auxLocale = $input->getOption('compare');
 
-        $baseLocaleFileNames = $this->getBaseFileNames($baseLocale);
+        $baseLocaleFileNames = $this->getFilenames($baseLocale);
 
         $localesAvailable = $this->getLocales();
 
@@ -94,8 +94,8 @@ class LocaleMissingKeysCommand extends BaseCommand
         foreach ($array as $key => $value) {
             //Level 2 has the filepath.
             if ($level == 2) {
-                // Make path easier to read by removing anything before 'app'
-                $this->path = strstr($key, 'app');
+                // Make path easier to read by removing anything before 'sprinkles'
+                $this->path = strstr($key, 'sprinkles');
             }
             if (is_array($value)) {
                 //We need to loop through it.
@@ -150,8 +150,8 @@ class LocaleMissingKeysCommand extends BaseCommand
     {
         foreach ($filenames as $sprinklePath => $files) {
             foreach ($files as $key => $file) {
-                $base = $this->getFile("$sprinklePath/locale/{$baseLocale}/{$file}");
-                $alt = $this->getFile("$sprinklePath/locale/{$altLocale}/{$file}");
+                $base = $this->useFile("$sprinklePath/locale/{$baseLocale}/{$file}");
+                $alt = $this->useFile("$sprinklePath/locale/{$altLocale}/{$file}");
                 $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->getDifference($base, $alt);
             }
         }
@@ -164,7 +164,7 @@ class LocaleMissingKeysCommand extends BaseCommand
      *
      * @param string $path The path of file to be included.
      */
-    private function getFile($path)
+    protected function useFile($path)
     {
         return include "$path";
     }
@@ -176,7 +176,7 @@ class LocaleMissingKeysCommand extends BaseCommand
      *
      * @return array Locale files and locations for the locale being compared against.
      */
-    public function getBaseFileNames($locale)
+    public function getFilenames($locale)
     {
         $file = ($this->ci->locator->listResources("locale://{$locale}", true));
         foreach ($file as $filename => $path) {
