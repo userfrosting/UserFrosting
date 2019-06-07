@@ -92,10 +92,10 @@ trait HasRelationships
      * @param string $related
      * @param string $through
      * @param string $firstJoiningTable
-     * @param string $firstForeignKey
+     * @param string $firstForeignPivotKey
      * @param string $firstRelatedKey
      * @param string $secondJoiningTable
-     * @param string $secondForeignKey
+     * @param string $secondForeignPivotKey
      * @param string $secondRelatedKey
      * @param string $throughRelation
      * @param string $relation
@@ -106,10 +106,10 @@ trait HasRelationships
         $related,
         $through,
         $firstJoiningTable = null,
-        $firstForeignKey = null,
+        $firstForeignPivotKey = null,
         $firstRelatedKey = null,
         $secondJoiningTable = null,
-        $secondForeignKey = null,
+        $secondForeignPivotKey = null,
         $secondRelatedKey = null,
         $throughRelation = null,
         $relation = null
@@ -123,7 +123,11 @@ trait HasRelationships
 
         // Create models for through and related
         $through = new $through();
-        $related = $this->newRelatedInstance($related);
+
+        // First, we'll need to determine the foreign key and "other key" for the
+        // relationship. Once we have determined the keys we'll make the query
+        // instances as well as the relationship instances we need for this.
+        $instance = $this->newRelatedInstance($related);
 
         if (is_null($throughRelation)) {
             $throughRelation = $through->getTable();
@@ -137,26 +141,28 @@ trait HasRelationships
         }
 
         if (is_null($secondJoiningTable)) {
-            $secondJoiningTable = $through->joiningTable($related);
+            $secondJoiningTable = $through->joiningTable($instance);
         }
 
-        $firstForeignKey = $firstForeignKey ?: $this->getForeignKey();
+        $firstForeignPivotKey = $firstForeignPivotKey ?: $this->getForeignKey();
         $firstRelatedKey = $firstRelatedKey ?: $through->getForeignKey();
-        $secondForeignKey = $secondForeignKey ?: $through->getForeignKey();
-        $secondRelatedKey = $secondRelatedKey ?: $related->getForeignKey();
+        $secondForeignPivotKey = $secondForeignPivotKey ?: $through->getForeignKey();
+        $secondRelatedKey = $secondRelatedKey ?: $instance->getForeignKey();
 
         // This relationship maps the top model (this) to the through model.
-        $intermediateRelationship = $this->belongsToMany($through, $firstJoiningTable, $firstForeignKey, $firstRelatedKey, $throughRelation)
-            ->withPivot($firstForeignKey);
+        $intermediateRelationship = $this->belongsToMany($through, $firstJoiningTable, $firstForeignPivotKey, $firstRelatedKey, $throughRelation)
+            ->withPivot($firstForeignPivotKey);
 
         // Now we set up the relationship with the related model.
         $query = new BelongsToManyThrough(
-            $related->newQuery(),
+            $instance->newQuery(),
             $this,
             $intermediateRelationship,
             $secondJoiningTable,
-            $secondForeignKey,
+            $secondForeignPivotKey,
             $secondRelatedKey,
+            $this->getKeyName(),
+            $instance->getKeyName(),
             $relation
         );
 

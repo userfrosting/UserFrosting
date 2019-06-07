@@ -576,6 +576,7 @@ class DatabaseTests extends TestCase
         $user->roles()->attach([1, 2]);
 
         // Test retrieval of via models as well
+        // This user won't have `uri_royal_jelly` slug
         $this->assertEquals([
             [
                 'id'    => 1,
