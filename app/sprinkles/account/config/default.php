@@ -79,13 +79,13 @@ return [
     * your browser will send your (super secret) cookies to host20.vps.blah.com.
     *
     * You only want to turn this on if you want machine1.foo.com to receive the
-    * cookies that THIS MACHINE (machine2.foo.com) set. 
+    * cookies that THIS MACHINE (machine2.foo.com) set.
     */
     'remember_me' => [
         'cookie' => [
             'name' => 'rememberme',
         ],
-        'domain' => null,
+        'domain'      => null,
         'expire_time' => 604800,
         'session'     => [
             'path' => '/',
