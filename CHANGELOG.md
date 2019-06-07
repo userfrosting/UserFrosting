@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Account sprinkle now extend the Core `BakeCommand` class to add the `create-admin` to the general bake command. Any sprinkle already extending the Core `BakeCommand` might need adjustments.
 
+### Removed
+- Removed `belongsToManyConstrained` (deprecated in 4.1.6)
 
 ## [v4.2.2]
 

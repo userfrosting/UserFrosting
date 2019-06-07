@@ -12,7 +12,6 @@ namespace UserFrosting\Sprinkle\Core\Database\Models\Concerns;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyConstrained;
 use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
 use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyUnique;
 use UserFrosting\Sprinkle\Core\Database\Relations\HasManySyncable;
@@ -262,58 +261,6 @@ trait HasRelationships
             $instance->newQuery(), $this, $name, $table,
             $foreignPivotKey, $relatedPivotKey, $parentKey ?: $this->getKeyName(),
             $relatedKey ?: $instance->getKeyName(), $caller, $inverse
-        );
-    }
-
-    /**
-     * Define a constrained many-to-many relationship.
-     * This is similar to a regular many-to-many, but constrains the child results to match an additional constraint key in the parent object.
-     * This has been superseded by the belongsToManyUnique relationship's `withTernary` method since 4.1.7.
-     *
-     * @deprecated since 4.1.6
-     *
-     * @param string $related
-     * @param string $constraintKey
-     * @param string $table
-     * @param string $foreignKey
-     * @param string $relatedKey
-     * @param string $relation
-     *
-     * @return BelongsToManyConstrained
-     */
-    public function belongsToManyConstrained($related, $constraintKey, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
-    {
-        // If no relationship name was passed, we will pull backtraces to get the
-        // name of the calling function. We will use that function name as the
-        // title of this relation since that is a great convention to apply.
-        if (is_null($relation)) {
-            $relation = $this->guessBelongsToManyRelation();
-        }
-
-        // First, we'll need to determine the foreign key and "other key" for the
-        // relationship. Once we have determined the keys we'll make the query
-        // instances as well as the relationship instances we need for this.
-        $instance = $this->newRelatedInstance($related);
-
-        $foreignKey = $foreignKey ?: $this->getForeignKey();
-
-        $relatedKey = $relatedKey ?: $instance->getForeignKey();
-
-        // If no table name was provided, we can guess it by concatenating the two
-        // models using underscores in alphabetical order. The two model names
-        // are transformed to snake case from their default CamelCase also.
-        if (is_null($table)) {
-            $table = $this->joiningTable($related);
-        }
-
-        return new BelongsToManyConstrained(
-            $instance->newQuery(),
-            $this,
-            $constraintKey,
-            $table,
-            $foreignKey,
-            $relatedKey,
-            $relation
         );
     }
 
