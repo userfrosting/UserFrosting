@@ -167,15 +167,17 @@ trait HasRelationships
      * Define a unique many-to-many relationship.  Similar to a regular many-to-many relationship, but removes duplicate child objects.
      * Can also be used to implement ternary relationships.
      *
-     * @param string $related
-     * @param string $table
-     * @param string $foreignKey
-     * @param string $relatedKey
-     * @param string $relation
+     * @param  string  $related
+     * @param  string  $table
+     * @param  string  $foreignPivotKey
+     * @param  string  $relatedPivotKey
+     * @param  string  $parentKey
+     * @param  string  $relatedKey
+     * @param  string  $relation
      *
      * @return BelongsToManyUnique
      */
-    public function belongsToManyUnique($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
+    public function belongsToManyUnique($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null, $parentKey = null, $relatedKey = null, $relation = null)
     {
         // If no relationship name was passed, we will pull backtraces to get the
         // name of the calling function. We will use that function name as the
@@ -189,23 +191,25 @@ trait HasRelationships
         // instances as well as the relationship instances we need for this.
         $instance = $this->newRelatedInstance($related);
 
-        $foreignKey = $foreignKey ?: $this->getForeignKey();
+        $foreignPivotKey = $foreignPivotKey ?: $this->getForeignKey();
 
-        $relatedKey = $relatedKey ?: $instance->getForeignKey();
+        $relatedPivotKey = $relatedPivotKey ?: $instance->getForeignKey();
 
         // If no table name was provided, we can guess it by concatenating the two
         // models using underscores in alphabetical order. The two model names
         // are transformed to snake case from their default CamelCase also.
         if (is_null($table)) {
-            $table = $this->joiningTable($related);
+            $table = $this->joiningTable($related, $instance);
         }
 
         return new BelongsToManyUnique(
             $instance->newQuery(),
             $this,
             $table,
-            $foreignKey,
-            $relatedKey,
+            $foreignPivotKey,
+            $relatedPivotKey,
+            $parentKey ?: $this->getKeyName(),
+            $relatedKey ?: $instance->getKeyName(),
             $relation
         );
     }
