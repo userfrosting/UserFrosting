@@ -46,6 +46,8 @@ class LocaleMissingValuesCommand extends BaseCommand
     /**
      * {@inheritdoc}
      */
+    protected $array = [];
+
     protected function configure()
     {
         $this->setName('locale:missing-values')
@@ -78,13 +80,13 @@ class LocaleMissingValuesCommand extends BaseCommand
 
         $this->table->setHeaders([new TableCell('COMPARING AGAINST: ' . $baseLocale, ['colspan' => 3])]);
         $this->table->addRows([['FILE PATH', 'KEY MISSING VALUE', "$baseLocale VALUE"], new TableSeparator()]);
-
+        print_r($this->$array);
 //        print_r($difference);
 
         // Build the table.
-        $this->buildTable($difference);
+        $this->buildTable($this->$array);
 
-        //    return $this->table->render();
+        return $this->table->render();
     }
 
     /**
@@ -141,8 +143,9 @@ class LocaleMissingValuesCommand extends BaseCommand
         return !isset($difference) ? 0 : $difference;
     }
 
-    private function getEmptyValues($alt)
+    public function getEmptyValues($alt)
     {
+        $test = [];
         foreach ($alt as $key => $value) {
             if (is_array($value)) {
                 //We need to loop through it.
@@ -153,14 +156,12 @@ class LocaleMissingValuesCommand extends BaseCommand
                 $value = trim($value);
             }
             if (isset($value) && $value == '') {
-                //    $baseTranslation = $this->getBaseTranslation($this->testBase, $key);
-                echo "#2 The key is $key and the value is $value \r\n\r\n";
-                $test[$key] = $key;
+                $baseTranslation = $this->getBaseTranslation($this->testBase, $key);
+                $this->$array[$this->$path][$key] = $baseTranslation;
             }
         }
-        //    print_r($test);
 
-        return $test;
+        //    print_r('Printing test' . $test);
     }
 
     private function getBaseTranslation(array $haystack, $needle)
@@ -192,13 +193,12 @@ class LocaleMissingValuesCommand extends BaseCommand
             foreach ($files as $key => $file) {
                 $this->testBase = $this->getFile("$sprinklePath/locale/{$baseLocale}/{$file}");
                 $alt = $this->getFile("$sprinklePath/locale/{$altLocale}/{$file}");
-
-                $missing[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->getEmptyValues($alt);
-                print_r($missing);
+                $this->path = "$sprinklePath/locale/$altLocale/$file";
+                //  $missing[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->getEmptyValues($alt);
+                $this->getEmptyValues($alt);
+                //    print_r($missing);
             }
         }
-
-        return $missing;
     }
 
     /**
