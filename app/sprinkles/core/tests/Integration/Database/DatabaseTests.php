@@ -350,6 +350,7 @@ class DatabaseTests extends TestCase
                 'pivot' => [
                     'assignable_id' => 1,
                     'task_id'       => 2,
+                    'assignable_type' => EloquentTestUser::class,
                 ],
                 'locations' => [
                     [
@@ -376,6 +377,7 @@ class DatabaseTests extends TestCase
                 'pivot' => [
                     'assignable_id' => 1,
                     'task_id'       => 3,
+                    'assignable_type' => EloquentTestUser::class,
                 ],
                 'locations' => [
                     [
