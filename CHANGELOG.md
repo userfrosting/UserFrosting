@@ -764,7 +764,10 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
 [#981]: https://github.com/userfrosting/UserFrosting/issues/981
 [#983]: https://github.com/userfrosting/UserFrosting/issues/983
+[#990]: https://github.com/userfrosting/UserFrosting/issues/990
+[#991]: https://github.com/userfrosting/UserFrosting/issues/991
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
 [v4.2.2]: https://github.com/userfrosting/UserFrosting/compare/v.4.2.1...v4.2.2
+[v4.2.3]: https://github.com/userfrosting/UserFrosting/compare/v4.2.2...v4.2.3
