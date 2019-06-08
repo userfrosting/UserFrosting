@@ -18,7 +18,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
- * @see https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/MorphToMany.php
+ * @see https://github.com/laravel/framework/blob/5.8/src/Illuminate/Database/Eloquent/Relations/MorphToMany.php
  */
 class MorphToManyUnique extends MorphToMany
 {
