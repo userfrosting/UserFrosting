@@ -47,8 +47,7 @@ class GroupControllerGuestTest extends TestCase
             // Setup database, then setup User & default role
             $this->refreshDatabase();
             $this->setupUser();
-
-        } else if (!static::$initialized) {
+        } elseif (!static::$initialized) {
 
             // Only refresh db once
             $this->refreshDatabase();
@@ -56,8 +55,6 @@ class GroupControllerGuestTest extends TestCase
         }
     }
 
-    /**
-     */
     public function testControllerConstructor()
     {
         $controller = $this->getController();
@@ -82,7 +79,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testGetInfo_GuestUser(GroupController $controller)
     {
@@ -93,7 +90,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testGetInfo_ForbiddenException(GroupController $controller)
     {
@@ -108,7 +105,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testGetListWithNoPermission(GroupController $controller)
     {
@@ -127,7 +124,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testGetUsersWithNoPermission(GroupController $controller)
     {
@@ -150,7 +147,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testpageInfoWithNoPermission(GroupController $controller)
     {
@@ -173,7 +170,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testpageInfoWithPartialPermissions(GroupController $controller)
     {
@@ -200,7 +197,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testpageListWithNoPermission(GroupController $controller)
     {
@@ -219,7 +216,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testCreateWithNoPermission(GroupController $controller)
     {
@@ -239,7 +236,7 @@ class GroupControllerGuestTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @todo test individual permission with the delete_group permission too
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testDeleteWithNoPermission(GroupController $controller)
     {
@@ -262,7 +259,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testGetModalConfirmDeleteWithNoPermission(GroupController $controller)
     {
@@ -277,7 +274,7 @@ class GroupControllerGuestTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'slug' => $group->slug
+            'slug' => $group->slug,
         ]);
 
         // Set expectations
@@ -289,7 +286,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testGetModalCreateWithNoPermission(GroupController $controller)
     {
@@ -308,7 +305,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testGetModalEditWithNoPermission(GroupController $controller)
     {
@@ -323,7 +320,7 @@ class GroupControllerGuestTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'slug' => $group->slug
+            'slug' => $group->slug,
         ]);
 
         // Set expectations
@@ -335,7 +332,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testUpdateInfoWithNoPermission(GroupController $controller)
     {
@@ -353,7 +350,7 @@ class GroupControllerGuestTest extends TestCase
         $data = [
             'name' => 'foo',
             'slug' => 'foo',
-            'icon' => 'foo'
+            'icon' => 'foo',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -366,7 +363,7 @@ class GroupControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  GroupController $controller
+     * @param GroupController $controller
      */
     public function testUpdateInfoWithNoGroup(GroupController $controller)
     {
@@ -383,7 +380,6 @@ class GroupControllerGuestTest extends TestCase
         $controller->updateInfo($this->getRequest(), $this->getResponse(), ['slug' => 'blah']);
     }
 
-
     /**
      * @return GroupController
      */
@@ -392,8 +388,6 @@ class GroupControllerGuestTest extends TestCase
         return new GroupController($this->ci);
     }
 
-    /**
-     */
     private function setupUser()
     {
         // Guest user, won't have any access
@@ -403,7 +397,7 @@ class GroupControllerGuestTest extends TestCase
         $fm = $this->ci->factory;
         $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
             'slug' => 'foo',
-            'name' => 'bar'
+            'name' => 'bar',
         ]);
     }
 }
