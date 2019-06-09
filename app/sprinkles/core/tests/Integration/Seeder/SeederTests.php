@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -70,18 +71,18 @@ class DatabaseTests extends TestCase
             [
                 'name'     => 'Seed1',
                 'class'    => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',
-                'sprinkle' => 'Core'
+                'sprinkle' => 'Core',
             ],
             [
                 'name'     => 'Seed2',
                 'class'    => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed2',
-                'sprinkle' => 'Core'
+                'sprinkle' => 'Core',
             ],
             [
                 'name'     => 'Test/Seed',
                 'class'    => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Test\\Seed',
-                'sprinkle' => 'Core'
-            ]
+                'sprinkle' => 'Core',
+            ],
         ], $seeds);
     }
 
@@ -96,7 +97,7 @@ class DatabaseTests extends TestCase
         $this->assertEquals([
             'name'     => 'Seed1',
             'class'    => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',
-            'sprinkle' => 'Core'
+            'sprinkle' => 'Core',
         ], $seed);
     }
 

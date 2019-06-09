@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,15 +10,15 @@
 
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Support\DotenvEditor\DotenvEditor;
 use UserFrosting\System\Bakery\BaseCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Setup wizard CLI Tools.
- * Helper command to setup the 'UF_MODE' var of the .env file
+ * Helper command to setup the 'UF_MODE' var of the .env file.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -26,7 +27,7 @@ class SetupEnvCommand extends BaseCommand
     /**
      * @var string Path to the .env file
      */
-    protected $envPath = \UserFrosting\APP_DIR. '/.env';
+    protected $envPath = \UserFrosting\APP_DIR . '/.env';
 
     /**
      * @var string Key for the env mode setting
@@ -70,10 +71,11 @@ class SetupEnvCommand extends BaseCommand
     }
 
     /**
-     * Ask for env mode
+     * Ask for env mode.
      *
-     * @param  InputInterface $args Command arguments
-     * @return string         The new env mode
+     * @param InputInterface $args Command arguments
+     *
+     * @return string The new env mode
      */
     protected function askForEnv(InputInterface $args)
     {
@@ -85,7 +87,7 @@ class SetupEnvCommand extends BaseCommand
                 'default',
                 'production',
                 'debug',
-                'Other...'
+                'Other...',
             ], 'default');
         }
 

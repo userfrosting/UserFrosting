@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -21,6 +22,6 @@ return [
         'LENGTH_RANGE'  => 'ความยาวของ {{label}} จะต้องอยู่ระหว่าง {{min}} ถึง {{max}} ตัวอักษร',
         'NO_LEAD_WS'    => 'ค่าของ <strong>{{label}}</strong> ไม่สามารถเริ่มต้นด้วยช่องว่าง หรือ แท็บ',
         'NO_TRAIL_WS'   => 'ค่าของ  <strong>{{label}}</strong> ไม่สามารถลงท้ายด้วยช่องว่าง หรือ แท็บ',
-        'REQUIRED'      => 'กรุณากำหนดค่าของ <strong>{{label}}</strong>'
-    ]
+        'REQUIRED'      => 'กรุณากำหนดค่าของ <strong>{{label}}</strong>',
+    ],
 ];

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -14,7 +15,7 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
  * Throttles table migration
- * Version 4.0.0
+ * Version 4.0.0.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */

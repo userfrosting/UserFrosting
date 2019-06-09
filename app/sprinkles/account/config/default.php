@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -33,7 +34,7 @@ return [
     * to log. This can help debugging your permissions and roles
     */
     'debug' => [
-        'auth' => false
+        'auth' => false,
     ],
 
     /*
@@ -45,8 +46,8 @@ return [
         'algorithm'  => 'sha512',
         'timeouts'   => [
             'create' => 86400,
-            'reset'  => 10800
-        ]
+            'reset'  => 10800,
+        ],
     ],
 
     /*
@@ -57,12 +58,12 @@ return [
     */
     'remember_me' => [
         'cookie' => [
-            'name' => 'rememberme'
+            'name' => 'rememberme',
         ],
         'expire_time' => 604800,
         'session'     => [
-            'path' => '/'
-        ]
+            'path' => '/',
+        ],
     ],
 
     /*
@@ -74,7 +75,7 @@ return [
     */
     'reserved_user_ids' => [
         'guest'  => -1,
-        'master' => 1
+        'master' => 1,
     ],
 
     /*
@@ -86,8 +87,8 @@ return [
     'session' => [
         'keys' => [
             'current_user_id'  => 'account.current_user_id',    // the key to use for storing the authenticated user's id
-            'captcha'          => 'account.captcha'             // Key used to store a captcha hash during captcha verification
-        ]
+            'captcha'          => 'account.captcha',             // Key used to store a captcha hash during captcha verification
+        ],
     ],
 
     /*
@@ -99,7 +100,7 @@ return [
     */
     'site' => [
         'login' => [
-            'enable_email' => true // Set to false to allow login by username only
+            'enable_email' => true, // Set to false to allow login by username only
         ],
         'registration' => [
             'enabled'                    => true, //if this set to false, you probably want to also set require_email_verification to false as well to disable the link on the signup page
@@ -110,10 +111,10 @@ return [
                 'locale' => 'en_US',
                 'group'  => 'terran',
                 'roles'  => [
-                    'user' => true
-                ]
-            ]
-        ]
+                    'user' => true,
+                ],
+            ],
+        ],
     ],
 
     /*
@@ -129,7 +130,7 @@ return [
         'password_reset_request' => null,
         'registration_attempt'   => null,
         'sign_in_attempt'        => null,
-        'verification_request'   => null
+        'verification_request'   => null,
     ],
 
     /*
@@ -139,6 +140,6 @@ return [
     */
     'verification' => [
         'algorithm' => 'sha512',
-        'timeout'   => 10800
-    ]
+        'timeout'   => 10800,
+    ],
 ];

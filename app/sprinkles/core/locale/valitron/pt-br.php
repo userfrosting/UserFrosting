@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -31,5 +32,5 @@ return [
     'dateFormat'    => "deve ser uma data no formato '%s'",
     'dateBefore'    => "deve ser uma data anterior a '%s'",
     'dateAfter'     => "deve ser uma data posterior a '%s'",
-    'contains'      => 'deve conter %s'
+    'contains'      => 'deve conter %s',
 ];

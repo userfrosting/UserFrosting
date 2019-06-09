@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -36,5 +37,5 @@ return [
     'lengthBetween' => 'は%d〜%d文字で入力してください',
     'creditCard'    => 'はクレジットカード番号の書式として正しくありません',
     'lengthMin'     => 'は%d文字以上入力してください',
-    'lengthMax'     => 'は%d文字以内で入力してください'
+    'lengthMax'     => 'は%d文字以内で入力してください',
 ];

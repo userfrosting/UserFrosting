@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -11,14 +12,13 @@ namespace UserFrosting\Sprinkle\Core\Alert;
 
 use Illuminate\Cache\Repository as Cache;
 use UserFrosting\I18n\MessageTranslator;
-use UserFrosting\Support\Repository\Repository;
 
 /**
  * CacheAlertStream Class
  * Implements a message stream for use between HTTP requests, with i18n
  * support via the MessageTranslator class using the cache system to store
  * the alerts. Note that the tags are added each time instead of the
- * constructor since the session_id can change when the user logs in or out
+ * constructor since the session_id can change when the user logs in or out.
  *
  * @author Louis Charette
  */
@@ -30,9 +30,9 @@ class CacheAlertStream extends AlertStream
     protected $cache;
 
     /**
-     * @var Repository Object We use the cache object so that added messages will automatically appear in the cache.
+     * @var string Session id tied to the alert stream
      */
-    protected $config;
+    protected $session_id;
 
     /**
      * Create a new message stream.
@@ -40,12 +40,12 @@ class CacheAlertStream extends AlertStream
      * @param string                 $messagesKey Store the messages under this key
      * @param MessageTranslator|null $translator
      * @param Cache                  $cache
-     * @param Repository             $config
+     * @param string                 $sessionId
      */
-    public function __construct($messagesKey, MessageTranslator $translator = null, Cache $cache, Repository $config)
+    public function __construct($messagesKey, MessageTranslator $translator = null, Cache $cache, $sessionId)
     {
         $this->cache = $cache;
-        $this->config = $config;
+        $this->session_id = $sessionId;
         parent::__construct($messagesKey, $translator);
     }
 
@@ -56,8 +56,8 @@ class CacheAlertStream extends AlertStream
      */
     public function messages()
     {
-        if ($this->cache->tags('_s'.session_id())->has($this->messagesKey)) {
-            return $this->cache->tags('_s'.session_id())->get($this->messagesKey) ?: [];
+        if ($this->getCache()->has($this->messagesKey)) {
+            return $this->getCache()->get($this->messagesKey) ?: [];
         } else {
             return [];
         }
@@ -68,16 +68,24 @@ class CacheAlertStream extends AlertStream
      */
     public function resetMessageStream()
     {
-        $this->cache->tags('_s'.session_id())->forget($this->messagesKey);
+        $this->getCache()->forget($this->messagesKey);
     }
 
     /**
-     * Save messages to the stream
+     * Save messages to the stream.
      *
-     * @param string $messages The message
+     * @param array $messages The message
      */
-    protected function saveMessages($messages)
+    protected function saveMessages(array $messages)
     {
-        $this->cache->tags('_s'.session_id())->forever($this->messagesKey, $messages);
+        $this->getCache()->forever($this->messagesKey, $messages);
+    }
+
+    /**
+     * @return \Illuminate\Cache\TaggedCache
+     */
+    protected function getCache()
+    {
+        return $this->cache->tags('_s' . $this->session_id);
     }
 }

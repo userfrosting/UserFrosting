@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,17 +10,17 @@
 
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
+use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\ConfirmableTrait;
+use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * seed Bakery Command
- * Perform a database seed
+ * Perform a database seed.
  *
  * @author Louis Charette
  */
@@ -28,7 +29,7 @@ class SeedCommand extends BaseCommand
     use ConfirmableTrait;
 
     /**
-     * @var Seeder $seeder
+     * @var Seeder
      */
     protected $seeder;
 
@@ -72,7 +73,7 @@ class SeedCommand extends BaseCommand
             }
 
             // Display the class we are going to use as info
-            $this->io->writeln('<info>Seeding database using class `'.get_class($seedClass).'`</>');
+            $this->io->writeln('<info>Seeding database using class `' . get_class($seedClass) . '`</>');
 
             // Add seed class to list
             $seeds[] = $seedClass;

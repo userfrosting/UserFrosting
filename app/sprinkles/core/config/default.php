@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -25,8 +26,8 @@ return [
        'address_book' => [
             'admin' => [
                 'email' => getenv('SMTP_USER') ?: null,
-                'name'  => 'Site Administrator'
-            ]
+                'name'  => 'Site Administrator',
+            ],
         ],
 
         /*
@@ -51,13 +52,13 @@ return [
         'assets' => [
             'compiled' => [
                 'path'   => 'assets',
-                'schema' => 'bundle.result.json'
+                'schema' => 'bundle.result.json',
             ],
             'raw' => [
                 'path'   => 'assets-raw',
-                'schema' => 'asset-bundles.json'
+                'schema' => 'asset-bundles.json',
             ],
-            'use_raw'  => true
+            'use_raw'  => true,
         ],
 
         /*
@@ -76,16 +77,16 @@ return [
             'memcached'  => [
                 'host'   => '127.0.0.1',
                 'port'   => 11211,
-                'weight' => 100
+                'weight' => 100,
             ],
             'redis' => [
                 'host'     => '127.0.0.1',
                 'password' => null,
                 'port'     => 6379,
-                'database' => 0
+                'database' => 0,
             ],
             // Cache twig file to disk
-            'twig' => false
+            'twig' => false,
         ],
 
         /*
@@ -108,7 +109,7 @@ return [
                 // Regular expressions will be delimited with ~ in preg_match, so if you
                 // have routes with ~ in them, you must escape this character in your regex.
                 // Also, remember to use ^ when you only want to match the beginning of a URL path!
-            ]
+            ],
         ],
 
         /*
@@ -131,8 +132,8 @@ return [
                 'password'  => getenv('DB_PASSWORD') ?: null,
                 'charset'   => 'utf8',
                 'collation' => 'utf8_unicode_ci',
-                'prefix'    => ''
-            ]
+                'prefix'    => '',
+            ],
         ],
 
         /*
@@ -145,7 +146,7 @@ return [
             'deprecation'   => true,
             'queries'       => false,
             'smtp'          => false,
-            'twig'          => false
+            'twig'          => false,
         ],
 
         /*
@@ -171,7 +172,7 @@ return [
                  */
                 'local' => [
                     'driver' => 'local',
-                    'root'   => \UserFrosting\STORAGE_DIR
+                    'root'   => \UserFrosting\STORAGE_DIR,
                 ],
                 /*
                 * Public files are directly accessible throught the webserver for
@@ -182,7 +183,7 @@ return [
                 'public' => [
                     'driver' => 'local',
                     'root'   => \UserFrosting\STORAGE_PUBLIC_DIR,
-                    'url'    => 'files/'
+                    'url'    => 'files/',
                 ],
                 /*
                  * Amazon S3 Bucket Config. Config should go in .env file. For help, see :
@@ -217,8 +218,8 @@ return [
             'message_options' => [
                 'CharSet'   => 'UTF-8',
                 'isHtml'    => true,
-                'Timeout'   => 15
-            ]
+                'Timeout'   => 15,
+            ],
         ],
 
         /*
@@ -228,7 +229,7 @@ return [
         * `repository_table` is the table with the list of ran migrations
         */
         'migrations' => [
-            'repository_table' => 'migrations'
+            'repository_table' => 'migrations',
         ],
 
         /*
@@ -238,7 +239,7 @@ return [
         */
         'path'    => [
             'document_root'     => str_replace(DIRECTORY_SEPARATOR, \UserFrosting\DS, $_SERVER['DOCUMENT_ROOT']),
-            'public_relative'   => dirname($_SERVER['SCRIPT_NAME']) // The location of `index.php` relative to the document root.  Use for sites installed in subdirectories of your web server's document root.
+            'public_relative'   => dirname($_SERVER['SCRIPT_NAME']), // The location of `index.php` relative to the document root.  Use for sites installed in subdirectories of your web server's document root.
         ],
 
         /*
@@ -252,7 +253,7 @@ return [
             'handler'       => 'file', // Supported Handler : `file`, `database` or `array`
             // Config values for when using db-based sessions
             'database'      => [
-                'table' => 'sessions'
+                'table' => 'sessions',
             ],
             'name'          => 'uf4',
             'minutes'       => 120,
@@ -260,7 +261,7 @@ return [
             // Decouples the session keys used to store certain session info
             'keys' => [
                 'csrf'    => 'site.csrf', // the key (prefix) used to store an ArrayObject of CSRF tokens.
-            ]
+            ],
         ],
 
         /*
@@ -271,7 +272,7 @@ return [
         * Set `displayErrorDetails` to true to display full error details
         */
         'settings' => [
-            'displayErrorDetails' => true
+            'displayErrorDetails' => true,
         ],
 
         /*
@@ -284,20 +285,20 @@ return [
             // AdminLTE skin color
             // See https://adminlte.io/themes/AdminLTE/documentation/index.html#layout
             'AdminLTE' => [
-                'skin' => 'blue'
+                'skin' => 'blue',
             ],
             // Google Analytics Settings
             'analytics' => [
                 'google' => [
                     'code'    => '',
-                    'enabled' => false
-                ]
+                    'enabled' => false,
+                ],
             ],
             'author'    => 'Author', // Site author
             'csrf'      => null,      // Do not set this variable. The core Twig extension will override it with values from the CSRF service.
             'debug'     => [
                 'ajax' => false,
-                'info' => true
+                'info' => true,
             ],
             'locales' => [
                 // Should be ordered according to https://en.wikipedia.org/wiki/List_of_languages_by_total_number_of_speakers,
@@ -323,12 +324,12 @@ return [
                 // First locale is the base one and the other one are loaded on top.
                 // For example, 'en_US,es_ES' will use the English (en_US)
                 // translation as a base and load the Spanish (es_ES) translation on top.
-                'default' => 'en_US'
+                'default' => 'en_US',
             ],
             'title' => 'UserFrosting', // Site display name
             // Global ufTable settings
             'uf_table' => [
-                'use_loading_transition' => true
+                'use_loading_transition' => true,
             ],
             // URLs
             'uri' => [
@@ -337,11 +338,11 @@ return [
                     'host'      => isset($_SERVER['SERVER_NAME']) ? trim($_SERVER['SERVER_NAME'], '/') : 'localhost',
                     'scheme'    => empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off' ? 'http' : 'https',
                     'port'      => isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : null,
-                    'path'      => isset($_SERVER['SCRIPT_NAME']) ? trim(dirname($_SERVER['SCRIPT_NAME']), '/\\') : ''
+                    'path'      => isset($_SERVER['SCRIPT_NAME']) ? trim(dirname($_SERVER['SCRIPT_NAME']), '/\\') : '',
                 ],
                 'author'    => 'https://www.userfrosting.com',
-                'publisher' => ''
-            ]
+                'publisher' => '',
+            ],
         ],
 
         /*
@@ -355,6 +356,6 @@ return [
             'display_errors'  => 'true',
             'log_errors'      => 'false',
             // Let PHP itself render errors natively.  Useful if a fatal error is raised in our custom shutdown handler.
-            'display_errors_native' => 'false'
-        ]
+            'display_errors_native' => 'false',
+        ],
     ];

@@ -5,6 +5,8 @@ language: php
 services:
   - mysql
   - postgresql
+  - memcached
+  - redis-server
 
 php:
   - 5.6
@@ -18,11 +20,12 @@ env:
     - DB=mysql
     - DB=sqlite
     - DB=pgsql
+    - DB=memory
 
 cache:
   directories:
     - $HOME/.composer/cache
-    
+
 before_install:
   # copy sprinkles.json
   - cp app/sprinkles.example.json app/sprinkles.json
@@ -30,6 +33,9 @@ before_install:
   - bash build/before_install.sh $DB
   # update node
   - nvm install 10.12.0
+  # Install Redis and Memcached
+  - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - printf "\n" | pecl install -f redis
 
 before_script:
   # install deps and UF

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -10,14 +11,14 @@
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\ConfirmableTrait;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * migrate Bakery Command
- * Perform database migration
+ * Perform database migration.
  *
  * @author Louis Charette
  */
@@ -96,9 +97,10 @@ class MigrateCommand extends BaseCommand
     }
 
     /**
-     * Setup migrator and the shared options between other command
+     * Setup migrator and the shared options between other command.
      *
-     * @param  InputInterface                                         $input
+     * @param InputInterface $input
+     *
      * @return \UserFrosting\Sprinkle\Core\Database\Migrator\Migrator The migrator instance
      */
     protected function setupMigrator(InputInterface $input)

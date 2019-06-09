@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -41,7 +42,7 @@ class ServicesProvider
      */
     public function register(ContainerInterface $container)
     {
-        /**
+        /*
          * Extend the asset manager service to see assets for the current user's theme.
          *
          * @return \UserFrosting\Assets\Assets
@@ -54,7 +55,7 @@ class ServicesProvider
             return $assets;
         });
 
-        /**
+        /*
          * Extend the 'classMapper' service to register model classes.
          *
          * Mappings added: User, Group, Role, Permission, Activity, PasswordReset, Verification
@@ -74,7 +75,7 @@ class ServicesProvider
             return $classMapper;
         });
 
-        /**
+        /*
          * Extends the 'errorHandler' service with custom exception handlers.
          *
          * Custom handlers added: ForbiddenExceptionHandler
@@ -92,7 +93,7 @@ class ServicesProvider
             return $handler;
         });
 
-        /**
+        /*
          * Extends the 'localePathBuilder' service, adding any locale files from the user theme.
          *
          * @return \UserFrosting\I18n\LocalePathBuilder
@@ -116,7 +117,7 @@ class ServicesProvider
             return $pathBuilder;
         });
 
-        /**
+        /*
          * Extends the 'view' service with the AccountExtension for Twig.
          *
          * Adds account-specific functions, globals, filters, etc to Twig, and the path to templates for the user theme.
@@ -152,7 +153,7 @@ class ServicesProvider
             return $view;
         });
 
-        /**
+        /*
          * Authentication service.
          *
          * Supports logging in users, remembering their sessions, etc.
@@ -173,7 +174,7 @@ class ServicesProvider
             return $authenticator;
         };
 
-        /**
+        /*
          * Sets up the AuthGuard middleware, used to limit access to authenticated users for certain routes.
          *
          * @return \UserFrosting\Sprinkle\Account\Authenticate\AuthGuard
@@ -184,7 +185,7 @@ class ServicesProvider
             return new AuthGuard($authenticator);
         };
 
-        /**
+        /*
          * Authorization check logging with Monolog.
          *
          * Extend this service to push additional handlers onto the 'auth' log stack.
@@ -206,7 +207,7 @@ class ServicesProvider
             return $logger;
         };
 
-        /**
+        /*
          * Authorization service.
          *
          * Determines permissions for user actions.  Extend this service to add additional access condition callbacks.
@@ -218,7 +219,7 @@ class ServicesProvider
 
             // Default access condition callbacks.  Add more in your sprinkle by using $container->extend(...)
             $callbacks = [
-                /**
+                /*
                  * Unconditionally grant permission - use carefully!
                  * @return bool returns true no matter what.
                  */
@@ -226,7 +227,7 @@ class ServicesProvider
                     return true;
                 },
 
-                /**
+                /*
                  * Check if the specified values are identical to one another (strict comparison).
                  * @param  mixed $val1 the first value to compare.
                  * @param  mixed $val2 the second value to compare.
@@ -236,7 +237,7 @@ class ServicesProvider
                     return $val1 === $val2;
                 },
 
-                /**
+                /*
                  * Check if the specified values are numeric, and if so, if they are equal to each other.
                  * @param  mixed $val1 the first value to compare.
                  * @param  mixed $val2 the second value to compare.
@@ -253,7 +254,7 @@ class ServicesProvider
                     return $val1 == $val2;
                 },
 
-                /**
+                /*
                  * Check if the specified user (by user_id) has a particular role.
                  *
                  * @param  int  $user_id the id of the user.
@@ -267,7 +268,7 @@ class ServicesProvider
                         ->count() > 0;
                 },
 
-                /**
+                /*
                  * Check if the specified value $needle is in the values of $haystack.
                  *
                  * @param  mixed        $needle   the value to look for in $haystack
@@ -278,7 +279,7 @@ class ServicesProvider
                     return in_array($needle, $haystack);
                 },
 
-                /**
+                /*
                  * Check if the specified user (by user_id) is in a particular group.
                  *
                  * @param  int  $user_id  the id of the user.
@@ -291,7 +292,7 @@ class ServicesProvider
                     return $user->group_id == $group_id;
                 },
 
-                /**
+                /*
                  * Check if the specified user (by user_id) is the master user.
                  *
                  * @param  int  $user_id the id of the user.
@@ -302,7 +303,7 @@ class ServicesProvider
                     return $user_id == $config['reserved_user_ids.master'];
                 },
 
-                /**
+                /*
                  * Check if all values in the array $needle are present in the values of $haystack.
                  *
                  * @param  array[mixed] $needle   the array whose values we should look for in $haystack
@@ -313,7 +314,7 @@ class ServicesProvider
                     return count($needle) == count(array_intersect($needle, $haystack));
                 },
 
-                /**
+                /*
                  * Check if all keys of the array $needle are present in the values of $haystack.
                  *
                  * This function is useful for whitelisting an array of key-value parameters.
@@ -323,7 +324,7 @@ class ServicesProvider
                  */
                 'subset_keys' => function ($needle, $haystack) {
                     return count($needle) == count(array_intersect(array_keys($needle), $haystack));
-                }
+                },
             ];
 
             $authorizer = new AuthorizationManager($c, $callbacks);
@@ -331,7 +332,7 @@ class ServicesProvider
             return $authorizer;
         };
 
-        /**
+        /*
          * Loads the User object for the currently logged-in user.
          *
          * @return \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface
@@ -348,7 +349,7 @@ class ServicesProvider
             return $currentUser;
         };
 
-        /**
+        /*
          * Password Hasher service
          *
          * @return \UserFrosting\Sprinkle\Account\Authenticate\Hasher
@@ -359,13 +360,13 @@ class ServicesProvider
             return $hasher;
         };
 
-        /**
+        /*
          * Returns a callback that forwards to dashboard if user is already logged in.
          *
          * @return callable
          */
         $container['redirect.onAlreadyLoggedIn'] = function ($c) {
-            /**
+            /*
              * This method is invoked when a user attempts to perform certain public actions when they are already logged in.
              *
              * @todo Forward to user's landing page or last visited page
@@ -381,13 +382,13 @@ class ServicesProvider
             };
         };
 
-        /**
+        /*
          * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
          *
          * @return callable
          */
         $container['redirect.onLogin'] = function ($c) {
-            /**
+            /*
              * This method is invoked when a user completes the login process.
              *
              * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
@@ -417,7 +418,7 @@ class ServicesProvider
             };
         };
 
-        /**
+        /*
          * Repository for password reset requests.
          *
          * @return \UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository
@@ -431,7 +432,7 @@ class ServicesProvider
             return $repo;
         };
 
-        /**
+        /*
          * Repository for verification requests.
          *
          * @return \UserFrosting\Sprinkle\Account\Repository\VerificationRepository
@@ -445,7 +446,7 @@ class ServicesProvider
             return $repo;
         };
 
-        /**
+        /*
          * Logger for logging the current user's activities to the database.
          *
          * Extend this service to push additional handlers onto the 'userActivity' log stack.
