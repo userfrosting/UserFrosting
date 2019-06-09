@@ -84,6 +84,27 @@ class LocaleMissingKeysCommand extends BaseCommand
     }
 
     /**
+     * Flattens a nested array into dot syntax.
+     *
+     * @param array $array The array to flatten.
+     *
+     * @return array Keys with missing values.
+     */
+    private function arrayFlatten($array, $prefix = '')
+    {
+        $result = [];
+        foreach ($array as $key=>$value) {
+            if (is_array($value)) {
+                $result = $result + $this->arrayFlatten($value, $prefix . $key . '.');
+            } else {
+                $result[$prefix . $key] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Populate table with file paths and missing keys.
      *
      * @param array $array File paths and missing keys.
@@ -91,6 +112,7 @@ class LocaleMissingKeysCommand extends BaseCommand
      */
     protected function buildTable(array $array, $level = 1)
     {
+        print_r($array);
         foreach ($array as $key => $value) {
             //Level 2 has the filepath.
             if ($level == 2) {
@@ -102,7 +124,7 @@ class LocaleMissingKeysCommand extends BaseCommand
                 $this->buildTable($value, ($level + 1));
             } elseif ($value != '0') {
                 //It is not an array and not '0', so add the row.
-                $this->$table->addRow([$this->path, $value]);
+                $this->$table->addRow([$this->path, $key]);
             }
         }
     }
@@ -113,7 +135,7 @@ class LocaleMissingKeysCommand extends BaseCommand
      * @param array $array1
      * @param array $array2
      *
-     * @return array [description]
+     * @return array
      */
     protected function getDifference($array1, $array2)
     {
@@ -133,6 +155,7 @@ class LocaleMissingKeysCommand extends BaseCommand
                 $difference[$key] = $key;
             }
         }
+        print_r($difference);
 
         return !isset($difference) ? 0 : $difference;
     }
@@ -152,7 +175,8 @@ class LocaleMissingKeysCommand extends BaseCommand
             foreach ($files as $key => $file) {
                 $base = $this->useFile("$sprinklePath/locale/{$baseLocale}/{$file}");
                 $alt = $this->useFile("$sprinklePath/locale/{$altLocale}/{$file}");
-                $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->getDifference($base, $alt);
+                $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->arrayFlatten($this->getDifference($base, $alt));
+                print_r($this->arrayFlatten($this->getDifference($base, $alt)));
             }
         }
 

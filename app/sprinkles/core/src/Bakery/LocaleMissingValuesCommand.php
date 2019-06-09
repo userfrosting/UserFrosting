@@ -133,7 +133,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
     }
 
     /**
-     * Find keys with missing values.
+     * Find keys with missing values. Collapses keys into array dot syntax.
      *
      * @param array $array Locale translation file.
      *
@@ -141,6 +141,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      */
     public function findMissing($array, $prefix = '')
     {
+        print_r($array);
         $result = [];
         foreach ($array as $key=>$value) {
             if (is_array($value)) {
@@ -164,6 +165,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      */
     protected function buildTable(array $array, $level = 1)
     {
+        print_r($array);
         foreach ($array as $key => $value) {
             //Level 2 has the filepath.
             if ($level == 2) {
@@ -174,7 +176,6 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
                 //We need to loop through it.
                 $this->buildTable($value, ($level + 1));
             } else {
-                //It is not an array and not '0', so add the row.
                 $this->table->addRow([$this->path, $key, substr($this->translator->translate($key), 0, $this->maxLength)]);
             }
         }

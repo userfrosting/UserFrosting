@@ -112,15 +112,15 @@ class LocaleFixKeysCommand extends LocaleMissingValuesCommand
         //  return $this->table->render();
     }
 
-    /**
-     * Iterate over sprinkle locale files and find the difference for two locales.
-     *
-     * @param string $baseLocale Locale being compared against.
-     * @param string $altLocale  Locale to find missing keys for.
-     * @param array  $filenames  Sprinkle locale files that will be compared.
-     *
-     * @return array The keys in $baseLocale that do not exist in $altLocale.
-     */
+    private function parseArrayToBrackets($input)
+    {
+        $output = json_decode(str_replace(['(', ')'], ['&#40', '&#41'], json_encode($input)), true);
+        $output = var_export($output, true);
+        $output = str_replace(['array (', ')', '&#40', '&#41'], ['[', ']', '(', ')'], $output);
+
+        return $output;
+    }
+
     public function test()
     {
 
@@ -134,28 +134,30 @@ class LocaleFixKeysCommand extends LocaleMissingValuesCommand
         $temp = new Repository();
 
         $testA = $this->useFile('/home/vagrant/userfrosting/app/sprinkles/pastries/locale/en_US/pastries.php');
-
         $testB = $this->useFile('/home/vagrant/userfrosting/app/sprinkles/pastries/locale/es_ES/pastries.php');
 
         $temp->mergeItems(null, $testA);
         $temp->mergeItems(null, $testB);
 
-        print_r(get_class_methods($temp));
+        //  print_r(get_class_methods($temp));
 
-        $temp->all();
+        //  $temp->all();
+        $test1 = $temp->all();
+        print_r($test1);
 
-        print_r($temp->all());
+        $test1 = $this->parseArrayToBrackets($test1);
 
         //Encode the array into a JSON string.
         $encodedString = json_encode($temp->all());
 
+        passthru('cat header > test.php');
+
         //Save the JSON string to a text file.
-        file_put_contents('json_array.txt', $encodedString);
+        file_put_contents('test.php', $test1, FILE_APPEND);
 
         passthru('pwd');
 
-        passthru('cat header > test.php');
-        passthru("echo $encodedString >> test.php");
+        //  passthru("echo $encodedString >> test.php");
 
         $loader = new ArrayFileLoader($builder->buildPaths());
 
