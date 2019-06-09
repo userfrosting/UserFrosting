@@ -140,7 +140,22 @@ class LocaleFixKeysCommand extends LocaleMissingValuesCommand
         $temp->mergeItems(null, $testA);
         $temp->mergeItems(null, $testB);
 
-        print_r($temp);
+        print_r(get_class_methods($temp));
+
+        $temp->all();
+
+        print_r($temp->all());
+
+        //Encode the array into a JSON string.
+        $encodedString = json_encode($temp->all());
+
+        //Save the JSON string to a text file.
+        file_put_contents('json_array.txt', $encodedString);
+
+        passthru('pwd');
+
+        passthru('cat header > test.php');
+        passthru("echo $encodedString >> test.php");
 
         $loader = new ArrayFileLoader($builder->buildPaths());
 
