@@ -19,7 +19,7 @@
         "ext-gd": "*",
         "composer/installers": "^1.4.0",
         "userfrosting/uniformresourcelocator": "~4.2.3",
-        "symfony/console": "^3.3",
+        "symfony/console": "^4.3",
         "wikimedia/composer-merge-plugin": "^1.4.0"
     },
     "require-dev": {
