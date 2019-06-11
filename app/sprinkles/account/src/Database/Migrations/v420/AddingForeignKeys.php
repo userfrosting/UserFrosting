@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v420;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\SQLiteConnection;
 use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
@@ -71,6 +72,15 @@ class AddingForeignKeys extends Migration
      */
     public function down()
     {
+        /*
+         * sqlite can't drop foreign key wihout dropping the entire table
+         * since Laravel 5.7. Skip drop if an sqlite connection is detected
+         * @see https://github.com/laravel/framework/issues/25475
+         */
+        if ($this->schema->getConnection() instanceof SQLiteConnection) {
+            return;
+        }
+
         foreach ($this->tables as $tableName => $keys) {
             if ($this->schema->hasTable($tableName)) {
                 $this->schema->table($tableName, function (Blueprint $table) use ($keys) {

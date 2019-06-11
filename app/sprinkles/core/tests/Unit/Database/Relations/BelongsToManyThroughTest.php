@@ -76,7 +76,7 @@ class BelongsToManyThroughTest extends TestCase
         // Mock the intermediate role->permission BelongsToMany relation
         $intermediateRelationship = m::mock(BelongsToMany::class);
         $intermediateRelationship->shouldReceive('getTable')->once()->andReturn('permission_roles');
-        $intermediateRelationship->shouldReceive('getQualifiedRelatedKeyName')->once()->andReturn('permission_roles.role_id');
+        $intermediateRelationship->shouldReceive('getQualifiedRelatedPivotKeyName')->once()->andReturn('permission_roles.role_id');
         // Crazy pivot query stuff
         $newPivot = m::mock('\Illuminate\Database\Eloquent\Relations\Pivot');
         $newPivot->shouldReceive('getForeignKey')->andReturn('permission_id');
@@ -97,7 +97,8 @@ class BelongsToManyThroughTest extends TestCase
             'role_users',
             'role_id',
             'user_id',
-            'relation_name'
+            'relation_name',
+            'id'
         );
     }
 }

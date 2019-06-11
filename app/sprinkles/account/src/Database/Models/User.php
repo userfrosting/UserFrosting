@@ -75,7 +75,7 @@ class User extends Model implements UserInterface
     /**
      * A list of attributes to hide by default when using toArray() and toJson().
      *
-     * @link https://laravel.com/docs/5.4/eloquent-serialization#hiding-attributes-from-json
+     * @link https://laravel.com/docs/5.8/eloquent-serialization#hiding-attributes-from-json
      *
      * @var string[]
      */

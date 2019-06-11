@@ -50,8 +50,7 @@ class RoleControllerTest extends TestCase
             // Setup database, then setup User & default role
             $this->refreshDatabase();
             $this->setupUser();
-
-        } else if (!static::$initialized) {
+        } elseif (!static::$initialized) {
 
             // Only refresh db once
             $this->refreshDatabase();
@@ -59,8 +58,6 @@ class RoleControllerTest extends TestCase
         }
     }
 
-    /**
-     */
     public function testControllerConstructor()
     {
         $controller = $this->getController();
@@ -86,14 +83,14 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testCreate(RoleController $controller)
     {
         // Set post data
         $data = [
             'name' => 'foo',
-            'slug' => 'bar'
+            'slug' => 'bar',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -116,14 +113,14 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testCreateWithMissingName(RoleController $controller)
     {
         // Set post data
         $data = [
             'name' => '',
-            'slug' => 'foo'
+            'slug' => 'foo',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -142,14 +139,14 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testCreateWithDuplicateSlug(RoleController $controller)
     {
         // Set post data. Foo has already been set by testCreate
         $data = [
             'name' => 'bar',
-            'slug' => 'foo'
+            'slug' => 'foo',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -168,14 +165,14 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testCreateWithDuplicateName(RoleController $controller)
     {
         // Set post data. Bar has already been set by testCreate
         $data = [
             'name' => 'bar',
-            'slug' => 'foo'
+            'slug' => 'foo',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -194,7 +191,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testDelete(RoleController $controller)
     {
@@ -221,7 +218,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testDelete
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testDeleteWithNotExistingRole(RoleController $controller)
     {
@@ -235,7 +232,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testDelete
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testDeleteWithDefaultRole(RoleController $controller)
     {
@@ -249,7 +246,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testDelete
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testDeleteWithUserInRole(RoleController $controller)
     {
@@ -269,7 +266,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetInfoWithNotFoundException(RoleController $controller)
     {
@@ -279,7 +276,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetInfo(RoleController $controller)
     {
@@ -292,7 +289,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetList(RoleController $controller)
     {
@@ -304,12 +301,12 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalConfirmDelete(RoleController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo'
+            'slug' => 'foo',
         ]);
 
         // Get controller stuff
@@ -321,7 +318,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalConfirmDeleteWithNoGetData(RoleController $controller)
     {
@@ -332,12 +329,12 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalConfirmDeleteWithNonExistingRole(RoleController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foobar'
+            'slug' => 'foobar',
         ]);
 
         $this->expectException(NotFoundException::class);
@@ -347,7 +344,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalConfirmDeleteWithUserInRole(RoleController $controller)
     {
@@ -362,7 +359,7 @@ class RoleControllerTest extends TestCase
         $testUser->save();
 
         $request = $this->getRequest()->withQueryParams([
-            'slug' => $role->slug
+            'slug' => $role->slug,
         ]);
 
         $this->expectException(BadRequestException::class);
@@ -372,7 +369,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalConfirmDeleteWithDefaultRole(RoleController $controller)
     {
@@ -380,7 +377,7 @@ class RoleControllerTest extends TestCase
         $this->ci->config['site.registration.user_defaults.roles'] = ['foo' => true];
 
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo'
+            'slug' => 'foo',
         ]);
 
         // Set expectations
@@ -392,7 +389,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalCreate(RoleController $controller)
     {
@@ -403,12 +400,12 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalEdit(RoleController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo'
+            'slug' => 'foo',
         ]);
 
         // Get controller stuff
@@ -420,7 +417,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalEdit
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalEditWithNoGetData(RoleController $controller)
     {
@@ -431,12 +428,12 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalEdit
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalEditWithNonExistingRole(RoleController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foobar'
+            'slug' => 'foobar',
         ]);
 
         $this->expectException(NotFoundException::class);
@@ -445,7 +442,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetUsersWithBadSlug(RoleController $controller)
     {
@@ -455,7 +452,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetUsersWithNoSlug(RoleController $controller)
     {
@@ -465,7 +462,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetUsers(RoleController $controller)
     {
@@ -477,7 +474,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testpageInfo(RoleController $controller)
     {
@@ -488,7 +485,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testpageInfoWithBadSlug(RoleController $controller)
     {
@@ -498,7 +495,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testpageList(RoleController $controller)
     {
@@ -509,7 +506,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testUpdateInfo(RoleController $controller)
     {
@@ -523,7 +520,7 @@ class RoleControllerTest extends TestCase
         // Set post data
         $data = [
             'name' => 'foofoo',
-            'slug' => 'foofoo'
+            'slug' => 'foofoo',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -549,14 +546,14 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testUpdateInfoWithMissingName(RoleController $controller)
     {
         // Set post data
         $data = [
             'name' => '',
-            'slug' => 'foo'
+            'slug' => 'foo',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -580,14 +577,14 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testUpdateInfoWithMissingSlug(RoleController $controller)
     {
         // Set post data
         $data = [
             'name' => 'bar',
-            'slug' => ''
+            'slug' => '',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -611,7 +608,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testUpdateInfoWithDuplicateSlug(RoleController $controller)
     {
@@ -621,7 +618,7 @@ class RoleControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'slug' => $role2->slug
+            'slug' => $role2->slug,
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -641,7 +638,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testUpdateInfoWithDuplicateName(RoleController $controller)
     {
@@ -670,12 +667,12 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalEditPermissions(RoleController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo'
+            'slug' => 'foo',
         ]);
 
         // Get controller stuff
@@ -687,7 +684,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalEditPermissions
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalEditPermissionsWithNoGetData(RoleController $controller)
     {
@@ -698,12 +695,12 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalEditPermissions
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetModalEditPermissionsWithNonExistingRole(RoleController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foobar'
+            'slug' => 'foobar',
         ]);
 
         $this->expectException(NotFoundException::class);
@@ -712,7 +709,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetPermissions(RoleController $controller)
     {
@@ -725,7 +722,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetPermissions
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetPermissionsWithNoArgs(RoleController $controller)
     {
@@ -736,7 +733,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetPermissions
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testGetPermissionsWithNonExistingRole(RoleController $controller)
     {
@@ -746,7 +743,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testupdateField(RoleController $controller)
     {
@@ -759,7 +756,7 @@ class RoleControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => 'foo123'
+            'value' => 'foo123',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -784,7 +781,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testupdateFieldWithNonExistingRole(RoleController $controller)
     {
@@ -794,7 +791,7 @@ class RoleControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testupdateFieldNoValue(RoleController $controller)
     {
@@ -805,7 +802,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testupdateField
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testupdateFieldWithFailedValidation(RoleController $controller)
     {
@@ -815,7 +812,7 @@ class RoleControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => $value
+            'value' => $value,
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -827,7 +824,7 @@ class RoleControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testupdateField
-     * @param  RoleController $controller
+     * @param RoleController $controller
      */
     public function testupdateFieldWithPermissionField(RoleController $controller)
     {
@@ -841,7 +838,7 @@ class RoleControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => [['permission_id' => $permission->id]]
+            'value' => [['permission_id' => $permission->id]],
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -866,7 +863,6 @@ class RoleControllerTest extends TestCase
         $this->assertSame('success', end($messages)['type']);
     }
 
-
     /**
      * @return RoleController
      */
@@ -875,8 +871,6 @@ class RoleControllerTest extends TestCase
         return new RoleController($this->ci);
     }
 
-    /**
-     */
     private function setupUser()
     {
         // Admin user, WILL have access
@@ -886,7 +880,7 @@ class RoleControllerTest extends TestCase
         $fm = $this->ci->factory;
         $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
             'slug' => 'foo',
-            'name' => 'bar'
+            'name' => 'bar',
         ]);
     }
 }
