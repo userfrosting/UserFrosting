@@ -29,7 +29,7 @@ class LocaleMissingKeysCommand extends BaseCommand
     /**
      * @var string
      */
-    protected $auxLocale;
+    protected $locales;
 
     /**
      * @var string
@@ -48,7 +48,7 @@ class LocaleMissingKeysCommand extends BaseCommand
     {
         $this->setName('locale:missing-keys')
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale to compare against.', 'en_US')
-        ->addOption('compare', 'c', InputOption::VALUE_REQUIRED, 'A optional second locale to compare against', null);
+        ->addOption('compare', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "en_US,es_ES"', null);
 
         $this->setDescription('Generate a table of missing locale keys.');
     }
@@ -64,13 +64,13 @@ class LocaleMissingKeysCommand extends BaseCommand
         $baseLocale = $input->getOption('base');
 
         // Option -c. Set to only compare two locales.
-        $this->auxLocale = $input->getOption('compare');
+        $this->locales = $input->getOption('compare');
 
         $baseLocaleFileNames = $this->getFilenames($baseLocale);
 
-        $localesAvailable = $this->getLocales();
+        $locales = $this->getLocales();
 
-        foreach ($localesAvailable as $key => $altLocale) {
+        foreach ($locales as $key => $altLocale) {
             $difference[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
         }
 
@@ -213,8 +213,8 @@ class LocaleMissingKeysCommand extends BaseCommand
     public function getLocales()
     {
         // If set, use the locale from the -c option.
-        if ($this->auxLocale) {
-            return [$this->auxLocale];
+        if ($this->locales) {
+            $locales = explode(',', $this->locales);
         } else {
             return array_keys($this->ci->config['site']['locales']['available']);
         }

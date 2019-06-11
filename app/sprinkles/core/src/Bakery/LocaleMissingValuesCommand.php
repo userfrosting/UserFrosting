@@ -49,8 +49,8 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
     protected function configure()
     {
         $this->setName('locale:missing-values')
-        ->addOption('translate', 't', InputOption::VALUE_REQUIRED, 'The locale of preview.', 'en_US')
-        ->addOption('check', 'c', InputOption::VALUE_REQUIRED, 'Specific locales to check.', null)
+        ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale used for comparison.', 'en_US')
+        ->addOption('check', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "en_US,es_ES"', null)
         ->addOption('length', 'l', InputOption::VALUE_REQUIRED, 'Set max length for preview column text', 255);
 
         $this->setDescription('Generate a table of keys with missing values.');
@@ -69,19 +69,25 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         $this->maxLength = $input->getOption('length');
 
         // The locale for the 'preview' column. Defaults to en_US if not set.
-        $translationLocale = $input->getOption('translate');
+        $baseLocale = $input->getOption('base');
 
-        $this->setTranslation($translationLocale);
+        $this->setTranslation($baseLocale);
 
         $locales = $this->getLocales();
-
+        print_r($locales);
         $files = $this->getFilePaths($locales);
 
-        $missing[] = $this->searchFiles($files);
+        $missing[] = $this->searchFilesForNull($files);
+
+        $baseLocaleFileNames = $this->getFilenames($baseLocale);
+
+        foreach ($locales as $key => $altLocale) {
+            $missing[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
+        }
 
         $this->table->setHeaders([
           [new TableCell('LOCALES SEARCHED: |' . implode('|', $locales) . '|', ['colspan' => 3])],
-          [new TableCell("USING | $translationLocale | FOR TRANSLATION PREVIEW", ['colspan' => 3])],
+          [new TableCell("USING | $baseLocale | FOR TRANSLATION PREVIEW", ['colspan' => 3])],
 
         ]);
         $this->table->setColumnWidth(2, 50);
@@ -94,7 +100,33 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         // Build the table.
         $this->buildTable($missing);
 
-        return $this->table->render();
+        //  return $this->table->render();
+    }
+
+    public function compareFiles($baseLocale, $altLocale, $filenames)
+    {
+        foreach ($filenames as $sprinklePath => $files) {
+            foreach ($files as $key => $file) {
+                $base = $this->parseFile("$sprinklePath/locale/{$baseLocale}/{$file}");
+                $alt = $this->parseFile("$sprinklePath/locale/{$altLocale}/{$file}");
+                $missing[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->recursive_array_intersect_key($alt, $base);
+            }
+        }
+        print_r($missing);
+
+        return $missing;
+    }
+
+    public function recursive_array_intersect_key(array $array1, $array2)
+    {
+        $array1 = array_intersect_key($array1, $array2);
+        foreach ($array1 as $key => &$value) {
+            if (is_array($value) && is_array($array2[$key])) {
+                $value = $this->recursive_array_intersect_key($value, $array2[$key]);
+            }
+        }
+
+        return $array1;
     }
 
     /**
@@ -105,7 +137,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      *
      * @return array Filepath,
      */
-    public function searchFiles($files)
+    public function searchFilesForNull($files)
     {
         foreach ($files as $key => $file) {
             $missing[$file] = $this->findMissing($this->parseFile($file));

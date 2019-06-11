@@ -16,6 +16,7 @@ use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use UserFrosting\Support\Repository\Repository;
 
 /**
  * locale:fix-keys command.
@@ -28,12 +29,12 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     /**
      * @var string
      */
-    protected $auxLocale;
+    protected $locales;
 
     /**
-     * @var string
+     * $var string
      */
-    protected static $path;
+    protected static $baseLocale;
 
     /**
      * @var array
@@ -46,10 +47,10 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     protected function configure()
     {
         $this->setName('locale:fix-keys')
-        ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale to compare against.', 'en_US')
-        ->addOption('compare', 'c', InputOption::VALUE_REQUIRED, 'A optional second locale to compare against', null);
+        ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale used to generate values for any keys that are fixed. ', 'en_US')
+        ->addOption('fix', 'f', InputOption::VALUE_REQUIRED, 'One or more specific locales to fix. E.g. "en_US,es_ES" ', null);
 
-        $this->setDescription('Generate a table of missing locale keys.');
+        $this->setDescription('Fix locale missing files and key values');
     }
 
     /**
@@ -60,28 +61,28 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
         $this->$table = new Table($output);
 
         // The "base" locale to compare other locales against. Defaults to en_US if not set.
-        $baseLocale = $input->getOption('base');
+        $this->baseLocale = $input->getOption('base');
 
-        // Option -c. Set to only compare two locales.
-        $this->auxLocale = $input->getOption('compare');
+        // Option -c. Set to compare one or more specific locales.
+        $this->locales = $input->getOption('fix');
 
-        $baseLocaleFileNames = $this->getFilenames($baseLocale);
+        $baseLocaleFileNames = $this->getFilenames($this->baseLocale);
 
         $localesAvailable = $this->getLocales();
 
+        $filesFixed = [];
+
         foreach ($localesAvailable as $key => $altLocale) {
-            $difference[$altLocale] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
+            $filesFixed[$altLocale] = $this->compareFiles($this->baseLocale, $altLocale, $baseLocaleFileNames);
         }
 
-        print_r($difference);
-
-        $this->$table->setHeaders([new TableCell('COMPARING AGAINST: ' . $baseLocale, ['colspan' => 2])]);
-        $this->$table->addRows([['FILE PATH', 'MISSING KEY'], new TableSeparator()]);
+        $this->$table->setHeaders([new TableCell('MISSING KEY VALUES WILL BE SET USING: ' . $this->baseLocale, ['colspan' => 1])]);
+        $this->$table->addRows([['FILES FIXED'], new TableSeparator()]);
 
         // Build the table.
-        $this->buildTable($difference);
+        $this->buildTable($filesFixed);
 
-        //      return $this->$table->render();
+        return $this->$table->render();
     }
 
     /**
@@ -111,20 +112,15 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
      * @param array $array File paths and missing keys.
      * @param int   $level Nested array depth.
      */
-    protected function buildTable(array $array, $level = 1)
+    protected function buildTable(array $array)
     {
         foreach ($array as $key => $value) {
-            //Level 2 has the filepath.
-            if ($level == 2) {
-                // Make path easier to read by removing anything before 'sprinkles'
-                $this->path = strstr($key, 'sprinkles');
-            }
             if (is_array($value)) {
                 //We need to loop through it.
-                $this->buildTable($value, ($level + 1));
+                $this->buildTable($value);
             } elseif ($value != '0') {
                 //It is not an array and not '0', so add the row.
-                $this->$table->addRow([$this->path, $key]);
+                $this->$table->addRow([$value]);
             }
         }
     }
@@ -166,7 +162,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
      * @param string $altLocale  Locale to find missing keys for.
      * @param array  $filenames  Sprinkle locale files that will be compared.
      *
-     * @return array The keys in $baseLocale that do not exist in $altLocale.
+     * @return array Filepaths that were fixed.
      */
     public function compareFiles($baseLocale, $altLocale, $filenames)
     {
@@ -174,44 +170,52 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
             foreach ($files as $key => $file) {
                 $base = $this->parseFile("$sprinklePath/locale/{$baseLocale}/{$file}");
                 $alt = $this->parseFile("$sprinklePath/locale/{$altLocale}/{$file}");
+                $filePath = "$sprinklePath/locale/{$altLocale}/{$file}";
                 $missing = $this->arrayFlatten($this->getDifference($base, $alt));
 
                 // The files with missing keys.
                 if (!empty($missing)) {
-                    $difference[] = $sprinklePath . '/locale' . '/' . $altLocale . '/' . $file;
+                    $filesFixed[] = $this->write($base, $alt, $filePath);
                 }
             }
         }
-        //  print_r($difference);
 
-        return $difference;
+        return $filesFixed;
     }
 
     /**
-     * Access file contents through inclusion.
+     * Fixes locale files by adding missing keys.
      *
-     * @param string $path The path of file to be included.
+     * @param array  $base
+     * @param array  $alt
+     * @param string $filePath The path of fixed file.
+     *
+     * @return string
      */
-    protected function parseFile($path)
+    public function write($base, $alt, $filePath)
     {
-        return include "$path";
-    }
-
-    /**
-     * Gets all locale files for a specific locale.
-     *
-     * @param string $locale The locale being compared against.
-     *
-     * @return array Locale files and locations for the locale being compared against.
-     */
-    public function getFilenames($locale)
-    {
-        $file = ($this->ci->locator->listResources("locale://{$locale}", true));
-        foreach ($file as $filename => $path) {
-            $files[$path->getLocation()->getPath()][] = $path->getBaseName();
+        //If the directory does not exist we need to create it recursively.
+        if (!file_exists(dirname($filePath))) {
+            mkdir(dirname($filePath), 0777, true);
         }
 
-        return $files;
+        // Build the respository and then merge in each locale file.
+        // Any keys not in the $alt locale will be added with the $base locales value.
+        $repository = new Repository();
+        $repository->mergeItems(null, $base, $alt);
+
+        // We will fix the file by completely rebuilding it.
+        passthru("echo \<?php > $filePath");
+        file_put_contents($filePath, var_export($repository->all(), true), FILE_APPEND);
+        passthru("echo \; >> $filePath");
+
+        // Check the file with php-cs-fixer
+        passthru("php ./app/vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix $filePath --quiet --using-cache no --config ./.php_cs");
+
+        // FInally, we need to insert 'return' to the file.
+        file_put_contents($filePath, preg_replace('/\[/', 'return [', file_get_contents($filePath), 1));
+
+        return "$filePath";
     }
 
     /**
@@ -219,11 +223,21 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
      */
     public function getLocales()
     {
+        $configuredLocales = array_keys($this->ci->config['site']['locales']['available']);
+
         // If set, use the locale from the -c option.
-        if ($this->auxLocale) {
-            return [$this->auxLocale];
+        if ($this->locales) {
+            $locales = explode(',', $this->locales);
+            foreach ($locales as $key => $value) {
+                if (!in_array($value, $configuredLocales)) {
+                    $this->io->warning("The $value locale was not found in your current configuration. Proceeding may results in a large number of files being created. Are you sure you want to continue?");
+                    if (!$this->io->confirm('Continue?', false)) {
+                        exit;
+                    }
+                }
+            }
         } else {
-            return array_keys($this->ci->config['site']['locales']['available']);
+            return $configuredLocales;
         }
     }
 }
