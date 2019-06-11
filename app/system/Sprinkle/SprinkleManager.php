@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -19,6 +20,7 @@ use UserFrosting\Support\Exception\JsonException;
  *
  * Manages a collection of loaded Sprinkles for the application.
  * Handles Sprinkle class creation, event subscription, services registration, and resource stream registration.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class SprinkleManager
@@ -50,7 +52,7 @@ class SprinkleManager
 
     /**
      * Register resource streams for all base sprinkles.
-     * For each sprinkle, register its resources and then run its initializer
+     * For each sprinkle, register its resources and then run its initializer.
      */
     public function addResources()
     {
@@ -60,7 +62,8 @@ class SprinkleManager
     }
 
     /**
-     * Register a sprinkle as a locator location
+     * Register a sprinkle as a locator location.
+     *
      * @param string $sprinkleName
      */
     public function addSprinkleResources($sprinkleName)
@@ -71,9 +74,10 @@ class SprinkleManager
     }
 
     /**
-     * Returns sprinkle base path from name
+     * Returns sprinkle base path from name.
      *
-     * @param  string $sprinkleName
+     * @param string $sprinkleName
+     *
      * @return string
      */
     public function getSprinklePath($sprinkleName)
@@ -94,9 +98,10 @@ class SprinkleManager
     }
 
     /**
-     * Returns the sprinkle class
+     * Returns the sprinkle class.
      *
-     * @param  string $sprinkleName
+     * @param string $sprinkleName
+     *
      * @return string
      */
     protected function getSprinkleClass($sprinkleName)
@@ -107,8 +112,10 @@ class SprinkleManager
     }
 
     /**
-     * Returns the claculated sprinkle namespace
-     * @param  string $sprinkleName
+     * Returns the claculated sprinkle namespace.
+     *
+     * @param string $sprinkleName
+     *
      * @return string The Sprinkle Namespace
      */
     public function getSprinkleClassNamespace($sprinkleName)
@@ -119,9 +126,10 @@ class SprinkleManager
     }
 
     /**
-     * Returns the sprinkle service provider class
+     * Returns the sprinkle service provider class.
      *
-     * @param  string $sprinkleName
+     * @param string $sprinkleName
+     *
      * @return string
      */
     protected function getSprinkleDefaultServiceProvider($sprinkleName)
@@ -134,8 +142,10 @@ class SprinkleManager
      *
      * Creates an object of a subclass of UserFrosting\System\Sprinkle\Sprinkle if defined for the sprinkle (converting to StudlyCase).
      * Otherwise, returns null.
-     * @param  string $sprinkleName The name of the Sprinkle to initialize.
-     * @return mixed  Sprinkle class instance or null if no such class exist
+     *
+     * @param string $sprinkleName The name of the Sprinkle to initialize.
+     *
+     * @return mixed Sprinkle class instance or null if no such class exist
      */
     public function bootSprinkle($sprinkleName)
     {
@@ -204,9 +214,10 @@ class SprinkleManager
 
     /**
      * Return if a Sprinkle is available
-     * Can be used by other Sprinkles to test if their dependencies are met
+     * Can be used by other Sprinkles to test if their dependencies are met.
      *
-     * @param  string $sprinkleName The name of the Sprinkle
+     * @param string $sprinkleName The name of the Sprinkle
+     *
      * @return bool
      */
     public function isAvailable($sprinkleName)
@@ -215,9 +226,10 @@ class SprinkleManager
     }
 
     /**
-     * Find sprinkle value from the sprinkles.json
+     * Find sprinkle value from the sprinkles.json.
      *
-     * @param  string       $sprinkleName
+     * @param string $sprinkleName
+     *
      * @return string|false Return sprinkle name or false if sprinkle not found
      */
     public function getSprinkle($sprinkleName)
@@ -259,7 +271,7 @@ class SprinkleManager
     }
 
     /**
-     * Returns sprinklePath parameter
+     * Returns sprinklePath parameter.
      *
      * @return string
      */
@@ -269,9 +281,10 @@ class SprinkleManager
     }
 
     /**
-     * Sets sprinklePath parameter
+     * Sets sprinklePath parameter.
      *
-     * @param  string $sprinklesPath
+     * @param string $sprinklesPath
+     *
      * @return static
      */
     public function setSprinklesPath($sprinklesPath)
@@ -284,7 +297,8 @@ class SprinkleManager
     /**
      * Load list of Sprinkles from a JSON schema file (e.g. 'sprinkles.json').
      *
-     * @param  string   $schemaPath
+     * @param string $schemaPath
+     *
      * @return string[]
      */
     protected function loadSchema($schemaPath)
@@ -293,12 +307,14 @@ class SprinkleManager
 
         if ($sprinklesFile === false) {
             $errorMessage = "Error: Unable to determine Sprinkle load order. File '$schemaPath' not found or unable to read. Please create a 'sprinkles.json' file and try again.";
+
             throw new FileNotFoundException($errorMessage);
         }
 
         // Make sure sprinkle contains valid json
         if (!$data = json_decode($sprinklesFile)) {
             $errorMessage = "Error: Unable to determine Sprinkle load order. File '$schemaPath' doesn't contain valid json : " . json_last_error_msg();
+
             throw new JsonException($errorMessage);
         }
 

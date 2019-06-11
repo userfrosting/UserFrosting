@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -23,6 +24,7 @@ class SlimCsrfProvider implements CsrfProviderInterface
 {
     /**
      * {@inheritdoc}
+     *
      * @return \Slim\Csrf\Guard
      */
     public static function setupService(ContainerInterface $ci)
@@ -42,9 +44,8 @@ class SlimCsrfProvider implements CsrfProviderInterface
         $onFailure = function ($request, $response, $next) {
             $e = new BadRequestException('The CSRF code was invalid or not provided.');
             $e->addUserMessage('CSRF_MISSING');
-            throw $e;
 
-            return $next($request, $response);
+            throw $e;
         };
 
         return new Guard($ci->config['csrf.name'], $csrfStorage, $onFailure, $ci->config['csrf.storage_limit'], $ci->config['csrf.strength'], $ci->config['csrf.persistent_token']);

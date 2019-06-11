@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -17,7 +18,7 @@ use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
- * AdminController Class
+ * AdminController Class.
  *
  * Controller class for /dashboard URL.  Handles admin-related activities
  *
@@ -26,7 +27,8 @@ use UserFrosting\Support\Exception\ForbiddenException;
 class AdminController extends SimpleController
 {
     /**
-     * Renders the admin panel dashboard
+     * Renders the admin panel dashboard.
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -48,7 +50,7 @@ class AdminController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Probably a better way to do this
-        $users = $classMapper->staticMethod('user', 'orderBy', 'created_at', 'desc')
+        $users = $classMapper->getClassMapping('user')::orderBy('created_at', 'desc')
                  ->take(8)
                  ->get();
 
@@ -70,26 +72,26 @@ class AdminController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/dashboard.html.twig', [
             'counter' => [
-                'users'  => $classMapper->staticMethod('user', 'count'),
-                'roles'  => $classMapper->staticMethod('role', 'count'),
-                'groups' => $classMapper->staticMethod('group', 'count')
+                'users'  => $classMapper->getClassMapping('user')::count(),
+                'roles'  => $classMapper->getClassMapping('role')::count(),
+                'groups' => $classMapper->getClassMapping('group')::count(),
             ],
             'info' => [
                 'version' => [
                     'UF'       => \UserFrosting\VERSION,
                     'php'      => phpversion(),
-                    'database' => EnvironmentInfo::database()
+                    'database' => EnvironmentInfo::database(),
                 ],
                 'database' => [
-                    'name' => $config['db.default.database']
+                    'name' => $config['db.default.database'],
                 ],
                 'environment' => $this->ci->environment,
                 'path'        => [
-                    'project' => \UserFrosting\ROOT_DIR
-                ]
+                    'project' => \UserFrosting\ROOT_DIR,
+                ],
             ],
             'sprinkles' => $sprinkles,
-            'users'     => $users
+            'users'     => $users,
         ]);
     }
 
@@ -98,6 +100,7 @@ class AdminController extends SimpleController
      *
      * This route requires authentication.
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -132,6 +135,7 @@ class AdminController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -152,7 +156,7 @@ class AdminController extends SimpleController
         return $this->ci->view->render($response, 'modals/confirm-clear-cache.html.twig', [
             'form' => [
                 'action' => 'api/dashboard/clear-cache',
-            ]
+            ],
         ]);
     }
 }

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,11 +10,11 @@
 
 namespace UserFrosting\Sprinkle\Account\Database\Seeds;
 
-use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Core\Database\Seeder\BaseSeed;
 
 /**
- * Seeder for the default groups
+ * Seeder for the default groups.
  */
 class DefaultGroups extends BaseSeed
 {
@@ -42,20 +43,20 @@ class DefaultGroups extends BaseSeed
                 'slug'        => 'terran',
                 'name'        => 'Terran',
                 'description' => 'The terrans are a young species with psionic potential. The terrans of the Koprulu sector descend from the survivors of a disastrous 23rd century colonization mission from Earth.',
-                'icon'        => 'sc sc-terran'
+                'icon'        => 'sc sc-terran',
             ]),
             new Group([
                 'slug'        => 'zerg',
                 'name'        => 'Zerg',
                 'description' => 'Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.',
-                'icon'        => 'sc sc-zerg'
+                'icon'        => 'sc sc-zerg',
             ]),
             new Group([
                 'slug'        => 'protoss',
                 'name'        => 'Protoss',
                 'description' => 'The protoss, a.k.a. the Firstborn, are a sapient humanoid race native to Aiur. Their advanced technology complements and enhances their psionic mastery.',
-                'icon'        => 'sc sc-protoss'
-            ])
+                'icon'        => 'sc sc-protoss',
+            ]),
         ];
     }
 }

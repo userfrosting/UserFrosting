@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,11 +10,11 @@
 
 namespace UserFrosting\Sprinkle\Core\Twig;
 
-use Interop\Container\ContainerInterface;
 use Illuminate\Filesystem\Filesystem;
+use Interop\Container\ContainerInterface;
 
 /**
- * Provides helper function to delete the Twig cache directory
+ * Provides helper function to delete the Twig cache directory.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -35,7 +36,7 @@ class CacheHelper
     }
 
     /**
-     * Function that delete the Twig cache directory content
+     * Function that delete the Twig cache directory content.
      *
      * @return bool true/false if operation is successfull
      */

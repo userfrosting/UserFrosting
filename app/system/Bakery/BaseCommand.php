@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,11 +10,11 @@
 
 namespace UserFrosting\System\Bakery;
 
+use Interop\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Interop\Container\ContainerInterface;
 
 /**
  * Base class for UserFrosting Bakery CLI tools.
@@ -29,7 +30,7 @@ abstract class BaseCommand extends Command
     protected $io;
 
     /**
-     *    @var ContainerInterface $ci The global container object, which holds all of UserFrosting services.
+     *    @var ContainerInterface The global container object, which holds all of UserFrosting services.
      */
     protected $ci;
 
@@ -42,7 +43,7 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * Setup the global container object
+     * Setup the global container object.
      *
      * @param ContainerInterface $ci
      */
@@ -52,7 +53,7 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     *    Return if the app is in production mode
+     *    Return if the app is in production mode.
      *
      *    @return bool True/False if the app is in production mode
      */

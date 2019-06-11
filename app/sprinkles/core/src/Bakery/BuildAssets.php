@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -10,14 +11,14 @@
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * Assets builder CLI Tools.
- * Wrapper for npm/node commands
+ * Wrapper for npm/node commands.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -76,7 +77,7 @@ class BuildAssets extends BaseCommand
     }
 
     /**
-     * Install npm package
+     * Install npm package.
      *
      * @param bool $force Force `npm install` to be run, ignoring evidence of a previous run.
      */
@@ -127,7 +128,7 @@ class BuildAssets extends BaseCommand
     }
 
     /**
-     * Perform UF Assets installation
+     * Perform UF Assets installation.
      */
     protected function assetsInstall()
     {
@@ -175,7 +176,7 @@ class BuildAssets extends BaseCommand
 
     /**
      * Run the `uf-clean` command to delete installed assets, delete compiled
-     * bundle config file and delete compiled assets
+     * bundle config file and delete compiled assets.
      */
     protected function clean()
     {

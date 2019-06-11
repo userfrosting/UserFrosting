@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -160,12 +161,12 @@ class ExceptionHandler implements ExceptionHandlerInterface
             ->withStatus($httpCode)
             ->withHeader('Content-type', $this->contentType)
             ->write($template->render([
-                'messages' => $messages
+                'messages' => $messages,
             ]));
     }
 
     /**
-     * Write to the error log
+     * Write to the error log.
      */
     public function writeToErrorLog()
     {
@@ -189,9 +190,10 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     /**
      * Determine which renderer to use based on content type
-     * Overloaded $renderer from calling class takes precedence over all
+     * Overloaded $renderer from calling class takes precedence over all.
      *
      * @throws \RuntimeException
+     *
      * @return \UserFrosting\Sprinkle\Core\Error\Renderer\ErrorRendererInterface
      */
     protected function determineRenderer()
@@ -255,12 +257,12 @@ class ExceptionHandler implements ExceptionHandlerInterface
     protected function determineUserMessages()
     {
         return [
-            new UserMessage('ERROR.SERVER')
+            new UserMessage('ERROR.SERVER'),
         ];
     }
 
     /**
-     * Monolog logging for errors
+     * Monolog logging for errors.
      *
      * @param string $message
      */

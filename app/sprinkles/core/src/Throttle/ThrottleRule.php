@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,9 +13,10 @@ namespace UserFrosting\Sprinkle\Core\Throttle;
 use Carbon\Carbon;
 
 /**
- * ThrottleRule Class
+ * ThrottleRule Class.
  *
  * Represents a request throttling rule.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class ThrottleRule

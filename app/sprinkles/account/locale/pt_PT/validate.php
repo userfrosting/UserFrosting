@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -14,6 +15,6 @@
  */
 return [
     'VALIDATE' => [
-        'PASSWORD_MISMATCH' => 'A password e respetiva confirmação têm de coincidir.'
-    ]
+        'PASSWORD_MISMATCH' => 'A password e respetiva confirmação têm de coincidir.',
+    ],
 ];

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Mail;
 use Slim\Views\Twig;
 
 /**
- * MailMessage Class
+ * MailMessage Class.
  *
  * Represents a basic mail message, containing a static subject and body.
  *

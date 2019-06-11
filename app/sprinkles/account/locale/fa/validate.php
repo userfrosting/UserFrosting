@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,6 +16,6 @@
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => 'گذرواژه و تکرار آن باید با یکدیگر تطبیق پیدا کنند',
-        'USERNAME'          => "نام کاربری فقط میتواند از حروف کوچک، اعداد، '.'، '-' و '_' متشکل شوند."
-    ]
+        'USERNAME'          => "نام کاربری فقط میتواند از حروف کوچک، اعداد، '.'، '-' و '_' متشکل شوند.",
+    ],
 ];

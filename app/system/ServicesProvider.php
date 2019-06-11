@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -18,6 +19,7 @@ use UserFrosting\UniformResourceLocator\ResourceLocator;
  * UserFrosting system services provider.
  *
  * Registers system services for UserFrosting, such as file locator, event dispatcher, and sprinkle manager.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class ServicesProvider
@@ -29,7 +31,7 @@ class ServicesProvider
      */
     public function register(ContainerInterface $container)
     {
-        /**
+        /*
          * Set up the event dispatcher, required by Sprinkles to hook into the UF lifecycle.
          *
          * @return \RocketTheme\Toolbox\Event\EventDispatcher
@@ -38,7 +40,7 @@ class ServicesProvider
             return new EventDispatcher();
         };
 
-        /**
+        /*
          * Path/file locator service.
          *
          * Register custom streams for the application, and add paths for app-level streams.
@@ -56,7 +58,7 @@ class ServicesProvider
             return $locator;
         };
 
-        /**
+        /*
          * Set up sprinkle manager service.
          *
          * @return \UserFrosting\System\Sprinkle\SprinkleManager

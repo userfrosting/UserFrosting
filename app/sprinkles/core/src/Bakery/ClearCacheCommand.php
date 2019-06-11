@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -11,8 +12,8 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\Sprinkle\Core\Twig\CacheHelper;
+use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * ClearCache CLI Command.
@@ -61,7 +62,7 @@ class ClearCacheCommand extends BaseCommand
     }
 
     /**
-     * Flush the cached data from the cache service
+     * Flush the cached data from the cache service.
      */
     protected function clearIlluminateCache()
     {
@@ -69,7 +70,7 @@ class ClearCacheCommand extends BaseCommand
     }
 
     /**
-     * Clear the Twig cache using the Twig CacheHelper class
+     * Clear the Twig cache using the Twig CacheHelper class.
      *
      * @return bool true/false if operation is successfull
      */
@@ -81,7 +82,7 @@ class ClearCacheCommand extends BaseCommand
     }
 
     /**
-     * Clear the Router cache data file
+     * Clear the Router cache data file.
      *
      * @return bool true/false if operation is successfull
      */

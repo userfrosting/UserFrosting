@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,16 +10,16 @@
 
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
-use UserFrosting\Support\DotenvEditor\DotenvEditor;
-use UserFrosting\System\Bakery\BaseCommand;
-use UserFrosting\Support\Repository\Repository as Config;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use UserFrosting\Support\DotenvEditor\DotenvEditor;
+use UserFrosting\Support\Repository\Repository as Config;
+use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * SMTP Setup Wizard CLI Tools.
- * Helper command to setup SMTP config in .env file
+ * Helper command to setup SMTP config in .env file.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -27,7 +28,7 @@ class SetupSmtpCommand extends BaseCommand
     /**
      * @var string Path to the .env file
      */
-    protected $envPath = \UserFrosting\APP_DIR. '/.env';
+    protected $envPath = \UserFrosting\APP_DIR . '/.env';
 
     /**
      * @var string SMTP setup string
@@ -64,7 +65,7 @@ class SetupSmtpCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /**
-         * @var Config $config Get config
+         * @var Config Get config
          */
         $config = $this->ci->config;
 
@@ -87,7 +88,7 @@ class SetupSmtpCommand extends BaseCommand
         $keys = [
             'SMTP_HOST'     => ($dotenvEditor->keyExists('SMTP_HOST')) ? $dotenvEditor->getValue('SMTP_HOST') : '',
             'SMTP_USER'     => ($dotenvEditor->keyExists('SMTP_USER')) ? $dotenvEditor->getValue('SMTP_USER') : '',
-            'SMTP_PASSWORD' => ($dotenvEditor->keyExists('SMTP_PASSWORD')) ? $dotenvEditor->getValue('SMTP_PASSWORD') : ''
+            'SMTP_PASSWORD' => ($dotenvEditor->keyExists('SMTP_PASSWORD')) ? $dotenvEditor->getValue('SMTP_PASSWORD') : '',
         ];
 
         // There may be some custom config or global env values defined on the server.
@@ -120,10 +121,11 @@ class SetupSmtpCommand extends BaseCommand
     }
 
     /**
-     * Ask with setup method to use
+     * Ask with setup method to use.
      *
-     * @param  InputInterface $input
-     * @return array          The SMTP connection info
+     * @param InputInterface $input
+     *
+     * @return array The SMTP connection info
      */
     protected function askForSmtpMethod(InputInterface $input)
     {
@@ -152,10 +154,11 @@ class SetupSmtpCommand extends BaseCommand
     }
 
     /**
-     * Ask for SMTP credential
+     * Ask for SMTP credential.
      *
-     * @param  InputInterface $input Command arguments
-     * @return array          The SMTP connection info
+     * @param InputInterface $input Command arguments
+     *
+     * @return array The SMTP connection info
      */
     protected function askForSmtp(InputInterface $input)
     {
@@ -170,15 +173,16 @@ class SetupSmtpCommand extends BaseCommand
         return [
             'SMTP_HOST'     => $smtpHost,
             'SMTP_USER'     => $smtpUser,
-            'SMTP_PASSWORD' => $smtpPassword
+            'SMTP_PASSWORD' => $smtpPassword,
         ];
     }
 
     /**
-     * Ask for Gmail
+     * Ask for Gmail.
      *
-     * @param  InputInterface $input Command arguments
-     * @return array          The SMTP connection info
+     * @param InputInterface $input Command arguments
+     *
+     * @return array The SMTP connection info
      */
     protected function askForGmail(InputInterface $input)
     {
@@ -191,15 +195,16 @@ class SetupSmtpCommand extends BaseCommand
         return [
             'SMTP_HOST'     => 'smtp.gmail.com',
             'SMTP_USER'     => $smtpUser,
-            'SMTP_PASSWORD' => $smtpPassword
+            'SMTP_PASSWORD' => $smtpPassword,
         ];
     }
 
     /**
-     * Process the "no email support" setup option
+     * Process the "no email support" setup option.
      *
-     * @param  InputInterface $input
-     * @return array          The SMTP connection info
+     * @param InputInterface $input
+     *
+     * @return array The SMTP connection info
      */
     protected function askForNone(InputInterface $input)
     {
@@ -210,7 +215,7 @@ class SetupSmtpCommand extends BaseCommand
             return [
                 'SMTP_HOST'     => '',
                 'SMTP_USER'     => '',
-                'SMTP_PASSWORD' => ''
+                'SMTP_PASSWORD' => '',
             ];
         } else {
             $this->askForSmtpMethod($input);
@@ -220,8 +225,9 @@ class SetupSmtpCommand extends BaseCommand
     /**
      * Check if the app/.env SMTP portion is defined or not.
      *
-     * @param  DotenvEditor $dotenvEditor
-     * @return bool         true if SMTP is configured in .env file
+     * @param DotenvEditor $dotenvEditor
+     *
+     * @return bool true if SMTP is configured in .env file
      */
     protected function isSmtpConfigured(DotenvEditor $dotenvEditor)
     {

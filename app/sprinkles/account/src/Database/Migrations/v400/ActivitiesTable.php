@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,14 +10,15 @@
 
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
-use UserFrosting\Sprinkle\Core\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
  * Sessions table migration
- * Version 4.0.0
+ * Version 4.0.0.
  *
- * See https://laravel.com/docs/5.4/migrations#tables
+ * See https://laravel.com/docs/5.8/migrations#tables
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class ActivitiesTable extends Migration

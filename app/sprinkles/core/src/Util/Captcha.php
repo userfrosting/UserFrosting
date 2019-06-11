@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,12 +13,13 @@ namespace UserFrosting\Sprinkle\Core\Util;
 use UserFrosting\Session\Session;
 
 /**
- * Captcha Class
+ * Captcha Class.
  *
  * Implements the captcha for user registration.
  *
  * @author r3wt
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see http://www.userfrosting.com/components/#messages
  */
 class Captcha
@@ -100,7 +102,8 @@ class Captcha
      * Check that the specified code, when hashed, matches the code in the session.
      * Also, stores the specified code in the session with an md5 hash.
      *
-     * @param  string $code
+     * @param string $code
+     *
      * @return bool
      */
     public function verifyCode($code)

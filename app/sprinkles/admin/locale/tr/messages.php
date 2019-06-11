@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -19,14 +20,14 @@ return [
 
        'LAST' => 'Son Etkinlik',
        'PAGE' => 'Kullanıcı etkinliklerinin listesi',
-       'TIME' => 'Aktivite zamanı'
+       'TIME' => 'Aktivite zamanı',
     ],
 
     'CACHE' => [
         'CLEAR'             => 'Önbelleği temizle',
         'CLEAR_CONFIRM'     => 'Site önbelleğini temizlemek istediğine emin misin?',
         'CLEAR_CONFIRM_YES' => 'Evet, önbelleği temizle',
-        'CLEARED'           => 'Önbellek temizlenmesi başarıyla tamamlandı!'
+        'CLEARED'           => 'Önbellek temizlenmesi başarıyla tamamlandı!',
     ],
 
     'DASHBOARD'             => 'Pano',
@@ -61,13 +62,13 @@ return [
         'NOT_EMPTY'           => 'Bunu yapamazsınız çünkü hala grupla ilişkili kullanıcılar var<strong>{{name}}</strong>.',
         'PAGE_DESCRIPTION'    => 'Siten için grupların bir listesi.  Grupları silmek ve düzenlemek için yönetim araçları sağlar.',
         'SUMMARY'             => 'Grup özeti',
-        'UPDATE'              => 'Grup için detaylar güncellendi<strong>{{name}}</strong>'
+        'UPDATE'              => 'Grup için detaylar güncellendi<strong>{{name}}</strong>',
     ],
 
     'MANUALLY_ACTIVATED'    => "{{user_name}}'ın hesabı el ile aktifleştirildi",
     'MASTER_ACCOUNT_EXISTS' => 'Ana hesap zaten mevcut!',
     'MIGRATION'             => [
-        'REQUIRED'          => 'Veritabanını güncellemek gerek'
+        'REQUIRED'          => 'Veritabanını güncellemek gerek',
     ],
 
     'PERMISSION' => [
@@ -83,7 +84,7 @@ return [
         'PAGE_DESCRIPTION'  => 'Siteniz için izinlerin bir listesi.  Düzenleme yapmak ve izinleri kaldırmak yönetim araçları temin eder.',
         'SUMMARY'           => 'İzin Özeti',
         'UPDATE'            => 'İzinlerin Güncellenmesi',
-        'VIA_ROLES'         => 'Roller ile izin alımı'
+        'VIA_ROLES'         => 'Roller ile izin alımı',
     ],
 
     'ROLE' => [
@@ -108,7 +109,7 @@ return [
         'PAGE_DESCRIPTION'    => 'Siteniz için rollerin bir listesi. Düzenlemek ve rolleri silmek için yönetim araçları sağlar.',
         'PERMISSIONS_UPDATED' => 'Rol için izinler güncellendi<strong>{{name}}</strong>',
         'SUMMARY'             => 'Rol özeti',
-        'UPDATED'             => 'Rol için detaylar güncellendi<strong>{{name}}</strong>'
+        'UPDATED'             => 'Rol için detaylar güncellendi<strong>{{name}}</strong>',
     ],
 
     'SYSTEM_INFO' => [
@@ -121,7 +122,7 @@ return [
         'SERVER'        => 'Web sunucu yazılımı',
         'SPRINKLES'     => 'Yüklü serpintiler',
         'UF_VERSION'    => 'UserFrosting sürümü',
-        'URL'           => 'Site kök url'
+        'URL'           => 'Site kök url',
     ],
 
     'TOGGLE_COLUMNS' => 'Sütünları değiştirme',
@@ -133,7 +134,7 @@ return [
         'ADMIN' => [
             'CHANGE_PASSWORD'    => 'Kullanıcı şifresini değiştir',
             'SEND_PASSWORD_LINK' => 'Kullanıcıya kendi şifresini seçebileceği bir bağlantı gönder',
-            'SET_PASSWORD'       => 'Kullanıcının şifresi olarak ayarla'
+            'SET_PASSWORD'       => 'Kullanıcının şifresi olarak ayarla',
         ],
 
         'ACTIVATE'          => 'Aktif Kullanıcı',
@@ -151,11 +152,11 @@ return [
         'PAGE_DESCRIPTION'  => 'Siten için kullanıcıların listesi. Kullanıcı detaylarını düzenlemek, elle kullanıcıları aktifleştirmek, kullanıcıları etkinleştirme/devre dışı bırakma, ve daha fazlası için yönetimsel araçlar sağlar.',
         'SUMMARY'           => 'Hesap özeti',
         'VIEW_ALL'          => 'Tüm kullanıcıları göster',
-        'WITH_PERMISSION'   => 'Bu izni olan kullanıcılar'
+        'WITH_PERMISSION'   => 'Bu izni olan kullanıcılar',
     ],
     'X_USER' => [
         0 => 'Kullanıcı yok',
         1 => '{{plural}} kullanıcı',
-        2 => '{{plural}} kullanıcılar'
-    ]
+        2 => '{{plural}} kullanıcılar',
+    ],
 ];

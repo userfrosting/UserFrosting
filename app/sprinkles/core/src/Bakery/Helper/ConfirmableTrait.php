@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -10,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Bakery\Helper;
 
 /**
- * Confirmable Trait. Include method used to confirm action
+ * Confirmable Trait. Include method used to confirm action.
  *
  * @author Louis Charette
  */
@@ -20,9 +21,10 @@ trait ConfirmableTrait
      * Confirm before proceeding with the action.
      * This method only asks for confirmation in production.
      *
-     * @param  bool               $force
-     * @param  string             $warning
-     * @param  \Closure|bool|null $callback
+     * @param bool               $force
+     * @param string             $warning
+     * @param \Closure|bool|null $callback
+     *
      * @return bool
      */
     public function confirmToProceed($force = false, $warning = 'Application In Production Mode!', $callback = null)

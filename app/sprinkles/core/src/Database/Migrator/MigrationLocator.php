@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -14,7 +15,7 @@ use UserFrosting\UniformResourceLocator\Resource as ResourceInstance;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
- * MigrationLocator Class
+ * MigrationLocator Class.
  *
  * Finds all migrations class in a given sprinkle
  *
@@ -33,7 +34,7 @@ class MigrationLocator implements MigrationLocatorInterface
     protected $scheme = 'migrations://';
 
     /**
-     * Class Constructor
+     * Class Constructor.
      *
      * @param ResourceLocator $locator The locator services
      */
@@ -43,7 +44,7 @@ class MigrationLocator implements MigrationLocatorInterface
     }
 
     /**
-     * Loop all the available sprinkles and return a list of their migrations
+     * Loop all the available sprinkles and return a list of their migrations.
      *
      * @return array A list of all the migration files found for every sprinkle
      */
@@ -60,10 +61,11 @@ class MigrationLocator implements MigrationLocatorInterface
     }
 
     /**
-     * Return an array of migration details inclusing the classname and the sprinkle name
+     * Return an array of migration details inclusing the classname and the sprinkle name.
      *
-     * @param  ResourceInstance $file The migration file
-     * @return string           The migration full class path
+     * @param ResourceInstance $file The migration file
+     *
+     * @return string The migration full class path
      */
     protected function getMigrationDetails(ResourceInstance $file)
     {

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,13 +10,13 @@
 
 namespace UserFrosting\Sprinkle\Core;
 
+use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\Event;
 use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\System\Sprinkle\Sprinkle;
-use Interop\Container\ContainerInterface;
 
 /**
  * Bootstrapper class for the core sprinkle.
@@ -45,7 +46,7 @@ class Core extends Sprinkle
             'onSprinklesInitialized'      => ['onSprinklesInitialized', 0],
             'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0],
             'onAddGlobalMiddleware'       => ['onAddGlobalMiddleware', 0],
-            'onAppInitialize'             => ['onAppInitialize', 0]
+            'onAppInitialize'             => ['onAppInitialize', 0],
         ];
     }
 
@@ -95,7 +96,7 @@ class Core extends Sprinkle
             '1',
             'on',
             'true',
-            'yes'
+            'yes',
         ])) {
             $displayErrors = true;
         }
@@ -105,7 +106,7 @@ class Core extends Sprinkle
     }
 
     /**
-     * Register routes
+     * Register routes.
      *
      * @param Event $event
      */
@@ -125,7 +126,7 @@ class Core extends Sprinkle
     }
 
     /**
-     * Register Core sprinkle locator streams
+     * Register Core sprinkle locator streams.
      */
     protected function registerStreams()
     {
@@ -149,6 +150,5 @@ class Core extends Sprinkle
         // Register core sprinkle class streams
         $locator->registerStream('seeds', '', \UserFrosting\SEEDS_DIR);
         $locator->registerStream('migrations', '', \UserFrosting\MIGRATIONS_DIR);
-
     }
 }
