@@ -108,7 +108,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
     public function searchFiles($files)
     {
         foreach ($files as $key => $file) {
-            $missing[$file] = $this->findMissing($this->useFile($file));
+            $missing[$file] = $this->findMissing($this->parseFile($file));
         }
 
         return $missing;
@@ -141,7 +141,6 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      */
     public function findMissing($array, $prefix = '')
     {
-        print_r($array);
         $result = [];
         foreach ($array as $key=>$value) {
             if (is_array($value)) {
@@ -165,7 +164,6 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      */
     protected function buildTable(array $array, $level = 1)
     {
-        print_r($array);
         foreach ($array as $key => $value) {
             //Level 2 has the filepath.
             if ($level == 2) {

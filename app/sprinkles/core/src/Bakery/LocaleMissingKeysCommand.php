@@ -90,7 +90,7 @@ class LocaleMissingKeysCommand extends BaseCommand
      *
      * @return array Keys with missing values.
      */
-    private function arrayFlatten($array, $prefix = '')
+    protected function arrayFlatten($array, $prefix = '')
     {
         $result = [];
         foreach ($array as $key=>$value) {
@@ -112,7 +112,6 @@ class LocaleMissingKeysCommand extends BaseCommand
      */
     protected function buildTable(array $array, $level = 1)
     {
-        print_r($array);
         foreach ($array as $key => $value) {
             //Level 2 has the filepath.
             if ($level == 2) {
@@ -155,7 +154,6 @@ class LocaleMissingKeysCommand extends BaseCommand
                 $difference[$key] = $key;
             }
         }
-        print_r($difference);
 
         return !isset($difference) ? 0 : $difference;
     }
@@ -173,10 +171,9 @@ class LocaleMissingKeysCommand extends BaseCommand
     {
         foreach ($filenames as $sprinklePath => $files) {
             foreach ($files as $key => $file) {
-                $base = $this->useFile("$sprinklePath/locale/{$baseLocale}/{$file}");
-                $alt = $this->useFile("$sprinklePath/locale/{$altLocale}/{$file}");
+                $base = $this->parseFile("$sprinklePath/locale/{$baseLocale}/{$file}");
+                $alt = $this->parseFile("$sprinklePath/locale/{$altLocale}/{$file}");
                 $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->arrayFlatten($this->getDifference($base, $alt));
-                print_r($this->arrayFlatten($this->getDifference($base, $alt)));
             }
         }
 
@@ -188,7 +185,7 @@ class LocaleMissingKeysCommand extends BaseCommand
      *
      * @param string $path The path of file to be included.
      */
-    protected function useFile($path)
+    protected function parseFile($path)
     {
         return include "$path";
     }
