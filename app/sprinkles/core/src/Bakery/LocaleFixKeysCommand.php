@@ -32,7 +32,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     protected static $locales;
 
     /**
-     * $var string
+     * @var string
      */
     protected static $baseLocale;
 
