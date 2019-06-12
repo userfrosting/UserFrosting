@@ -29,7 +29,7 @@ class LocaleMissingKeysCommand extends BaseCommand
     /**
      * @var string
      */
-    protected $locales;
+    protected static $locales;
 
     /**
      * @var string
@@ -48,7 +48,7 @@ class LocaleMissingKeysCommand extends BaseCommand
     {
         $this->setName('locale:missing-keys')
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale to compare against.', 'en_US')
-        ->addOption('compare', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "en_US,es_ES"', null);
+        ->addOption('compare', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null);
 
         $this->setDescription('Generate a table of missing locale keys.');
     }
@@ -129,6 +129,28 @@ class LocaleMissingKeysCommand extends BaseCommand
     }
 
     /**
+     * Iterate over sprinkle locale files and find the difference for two locales.
+     *
+     * @param string $baseLocale Locale being compared against.
+     * @param string $altLocale  Locale to find missing keys for.
+     * @param array  $filenames  Sprinkle locale files that will be compared.
+     *
+     * @return array The keys in $baseLocale that do not exist in $altLocale.
+     */
+    protected function compareFiles($baseLocale, $altLocale, $filenames)
+    {
+        foreach ($filenames as $sprinklePath => $files) {
+            foreach ($files as $key => $file) {
+                $base = $this->parseFile("$sprinklePath/locale/{$baseLocale}/{$file}");
+                $alt = $this->parseFile("$sprinklePath/locale/{$altLocale}/{$file}");
+                $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->arrayFlatten($this->getDifference($base, $alt));
+            }
+        }
+
+        return $difference;
+    }
+
+    /**
      * Find the missing keys between two arrays.
      *
      * @param array $array1
@@ -159,38 +181,6 @@ class LocaleMissingKeysCommand extends BaseCommand
     }
 
     /**
-     * Iterate over sprinkle locale files and find the difference for two locales.
-     *
-     * @param string $baseLocale Locale being compared against.
-     * @param string $altLocale  Locale to find missing keys for.
-     * @param array  $filenames  Sprinkle locale files that will be compared.
-     *
-     * @return array The keys in $baseLocale that do not exist in $altLocale.
-     */
-    public function compareFiles($baseLocale, $altLocale, $filenames)
-    {
-        foreach ($filenames as $sprinklePath => $files) {
-            foreach ($files as $key => $file) {
-                $base = $this->parseFile("$sprinklePath/locale/{$baseLocale}/{$file}");
-                $alt = $this->parseFile("$sprinklePath/locale/{$altLocale}/{$file}");
-                $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->arrayFlatten($this->getDifference($base, $alt));
-            }
-        }
-
-        return $difference;
-    }
-
-    /**
-     * Access file contents through inclusion.
-     *
-     * @param string $path The path of file to be included.
-     */
-    protected function parseFile($path)
-    {
-        return include "$path";
-    }
-
-    /**
      * Gets all locale files for a specific locale.
      *
      * @param string $locale The locale being compared against.
@@ -210,7 +200,7 @@ class LocaleMissingKeysCommand extends BaseCommand
     /**
      * @return array Locales to check for missing keys.
      */
-    public function getLocales()
+    protected function getLocales()
     {
         // If set, use the locale from the -c option.
         if ($this->locales) {
@@ -218,5 +208,15 @@ class LocaleMissingKeysCommand extends BaseCommand
         } else {
             return array_keys($this->ci->config['site']['locales']['available']);
         }
+    }
+
+    /**
+     * Access file contents through inclusion.
+     *
+     * @param string $path The path of file to be included.
+     */
+    protected function parseFile($path)
+    {
+        return include "$path";
     }
 }

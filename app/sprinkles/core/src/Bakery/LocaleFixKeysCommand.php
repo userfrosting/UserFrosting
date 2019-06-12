@@ -20,7 +20,7 @@ use UserFrosting\Support\Repository\Repository;
 
 /**
  * locale:fix-keys command.
- * Generate missing keys in locale translation files.
+ * Fix missing keys in locale translation files.
  *
  * @author Amos Folz
  */
@@ -29,7 +29,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     /**
      * @var string
      */
-    protected $locales;
+    protected static $locales;
 
     /**
      * $var string
@@ -48,7 +48,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     {
         $this->setName('locale:fix-keys')
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale used to generate values for any keys that are fixed. ', 'en_US')
-        ->addOption('fix', 'f', InputOption::VALUE_REQUIRED, 'One or more specific locales to fix. E.g. "en_US,es_ES" ', null);
+        ->addOption('fix', 'f', InputOption::VALUE_REQUIRED, 'One or more specific locales to fix. E.g. "fr_FR,es_ES" ', null);
 
         $this->setDescription('Fix locale missing files and key values');
     }
@@ -70,44 +70,23 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
 
         $localesAvailable = $this->getLocales();
 
-        $filesFixed = [];
+        $fixed = [];
 
         foreach ($localesAvailable as $key => $altLocale) {
-            $filesFixed[$altLocale] = $this->compareFiles($this->baseLocale, $altLocale, $baseLocaleFileNames);
+            $fixed[$altLocale] = $this->fixFiles($this->baseLocale, $altLocale, $baseLocaleFileNames);
         }
 
         $this->$table->setHeaders([new TableCell('MISSING KEY VALUES WILL BE SET USING: ' . $this->baseLocale, ['colspan' => 1])]);
         $this->$table->addRows([['FILES FIXED'], new TableSeparator()]);
 
         // Build the table.
-        $this->buildTable($filesFixed);
+        $this->buildTable($fixed);
 
         return $this->$table->render();
     }
 
     /**
-     * Flattens a nested array into dot syntax.
-     *
-     * @param array $array The array to flatten.
-     *
-     * @return array Keys with missing values.
-     */
-    protected function arrayFlatten($array, $prefix = '')
-    {
-        $result = [];
-        foreach ($array as $key=>$value) {
-            if (is_array($value)) {
-                $result = $result + $this->arrayFlatten($value, $prefix . $key . '.');
-            } else {
-                $result[$prefix . $key] = $value;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Populate table with file paths and missing keys.
+     * Populate table with a list of files that were fixed.
      *
      * @param array $array File paths and missing keys.
      * @param int   $level Nested array depth.
@@ -126,36 +105,6 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     }
 
     /**
-     * Find the missing keys between two arrays.
-     *
-     * @param array $array1
-     * @param array $array2
-     *
-     * @return array
-     */
-    protected function getDifference($array1, $array2)
-    {
-        foreach ($array1 as $key => $value) {
-            if (is_array($value)) {
-                if (!isset($array2[$key])) {
-                    $difference[$key] = $key;
-                } elseif (!is_array($array2[$key])) {
-                    $difference[$key] = $key;
-                } else {
-                    $new_diff = $this->getDifference($value, $array2[$key]);
-                    if ($new_diff != false) {
-                        $difference[$key] = $new_diff;
-                    }
-                }
-            } elseif (!isset($array2[$key])) {
-                $difference[$key] = $key;
-            }
-        }
-
-        return !isset($difference) ? 0 : $difference;
-    }
-
-    /**
      * Iterate over sprinkle locale files and find the difference for two locales.
      *
      * @param string $baseLocale Locale being compared against.
@@ -164,7 +113,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
      *
      * @return array Filepaths that were fixed.
      */
-    public function compareFiles($baseLocale, $altLocale, $filenames)
+    protected function fixFiles($baseLocale, $altLocale, $filenames)
     {
         foreach ($filenames as $sprinklePath => $files) {
             foreach ($files as $key => $file) {
@@ -175,12 +124,12 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
 
                 // The files with missing keys.
                 if (!empty($missing)) {
-                    $filesFixed[] = $this->write($base, $alt, $filePath);
+                    $fixed[] = $this->fix($base, $alt, $filePath);
                 }
             }
         }
 
-        return $filesFixed;
+        return $fixed;
     }
 
     /**
@@ -192,7 +141,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
      *
      * @return string
      */
-    public function write($base, $alt, $filePath)
+    protected function fix($base, $alt, $filePath)
     {
         //If the directory does not exist we need to create it recursively.
         if (!file_exists(dirname($filePath))) {
@@ -221,11 +170,11 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     /**
      * @return array Locales to check for missing keys.
      */
-    public function getLocales()
+    protected function getLocales()
     {
         $configuredLocales = array_keys($this->ci->config['site']['locales']['available']);
 
-        // If set, use the locale from the -c option.
+        // If set, use the locale(s) from the -f option.
         if ($this->locales) {
             $locales = explode(',', $this->locales);
             foreach ($locales as $key => $value) {
@@ -236,6 +185,8 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
                     }
                 }
             }
+
+            return$locales;
         } else {
             return $configuredLocales;
         }
