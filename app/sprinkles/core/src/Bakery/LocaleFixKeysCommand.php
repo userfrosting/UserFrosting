@@ -149,9 +149,10 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
         }
 
         // Build the respository and then merge in each locale file.
-        // Any keys not in the $alt locale will be added with the $base locales value.
+        // Any keys not in the $alt locale will be the original left from the $base locales value.
         $repository = new Repository();
-        $repository->mergeItems(null, $base, $alt);
+        $repository->mergeItems(null, $base);
+        $repository->mergeItems(null, $alt);
 
         // We will fix the file by completely rebuilding it.
         passthru("echo \<?php > $filePath");
@@ -161,7 +162,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
         // Check the file with php-cs-fixer
         passthru("php ./app/vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix $filePath --quiet --using-cache no --config ./.php_cs");
 
-        // FInally, we need to insert 'return' to the file.
+        // Insert 'return' into the file.
         file_put_contents($filePath, preg_replace('/\[/', 'return [', file_get_contents($filePath), 1));
 
         return "$filePath";
