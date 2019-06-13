@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -20,7 +21,7 @@ use UserFrosting\Support\Message\UserMessage;
 class HttpExceptionHandler extends ExceptionHandler
 {
     /**
-     * For HttpExceptions, only write to the error log if the status code is 500
+     * For HttpExceptions, only write to the error log if the status code is 500.
      */
     public function writeToErrorLog()
     {
@@ -60,7 +61,7 @@ class HttpExceptionHandler extends ExceptionHandler
 
         // Fallback
         return [
-            new UserMessage('ERROR.SERVER')
+            new UserMessage('ERROR.SERVER'),
         ];
     }
 }

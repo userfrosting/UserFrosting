@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,12 +10,12 @@
 
 namespace UserFrosting\Sprinkle\Core\Filesystem;
 
-use League\Flysystem\FilesystemInterface;
 use Illuminate\Filesystem\FilesystemManager as LaravelFilesystemManager;
+use League\Flysystem\FilesystemInterface;
 use UserFrosting\Support\Repository\Repository as ConfigRepository;
 
 /**
- * Filesystem disk manager service
+ * Filesystem disk manager service.
  *
  * @author Louis Charette
  */
@@ -40,7 +41,8 @@ class FilesystemManager extends LaravelFilesystemManager
     /**
      * Call a custom driver creator.
      *
-     * @param  array                                       $config
+     * @param array $config
+     *
      * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
     protected function callCustomCreator(array $config)
@@ -57,8 +59,10 @@ class FilesystemManager extends LaravelFilesystemManager
     /**
      * Create a cache store instance.
      *
-     * @param  mixed                                   $config
+     * @param mixed $config
+     *
      * @throws \InvalidArgumentException
+     *
      * @return \League\Flysystem\Cached\CacheInterface
      */
     // N.B.: Introduced after laravel 5.4
@@ -78,7 +82,8 @@ class FilesystemManager extends LaravelFilesystemManager
     /**
      * Get the filesystem connection configuration.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return array
      */
     protected function getConfig($name)

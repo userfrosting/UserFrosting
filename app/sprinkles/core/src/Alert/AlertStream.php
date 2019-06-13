@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,11 +14,12 @@ use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\I18n\MessageTranslator;
 
 /**
- * AlertStream Class
+ * AlertStream Class.
  *
  * Implements an alert stream for use between HTTP requests, with i18n support via the MessageTranslator class
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see http://www.userfrosting.com/components/#messages
  */
 abstract class AlertStream
@@ -28,15 +30,15 @@ abstract class AlertStream
     protected $messagesKey;
 
     /**
-     * @var \UserFrosting\I18n\MessageTranslator|null
+     * @var MessageTranslator|null
      */
-    protected $messageTranslator = null;
+    protected $messageTranslator;
 
     /**
      * Create a new message stream.
      *
-     * @param string                                    $messagesKey
-     * @param \UserFrosting\I18n\MessageTranslator|null $translator
+     * @param string                 $messagesKey
+     * @param MessageTranslator|null $translator
      */
     public function __construct($messagesKey, MessageTranslator $translator = null)
     {
@@ -47,10 +49,11 @@ abstract class AlertStream
     /**
      * Set the translator to be used for all message streams.  Must be done before `addMessageTranslated` can be used.
      *
-     * @param  \UserFrosting\I18n\MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
+     * @param MessageTranslator|null $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
+     *
      * @return self
      */
-    public function setTranslator(MessageTranslator $translator)
+    public function setTranslator(MessageTranslator $translator = null)
     {
         $this->messageTranslator = $translator;
 
@@ -60,16 +63,17 @@ abstract class AlertStream
     /**
      * Adds a raw text message to the cache message stream.
      *
-     * @param  string $type    The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
-     * @param  string $message The message to be added to the message stream.
-     * @return self   this MessageStream object.
+     * @param string $type    The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
+     * @param string $message The message to be added to the message stream.
+     *
+     * @return self this MessageStream object.
      */
     public function addMessage($type, $message)
     {
         $messages = $this->messages();
         $messages[] = [
             'type'    => $type,
-            'message' => $message
+            'message' => $message,
         ];
         $this->saveMessages($messages);
 
@@ -79,13 +83,15 @@ abstract class AlertStream
     /**
      * Adds a text message to the cache message stream, translated into the currently selected language.
      *
-     * @param  string            $type         The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
-     * @param  string            $messageId    The message id for the message to be added to the message stream.
-     * @param  array[string]     $placeholders An optional hash of placeholder names => placeholder values to substitute into the translated message.
+     * @param string $type         The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
+     * @param string $messageId    The message id for the message to be added to the message stream.
+     * @param array  $placeholders An optional hash of placeholder names => placeholder values to substitute into the translated message.
+     *
      * @throws \RuntimeException
-     * @return self              this MessageStream object.
+     *
+     * @return self this MessageStream object.
      */
-    public function addMessageTranslated($type, $messageId, $placeholders = [])
+    public function addMessageTranslated($type, $messageId, array $placeholders = [])
     {
         if (!$this->messageTranslator) {
             throw new \RuntimeException('No translator has been set!  Please call MessageStream::setTranslator first.');
@@ -148,9 +154,9 @@ abstract class AlertStream
     abstract public function resetMessageStream();
 
     /**
-     * Save messages to the stream
+     * Save messages to the stream.
      *
-     * @param string $message
+     * @param array $messages
      */
-    abstract protected function saveMessages($message);
+    abstract protected function saveMessages(array $messages);
 }

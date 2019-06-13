@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,6 +13,6 @@
  */
 return [
     'debug' => [
-        'auth' => true
+        'auth' => true,
     ],
 ];

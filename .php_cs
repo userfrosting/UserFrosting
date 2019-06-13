@@ -16,6 +16,7 @@ $rules = [
     'braces'                                      => true,
     'cast_spaces'                                 => true,
     'class_definition'                            => true,
+    'concat_space'                                => ['spacing' => 'one'],
     'declare_equal_normalize'                     => true,
     'elseif'                                      => true,
     'encoding'                                    => true,
@@ -89,15 +90,14 @@ $rules = [
     'switch_case_semicolon_to_colon'              => true,
     'switch_case_space'                           => true,
     'ternary_operator_spaces'                     => true,
+    'trailing_comma_in_multiline_array'           => true,
     'trim_array_spaces'                           => true,
     'unary_operator_spaces'                       => true,
     'visibility_required'                         => true,
     'whitespace_after_comma_in_array'             => true,
 
     'header_comment' => [
-        'header'       => $header,
-        'separate'     => 'bottom',
-        'comment_type' => 'PHPDoc',
+        'header'       => $header
     ]
 ];
 

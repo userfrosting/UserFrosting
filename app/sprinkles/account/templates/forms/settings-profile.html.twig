@@ -20,6 +20,7 @@
                 </div>
             </div>
 
+            {% if 'locale' not in fields.hidden %}
             <div class="form-group">
                 <label for="input-locale" class="control-label">{{translate("LOCALE")}}</label>
                 <select id="input-locale" class="form-control js-select2" name="locale" {{page.visibility}}>
@@ -31,6 +32,7 @@
                 </select>
                 <p class="help-block">{{translate("LOCALE.ACCOUNT")}}.</p>
             </div>
+            {% endif %}
         {% endblock %}
     </div>
     <div class="box-footer text-center">

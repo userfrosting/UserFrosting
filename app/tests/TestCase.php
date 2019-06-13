@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -108,6 +109,12 @@ class TestCase extends BaseTestCase
             foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {
                 call_user_func($callback);
             }
+
+            // Force destroy test sessions
+            $this->ci->session->destroy();
+
+            // Close DB connection
+            $this->ci->db->getDatabaseManager()->disconnect();
 
             $this->ci = null;
         }

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -19,8 +20,8 @@ use UnexpectedValueException;
 use UserFrosting\Sprinkle\Core\Util\Util;
 use Whoops\Exception\Formatter;
 use Whoops\Exception\Inspector;
-use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\Handler;
+use Whoops\Handler\PlainTextHandler;
 use Whoops\Util\Misc;
 use Whoops\Util\TemplateHelper;
 
@@ -89,12 +90,14 @@ class WhoopsRenderer extends ErrorRenderer
      *
      * @example
      *  "txmt://open?url=%file&line=%line"
-     * @var mixed $editor
+     *
+     * @var mixed
      */
     protected $editor;
 
     /**
-     * A list of known editor strings
+     * A list of known editor strings.
+     *
      * @var array
      */
     protected $editors = [
@@ -178,7 +181,7 @@ class WhoopsRenderer extends ErrorRenderer
                 if (isset($_ENV['whoops-test'])) {
                     throw new \Exception(
                         'Use handleUnconditionally instead of whoops-test'
-                        .' environment variable'
+                        . ' environment variable'
                     );
                 }
 
@@ -305,7 +308,7 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * Adds an entry to the list of tables displayed in the template.
      * The expected data is a simple associative array. Any nested arrays
-     * will be flattened with print_r
+     * will be flattened with print_r.
      *
      * @param string $label
      * @param array  $data
@@ -321,8 +324,9 @@ class WhoopsRenderer extends ErrorRenderer
      * it should produce a simple associative array. Any nested arrays will
      * be flattened with print_r.
      *
-     * @param  string                   $label
-     * @param  callable                 $callback Callable returning an associative array
+     * @param string   $label
+     * @param callable $callback Callable returning an associative array
+     *
      * @throws InvalidArgumentException If $callback is not callable
      */
     public function addDataTableCallback($label, /* callable */ $callback)
@@ -360,7 +364,8 @@ class WhoopsRenderer extends ErrorRenderer
      * Optionally accepts a 'label' parameter, to only return the data
      * table under that label.
      *
-     * @param  string|null      $label
+     * @param string|null $label
+     *
      * @return array[]|callable
      */
     public function getDataTables($label = null)
@@ -378,7 +383,8 @@ class WhoopsRenderer extends ErrorRenderer
      * handle or return prematurely.
      * Set this to ensure that the handler will perform no matter what.
      *
-     * @param  bool|null $value
+     * @param bool|null $value
+     *
      * @return bool|null
      */
     public function handleUnconditionally($value = null)
@@ -403,6 +409,7 @@ class WhoopsRenderer extends ErrorRenderer
      *       unlink($file);
      *       return "http://stackoverflow.com";
      *   });
+     *
      * @param string $identifier
      * @param string $resolver
      */
@@ -422,7 +429,8 @@ class WhoopsRenderer extends ErrorRenderer
      * @example
      *   $run->setEditor('sublime');
      *
-     * @param  string|callable          $editor
+     * @param string|callable $editor
+     *
      * @throws InvalidArgumentException If invalid argument identifier provided
      */
     public function setEditor($editor)
@@ -443,9 +451,11 @@ class WhoopsRenderer extends ErrorRenderer
      * a string that may be used as the href property for that
      * file reference.
      *
-     * @param  string                   $filePath
-     * @param  int                      $line
+     * @param string $filePath
+     * @param int    $line
+     *
      * @throws InvalidArgumentException If editor resolver does not return a string
+     *
      * @return string|bool
      */
     public function getEditorHref($filePath, $line)
@@ -473,11 +483,13 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * Given a boolean if the editor link should
      * act as an Ajax request. The editor must be a
-     * valid callable function/closure
+     * valid callable function/closure.
      *
-     * @param  string                   $filePath
-     * @param  int                      $line
+     * @param string $filePath
+     * @param int    $line
+     *
      * @throws UnexpectedValueException If editor resolver does not return a boolean
+     *
      * @return bool
      */
     public function getEditorAjax($filePath, $line)
@@ -514,7 +526,8 @@ class WhoopsRenderer extends ErrorRenderer
      * Adds a path to the list of paths to be searched for
      * resources.
      *
-     * @param  string                   $path
+     * @param string $path
+     *
      * @throws InvalidArgumentException If $path is not a valid directory
      */
     public function addResourcePath($path)
@@ -548,6 +561,7 @@ class WhoopsRenderer extends ErrorRenderer
 
     /**
      * @deprecated
+     *
      * @return string
      */
     public function getResourcesPath()
@@ -560,6 +574,7 @@ class WhoopsRenderer extends ErrorRenderer
 
     /**
      * @deprecated
+     *
      * @param string $resourcesPath
      */
     public function setResourcesPath($resourcesPath)
@@ -600,10 +615,11 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * Given a boolean if the editor link should
      * act as an Ajax request. The editor must be a
-     * valid callable function/closure
+     * valid callable function/closure.
      *
-     * @param  string $filePath
-     * @param  int    $line
+     * @param string $filePath
+     * @param int    $line
+     *
      * @return array
      */
     protected function getEditor($filePath, $line)
@@ -664,8 +680,10 @@ class WhoopsRenderer extends ErrorRenderer
      * way back to the first, enabling a cascading-type system of overrides
      * for all resources.
      *
-     * @param  string           $resource
+     * @param string $resource
+     *
      * @throws RuntimeException If resource cannot be found in any of the available paths
+     *
      * @return string
      */
     protected function getResource($resource)
@@ -692,7 +710,7 @@ class WhoopsRenderer extends ErrorRenderer
         // If we got this far, nothing was found.
         throw new RuntimeException(
             "Could not find resource '$resource' in any resource paths."
-            . '(searched: ' . join(', ', $this->searchPaths). ')'
+            . '(searched: ' . implode(', ', $this->searchPaths) . ')'
         );
     }
 
@@ -702,9 +720,10 @@ class WhoopsRenderer extends ErrorRenderer
      *
      * We intentionally dont rely on $GLOBALS as it depends on 'auto_globals_jit' php.ini setting.
      *
-     * @param  array  $superGlobal     One of the superglobal arrays
-     * @param  string $superGlobalName the name of the superglobal array, e.g. '_GET'
-     * @return array  $values without sensitive data
+     * @param array  $superGlobal     One of the superglobal arrays
+     * @param string $superGlobalName the name of the superglobal array, e.g. '_GET'
+     *
+     * @return array $values without sensitive data
      */
     private function masked(array $superGlobal, $superGlobalName)
     {

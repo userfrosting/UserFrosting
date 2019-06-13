@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -54,19 +55,36 @@ trait withTestUser
         if ($isMaster) {
             $user_id = $this->ci->config['reserved_user_ids.master'];
         } else {
-            $user_id = rand(0, 1222);
+            $user_id = $this->getRandomUserId($this->ci->config['reserved_user_ids.master']);
         }
 
-        $params = array_merge(['id' => $user_id], $params);
+        // If user exist, returns it, otherwise create a new one
+        if (!$user = User::find($user_id)) {
+            $params = array_merge(['id' => $user_id], $params);
 
-        $fm = $this->ci->factory;
-        $user = $fm->create(User::class, $params);
+            $fm = $this->ci->factory;
+            $user = $fm->create(User::class, $params);
+        }
 
         if ($login) {
             $this->loginUser($user);
         }
 
         return $user;
+    }
+
+    /**
+     * Returns a random user id, exclusing th master id
+     * @param  int $masterId
+     * @return int
+     */
+    protected function getRandomUserId($masterId)
+    {
+        do {
+            $id = mt_rand(1, 9999);
+        } while (in_array($id, [$masterId]));
+
+        return $id;
     }
 
     /**
@@ -83,7 +101,7 @@ trait withTestUser
 
         $permission = $fm->create(Permission::class, [
             'slug'       => $slug,
-            'conditions' => $conditions
+            'conditions' => $conditions,
         ]);
 
         // Add the permission to the user

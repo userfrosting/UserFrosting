@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -16,7 +17,6 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Session\DatabaseSessionHandler;
 use Illuminate\Session\FileSessionHandler;
 use Interop\Container\ContainerInterface;
 use League\FactoryMuffin\FactoryMuffin;
@@ -26,37 +26,37 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
+use UserFrosting\Assets\AssetBundles\GulpBundleAssetsCompiledBundles as CompiledAssetBundles;
 use UserFrosting\Assets\AssetLoader;
-use UserFrosting\Cache\TaggableFileStore;
+use UserFrosting\Assets\Assets;
 use UserFrosting\Cache\MemcachedStore;
 use UserFrosting\Cache\RedisStore;
+use UserFrosting\Cache\TaggableFileStore;
 use UserFrosting\Config\ConfigPathBuilder;
 use UserFrosting\I18n\LocalePathBuilder;
-use UserFrosting\Assets\Assets;
-use UserFrosting\Assets\AssetBundles\GulpBundleAssetsCompiledBundles as CompiledAssetBundles;
-use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
-use UserFrosting\Sprinkle\Core\Util\RawAssetBundles;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
-use UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager;
-use UserFrosting\Sprinkle\Core\Error\Handler\NotFoundExceptionHandler;
-use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
-use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Alert\CacheAlertStream;
 use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
-use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
-use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocator;
+use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
+use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocator;
+use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
 use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
+use UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager;
+use UserFrosting\Sprinkle\Core\Error\Handler\NotFoundExceptionHandler;
 use UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
+use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
+use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Router;
+use UserFrosting\Sprinkle\Core\Session\DatabaseSessionHandler;
 use UserFrosting\Sprinkle\Core\Session\NullSessionHandler;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
-use UserFrosting\Support\Exception\BadRequestException;
+use UserFrosting\Sprinkle\Core\Util\RawAssetBundles;
 use UserFrosting\Support\Exception\NotFoundException;
 use UserFrosting\Support\Repository\Loader\ArrayFileLoader;
 use UserFrosting\Support\Repository\Repository;
@@ -65,6 +65,7 @@ use UserFrosting\Support\Repository\Repository;
  * UserFrosting core services provider.
  *
  * Registers core services for UserFrosting, such as config, database, asset manager, translator, etc.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class ServicesProvider
@@ -76,7 +77,7 @@ class ServicesProvider
      */
     public function register(ContainerInterface $container)
     {
-        /**
+        /*
          * Flash messaging service.
          *
          * Persists error/success messages between requests in the session.
@@ -88,7 +89,7 @@ class ServicesProvider
             $config = $c->config;
 
             if ($config['alert.storage'] == 'cache') {
-                return new CacheAlertStream($config['alert.key'], $c->translator, $c->cache, $c->config);
+                return new CacheAlertStream($config['alert.key'], $c->translator, $c->cache, $c->session->getId());
             } elseif ($config['alert.storage'] == 'session') {
                 return new SessionAlertStream($config['alert.key'], $c->translator, $c->session);
             } else {
@@ -96,7 +97,7 @@ class ServicesProvider
             }
         };
 
-        /**
+        /*
          * Asset loader service
          *
          * Loads assets from a specified relative location.
@@ -109,7 +110,7 @@ class ServicesProvider
             return new AssetLoader($c->assets);
         };
 
-        /**
+        /*
          * Asset manager service.
          *
          * Loads raw or compiled asset information from your bundle.config.json schema file.
@@ -153,21 +154,23 @@ class ServicesProvider
             } else {
 
                 // Register compiled assets stream in public folder + alias for vendor ones + build stream for CompiledAssetBundles
-                $c->locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
-                $c->locator->registerStream('assets', 'vendor', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
-                $c->locator->registerStream('build', '', \UserFrosting\BUILD_DIR_NAME, true);
+                $locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
+                $locator->registerStream('assets', 'vendor', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
+                $locator->registerStream('build', '', \UserFrosting\BUILD_DIR_NAME, true);
 
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.compiled.path'];
                 $assets = new Assets($locator, 'assets', $baseUrl);
 
                 // Load compiled asset bundle.
-                $assets->addAssetBundles(new CompiledAssetBundles($locator('build://' . $config['assets.compiled.schema'], true, true)));
+                $path = $locator->findResource('build://' . $config['assets.compiled.schema'], true, true);
+                $bundles = new CompiledAssetBundles($path);
+                $assets->addAssetBundles($bundles);
             }
 
             return $assets;
         };
 
-        /**
+        /*
          * Cache service.
          *
          * @throws \Exception                   If cache handler is not supported
@@ -194,7 +197,7 @@ class ServicesProvider
             return $cacheStore->instance();
         };
 
-        /**
+        /*
          * Middleware to check environment.
          *
          * @todo We should cache the results of this, the first time that it succeeds.
@@ -205,7 +208,7 @@ class ServicesProvider
             return new CheckEnvironment($c->view, $c->locator, $c->cache);
         };
 
-        /**
+        /*
          * Class mapper.
          *
          * Creates an abstraction on top of class names to allow extending them in sprinkles.
@@ -221,7 +224,7 @@ class ServicesProvider
             return $classMapper;
         };
 
-        /**
+        /*
          * Site config service (separate from Slim settings).
          *
          * Will attempt to automatically determine which config file(s) to use based on the value of the UF_MODE environment variable.
@@ -257,7 +260,7 @@ class ServicesProvider
             // See https://github.com/laravel/framework/issues/8172#issuecomment-99112012 for more information on why it's bad to hit Laravel sessions multiple times in rapid succession.
             $csrfBlacklist = $config['csrf.blacklist'];
             $csrfBlacklist['^/' . $config['assets.raw.path']] = [
-                'GET'
+                'GET',
             ];
 
             $config->set('csrf.blacklist', $csrfBlacklist);
@@ -265,18 +268,18 @@ class ServicesProvider
             return $config;
         };
 
-        /**
+        /*
          * Initialize CSRF guard middleware.
          *
          * @see https://github.com/slimphp/Slim-Csrf
-         * @throws BadRequestException
+         * @throws \UserFrosting\Support\Exception\BadRequestException
          * @return \Slim\Csrf\Guard
          */
         $container['csrf'] = function ($c) {
             return SlimCsrfProvider::setupService($c);
         };
 
-        /**
+        /*
          * Initialize Eloquent Capsule, which provides the database layer for UF.
          *
          * @todo construct the individual objects rather than using the facade
@@ -313,7 +316,7 @@ class ServicesProvider
                     $logger->debug("Query executed on database [{$query->connectionName}]:", [
                         'query'    => $query->sql,
                         'bindings' => $query->bindings,
-                        'time'     => $query->time . ' ms'
+                        'time'     => $query->time . ' ms',
                     ]);
                 });
             }
@@ -321,7 +324,7 @@ class ServicesProvider
             return $capsule;
         };
 
-        /**
+        /*
          * Debug logging with Monolog.
          *
          * Extend this service to push additional handlers onto the 'debug' log stack.
@@ -343,7 +346,7 @@ class ServicesProvider
             return $logger;
         };
 
-        /**
+        /*
          * Custom error-handler for recoverable errors.
          *
          * @return \UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager
@@ -365,7 +368,7 @@ class ServicesProvider
             return $handler;
         };
 
-        /**
+        /*
          * Error logging with Monolog.
          *
          * Extend this service to push additional handlers onto the 'error' log stack.
@@ -387,7 +390,7 @@ class ServicesProvider
             return $log;
         };
 
-        /**
+        /*
          * Factory service with FactoryMuffin.
          *
          * Provide access to factories for the rapid creation of objects for the purpose of testing
@@ -411,7 +414,7 @@ class ServicesProvider
             return $fm;
         };
 
-        /**
+        /*
          * Filesystem Service
          * @return \UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager
          */
@@ -419,7 +422,7 @@ class ServicesProvider
             return new FilesystemManager($c->config);
         };
 
-        /**
+        /*
          * Builds search paths for locales in all Sprinkles.
          *
          * @throws \UnexpectedValueException
@@ -478,7 +481,7 @@ class ServicesProvider
             return new LocalePathBuilder($c->locator, 'locale://', $locales);
         };
 
-        /**
+        /*
          * Mail service.
          *
          * @return \UserFrosting\Sprinkle\Core\Mail\Mailer
@@ -494,7 +497,7 @@ class ServicesProvider
             return $mailer;
         };
 
-        /**
+        /*
          * Mail logging service.
          *
          * PHPMailer will use this to log SMTP activity.
@@ -516,7 +519,7 @@ class ServicesProvider
             return $log;
         };
 
-        /**
+        /*
          * Migrator service.
          *
          * This service handles database migration operations
@@ -538,7 +541,7 @@ class ServicesProvider
             return $migrator;
         };
 
-        /**
+        /*
          * Error-handler for 404 errors.  Notice that we manually create a UserFrosting NotFoundException,
          * and a NotFoundExceptionHandler.  This lets us pass through to the UF error handling system.
          *
@@ -553,7 +556,7 @@ class ServicesProvider
             };
         };
 
-        /**
+        /*
          * Error-handler for PHP runtime errors.  Notice that we just pass this through to our general-purpose
          * error-handling service.
          *
@@ -563,7 +566,7 @@ class ServicesProvider
             return $c->errorHandler;
         };
 
-        /**
+        /*
          * Laravel query logging with Monolog.
          *
          * Extend this service to push additional handlers onto the 'query' log stack.
@@ -585,7 +588,7 @@ class ServicesProvider
             return $logger;
         };
 
-        /**
+        /*
          * Override Slim's default router with the UF router.
          *
          * @return \UserFrosting\Sprinkle\Core\Router
@@ -600,7 +603,7 @@ class ServicesProvider
             return (new Router())->setCacheFile($routerCacheFile);
         };
 
-        /**
+        /*
          * Return an instance of the database seeder
          *
          * @return \UserFrosting\Sprinkle\Core\Database\Seeder\Seeder
@@ -609,7 +612,7 @@ class ServicesProvider
             return new Seeder($c);
         };
 
-        /**
+        /*
          * Start the PHP session, with the name and parameters specified in the configuration file.
          *
          * @throws \Exception
@@ -639,7 +642,7 @@ class ServicesProvider
             return $session;
         };
 
-        /**
+        /*
          * Request throttler.
          *
          * Throttles (rate-limits) requests of a predefined type, with rules defined in site config.
@@ -665,7 +668,7 @@ class ServicesProvider
             return $throttler;
         };
 
-        /**
+        /*
          * Translation service, for translating message tokens.
          *
          * @return \UserFrosting\I18n\MessageTranslator
@@ -681,7 +684,7 @@ class ServicesProvider
             return $translator;
         };
 
-        /**
+        /*
          * Set up Twig as the view, adding template paths for all sprinkles and the Slim Twig extension.
          *
          * Also adds the UserFrosting core Twig extension, which provides additional functions, filters, global variables, etc.

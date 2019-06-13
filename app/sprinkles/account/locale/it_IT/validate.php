@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -17,6 +18,6 @@
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => 'I due campi devono combaciare',
-        'USERNAME'          => "Il nome utente può essere composto solo da caratteri alfanumerici, '.', '-', e '_'."
-    ]
+        'USERNAME'          => "Il nome utente può essere composto solo da caratteri alfanumerici, '.', '-', e '_'.",
+    ],
 ];

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -14,7 +15,7 @@ use UserFrosting\Sprinkle\Core\Facades\Translator;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * UserSprunje
+ * UserSprunje.
  *
  * Implements Sprunje for the users API.
  *
@@ -25,23 +26,23 @@ class UserSprunje extends Sprunje
     protected $name = 'users';
 
     protected $listable = [
-        'status'
+        'status',
     ];
 
     protected $sortable = [
         'name',
         'last_activity',
-        'status'
+        'status',
     ];
 
     protected $filterable = [
         'name',
         'last_activity',
-        'status'
+        'status',
     ];
 
     protected $excludeForAll = [
-        'last_activity'
+        'last_activity',
     ];
 
     /**
@@ -58,8 +59,9 @@ class UserSprunje extends Sprunje
     /**
      * Filter LIKE the last activity description.
      *
-     * @param  Builder $query
-     * @param  mixed   $value
+     * @param Builder $query
+     * @param mixed   $value
+     *
      * @return self
      */
     protected function filterLastActivity($query, $value)
@@ -78,8 +80,9 @@ class UserSprunje extends Sprunje
     /**
      * Filter LIKE the first name, last name, or email.
      *
-     * @param  Builder $query
-     * @param  mixed   $value
+     * @param Builder $query
+     * @param mixed   $value
+     *
      * @return self
      */
     protected function filterName($query, $value)
@@ -98,10 +101,11 @@ class UserSprunje extends Sprunje
     }
 
     /**
-     * Filter by status (active, disabled, unactivated)
+     * Filter by status (active, disabled, unactivated).
      *
-     * @param  Builder $query
-     * @param  mixed   $value
+     * @param Builder $query
+     * @param mixed   $value
+     *
      * @return self
      */
     protected function filterStatus($query, $value)
@@ -135,24 +139,25 @@ class UserSprunje extends Sprunje
         return [
             [
                 'value' => 'active',
-                'text'  => Translator::translate('ACTIVE')
+                'text'  => Translator::translate('ACTIVE'),
             ],
             [
                 'value' => 'unactivated',
-                'text'  => Translator::translate('UNACTIVATED')
+                'text'  => Translator::translate('UNACTIVATED'),
             ],
             [
                 'value' => 'disabled',
-                'text'  => Translator::translate('DISABLED')
-            ]
+                'text'  => Translator::translate('DISABLED'),
+            ],
         ];
     }
 
     /**
      * Sort based on last activity time.
      *
-     * @param  Builder $query
-     * @param  string  $direction
+     * @param Builder $query
+     * @param string  $direction
+     *
      * @return self
      */
     protected function sortLastActivity($query, $direction)
@@ -165,8 +170,9 @@ class UserSprunje extends Sprunje
     /**
      * Sort based on last name.
      *
-     * @param  Builder $query
-     * @param  string  $direction
+     * @param Builder $query
+     * @param string  $direction
+     *
      * @return self
      */
     protected function sortName($query, $direction)
@@ -177,10 +183,11 @@ class UserSprunje extends Sprunje
     }
 
     /**
-     * Sort active, unactivated, disabled
+     * Sort active, unactivated, disabled.
      *
-     * @param  Builder $query
-     * @param  string  $direction
+     * @param Builder $query
+     * @param string  $direction
+     *
      * @return self
      */
     protected function sortStatus($query, $direction)

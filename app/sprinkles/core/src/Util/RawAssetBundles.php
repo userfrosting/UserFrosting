@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,7 +14,7 @@ use UserFrosting\Assets\AssetBundles\GulpBundleAssetsRawBundles;
 use UserFrosting\Assets\Exception\InvalidBundlesFileException;
 
 /**
- * RawAssetBundles Class
+ * RawAssetBundles Class.
  *
  * Extends GulpBundleAssetsRawBundles with an extend method that merges the referenced asset bundles with special collision logic.
  *
@@ -76,10 +77,12 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles
 
     /**
      * Adds provided bundle to provided bundle store with collision rule respected.
-     * @param  string|string[]       $bundle        Bundle to add.
-     * @param  string                $name          Name of bundle provided.
-     * @param  string                $collisionRule Rule to apply if collision is detected.
-     * @param  string[string][]      $bundleStore   Place to add bundles (CSS or JS depending on provided store).
+     *
+     * @param string|string[]  $bundle        Bundle to add.
+     * @param string           $name          Name of bundle provided.
+     * @param string           $collisionRule Rule to apply if collision is detected.
+     * @param string[string][] $bundleStore   Place to add bundles (CSS or JS depending on provided store).
+     *
      * @throws \ErrorException       if collision rule is 'error' and bundle is already defined.
      * @throws \OutOfBoundsException if an invalid collision rule is provided.
      */

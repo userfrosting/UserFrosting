@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -28,9 +29,11 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      * @throws NotFoundException  If permission is not found
      */
@@ -52,7 +55,7 @@ class PermissionController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $permission = $classMapper->staticMethod('permission', 'find', $permissionId);
+        $permission = $classMapper->getClassMapping('permission')::find($permissionId);
 
         // If the permission doesn't exist, return 404
         if (!$permission) {
@@ -68,15 +71,17 @@ class PermissionController extends SimpleController
     }
 
     /**
-     * Returns a list of Permissions
+     * Returns a list of Permissions.
      *
      * Generates a list of permissions, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getList(Request $request, Response $response, $args)
@@ -112,9 +117,11 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function getUsers(Request $request, Response $response, $args)
@@ -154,9 +161,11 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      * @throws NotFoundException  If permission is not found
      */
@@ -178,7 +187,7 @@ class PermissionController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $permission = $classMapper->staticMethod('permission', 'find', $permissionId);
+        $permission = $classMapper->getClassMapping('permission')::find($permissionId);
 
         // If the permission doesn't exist, return 404
         if (!$permission) {
@@ -186,7 +195,7 @@ class PermissionController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'pages/permission.html.twig', [
-            'permission' => $permission
+            'permission' => $permission,
         ]);
     }
 
@@ -198,9 +207,11 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      *
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageList(Request $request, Response $response, $args)
