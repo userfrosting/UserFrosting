@@ -15,7 +15,8 @@
  * @author Abdullah Seba
  */
 return [
-    'VALIDATE' => [
-        'PASSWORD_MISMATCH' => 'يجب أن تكون كلمة المرور وكلمة المرور التأكيدية نفس',
-    ],
+  'VALIDATE' => [
+    'PASSWORD_MISMATCH' => 'يجب أن تكون كلمة المرور وكلمة المرور التأكيدية نفس',
+    'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
+  ],
 ];

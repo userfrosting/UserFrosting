@@ -14,7 +14,8 @@
  * @author Louis Charette
  */
 return [
-    'VALIDATE' => [
-        'PASSWORD_MISMATCH' => 'Votre mot de passe et votre mot de passe de confirmation doivent correspondre.',
-    ],
+  'VALIDATE' => [
+    'PASSWORD_MISMATCH' => 'Votre mot de passe et votre mot de passe de confirmation doivent correspondre.',
+    'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
+  ],
 ];
