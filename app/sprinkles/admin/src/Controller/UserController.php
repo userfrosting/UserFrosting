@@ -765,6 +765,9 @@ class UserController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
+        /** @var \UserFrosting\Support\Repository\Repository $config */
+        $config = $this->ci->config;
+
         // Access-controlled resource - check that currentUser has permission to edit "password" field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
@@ -775,6 +778,10 @@ class UserController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/user/edit-password.yaml');
+        $schema->set('value.validators.length.min', $config['site.password.length.min']);
+        $schema->set('value.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'modals/user-set-password.html.twig', [
@@ -1307,6 +1314,8 @@ class UserController extends SimpleController
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/user/edit-field.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
