@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Config to set Domain of RememberMe Cookie ([#990]; [#991]; Thanks @xrobau!)
-
+- Config settings for password min/max length ([#993])
 
 ## [v4.2.2]
 
@@ -766,6 +766,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#983]: https://github.com/userfrosting/UserFrosting/issues/983
 [#990]: https://github.com/userfrosting/UserFrosting/issues/990
 [#991]: https://github.com/userfrosting/UserFrosting/issues/991
+[#993]: https://github.com/userfrosting/UserFrosting/issues/993
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
