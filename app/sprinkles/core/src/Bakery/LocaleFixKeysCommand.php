@@ -124,7 +124,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
 
                 // The files with missing keys.
                 if (!empty($missing)) {
-                    $fixed[] = $this->fix($base, $alt, 'test.php');
+                    $fixed[] = $this->fix($base, $alt, $filePath);
                 }
             }
         }
