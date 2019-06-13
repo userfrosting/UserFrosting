@@ -188,7 +188,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     }
 
     /**
-     * Fix a file using php-cs-fixer
+     * Fix a file using php-cs-fixer.
      *
      * @param string $file path of file to fix
      */
