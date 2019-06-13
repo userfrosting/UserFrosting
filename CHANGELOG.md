@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - [PHPMailer] Turn off opportunistic TLS when disabled ([#986]; [#987])
+- Migrator now ignore files that don't end in `.php` ([#965]; Temporary fix for [#998])
 
 ## [v4.2.2]
 
@@ -764,6 +765,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#953]: https://github.com/userfrosting/UserFrosting/issues/953
 [#958]: https://github.com/userfrosting/UserFrosting/issues/958
 [#963]: https://github.com/userfrosting/UserFrosting/issues/963
+[#965]: https://github.com/userfrosting/UserFrosting/issues/965
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
 [#981]: https://github.com/userfrosting/UserFrosting/issues/981
 [#983]: https://github.com/userfrosting/UserFrosting/issues/983
@@ -772,6 +774,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#990]: https://github.com/userfrosting/UserFrosting/issues/990
 [#991]: https://github.com/userfrosting/UserFrosting/issues/991
 [#993]: https://github.com/userfrosting/UserFrosting/issues/993
+[#998]: https://github.com/userfrosting/UserFrosting/issues/998
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
