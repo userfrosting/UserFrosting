@@ -78,7 +78,9 @@ class LocaleMissingKeysCommand extends BaseCommand
         $this->$table->addRows([['FILE PATH', 'MISSING KEY'], new TableSeparator()]);
 
         // Build the table.
-        $this->buildTable($difference);
+        if (!empty($difference)) {
+            $this->buildTable($difference);
+        }
 
         return $this->$table->render();
     }

@@ -148,23 +148,54 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
             mkdir(dirname($filePath), 0777, true);
         }
 
+        // Build the respository and then merge in each locale file.
         // Any keys not in the $alt locale will be the original left from the $base locales value.
         $repository = new Repository();
         $repository->mergeItems(null, $base);
         $repository->mergeItems(null, $alt);
 
-        // We will fix the file by completely rebuilding it.
-        passthru("echo \<?php > $filePath");
+        // Check if this is an existing locale file with docblock.
+        $temp = file_get_contents($filePath);
+
+        if (strpos($temp, '@author') !== false || strpos($temp, '/**') !== false) {
+            // Save existing docblock temporarily.
+            $start = strpos($temp, '/**');
+            $end = strpos(substr($temp, $start), '*/');
+            $docblock = file_get_contents($filePath, null, null, $start, $end + 2);
+
+            passthru("echo \<?php > $filePath");
+
+            // We have to add the comment header prior to docblock or php-cs-fixer will overwrite it.
+            $this->fixFileWithPhpCs($filePath);
+
+            // Append the docblock after the header comment.
+            file_put_contents($filePath, $docblock, FILE_APPEND);
+            passthru("echo '\r\n' >> $filePath");
+        } else {
+            passthru("echo \<?php > $filePath");
+        }
+
         file_put_contents($filePath, var_export($repository->all(), true), FILE_APPEND);
         passthru("echo \; >> $filePath");
 
-        // Check the file with php-cs-fixer
-        passthru("php ./app/vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix $filePath --quiet --using-cache no --config ./.php_cs");
+        // Final check with php-cs-fixer
+        $this->fixFileWithPhpCs($filePath);
 
         // Insert 'return' into the file.
         file_put_contents($filePath, preg_replace('/\[/', 'return [', file_get_contents($filePath), 1));
 
         return "$filePath";
+    }
+
+    /**
+     * Fix a file using php-cs-fixer
+     *
+     * @param string $file path of file to fix
+     */
+    public function fixFileWithPhpCs($file)
+    {
+        // Fix the file with php-cs-fixer
+        passthru("php ./app/vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix $file --quiet --using-cache no --config ./.php_cs");
     }
 
     /**
