@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Config to set Domain of RememberMe Cookie ([#990]; [#991]; Thanks @xrobau!)
 - Config settings for password min/max length ([#993])
 
+### Fixed
+- [PHPMailer] Turn off opportunistic TLS when disabled ([#986]; [#987])
+
 ## [v4.2.2]
 
 ### Added
@@ -764,6 +767,8 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
 [#981]: https://github.com/userfrosting/UserFrosting/issues/981
 [#983]: https://github.com/userfrosting/UserFrosting/issues/983
+[#986]: https://github.com/userfrosting/UserFrosting/issues/986
+[#987]: https://github.com/userfrosting/UserFrosting/issues/987
 [#990]: https://github.com/userfrosting/UserFrosting/issues/990
 [#991]: https://github.com/userfrosting/UserFrosting/issues/991
 [#993]: https://github.com/userfrosting/UserFrosting/issues/993
