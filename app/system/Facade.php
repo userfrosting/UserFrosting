@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,9 +10,9 @@
 
 namespace UserFrosting\System;
 
+use Interop\Container\ContainerInterface;
 use Mockery;
 use Mockery\MockInterface;
-use Interop\Container\ContainerInterface;
 use RuntimeException;
 
 /**
@@ -20,7 +21,9 @@ use RuntimeException;
  * Adapted from the Laravel Facade class: https://github.com/laravel/framework/blob/5.3/src/Illuminate/Support/Facades/Facade.php
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see https://laravel.com/docs/5.2/facades
+ *
  * @license https://github.com/laravel/framework/blob/5.3/LICENSE.md (MIT License)
  */
 abstract class Facade
@@ -76,7 +79,8 @@ abstract class Facade
     /**
      * Create a fresh mock instance for the given class.
      *
-     * @param  string               $name
+     * @param string $name
+     *
      * @return \Mockery\Expectation
      */
     protected static function createFreshMockInstance($name)
@@ -95,7 +99,8 @@ abstract class Facade
     /**
      * Create a fresh mock instance for the given class.
      *
-     * @param  string               $name
+     * @param string $name
+     *
      * @return \Mockery\Expectation
      */
     protected static function createMockByName($name)
@@ -152,7 +157,8 @@ abstract class Facade
     /**
      * Resolve the facade root instance from the container.
      *
-     * @param  string|object $name
+     * @param string|object $name
+     *
      * @return mixed
      */
     protected static function resolveFacadeInstance($name)
@@ -209,9 +215,11 @@ abstract class Facade
     /**
      * Handle dynamic, static calls to the object.
      *
-     * @param  string            $method
-     * @param  array             $args
+     * @param string $method
+     * @param array  $args
+     *
      * @throws \RuntimeException
+     *
      * @return mixed
      */
     public static function __callStatic($method, $args)

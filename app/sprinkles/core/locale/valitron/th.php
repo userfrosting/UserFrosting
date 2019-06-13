@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -37,5 +38,5 @@ return [
     'creditCard'    => 'จะต้องเป็นหมายเลขบัตรเครดิตที่ถูกต้อง',
     'lengthMin'     => 'จะต้องมีความยาวมากกว่า %d ตัวอักษร',
     'lengthMax'     => 'จะต้องมีความยาวน้อยกว่า %d ตัวอักษร',
-    'instanceOf'    => "จะต้องเป็นกรณีของ '%s'"
+    'instanceOf'    => "จะต้องเป็นกรณีของ '%s'",
 ];

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -14,7 +15,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Body;
 
 /**
- * [abstract description]
+ * [abstract description].
+ *
  * @var [type]
  */
 abstract class ErrorRenderer implements ErrorRendererInterface

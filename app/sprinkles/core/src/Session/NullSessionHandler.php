@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Session;
 use SessionHandlerInterface;
 
 /**
- * Temp class until we update to Laravel 5.5, so we can use theirs
+ * Temp class until we update to Laravel 5.5, so we can use theirs.
  */
 class NullSessionHandler implements SessionHandlerInterface
 {

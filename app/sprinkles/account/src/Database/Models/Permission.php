@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -16,7 +17,9 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * Permission Class.
  *
  * Represents a permission for a role or user.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @property string slug
  * @property string name
  * @property string conditions
@@ -33,7 +36,7 @@ class Permission extends Model
         'slug',
         'name',
         'conditions',
-        'description'
+        'description',
     ];
 
     /**
@@ -71,8 +74,9 @@ class Permission extends Model
     /**
      * Query scope to get all permissions assigned to a specific role.
      *
-     * @param  Builder $query
-     * @param  int     $roleId
+     * @param Builder $query
+     * @param int     $roleId
+     *
      * @return Builder
      */
     public function scopeForRole($query, $roleId)
@@ -86,8 +90,9 @@ class Permission extends Model
     /**
      * Query scope to get all permissions NOT associated with a specific role.
      *
-     * @param  Builder $query
-     * @param  int     $roleId
+     * @param Builder $query
+     * @param int     $roleId
+     *
      * @return Builder
      */
     public function scopeNotForRole($query, $roleId)

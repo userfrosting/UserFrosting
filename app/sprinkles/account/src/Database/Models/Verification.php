@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,10 +13,12 @@ namespace UserFrosting\Sprinkle\Account\Database\Models;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
- * Verification Class
+ * Verification Class.
  *
  * Represents a pending email verification for a new user account.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @property int user_id
  * @property hash token
  * @property bool completed
@@ -34,7 +37,7 @@ class Verification extends Model
         'hash',
         'completed',
         'expires_at',
-        'completed_at'
+        'completed_at',
     ];
 
     /**
@@ -56,7 +59,8 @@ class Verification extends Model
     }
 
     /**
-     * @param  string $value
+     * @param string $value
+     *
      * @return self
      */
     public function setToken($value)

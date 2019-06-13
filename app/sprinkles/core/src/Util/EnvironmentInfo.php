@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Util;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * EnvironmentInfo Class
+ * EnvironmentInfo Class.
  *
  * Gets basic information about the application environment.
  *

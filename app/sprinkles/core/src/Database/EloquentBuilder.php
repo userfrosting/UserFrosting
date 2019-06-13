@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -14,7 +15,7 @@ use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
 
 /**
- * UserFrosting's custom Eloquent Builder Class
+ * UserFrosting's custom Eloquent Builder Class.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -23,7 +24,8 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to sum the relations.
      *
-     * @param  mixed $relations
+     * @param mixed $relations
+     *
      * @return self
      */
     public function withSum($relations)
@@ -36,7 +38,8 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to max the relations.
      *
-     * @param  mixed $relations
+     * @param mixed $relations
+     *
      * @return self
      */
     public function withMax($relations)
@@ -49,7 +52,8 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to min the relations.
      *
-     * @param  mixed $relations
+     * @param mixed $relations
+     *
      * @return self
      */
     public function withMin($relations)
@@ -62,7 +66,8 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * Add subselect queries to min the relations.
      *
-     * @param  mixed $relations
+     * @param mixed $relations
+     *
      * @return self
      */
     public function withAvg($relations)
@@ -75,14 +80,15 @@ class EloquentBuilder extends LaravelEloquentBuilder
     /**
      * use the MySQL aggregate functions including AVG COUNT, SUM, MAX and MIN.
      *
-     * @param  array  $relations
-     * @param  string $function
+     * @param array  $relations
+     * @param string $function
+     *
      * @return self
      */
     public function withAggregate($relations, $function = 'COUNT')
     {
         if (is_null($this->query->columns)) {
-            $this->query->select([$this->query->from.'.*']);
+            $this->query->select([$this->query->from . '.*']);
         }
 
         $function = Str::lower($function);
@@ -108,7 +114,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
 
             $relation = $this->getRelationWithoutConstraints($name);
 
-            $expression = new Expression($function.'('.$this->query->getGrammar()->wrap($column).')');
+            $expression = new Expression($function . '(' . $this->query->getGrammar()->wrap($column) . ')');
 
             // Here we will get the relationship aggregate query and prepare to add it to the main query
             // as a sub-select. First, we'll get the "has" query and use that to get the relation
@@ -126,7 +132,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
             // Finally we will add the proper result column alias to the query and run the subselect
             // statement against the query builder. Then we will return the builder instance back
             // to the developer for further constraint chaining that needs to take place on it.
-            $column = snake_case(isset($alias) ? $alias : $name).'_'.$function;
+            $column = snake_case(isset($alias) ? $alias : $name) . '_' . $function;
 
             $this->selectSub($query->toBase(), $column);
         }

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -36,5 +37,5 @@ return [
     'lengthBetween' => 'должно содержать от %d до %d символов',
     'creditCard'    => 'должно быть номером кредитной карты',
     'lengthMin'     => 'должно содержать более %d символов',
-    'lengthMax'     => 'должно содержать менее %d символов'
+    'lengthMax'     => 'должно содержать менее %d символов',
 ];

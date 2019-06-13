@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -10,8 +11,8 @@
 namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Interop\Container\ContainerInterface;
-use UserFrosting\Sprinkle\Core\Util\Util;
 use UserFrosting\Assets\AssetsTemplatePlugin;
+use UserFrosting\Sprinkle\Core\Util\Util;
 
 /**
  * Extends Twig functionality for the Core sprinkle.
@@ -64,8 +65,8 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
             new \Twig_SimpleFunction('translate', function ($hook, $params = []) {
                 return $this->services['translator']->translate($hook, $params);
             }, [
-                'is_safe' => ['html']
-            ])
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 
@@ -88,7 +89,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
             }),
             new \Twig_SimpleFilter('unescape', function ($string) {
                 return html_entity_decode($string);
-            })
+            }),
         ];
     }
 
@@ -109,18 +110,18 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
             'csrf'   => [
                 'keys' => [
                     'name'  => $csrfNameKey,
-                    'value' => $csrfValueKey
+                    'value' => $csrfValueKey,
                 ],
                 'name'  => $csrfName,
-                'value' => $csrfValue
-            ]
+                'value' => $csrfValue,
+            ],
         ];
 
         $site = array_replace_recursive($this->services->config['site'], $csrf);
 
         return [
             'site'   => $site,
-            'assets' => new AssetsTemplatePlugin($this->services->assets)
+            'assets' => new AssetsTemplatePlugin($this->services->assets),
         ];
     }
 }

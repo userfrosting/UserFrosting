@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -24,7 +25,7 @@ return [
         'REQUIRED'      => '请为 <strong>{{label}}</strong> 确定一个值.',
         'SPRUNJE'       => [
             'BAD_FILTER' => '<strong>{{name}}</strong> 不是一个有效的 Sprunje 过滤器.',
-            'BAD_SORT'   => '<strong>{{name}}</strong> 不是一个有效的 Sprunje 排序.'
-        ]
-    ]
+            'BAD_SORT'   => '<strong>{{name}}</strong> 不是一个有效的 Sprunje 排序.',
+        ],
+    ],
 ];

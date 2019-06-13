@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -34,5 +35,5 @@ return [
     'contains'      => 'laukam jāsatur %s',
     'boolean'       => 'laukam jābūt ir/nav vērtībai',
     'lengthBetween' => 'lauka garumam jābūt no %d līdz %d simbolu garam',
-    'creditCard'    => 'laukam jābūt derīgam kredītkartes numuram'
+    'creditCard'    => 'laukam jābūt derīgam kredītkartes numuram',
 ];

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,6 +16,6 @@
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => 'Tu contraseña y contraseña de confirmación deben coincidir.',
-        'USERNAME'          => "El nombre de usuario puede consistir sólo en letras minúsculas, números, '.', '-' y '_'."
-    ]
+        'USERNAME'          => "El nombre de usuario puede consistir sólo en letras minúsculas, números, '.', '-' y '_'.",
+    ],
 ];
