@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -31,7 +32,7 @@ class PasswordSecurityTest extends TestCase
     'FE391596FAB81655455E437319127E7EFB9:2',
     'FEB3321CE615A2B986544888D42C17C417F:1',
     'FF0C145449A6D428BDFC46961A5ED09ADB0:3',
-    'FBD6D76BB5D2041542D7D2E3FAC5BB05593:22572'
+    'FBD6D76BB5D2041542D7D2E3FAC5BB05593:22572',
   ];
 
     /**

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -124,7 +125,7 @@ class PasswordSecurity
         $ch = curl_init();
         $optionsArray = [
         CURLOPT_URL            => 'https://api.pwnedpasswords.com/range/' . $hashPrefix,
-        CURLOPT_RETURNTRANSFER => true
+        CURLOPT_RETURNTRANSFER => true,
     ];
         curl_setopt_array($ch, $optionsArray);
 

@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
+ */
+
 $header = 'UserFrosting (http://www.userfrosting.com)
 
 @link      https://github.com/userfrosting/UserFrosting
@@ -16,6 +24,7 @@ $rules = [
     'braces'                                      => true,
     'cast_spaces'                                 => true,
     'class_definition'                            => true,
+    'concat_space'                                => ['spacing' => 'one'],
     'declare_equal_normalize'                     => true,
     'elseif'                                      => true,
     'encoding'                                    => true,
@@ -89,6 +98,7 @@ $rules = [
     'switch_case_semicolon_to_colon'              => true,
     'switch_case_space'                           => true,
     'ternary_operator_spaces'                     => true,
+    'trailing_comma_in_multiline_array'           => true,
     'trim_array_spaces'                           => true,
     'unary_operator_spaces'                       => true,
     'visibility_required'                         => true,
@@ -96,9 +106,7 @@ $rules = [
 
     'header_comment' => [
         'header'       => $header,
-        'separate'     => 'bottom',
-        'comment_type' => 'PHPDoc',
-    ]
+    ],
 ];
 
 $finder = PhpCsFixer\Finder::create()
@@ -111,5 +119,5 @@ return PhpCsFixer\Config::create()
     ->setRules($rules)
     ->setFinder($finder)
     ->setUsingCache(true)
-    ->setCacheFile(__DIR__.'/.php_cs.cache')
+    ->setCacheFile(__DIR__ . '/.php_cs.cache')
     ->setRiskyAllowed(true);
