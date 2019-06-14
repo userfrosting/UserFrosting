@@ -47,6 +47,7 @@ class LocaleMissingKeysCommand extends BaseCommand
     protected function configure()
     {
         $this->setName('locale:missing-keys')
+        ->setHelp("This command finds missing keys through comparison. E.g. running 'locale:missing-keys -b en_US -c es_ES' will compare all es_ES and en_US locale files and generate a table listing the filepath, missing key, and a preview of the value from the 'base' (-b) locale.")
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale to compare against.', 'en_US')
         ->addOption('compare', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null);
 
@@ -58,7 +59,10 @@ class LocaleMissingKeysCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->$table = new Table($output);
+        $this->io->title('Missing Locale Keys');
+
+        $this->table = new Table($output);
+        $this->table->setStyle('borderless');
 
         // The "base" locale to compare other locales against. Defaults to en_US if not set.
         $baseLocale = $input->getOption('base');
@@ -74,15 +78,15 @@ class LocaleMissingKeysCommand extends BaseCommand
             $difference[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
         }
 
-        $this->$table->setHeaders([new TableCell('COMPARING AGAINST: ' . $baseLocale, ['colspan' => 2])]);
-        $this->$table->addRows([['FILE PATH', 'MISSING KEY'], new TableSeparator()]);
+        $this->table->setHeaders([new TableCell('COMPARING AGAINST: ' . $baseLocale, ['colspan' => 2])]);
+        $this->table->addRows([['FILE PATH', 'MISSING KEY'], new TableSeparator()]);
 
         // Build the table.
         if (!empty($difference)) {
             $this->buildTable($difference);
         }
 
-        return $this->$table->render();
+        return $this->table->render();
     }
 
     /**
@@ -125,7 +129,7 @@ class LocaleMissingKeysCommand extends BaseCommand
                 $this->buildTable($value, ($level + 1));
             } elseif ($value != '0') {
                 //It is not an array and not '0', so add the row.
-                $this->$table->addRow([$this->path, $key]);
+                $this->table->addRow([$this->path, $key]);
             }
         }
     }

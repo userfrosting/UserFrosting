@@ -44,6 +44,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
     protected function configure()
     {
         $this->setName('locale:missing-values')
+        ->setHelp("This command generates missing locale file keys through comparison. E.g. running 'locale:missing-values -b en_US -f es_ES' will compare all es_ES and en_US locale files and populate es_ES with any missing keys from en_US.")
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale used for comparison and translation preview.', 'en_US')
         ->addOption('check', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null)
         ->addOption('length', 'l', InputOption::VALUE_REQUIRED, 'Set max length for preview column text.', 255)
@@ -58,7 +59,10 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->io->title('Missing/Duplicate Locale Values');
+
         $this->table = new Table($output);
+        $this->table->setStyle('borderless');
 
         // Option -c. The locales to be checked.
         $this->localesToCheck = $input->getOption('check');

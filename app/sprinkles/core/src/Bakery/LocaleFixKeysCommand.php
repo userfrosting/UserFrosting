@@ -10,9 +10,8 @@
 
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableCell;
-use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,12 +28,17 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     /**
      * @var string
      */
-    protected static $locales;
+    protected static $baseLocale;
 
     /**
      * @var string
      */
-    protected static $baseLocale;
+    protected static $locales;
+
+    /**
+     * @var array
+     */
+    protected $filesFixed = [];
 
     /**
      * @var array
@@ -47,6 +51,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     protected function configure()
     {
         $this->setName('locale:fix-keys')
+        ->setHelp("This command generates missing locale file keys through comparison. E.g. running 'locale:fix-keys -b en_US -f es_ES' will compare all es_ES and en_US locale files and populate es_ES with any missing keys from en_US.")
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale used to generate values for any keys that are fixed. ', 'en_US')
         ->addOption('fix', 'f', InputOption::VALUE_REQUIRED, 'One or more specific locales to fix. E.g. "fr_FR,es_ES" ', null);
 
@@ -58,7 +63,10 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->io->title('Fixing Locale Keys');
+
         $this->$table = new Table($output);
+        $this->$table->setStyle('compact');
 
         // The "base" locale to compare other locales against. Defaults to en_US if not set.
         $this->baseLocale = $input->getOption('base');
@@ -72,17 +80,20 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
 
         $fixed = [];
 
+        $progressBar = new ProgressBar($output);
+
+        $progressBar->start(count($localesAvailable));
+
         foreach ($localesAvailable as $key => $altLocale) {
             $fixed[$altLocale] = $this->fixFiles($this->baseLocale, $altLocale, $baseLocaleFileNames);
+            $progressBar->advance();
         }
+        $this->io->newLine(2);
 
-        $this->$table->setHeaders([new TableCell('MISSING KEY VALUES WILL BE SET USING: ' . $this->baseLocale, ['colspan' => 1])]);
-        $this->$table->addRows([['FILES FIXED'], new TableSeparator()]);
+        $this->io->section('Files fixed');
+        $this->getListValues($fixed);
 
-        // Build the table.
-        $this->buildTable($fixed);
-
-        return $this->$table->render();
+        return $this->io->listing($this->filesFixed);
     }
 
     /**
@@ -91,15 +102,15 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
      * @param array $array File paths and missing keys.
      * @param int   $level Nested array depth.
      */
-    protected function buildTable(array $array)
+    protected function getListValues(array $array)
     {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 //We need to loop through it.
-                $this->buildTable($value);
+                $this->getListValues($value);
             } elseif ($value != '0') {
-                //It is not an array and not '0', so add the row.
-                $this->$table->addRow([$value]);
+                //It is not an array and not '0', so add it to the list.
+                $this->filesFixed[] = $value;
             }
         }
     }
@@ -124,7 +135,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
 
                 // The files with missing keys.
                 if (!empty($missing)) {
-                    $fixed[] = $this->fix($base, $alt, $filePath);
+                    $fixed[] = $this->fix($base, $alt, 'test.php');
                 }
             }
         }
