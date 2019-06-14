@@ -132,7 +132,7 @@ class DatabaseTests extends TestCase
     }
 
     /**
-     * Tests...
+     * testOneToManyRelationship
      */
     public function testOneToManyRelationship()
     {
@@ -292,6 +292,7 @@ class DatabaseTests extends TestCase
 
     /**
      * testMorphsToManyUnique
+     * @depends testBelongsToManyUnique
      */
     public function testMorphsToManyUnique()
     {
@@ -307,16 +308,18 @@ class DatabaseTests extends TestCase
                 'id'    => 2,
                 'name'  => 'Chopping',
                 'pivot' => [
-                    'assignable_id' => 1,
-                    'task_id'       => 2,
+                    'assignable_id'   => 1,
+                    'task_id'         => 2,
+                    'assignable_type' => EloquentTestUser::class,
                 ],
             ],
             [
                 'id'    => 3,
                 'name'  => 'Baleing',
                 'pivot' => [
-                    'assignable_id' => 1,
-                    'task_id'       => 3,
+                    'assignable_id'   => 1,
+                    'task_id'         => 3,
+                    'assignable_type' => EloquentTestUser::class,
                 ],
             ],
         ];
@@ -331,6 +334,7 @@ class DatabaseTests extends TestCase
 
     /**
      * testMorphsToManyUniqueWithTertiary
+     * @depends testMorphsToManyUnique
      */
     public function testMorphsToManyUniqueWithTertiary()
     {
@@ -346,8 +350,9 @@ class DatabaseTests extends TestCase
                 'id'    => 2,
                 'name'  => 'Chopping',
                 'pivot' => [
-                    'assignable_id' => 1,
-                    'task_id'       => 2,
+                    'assignable_id'   => 1,
+                    'task_id'         => 2,
+                    'assignable_type' => EloquentTestUser::class,
                 ],
                 'locations' => [
                     [
@@ -372,8 +377,9 @@ class DatabaseTests extends TestCase
                 'id'    => 3,
                 'name'  => 'Baleing',
                 'pivot' => [
-                    'assignable_id' => 1,
-                    'task_id'       => 3,
+                    'assignable_id'   => 1,
+                    'task_id'         => 3,
+                    'assignable_type' => EloquentTestUser::class,
                 ],
                 'locations' => [
                     [
@@ -398,6 +404,7 @@ class DatabaseTests extends TestCase
 
     /**
      * testBelongsToManyUniqueWithTertiary
+     * @depends testBelongsToManyUnique
      */
     public function testBelongsToManyUniqueWithTertiary()
     {
@@ -470,6 +477,7 @@ class DatabaseTests extends TestCase
 
     /**
      * testBelongsToManyUniqueWithTertiaryEagerLoad
+     * @depends testBelongsToManyUniqueWithTertiary
      */
     public function testBelongsToManyUniqueWithTertiaryEagerLoad()
     {
@@ -572,6 +580,7 @@ class DatabaseTests extends TestCase
         $user->roles()->attach([1, 2]);
 
         // Test retrieval of via models as well
+        // This user won't have `uri_royal_jelly` slug
         $this->assertEquals([
             [
                 'id'    => 1,
@@ -648,6 +657,7 @@ class DatabaseTests extends TestCase
 
     /**
      * Test the ability of a BelongsToManyThrough relationship to retrieve and count paginated queries.
+     * @depends testBelongsToManyThrough
      */
     public function testBelongsToManyThroughPaginated()
     {
@@ -684,6 +694,7 @@ class DatabaseTests extends TestCase
     /**
      * Test the ability of a BelongsToManyThrough relationship to retrieve and count paginated queries,
      * when we need to reference a virtual/computed column (for example in a sort).
+     * @depends testBelongsToManyThrough
      */
     public function testBelongsToManyThroughPaginatedWithOrderByAggregateColumn()
     {
@@ -713,6 +724,7 @@ class DatabaseTests extends TestCase
     /**
      * Test the ability of a BelongsToManyThrough relationship to retrieve structured data on a single model or set of models,
      * eager loading the "via" models at the same time.
+     * @depends testBelongsToManyThrough
      */
     public function testBelongsToManyThroughWithVia()
     {
@@ -759,6 +771,7 @@ class DatabaseTests extends TestCase
 
     /**
      * testQueryExcludeOnJoinedTable
+     * @depends testQueryExclude
      */
     public function testQueryExcludeOnJoinedTable()
     {
@@ -805,6 +818,7 @@ class DatabaseTests extends TestCase
 
     /**
      * testQueryExcludeUseQualifiedNamesOnJoinedTable
+     * @depends testQueryExclude
      */
     public function testQueryExcludeUseQualifiedNamesOnJoinedTable()
     {
@@ -847,6 +861,7 @@ class DatabaseTests extends TestCase
 
     /**
      * testQueryExcludeWildcard
+     * @depends testQueryExclude
      */
     public function testQueryExcludeWildcard()
     {

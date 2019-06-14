@@ -82,7 +82,7 @@ class AccountControllerTest extends TestCase
     /**
      * N.B.: Must be first test, before any master user is created
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testRegisterWithNoMasterUser(AccountController $controller)
     {
@@ -170,7 +170,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     protected function performActualRegisterTest(AccountController $controller)
     {
@@ -208,15 +208,14 @@ class AccountControllerTest extends TestCase
         $this->assertSame('success', end($messages)['type']);
     }
 
-
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testcheckUsername(AccountController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'potato'
+            'user_name' => 'potato',
         ]);
 
         $result = $controller->checkUsername($request, $this->getResponse(), []);
@@ -228,7 +227,7 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testcheckUsername
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testcheckUsernameWithNoData(AccountController $controller)
     {
@@ -239,17 +238,17 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testcheckUsername
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testcheckUsernameWithUsernameNotAvailable(AccountController $controller)
     {
         // Create test user
         $this->createTestUser(false, false, [
-            'user_name' => 'userfoo'
+            'user_name' => 'userfoo',
         ]);
 
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo'
+            'user_name' => 'userfoo',
         ]);
 
         $result = $controller->checkUsername($request, $this->getResponse(), []);
@@ -274,7 +273,7 @@ class AccountControllerTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'potato'
+            'user_name' => 'potato',
         ]);
 
         $result = $controller->checkUsername($request, $this->getResponse(), []);
@@ -298,7 +297,7 @@ class AccountControllerTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'token' => 'potato'
+            'token' => 'potato',
         ]);
 
         $result = $controller->denyResetPassword($request, $this->getResponse(), []);
@@ -327,7 +326,7 @@ class AccountControllerTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'token' => 'potato'
+            'token' => 'potato',
         ]);
 
         $result = $controller->denyResetPassword($request, $this->getResponse(), []);
@@ -344,7 +343,7 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testdenyResetPassword
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testdenyResetPasswordWithFailedValidation(AccountController $controller)
     {
@@ -374,7 +373,7 @@ class AccountControllerTest extends TestCase
 
         // Create fake user to test
         $user = $this->createTestUser(false, false, [
-            'email' => 'foo@bar.com'
+            'email' => 'foo@bar.com',
         ]);
 
         // Recreate controller to use fake mailer
@@ -382,7 +381,7 @@ class AccountControllerTest extends TestCase
 
         // Set POST
         $request = $this->getRequest()->withParsedBody([
-            'email' => 'foo@bar.com'
+            'email' => 'foo@bar.com',
         ]);
 
         $result = $controller->forgotPassword($request, $this->getResponse(), []);
@@ -400,7 +399,7 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testforgotPassword
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testforgotPasswordWithFailedValidation(AccountController $controller)
     {
@@ -434,7 +433,7 @@ class AccountControllerTest extends TestCase
 
         // Set POST
         $request = $this->getRequest()->withParsedBody([
-            'email' => 'foo@bar.com'
+            'email' => 'foo@bar.com',
         ]);
 
         $result = $controller->forgotPassword($request, $this->getResponse(), []);
@@ -446,7 +445,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testgetModalAccountTos(AccountController $controller)
     {
@@ -458,7 +457,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testimageCaptcha(AccountController $controller)
     {
@@ -470,7 +469,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testlogin(AccountController $controller)
     {
@@ -505,7 +504,7 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testlogin
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testloginWithEmail(AccountController $controller)
     {
@@ -539,7 +538,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testloginWithLoggedInUser(AccountController $controller)
     {
@@ -563,7 +562,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testloginWithFailledValidation(AccountController $controller)
     {
@@ -662,7 +661,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testlogoutWithNoUser(AccountController $controller)
     {
@@ -674,7 +673,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testpageForgotPassword(AccountController $controller)
     {
@@ -686,7 +685,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testpageRegister(AccountController $controller)
     {
@@ -749,7 +748,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testpageResendVerification(AccountController $controller)
     {
@@ -761,7 +760,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testpageResetPassword(AccountController $controller)
     {
@@ -773,7 +772,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testpageSetPassword(AccountController $controller)
     {
@@ -817,7 +816,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     protected function actualpageSettings(AccountController $controller)
     {
@@ -829,7 +828,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testpageSettingsWithNoPermissions(AccountController $controller)
     {
@@ -839,7 +838,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testpageSignIn(AccountController $controller)
     {
@@ -908,8 +907,8 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @param  AccountController $controller
-     * @param  UserInterface     $user
+     * @param AccountController $controller
+     * @param UserInterface     $user
      */
     protected function performActualProfileTests(AccountController $controller, UserInterface $user)
     {
@@ -941,7 +940,7 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testProfile
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testProfileWithNoPermissions(AccountController $controller)
     {
@@ -1035,7 +1034,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testRegisterWithHoneypot(AccountController $controller)
     {
@@ -1045,7 +1044,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testRegisterWithRegistrationDisabled(AccountController $controller)
     {
@@ -1134,7 +1133,7 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testRegisterWithFailedThrottle
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testRegisterWithFailedCaptcha(AccountController $controller)
     {
@@ -1163,7 +1162,7 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testRegisterWithFailedCaptcha
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testRegisterWithFailedValidation(AccountController $controller)
     {
@@ -1202,7 +1201,7 @@ class AccountControllerTest extends TestCase
 
         // Create fake user to test
         $user = $this->createTestUser(false, false, [
-            'flag_verified' => 0
+            'flag_verified' => 0,
         ]);
 
         // Recreate controller to use fake mailer
@@ -1210,7 +1209,7 @@ class AccountControllerTest extends TestCase
 
         // Set POST
         $request = $this->getRequest()->withParsedBody([
-            'email' => $user->email
+            'email' => $user->email,
         ]);
 
         $result = $controller->resendVerification($request, $this->getResponse(), []);
@@ -1233,7 +1232,7 @@ class AccountControllerTest extends TestCase
     {
         // Create fake user to test
         $user = $this->createTestUser(false, false, [
-            'flag_verified' => 1
+            'flag_verified' => 1,
         ]);
 
         // Recreate controller to use fake mailer
@@ -1241,7 +1240,7 @@ class AccountControllerTest extends TestCase
 
         // Set POST
         $request = $this->getRequest()->withParsedBody([
-            'email' => $user->email
+            'email' => $user->email,
         ]);
 
         $result = $controller->resendVerification($request, $this->getResponse(), []);
@@ -1272,7 +1271,7 @@ class AccountControllerTest extends TestCase
 
         // Set POST
         $request = $this->getRequest()->withParsedBody([
-            'email' => 'testresendVerificationWithVerifiedUser@test.com'
+            'email' => 'testresendVerificationWithVerifiedUser@test.com',
         ]);
 
         $result = $controller->resendVerification($request, $this->getResponse(), []);
@@ -1285,7 +1284,7 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testresendVerification
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testresendVerificationWithFailedValidation(AccountController $controller)
     {
@@ -1317,7 +1316,7 @@ class AccountControllerTest extends TestCase
         $request = $this->getRequest()->withParsedBody([
             'password'  => 'testSetPassword',
             'passwordc' => 'testSetPassword',
-            'token'     => $resetModel->getToken()
+            'token'     => $resetModel->getToken(),
         ]);
 
         $result = $controller->setPassword($request, $this->getResponse(), []);
@@ -1335,7 +1334,7 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testSetPassword
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testSetPasswordWithNoToken(AccountController $controller)
     {
@@ -1343,7 +1342,7 @@ class AccountControllerTest extends TestCase
         $request = $this->getRequest()->withParsedBody([
             'password'  => 'testSetPassword',
             'passwordc' => 'testSetPassword',
-            'token' => 'potato'
+            'token'     => 'potato',
         ]);
 
         $result = $controller->setPassword($request, $this->getResponse(), []);
@@ -1361,7 +1360,7 @@ class AccountControllerTest extends TestCase
     /**
      * @depends testControllerConstructor
      * @depends testSetPassword
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testsetPasswordWithFailedValidation(AccountController $controller)
     {
@@ -1559,7 +1558,7 @@ class AccountControllerTest extends TestCase
 
         // Set POST
         $request = $this->getRequest()->withParsedBody([
-            'email' => $firstUser->email,
+            'email'    => $firstUser->email,
             'password' => '',
         ]);
 
@@ -1577,7 +1576,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructor
-     * @param  AccountController $controller
+     * @param AccountController $controller
      */
     public function testSuggestUsername(AccountController $controller)
     {
@@ -1609,7 +1608,7 @@ class AccountControllerTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'token' => 'potato'
+            'token' => 'potato',
         ]);
 
         $result = $controller->verify($request, $this->getResponse(), []);
@@ -1638,7 +1637,7 @@ class AccountControllerTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'token' => 'potato'
+            'token' => 'potato',
         ]);
 
         $result = $controller->verify($request, $this->getResponse(), []);

@@ -103,7 +103,7 @@ class AccountController extends SimpleController
         // Log throttleable event
         $throttler->logEvent('check_username_request');
 
-        if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
+        if ($classMapper->getClassMapping('user')::findUnique($data['user_name'], 'user_name')) {
             $message = $translator->translate('USERNAME.NOT_AVAILABLE', $data);
 
             return $response->write($message)->withStatus(200);
@@ -245,7 +245,7 @@ class AccountController extends SimpleController
             $throttler->logEvent('password_reset_request', $throttleData);
 
             // Load the user, by email address
-            $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
+            $user = $classMapper->getClassMapping('user')::where('email', $data['email'])->first();
 
             // Check that the email exists.
             // If there is no user with that email address, we should still pretend like we succeeded, to prevent account enumeration
@@ -519,6 +519,10 @@ class AccountController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/register.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         // Get locale information
@@ -593,11 +597,18 @@ class AccountController extends SimpleController
      */
     public function pageResetPassword(Request $request, Response $response, $args)
     {
+        /** @var \UserFrosting\Support\Repository\Repository $config */
+        $config = $this->ci->config;
+
         // Insert the user's secret token from the link into the password reset form
         $params = $request->getQueryParams();
 
         // Load validation rules - note this uses the same schema as "set password"
         $schema = new RequestSchema('schema://requests/set-password.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
@@ -627,11 +638,18 @@ class AccountController extends SimpleController
      */
     public function pageSetPassword(Request $request, Response $response, $args)
     {
+        /** @var \UserFrosting\Support\Repository\Repository $config */
+        $config = $this->ci->config;
+
         // Insert the user's secret token from the link into the password set form
         $params = $request->getQueryParams();
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/set-password.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'pages/set-password.html.twig', [
@@ -664,6 +682,9 @@ class AccountController extends SimpleController
      */
     public function pageSettings(Request $request, Response $response, $args)
     {
+        /** @var \UserFrosting\Support\Repository\Repository $config */
+        $config = $this->ci->config;
+
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -677,13 +698,14 @@ class AccountController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/account-settings.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validatorAccountSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         $schema = new RequestSchema('schema://requests/profile-settings.yaml');
         $validatorProfileSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
-
-        /** @var \UserFrosting\Support\Repository\Repository $config */
-        $config = $this->ci->config;
 
         // Get a list of all locales
         $locales = $config->getDefined('site.locales.available');
@@ -894,7 +916,7 @@ class AccountController extends SimpleController
         }
 
         // Security measure: do not allow registering new users until the master account has been created.
-        if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
+        if (!$classMapper->getClassMapping('user')::find($config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.MASTER_NOT_EXISTS');
 
             return $response->withJson([], 403);
@@ -919,6 +941,10 @@ class AccountController extends SimpleController
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/register.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1054,7 +1080,7 @@ class AccountController extends SimpleController
             $throttler->logEvent('verification_request', $throttleData);
 
             // Load the user, by email address
-            $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
+            $user = $classMapper->getClassMapping('user')::where('email', $data['email'])->first();
 
             // Check that the user exists and is not already verified.
             // If there is no user with that email address, or the user exists and is already verified,
@@ -1117,6 +1143,10 @@ class AccountController extends SimpleController
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/set-password.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1210,6 +1240,10 @@ class AccountController extends SimpleController
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/account-settings.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1240,7 +1274,7 @@ class AccountController extends SimpleController
         unset($data['passwordc']);
 
         // If new email was submitted, check that the email address is not in use
-        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
+        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->getClassMapping('user')::findUnique($data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
