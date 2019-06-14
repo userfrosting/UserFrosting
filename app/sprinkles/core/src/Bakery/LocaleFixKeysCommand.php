@@ -51,7 +51,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     protected function configure()
     {
         $this->setName('locale:fix-keys')
-        ->setHelp("This command generates missing locale file keys through comparison. E.g. running 'locale:fix-keys -b en_US -f es_ES' will compare all es_ES and en_US locale files and populate es_ES with any missing keys from en_US.")
+        ->setHelp("This command generates missing keys for locale translation files. E.g. running 'locale:fix-keys -b en_US -f es_ES' will compare all es_ES and en_US locale files and populate es_ES with any missing keys from en_US.")
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale used to generate values for any keys that are fixed. ', 'en_US')
         ->addOption('fix', 'f', InputOption::VALUE_REQUIRED, 'One or more specific locales to fix. E.g. "fr_FR,es_ES" ', null);
 
@@ -76,15 +76,22 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
 
         $baseLocaleFileNames = $this->getFilenames($this->baseLocale);
 
-        $localesAvailable = $this->getLocales();
+        $localesToFix = $this->getLocales();
+
+        $this->io->writeln('Locales to fix: |' . implode('|', $localesToFix) . '|');
+
+        $this->io->info([$baseLocale . ' locales in queue to be fixed using values from: ' . implode('|', $localesToFix) . '|'],
+      'continue?');
+        if (!$this->io->confirm('Continue?', false)) {
+            exit;
+        }
 
         $fixed = [];
 
         $progressBar = new ProgressBar($output);
+        $progressBar->start(count($localesToFix));
 
-        $progressBar->start(count($localesAvailable));
-
-        foreach ($localesAvailable as $key => $altLocale) {
+        foreach ($localesToFix as $key => $altLocale) {
             $fixed[$altLocale] = $this->fixFiles($this->baseLocale, $altLocale, $baseLocaleFileNames);
             $progressBar->advance();
         }
