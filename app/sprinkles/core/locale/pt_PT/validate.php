@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -21,6 +22,6 @@ return [
         'LENGTH_RANGE'  => '{{label}} deve conter entre {{min}} e {{max}} caracteres.',
         'NO_LEAD_WS'    => 'O valor para <strong>{{label}}</strong> não pode começar por espaços, tabulações, ou outros espaços em branco.',
         'NO_TRAIL_WS'   => 'O valor para <strong>{{label}}</strong> não pode terminar em espaços, tabulações, ou outros espaços em branco.',
-        'REQUIRED'      => 'Por favor especifique um valor para <strong>{{label}}</strong>.'
-    ]
+        'REQUIRED'      => 'Por favor especifique um valor para <strong>{{label}}</strong>.',
+    ],
 ];

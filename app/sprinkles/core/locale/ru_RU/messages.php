@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -21,7 +22,7 @@ return [
         '@TRANSLATION' => 'Капча',
         'FAIL'         => 'Код безопасности был введен с ошибками.',
         'SPECIFY'      => 'Введите код капчи',
-        'VERIFY'       => 'Проверьте капчу'
+        'VERIFY'       => 'Проверьте капчу',
     ],
 
     'CSRF_MISSING' => 'Отсутствует CSRF токен.  Попробуйте обновить страницу и повторить попытку ещё раз?',
@@ -30,23 +31,23 @@ return [
     'DESCRIPTION'   => 'Описание',
     'DOWNLOAD'      => [
         '@TRANSLATION' => 'Скачать',
-        'CSV'          => 'Скачать CSV'
+        'CSV'          => 'Скачать CSV',
     ],
 
     'EMAIL' => [
         '@TRANSLATION' => 'Email',
-        'YOUR'         => 'Ваш e-mail'
+        'YOUR'         => 'Ваш e-mail',
     ],
 
     'HOME'  => 'Главная',
 
     'LEGAL' => [
         '@TRANSLATION' => 'Правовая информация',
-        'DESCRIPTION'  => 'Наша правовая политика применима к использованию вами данного веб-сайта и наших услуг.'
+        'DESCRIPTION'  => 'Наша правовая политика применима к использованию вами данного веб-сайта и наших услуг.',
     ],
 
     'LOCALE' => [
-        '@TRANSLATION' => 'Язык'
+        '@TRANSLATION' => 'Язык',
     ],
 
     'NAME'       => 'Имя',
@@ -64,11 +65,11 @@ return [
         'NEXT'     => 'Следующая',
         'PREVIOUS' => 'Предыдущая',
         'FIRST'    => 'Первая',
-        'LAST'     => 'Последняя'
+        'LAST'     => 'Последняя',
     ],
     'PRIVACY' => [
         '@TRANSLATION' => 'Политика конфиденциальности',
-        'DESCRIPTION'  => 'Наша политика конфиденциальности описывает, какую информацию мы собираем от вас и как мы будем использовать её.'
+        'DESCRIPTION'  => 'Наша политика конфиденциальности описывает, какую информацию мы собираем от вас и как мы будем использовать её.',
     ],
 
     'SLUG'           => 'Метка',
@@ -117,5 +118,5 @@ return [
     // Misc.
     'BUILT_WITH_UF'     => 'Создано через <a href="http://www.userfrosting.com"> UserFrosting</a>',
     'ADMINLTE_THEME_BY' => 'Тема от <strong><a href="http://almsaeedstudio.com"> Almsaeed Studio</a>.</strong> Все права защищены',
-    'WELCOME_TO'        => 'Добро пожаловать на {{title}}!'
+    'WELCOME_TO'        => 'Добро пожаловать на {{title}}!',
 ];

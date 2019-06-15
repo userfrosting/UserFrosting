@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -19,18 +20,18 @@ return [
 
        'LAST' => '最后活动',
        'PAGE' => '用户活动列表',
-       'TIME' => '活动时间'
+       'TIME' => '活动时间',
     ],
 
     'ADMIN' => [
-        'PANEL' => '控制台'
+        'PANEL' => '控制台',
     ],
 
     'CACHE' => [
         'CLEAR'             => '清除缓存',
         'CLEAR_CONFIRM'     => '你确定要清除此网站的缓存?',
         'CLEAR_CONFIRM_YES' => '是的, 清除缓存',
-        'CLEARED'           => '缓存成功清除 !'
+        'CLEARED'           => '缓存成功清除 !',
     ],
 
     'DASHBOARD'             => '仪表盘',
@@ -63,13 +64,13 @@ return [
         'NOT_EMPTY'           => '你不能这样做，因为还有用户在组 <strong>{{name}}</strong>.',
         'PAGE_DESCRIPTION'    => '网站组列表.  请管理编辑和删除组的工具.',
         'SUMMARY'             => '组简介',
-        'UPDATE'              => '组<strong>{{name}}</strong>的信息已经更新'
+        'UPDATE'              => '组<strong>{{name}}</strong>的信息已经更新',
     ],
 
     'MANUALLY_ACTIVATED'    => '{{user_name}} 账户已手动激活',
     'MASTER_ACCOUNT_EXISTS' => '超级账户已存在!',
     'MIGRATION'             => [
-        'REQUIRED'          => '数据库需要更新'
+        'REQUIRED'          => '数据库需要更新',
     ],
 
     'PERMISSION' => [
@@ -85,7 +86,7 @@ return [
         'PAGE_DESCRIPTION'  => '网站的权限列表.  提供编辑和删除权限的工具.',
         'SUMMARY'           => '权限概要',
         'UPDATE'            => '更新权限',
-        'VIA_ROLES'         => '权限通过用户了'
+        'VIA_ROLES'         => '权限通过用户了',
     ],
 
     'ROLE' => [
@@ -110,7 +111,7 @@ return [
         'PAGE_DESCRIPTION'    => '网站的角色列表. 请管理编辑和删除角色的工具.',
         'PERMISSIONS_UPDATED' => '角色 <strong>{{name}}</strong> 的权限更新成功',
         'SUMMARY'             => '角色概要',
-        'UPDATED'             => '角色 <strong>{{name}}</strong> 更新成功'
+        'UPDATED'             => '角色 <strong>{{name}}</strong> 更新成功',
     ],
 
     'SYSTEM_INFO' => [
@@ -123,7 +124,7 @@ return [
         'SERVER'        => '网站服务器',
         'SPRINKLES'     => '加载的 sprinkles',
         'UF_VERSION'    => 'UserFrosting 版本',
-        'URL'           => '网站根目录'
+        'URL'           => '网站根目录',
     ],
 
     'TOGGLE_COLUMNS' => '加载列',
@@ -135,7 +136,7 @@ return [
         'ADMIN' => [
             'CHANGE_PASSWORD'    => '修改用户密码',
             'SEND_PASSWORD_LINK' => '发送允许该用户修改密码的链接',
-            'SET_PASSWORD'       => '设置用户的密码为'
+            'SET_PASSWORD'       => '设置用户的密码为',
         ],
 
         'ACTIVATE'          => '激活用户',
@@ -152,11 +153,11 @@ return [
         'PAGE_DESCRIPTION'  => '网站用户列表.  提供编辑用户信息, 手动激活用户, 启用/禁用 用户等工具.',
         'SUMMARY'           => '账户概要',
         'VIEW_ALL'          => '浏览所有用户',
-        'WITH_PERMISSION'   => '有此权限的用户'
+        'WITH_PERMISSION'   => '有此权限的用户',
     ],
     'X_USER' => [
         0 => '没有用户',
         1 => '{{plural}} 用户',
-        2 => '{{plural}} 用户'
-    ]
+        2 => '{{plural}} 用户',
+    ],
 ];

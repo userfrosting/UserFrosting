@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -10,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Database\Models;
 
 /**
- * Session Class
+ * Session Class.
  *
  * Represents a session object as stored in the database.
  */

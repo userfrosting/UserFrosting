@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -10,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 /**
- * Default XML Error Renderer
+ * Default XML Error Renderer.
  */
 class XmlRenderer extends ErrorRenderer
 {
@@ -40,7 +41,8 @@ class XmlRenderer extends ErrorRenderer
     /**
      * Returns a CDATA section with the given content.
      *
-     * @param  string $content
+     * @param string $content
+     *
      * @return string
      */
     private function createCdataSection($content)

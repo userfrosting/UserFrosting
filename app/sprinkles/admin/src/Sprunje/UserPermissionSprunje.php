@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,7 +14,7 @@ use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\NotFoundException;
 
 /**
- * UserPermissionSprunje
+ * UserPermissionSprunje.
  *
  * Implements Sprunje for retrieving a list of permissions for a specified user.
  *
@@ -33,7 +34,7 @@ class UserPermissionSprunje extends PermissionSprunje
             throw new BadRequestException();
         }
 
-        $user = $this->classMapper->staticMethod('user', 'find', $this->options['user_id']);
+        $user = $this->classMapper->getClassMapping('user')::find($this->options['user_id']);
 
         // If the user doesn't exist, return 404
         if (!$user) {

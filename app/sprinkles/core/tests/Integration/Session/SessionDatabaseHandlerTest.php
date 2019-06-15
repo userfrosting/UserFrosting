@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -7,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Account\Tests\Integration\Session;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
 
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;
@@ -60,7 +61,7 @@ class SessionDatabaseHandlerTest extends TestCase
         $connection = $this->ci->db->connection();
 
         // Define random session ID
-        $session_id = 'test'.rand(1, 100000);
+        $session_id = 'test' . rand(1, 100000);
 
         // Make sure db is empty at first
         $this->assertEquals(0, SessionTable::count());
@@ -70,15 +71,15 @@ class SessionDatabaseHandlerTest extends TestCase
         $handler = new DatabaseSessionHandler($connection, $config['session.database.table'], $config['session.minutes']);
 
         // Write session
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/DatabaseSessionHandler.php#L132
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/DatabaseSessionHandler.php#L132
         $this->assertTrue($handler->write($session_id, 'foo'));
 
         // Closing the handler does nothing anyway
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/DatabaseSessionHandler.php#L78
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/DatabaseSessionHandler.php#L78
         $this->assertTrue($handler->close());
 
         // Read session
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/DatabaseSessionHandler.php#L86-L101
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/DatabaseSessionHandler.php#L86-L101
         $this->assertSame('foo', $handler->read($session_id));
 
         // Check manually that the file has been written
@@ -87,7 +88,7 @@ class SessionDatabaseHandlerTest extends TestCase
         $this->assertSame(base64_encode('foo'), SessionTable::find($session_id)->payload);
 
         // Destroy session
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/DatabaseSessionHandler.php#L256
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/DatabaseSessionHandler.php#L256
         $this->assertTrue($handler->destroy($session_id));
 
         // Check db to make sure it's gone
@@ -131,7 +132,7 @@ class SessionDatabaseHandlerTest extends TestCase
     }
 
     /**
-     * @param  Session $session
+     * @param Session $session
      */
     protected function sessionTests(Session $session)
     {

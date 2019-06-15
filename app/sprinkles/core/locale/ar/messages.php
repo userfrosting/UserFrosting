@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -21,7 +22,7 @@ return [
         '@TRANSLATION' => 'كلمة التحقق',
         'FAIL'         => 'لم تقم بإدخال رمز كلمة التحقق بشكل صحيح',
         'SPECIFY'      => 'أدخل كلمة التحقق',
-        'VERIFY'       => 'التحقق من كلمة التحقق'
+        'VERIFY'       => 'التحقق من كلمة التحقق',
     ],
 
     'CSRF_MISSING' => 'رمز CSRF غير موجود حاول تحديث الصفحة ومن ثم إرساله مرة أخرى',
@@ -30,19 +31,19 @@ return [
     'DESCRIPTION'   => 'وصف',
     'DOWNLOAD'      => [
         '@TRANSLATION' => 'تحميل',
-        'CSV'          => 'تحميل CSV'
+        'CSV'          => 'تحميل CSV',
     ],
 
     'EMAIL' => [
         '@TRANSLATION' => 'البريد الإلكتروني',
-        'YOUR'         => 'عنوان بريدك الإلكتروني'
+        'YOUR'         => 'عنوان بريدك الإلكتروني',
     ],
 
     'HOME'  => 'الصفحة الرئيسية',
 
     'LEGAL' => [
         '@TRANSLATION' => 'السياسة القانونية',
-        'DESCRIPTION'  => 'تسري سياستنا القانونية على استخدامك لهذا الموقع وخدماتنا'
+        'DESCRIPTION'  => 'تسري سياستنا القانونية على استخدامك لهذا الموقع وخدماتنا',
     ],
 
     'LOCALE' => [
@@ -58,11 +59,11 @@ return [
         'NEXT'     => 'الصفحة التالية',
         'PREVIOUS' => 'الصفحة السابقة',
         'FIRST'    => 'الصفحة الأولى',
-        'LAST'     => 'آخر صفحة'
+        'LAST'     => 'آخر صفحة',
     ],
     'PRIVACY' => [
         '@TRANSLATION' => 'سياسة الخصوصية',
-        'DESCRIPTION'  => 'تحدد سياسة الخصوصية لدينا نوع المعلومات التي نجمعها منك وكيفية استخدامها.'
+        'DESCRIPTION'  => 'تحدد سياسة الخصوصية لدينا نوع المعلومات التي نجمعها منك وكيفية استخدامها.',
     ],
 
     'SLUG'           => 'Slug',
@@ -109,5 +110,5 @@ return [
     // Misc
     'BUILT_WITH_UF'     => 'بنيت مع <a href="http://www.userfrosting.com">UserFrosting</a>',
     'ADMINLTE_THEME_BY' => 'فكرة رئيسية <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a></strong> كل الحقوق محفوظة',
-    'WELCOME_TO'        => 'مرحبا بك في {{title}}!'
+    'WELCOME_TO'        => 'مرحبا بك في {{title}}!',
 ];
