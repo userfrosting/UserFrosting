@@ -33,11 +33,6 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
     protected $localesToCheck;
 
     /**
-     * @var array
-     */
-    protected static $table = [];
-
-    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -76,7 +71,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
 
         $baseLocaleFileNames = $this->getFilenames($baseLocale);
 
-        $this->io->writeln('Locales to search: |' . implode('|', $locales) . '|');
+        $this->io->writeln(['Locales to check: |' . implode('|', $locales) . '|']);
 
         if ($input->getOption('empty') != true) {
             $this->io->section('Searching for empty values.');
@@ -235,20 +230,6 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
 
         // Get nested array [0].
         return array_values((array) $loader)[0];
-    }
-
-    /**
-     * @return array Locales to check for misisng values.
-     */
-    protected function getLocales($baseLocale)
-    {
-        // If set, use the locale from the -c option.
-        if ($this->localesToCheck) {
-            return explode(',', $this->localesToCheck);
-        } else {
-            //Need to filter the base locale to prevent false positive.
-            return array_diff(array_keys($this->ci->config['site']['locales']['available']), [$baseLocale]);
-        }
     }
 
     /**

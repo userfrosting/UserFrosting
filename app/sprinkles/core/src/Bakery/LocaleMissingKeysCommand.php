@@ -28,7 +28,7 @@ class LocaleMissingKeysCommand extends BaseCommand
     /**
      * @var string
      */
-    protected static $locales;
+    protected $localesToCheck;
 
     /**
      * @var string
@@ -48,7 +48,7 @@ class LocaleMissingKeysCommand extends BaseCommand
         $this->setName('locale:missing-keys')
         ->setHelp("This command provides a summary of missing keys for locale translation files. E.g. running 'locale:missing-keys -b en_US -c es_ES' will compare all es_ES and en_US locale files and generate a table listing the filepath, missing key, and a preview of the key's value from the 'base' (-b) locale.")
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale to compare against.', 'en_US')
-        ->addOption('compare', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null);
+        ->addOption('check', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null);
 
         $this->setDescription('Generate a table of missing locale keys.');
     }
@@ -67,11 +67,13 @@ class LocaleMissingKeysCommand extends BaseCommand
         $baseLocale = $input->getOption('base');
 
         // Option -c. Set to compare one or more specific locales.
-        $this->locales = $input->getOption('compare');
+        $this->localesToCheck = $input->getOption('check');
 
         $baseLocaleFileNames = $this->getFilenames($baseLocale);
 
-        $locales = $this->getLocales();
+        $locales = $this->getLocales($baseLocale);
+
+        $this->io->writeln('Locales to check: |' . implode('|', $locales) . '|');
 
         $this->io->section("Searching for missing keys using $baseLocale for comparison.");
 
@@ -204,15 +206,16 @@ class LocaleMissingKeysCommand extends BaseCommand
     }
 
     /**
-     * @return array Locales to check for missing keys.
+     * @return array Locales to check.
      */
-    protected function getLocales()
+    protected function getLocales($baseLocale)
     {
         // If set, use the locale from the -c option.
-        if ($this->locales) {
-            $locales = explode(',', $this->locales);
+        if ($this->localesToCheck) {
+            return explode(',', $this->localesToCheck);
         } else {
-            return array_keys($this->ci->config['site']['locales']['available']);
+            //Need to filter the base locale to prevent false positive.
+            return array_diff(array_keys($this->ci->config['site']['locales']['available']), [$baseLocale]);
         }
     }
 

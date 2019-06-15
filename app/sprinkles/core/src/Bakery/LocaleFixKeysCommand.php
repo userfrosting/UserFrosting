@@ -76,13 +76,11 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
 
         $baseLocaleFileNames = $this->getFilenames($this->baseLocale);
 
-        $localesToFix = $this->getLocales();
+        $localesToFix = $this->getLocales($this->baseLocale);
 
-        $this->io->writeln('Locales to fix: |' . implode('|', $localesToFix) . '|');
+        $this->io->note('Locales to be fixed: |' . implode('|', $localesToFix) . '|');
 
-        $this->io->info([$baseLocale . ' locales in queue to be fixed using values from: ' . implode('|', $localesToFix) . '|'],
-      'continue?');
-        if (!$this->io->confirm('Continue?', false)) {
+        if (!$this->io->confirm("All translation files for the locales above will be populated using key|values from  | $this->baseLocale |. Continue?", false)) {
             exit;
         }
 
@@ -142,7 +140,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
 
                 // The files with missing keys.
                 if (!empty($missing)) {
-                    $fixed[] = $this->fix($base, $alt, 'test.php');
+                    $fixed[] = $this->fix($base, $alt, $filePath);
                 }
             }
         }
@@ -219,16 +217,16 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     /**
      * @return array Locales to check for missing keys.
      */
-    protected function getLocales()
+    protected function getLocales($baseLocale)
     {
-        $configuredLocales = array_keys($this->ci->config['site']['locales']['available']);
+        $configuredLocales = array_diff(array_keys($this->ci->config['site']['locales']['available']), [$baseLocale]);
 
         // If set, use the locale(s) from the -f option.
         if ($this->locales) {
             $locales = explode(',', $this->locales);
             foreach ($locales as $key => $value) {
                 if (!in_array($value, $configuredLocales)) {
-                    $this->io->warning("The $value locale was not found in your current configuration. Proceeding may results in a large number of files being created. Are you sure you want to continue?");
+                    $this->io->warning("The |$value| locale was not found in your current configuration. Proceeding may results in a large number of files being created. Are you sure you want to continue?");
                     if (!$this->io->confirm('Continue?', false)) {
                         exit;
                     }
