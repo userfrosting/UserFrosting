@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -7,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Account\Tests\Integration\Session;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\FileSessionHandler;
@@ -27,7 +28,7 @@ class SessionFileHandlerTest extends TestCase
         $fs = new Filesystem();
 
         // Define random session ID
-        $session_id = 'test'.rand(1, 100000);
+        $session_id = 'test' . rand(1, 100000);
 
         // Get session dir
         $session_dir = $this->ci->locator->findResource('session://');
@@ -43,17 +44,17 @@ class SessionFileHandlerTest extends TestCase
         $handler = new FileSessionHandler($fs, $session_dir, 120);
 
         // Write session
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/FileSessionHandler.php#L83
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/FileSessionHandler.php#L83
         // write() ==> $this->files->put($this->path.'/'.$sessionId, $data, true);
         $this->assertTrue($handler->write($session_id, 'foo'));
 
         // Closing the handler does nothing anyway
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/FileSessionHandler.php#L61
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/FileSessionHandler.php#L61
         // close() ==> return true;
         $this->assertTrue($handler->close());
 
         // Read session
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/FileSessionHandler.php#L71
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/FileSessionHandler.php#L71
         // read() ==> return $this->files->get($path, true);
         $this->assertSame('foo', $handler->read($session_id));
 
@@ -62,7 +63,7 @@ class SessionFileHandlerTest extends TestCase
         $this->assertSame('foo', $fs->get($session_file));
 
         // Destroy session
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/FileSessionHandler.php#L93
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/FileSessionHandler.php#L93
         // destroy() ==> $this->files->delete($this->path.'/'.$sessionId);
         $this->assertTrue($handler->destroy($session_id));
 
@@ -123,7 +124,7 @@ class SessionFileHandlerTest extends TestCase
     }
 
     /**
-     * @param  Session $session
+     * @param Session $session
      */
     protected function sessionTests(Session $session)
     {

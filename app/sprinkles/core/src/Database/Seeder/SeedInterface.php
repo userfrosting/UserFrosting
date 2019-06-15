@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -17,7 +18,7 @@ namespace UserFrosting\Sprinkle\Core\Database\Seeder;
 interface SeedInterface
 {
     /**
-     * Run the seed
+     * Run the seed.
      */
     public function run();
 }

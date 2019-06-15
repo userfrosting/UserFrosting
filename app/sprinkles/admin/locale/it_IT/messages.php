@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -21,14 +22,14 @@ return [
 
        'LAST' => 'Ultima attività',
        'PAGE' => 'Un elenco delle attività degli utenti',
-       'TIME' => 'Tempo di attività'
+       'TIME' => 'Tempo di attività',
     ],
 
     'CACHE' => [
         'CLEAR'             => 'Elimina cache',
         'CLEAR_CONFIRM'     => 'Sei sicuro di voler eliminare la cache del sito?',
         'CLEAR_CONFIRM_YES' => 'Sì, elimina la cache',
-        'CLEARED'           => 'La cache è stata eliminata correttamente!'
+        'CLEARED'           => 'La cache è stata eliminata correttamente!',
     ],
 
     'DASHBOARD'             => 'Pannello di Controllo',
@@ -62,13 +63,13 @@ return [
         'NOT_EMPTY'           => 'Non puoi farlo perché ci sono ancora utenti associati al gruppo <strong>{{name}}</strong>.',
         'PAGE_DESCRIPTION'    => "Un elenco dei gruppi per il tuo sito. Fornisce strumenti di gestione per la modifica e l'eliminazione di gruppi.",
         'SUMMARY'             => 'Riepilogo Gruppo',
-        'UPDATE'              => 'Dettagli del gruppo  <strong>{{name}}</strong> aggiornati.'
+        'UPDATE'              => 'Dettagli del gruppo  <strong>{{name}}</strong> aggiornati.',
     ],
 
     'MANUALLY_ACTIVATED'    => '<strong>{{user_name}}</strong> è stato attivato manualmente',
     'MASTER_ACCOUNT_EXISTS' => "L'account primario esiste già!",
     'MIGRATION'             => [
-        'REQUIRED'          => 'È necessario aggiornare il database'
+        'REQUIRED'          => 'È necessario aggiornare il database',
     ],
 
     'PERMISSION' => [
@@ -84,7 +85,7 @@ return [
         'PAGE_DESCRIPTION'  => "Un elenco delle autorizzazioni per il tuo sito. Fornisce strumenti di gestione per la modifica e l'eliminazione delle autorizzazioni.",
         'SUMMARY'           => 'Sommario autorizzazioni',
         'UPDATE'            => 'Aggiorna autorizzazioni',
-        'VIA_ROLES'         => 'Ha i permessi tramite i ruoli'
+        'VIA_ROLES'         => 'Ha i permessi tramite i ruoli',
     ],
 
     'ROLE' => [
@@ -109,7 +110,7 @@ return [
         'PAGE_DESCRIPTION'    => "Un elenco dei ruoli per il tuo sito. Fornisce strumenti di gestione per la modifica e l'eliminazione di ruoli.",
         'PERMISSIONS_UPDATED' => 'Autorizzazioni aggiornate per il ruolo <strong>{{name}}</strong>',
         'SUMMARY'             => 'Riepilogo dei Ruoli',
-        'UPDATED'             => 'Dettagli aggiornati per il ruolo <strong>{{name}}</strong>'
+        'UPDATED'             => 'Dettagli aggiornati per il ruolo <strong>{{name}}</strong>',
     ],
 
     'SYSTEM_INFO' => [
@@ -122,7 +123,7 @@ return [
         'SERVER'        => 'Software Webserver',
         'SPRINKLES'     => 'Sprinkles caricati',
         'UF_VERSION'    => 'Versione UserFrosting',
-        'URL'           => 'Url della root del sito'
+        'URL'           => 'Url della root del sito',
     ],
 
     'TOGGLE_COLUMNS' => 'Scambia le colonne',
@@ -134,7 +135,7 @@ return [
         'ADMIN' => [
             'CHANGE_PASSWORD'    => 'Cambia password utente',
             'SEND_PASSWORD_LINK' => "Invia all'utente un link che gli permetterà di scegliere una nuova password.",
-            'SET_PASSWORD'       => "Impostare la password dell'utente come"
+            'SET_PASSWORD'       => "Impostare la password dell'utente come",
         ],
 
         'ACTIVATE'          => 'Attiva utente',
@@ -151,11 +152,11 @@ return [
         'PAGE_DESCRIPTION'  => 'Un elenco degli utenti del tuo sito. Fornisce strumenti di gestione, tra cui la possibilità di modificare i dettagli utente, attivare manualmente gli utenti, abilitare / disabilitare gli utenti e altro ancora.',
         'SUMMARY'           => 'Riepilogo account',
         'VIEW_ALL'          => 'Visualizza tutti gli utenti',
-        'WITH_PERMISSION'   => 'Utenti con questa autorizzazione'
+        'WITH_PERMISSION'   => 'Utenti con questa autorizzazione',
     ],
     'X_USER' => [
         0 => 'Nessun utente',
         1 => '{{plural}} utente',
-        2 => '{{plural}} utenti'
-    ]
+        2 => '{{plural}} utenti',
+    ],
 ];

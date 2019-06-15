@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -37,5 +38,5 @@ return [
     'creditCard'    => 'πρέπει να είναι ένα έγκυρο νούμερο πιστωτικής κάρτας',
     'lengthMin'     => 'πρέπει να περιέχει περισσότερους από %d χαρακτήρες',
     'lengthMax'     => 'πρέπει να περιέχει λιγότερους από %d χαρακτήρες',
-    'instanceOf'    => "πρέπει να είναι αντικείμενο της '%s'"
+    'instanceOf'    => "πρέπει να είναι αντικείμενο της '%s'",
 ];

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -28,14 +29,14 @@ return [
             'DESCRIPTION'               => 'Die angeforderte Ressource wurde nicht gefunden.',
             'DETAIL'                    => 'Wir haben versucht Ihre Seite zu finden ...',
             'EXPLAIN'                   => 'Die von Ihnen gesuchte Seite konnte nicht gefunden werden.',
-            'RETURN'                    => "Klicken Sie <a href='{{url}}'>Hier</a>, um zur Startseite zurückzukehren."
+            'RETURN'                    => "Klicken Sie <a href='{{url}}'>Hier</a>, um zur Startseite zurückzukehren.",
         ],
 
         'CONFIG' => [
             'TITLE'                     => 'UserFrosting Konfigurationsproblem!',
             'DESCRIPTION'               => 'Einige UserFrosting-Konfigurationsanforderungen wurden nicht erfüllt.',
             'DETAIL'                    => 'Etwas stimmt hier nicht.',
-            'RETURN'                    => "Bitte beheben Sie die folgenden Fehler dann laden Sie die <a href='{{url}}'>Website</a> neu."
+            'RETURN'                    => "Bitte beheben Sie die folgenden Fehler dann laden Sie die <a href='{{url}}'>Website</a> neu.",
         ],
 
         'DESCRIPTION'                   => 'Wir haben eine große Störung in der Macht erkannt.',
@@ -49,6 +50,6 @@ return [
 
         'SERVER'                        => 'Hoppla, sieht aus als hätte der Server möglicherweise gepatzt. Wenn Sie ein Administrator sind, überprüfen Sie bitte die PHP- oder UF-Fehlerprotokolle.',
 
-        'TITLE'                         => 'Störung in der Kraft'
-    ]
+        'TITLE'                         => 'Störung in der Kraft',
+    ],
 ];

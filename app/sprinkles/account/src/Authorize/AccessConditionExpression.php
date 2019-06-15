@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -10,15 +11,15 @@
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Monolog\Logger;
+use PhpParser\Error as PhpParserException;
 use PhpParser\Lexer\Emulative as EmulativeLexer;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser as Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
-use PhpParser\Error as PhpParserException;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
 /**
- * AccessConditionExpression class
+ * AccessConditionExpression class.
  *
  * This class models the evaluation of an authorization condition expression, as associated with permissions.
  * A condition is built as a boolean expression composed of AccessCondition method calls.
@@ -87,9 +88,11 @@ class AccessConditionExpression
      *
      * The special parameter `self` is an array of the current user's data.
      * This get included automatically, and so does not need to be passed in.
-     * @param  string       $condition a boolean expression composed of calls to AccessCondition functions.
-     * @param  array[mixed] $params    the parameters to be used when evaluating the expression.
-     * @return bool         true if the condition is passed for the given parameters, otherwise returns false.
+     *
+     * @param string       $condition a boolean expression composed of calls to AccessCondition functions.
+     * @param array[mixed] $params    the parameters to be used when evaluating the expression.
+     *
+     * @return bool true if the condition is passed for the given parameters, otherwise returns false.
      */
     public function evaluateCondition($condition, $params)
     {

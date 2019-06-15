@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -16,6 +17,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
  * AuthorizationManager class.
  *
  * Manages a collection of access condition callbacks, and uses them to perform access control checks on user objects.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class AuthorizationManager
@@ -46,6 +48,7 @@ class AuthorizationManager
      * Register an authorization callback, which can then be used in permission conditions.
      *
      * To add additional callbacks, simply extend the `authorizer` service in your Sprinkle's service provider.
+     *
      * @param string   $name
      * @param callable $callback
      */
@@ -71,11 +74,12 @@ class AuthorizationManager
      *
      * Determine if this user has access to the given $slug under the given $params.
      *
-     * @param  UserInterface|null $user
-     * @param  string             $slug   The permission slug to check for access.
-     * @param  array              $params An array of field names => values, specifying any additional data to provide the authorization module
-     *                                    when determining whether or not this user has access.
-     * @return bool               True if the user has access, false otherwise.
+     * @param UserInterface|null $user
+     * @param string             $slug   The permission slug to check for access.
+     * @param array              $params An array of field names => values, specifying any additional data to provide the authorization module
+     *                                   when determining whether or not this user has access.
+     *
+     * @return bool True if the user has access, false otherwise.
      */
     public function checkAccess($user, $slug, array $params = [])
     {
@@ -146,7 +150,8 @@ class AuthorizationManager
     /**
      * Remove extraneous information from the permission to reduce verbosity.
      *
-     * @param  array $permissions
+     * @param array $permissions
+     *
      * @return array
      */
     protected function getPermissionsArrayDebugInfo($permissions)

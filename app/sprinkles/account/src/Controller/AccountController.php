@@ -14,10 +14,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Facades\Password;
@@ -34,6 +34,7 @@ use UserFrosting\Support\Exception\NotFoundException;
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see http://www.userfrosting.com/navigating/#structure
  */
 class AccountController extends SimpleController
@@ -72,9 +73,11 @@ class AccountController extends SimpleController
      * Route: /account/check-username
      * Route Name: {none}
      * Request type: GET
-     * @param  Request             $request
-     * @param  Response            $response
-     * @param  array               $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws BadRequestException
      */
     public function checkUsername(Request $request, Response $response, $args)
@@ -102,6 +105,7 @@ class AccountController extends SimpleController
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
@@ -123,7 +127,7 @@ class AccountController extends SimpleController
         // Log throttleable event
         $throttler->logEvent('check_username_request');
 
-        if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
+        if ($classMapper->getClassMapping('user')::findUnique($data['user_name'], 'user_name')) {
             $message = $translator->translate('USERNAME.NOT_AVAILABLE', $data);
 
             return $response->write($message)->withStatus(200);
@@ -143,6 +147,7 @@ class AccountController extends SimpleController
      * Route: /account/set-password/deny
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -175,6 +180,7 @@ class AccountController extends SimpleController
             return $response->withRedirect($loginPage);
         }
 
+        /** @var \UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository $passwordReset */
         $passwordReset = $this->ci->repoPasswordReset->cancel($data['token']);
 
         if (!$passwordReset) {
@@ -198,6 +204,7 @@ class AccountController extends SimpleController
      * Note that we have removed the requirement that a password reset request not already be in progress.
      * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
      * This route is "public access".
+     *
      * @todo require additional user information
      * @todo prevent password reset requests for root account?
      *
@@ -205,6 +212,7 @@ class AccountController extends SimpleController
      * Route: /account/forgot-password
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -239,7 +247,6 @@ class AccountController extends SimpleController
         }
 
         // Throttle requests
-
         /** @var \UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
         $throttler = $this->ci->throttler;
 
@@ -262,7 +269,7 @@ class AccountController extends SimpleController
             $throttler->logEvent('password_reset_request', $throttleData);
 
             // Load the user, by email address
-            $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
+            $user = $classMapper->getClassMapping('user')::where('email', $data['email'])->first();
 
             // Check that the email exists.
             // If there is no user with that email address, we should still pretend like we succeeded, to prevent account enumeration
@@ -301,6 +308,7 @@ class AccountController extends SimpleController
      * Route: /modals/account/tos
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -317,6 +325,7 @@ class AccountController extends SimpleController
      * Route: /account/captcha
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -347,6 +356,7 @@ class AccountController extends SimpleController
      * Route: /account/login
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -477,6 +487,7 @@ class AccountController extends SimpleController
      * Route: /account/logout
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -502,6 +513,7 @@ class AccountController extends SimpleController
      * Route: /account/forgot-password
      * Route Name: forgot-password
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -532,9 +544,11 @@ class AccountController extends SimpleController
      * Route: /account/register
      * Route Name: register
      * Request type: GET
-     * @param  Request           $request
-     * @param  Response          $response
-     * @param  array             $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws NotFoundException If site registration is disabled
      */
     public function pageRegister(Request $request, Response $response, $args)
@@ -561,6 +575,10 @@ class AccountController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/register.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         // Get locale information
@@ -599,6 +617,7 @@ class AccountController extends SimpleController
      * Route: /account/resend-verification
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -627,17 +646,25 @@ class AccountController extends SimpleController
      * Route: /account/set-password/confirm
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
      */
     public function pageResetPassword(Request $request, Response $response, $args)
     {
+        /** @var \UserFrosting\Support\Repository\Repository $config */
+        $config = $this->ci->config;
+
         // Insert the user's secret token from the link into the password reset form
         $params = $request->getQueryParams();
 
         // Load validation rules - note this uses the same schema as "set password"
         $schema = new RequestSchema('schema://requests/set-password.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
@@ -660,17 +687,25 @@ class AccountController extends SimpleController
      * Route:
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
      */
     public function pageSetPassword(Request $request, Response $response, $args)
     {
+        /** @var \UserFrosting\Support\Repository\Repository $config */
+        $config = $this->ci->config;
+
         // Insert the user's secret token from the link into the password set form
         $params = $request->getQueryParams();
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/set-password.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'pages/set-password.html.twig', [
@@ -694,13 +729,18 @@ class AccountController extends SimpleController
      * Route: /account/settings
      * Route Name: {none}
      * Request type: GET
-     * @param  Request            $request
-     * @param  Response           $response
-     * @param  array              $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws ForbiddenException If user is not authozied to access page
      */
     public function pageSettings(Request $request, Response $response, $args)
     {
+        /** @var \UserFrosting\Support\Repository\Repository $config */
+        $config = $this->ci->config;
+
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -714,13 +754,14 @@ class AccountController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/account-settings.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validatorAccountSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         $schema = new RequestSchema('schema://requests/profile-settings.yaml');
         $validatorProfileSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
-
-        /** @var \UserFrosting\Support\Repository\Repository $config */
-        $config = $this->ci->config;
 
         // Get a list of all locales
         $locales = $config->getDefined('site.locales.available');
@@ -758,6 +799,7 @@ class AccountController extends SimpleController
      * Route: /account/sign-in
      * Route Name: login
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -802,6 +844,7 @@ class AccountController extends SimpleController
      * Route: /account/settings/profile
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -857,7 +900,7 @@ class AccountController extends SimpleController
 
         // Check that locale is valid
         $locales = $config->getDefined('site.locales.available');
-        if (!array_key_exists($data['locale'], $locales)) {
+        if (isset($data['locale']) && !array_key_exists($data['locale'], $locales)) {
             $ms->addMessageTranslated('danger', 'LOCALE.INVALID', $data);
             $error = true;
         }
@@ -902,9 +945,11 @@ class AccountController extends SimpleController
      * Route: /account/register
      * Route Name: {none}
      * Request type: POST
-     * @param  Request                $request
-     * @param  Response               $response
-     * @param  array                  $args
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
      * @throws SpammyRequestException
      */
     public function register(Request $request, Response $response, $args)
@@ -927,7 +972,7 @@ class AccountController extends SimpleController
         }
 
         // Security measure: do not allow registering new users until the master account has been created.
-        if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
+        if (!$classMapper->getClassMapping('user')::find($config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.MASTER_NOT_EXISTS');
 
             return $response->withJson([], 403);
@@ -952,6 +997,10 @@ class AccountController extends SimpleController
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/register.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -983,7 +1032,7 @@ class AccountController extends SimpleController
         // Check captcha, if required
         if ($config['site.registration.captcha']) {
             $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
-            if (!$data['captcha'] || !$captcha->verifyCode($data['captcha'])) {
+            if (!isset($data['captcha']) || !$captcha->verifyCode($data['captcha'])) {
                 $ms->addMessageTranslated('danger', 'CAPTCHA.FAIL');
                 $error = true;
             }
@@ -1030,6 +1079,7 @@ class AccountController extends SimpleController
      * Route: /account/resend-verification
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1086,7 +1136,7 @@ class AccountController extends SimpleController
             $throttler->logEvent('verification_request', $throttleData);
 
             // Load the user, by email address
-            $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
+            $user = $classMapper->getClassMapping('user')::where('email', $data['email'])->first();
 
             // Check that the user exists and is not already verified.
             // If there is no user with that email address, or the user exists and is already verified,
@@ -1128,6 +1178,7 @@ class AccountController extends SimpleController
      * Route: /account/set-password
      * Route Name: {none}
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1148,6 +1199,10 @@ class AccountController extends SimpleController
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/set-password.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1206,6 +1261,7 @@ class AccountController extends SimpleController
      * Route: /account/settings
      * Route Name: settings
      * Request type: POST
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1240,6 +1296,10 @@ class AccountController extends SimpleController
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/account-settings.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1270,7 +1330,7 @@ class AccountController extends SimpleController
         unset($data['passwordc']);
 
         // If new email was submitted, check that the email address is not in use
-        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
+        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->getClassMapping('user')::findUnique($data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
@@ -1307,12 +1367,14 @@ class AccountController extends SimpleController
      * Suggest an available username for a specified first/last name.
      *
      * This route is "public access".
+     *
      * @todo Can this route be abused for account enumeration?  If so we should throttle it as well.
      *
      * AuthGuard: false
      * Route: /account/suggest-username
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -1346,6 +1408,7 @@ class AccountController extends SimpleController
      * Route: /account/verify
      * Route Name: {none}
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args

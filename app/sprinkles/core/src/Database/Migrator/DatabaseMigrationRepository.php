@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -13,7 +14,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * MigrationRepository Class
+ * MigrationRepository Class.
  *
  * Repository used to store all migrations run against the database
  *
@@ -49,11 +50,12 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     }
 
     /**
-     * Get the list of ran migrations
+     * Get the list of ran migrations.
      *
-     * @param  int    $steps Number of batch to return
-     * @param  string $order asc|desc
-     * @return array  An array of migration class names in the order they where ran
+     * @param int    $steps Number of batch to return
+     * @param string $order asc|desc
+     *
+     * @return array An array of migration class names in the order they where ran
      */
     public function getMigrationsList($steps = -1, $order = 'asc')
     {
@@ -63,8 +65,9 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     /**
      * Get list of migrations.
      *
-     * @param  int    $steps Number of batch to return
-     * @param  string $order asc|desc
+     * @param int    $steps Number of batch to return
+     * @param string $order asc|desc
+     *
      * @return array
      */
     public function getMigrations($steps = -1, $order = 'asc')
@@ -80,9 +83,10 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     }
 
     /**
-     * Get details about a specific migration
+     * Get details about a specific migration.
      *
-     * @param  string    $migration The migration class
+     * @param string $migration The migration class
+     *
      * @return \stdClass The migration info
      */
     public function getMigration($migration)
@@ -91,7 +95,7 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     }
 
     /**
-     * Get the last migration batch in reserve order they were ran (last one first)
+     * Get the last migration batch in reserve order they were ran (last one first).
      *
      * @return array
      */
@@ -163,7 +167,7 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     }
 
     /**
-     * Delete the migration repository data store
+     * Delete the migration repository data store.
      */
     public function deleteRepository()
     {
@@ -191,7 +195,7 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     }
 
     /**
-     * Returns the schema builder instance
+     * Returns the schema builder instance.
      *
      * @return \Illuminate\Database\Schema\Builder
      */

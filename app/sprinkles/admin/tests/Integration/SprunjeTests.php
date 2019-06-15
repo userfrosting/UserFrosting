@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -71,7 +72,7 @@ class SprunjeTests extends TestCase
 
         // Test user 0
         $sprunje = new UserPermissionSprunje($this->classMapper, [
-            'user_id' => $users[0]->id
+            'user_id' => $users[0]->id,
         ]);
 
         list($count, $countFiltered, $models) = $sprunje->getModels();
@@ -86,7 +87,7 @@ class SprunjeTests extends TestCase
 
         // Test user 1
         $sprunje = new UserPermissionSprunje($this->classMapper, [
-            'user_id' => $users[1]->id
+            'user_id' => $users[1]->id,
         ]);
 
         list($count, $countFiltered, $models) = $sprunje->getModels();
@@ -99,12 +100,12 @@ class SprunjeTests extends TestCase
         static::ignoreRelations($models);
         $this->assertCollectionsSame(collect([
             $permissions[1],
-            $permissions[2]
+            $permissions[2],
         ]), $models);
 
         // Test user 2
         $sprunje = new UserPermissionSprunje($this->classMapper, [
-            'user_id' => $users[2]->id
+            'user_id' => $users[2]->id,
         ]);
 
         list($count, $countFiltered, $models) = $sprunje->getModels();
@@ -116,7 +117,7 @@ class SprunjeTests extends TestCase
         // Ignore pivot and roles_via.  These are covered by the tests for the relationships themselves.
         static::ignoreRelations($models);
         $this->assertCollectionsSame(collect([
-            $permissions[2]
+            $permissions[2],
         ]), $models);
     }
 }

@@ -5,6 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.3.0]
+
+### Changed Requirements
+- Changed minimum PHP Version to 7.1
+
+### Added
+- Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
+
+### Fix
+- `bake` command return error if account sprinkle is not included ([#944])
+
+### Changed
+- Account sprinkle now extend the Core `BakeCommand` class to add the `create-admin` to the general bake command. Any sprinkle already extending the Core `BakeCommand` might need adjustments.
+- Updated custom Eloquent relations (`belongsToManyThrough`, `morphToManyUnique`, `belongsToManyUnique`, `morphToManyUnique`, etc.) to support Laravel 5.8. See [The `belongsToMany` Method](https://laravel.com/docs/5.5/upgrade#upgrade-5.5.0).
+
+### Removed
+- Removed `belongsToManyConstrained` (deprecated in 4.1.6)
+
+## [v4.2.3]
+
+### Added
+- Config to set Domain of RememberMe Cookie ([#990]; [#991]; Thanks @xrobau!)
+- Config settings for password min/max length ([#993])
+
+### Fixed
+- [PHPMailer] Turn off opportunistic TLS when disabled ([#986]; [#987])
+- Migrator now ignore files that don't end in `.php` ([#965]; Temporary fix for [#998])
+
+## [v4.2.2]
+
+### Added
+- New group factory (`'UserFrosting\Sprinkle\Account\Database\Models\Group'`)
+- New `withController` Trait, as an alternative for deprecated `ControllerTestCase`
+- StyleCI config
+- [Travis] SQLite in-memory DB testing
+- [Travis] enabled memcache & Redis service
+
+### Fixed
+- DefaultPermissions seed results in SQL errors ([#981]; [#983])
+- Make group & role schema consistent between creation and edition. Prevents group and role without a name or slug to be created during edition.
+- Factories changed to make sure slugs are unique
+- Fix `WithTestUser` Trait returning a user with id of zero or reserve master id when a non-master user was asked. If master user already exist, will return it instead of trying to create a new one (with the same id)
+- Force close db connection on test `tearDown` procedure
+
+### Changed
+- Recommended PHP version is now 7.2, as 7.1 will be EOL in less than 6 months
+- Added tests coverage for all build-in controllers
+- Applied styling rules from StyleCI & updated php-cs-fixer rules to match StyleCI config
+
+### Deprecated
+- `ControllerTestCase`. Use `withController` Trait instead.
+
+
 ## [v4.2.1]
 
 ### Added
@@ -730,7 +783,18 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#953]: https://github.com/userfrosting/UserFrosting/issues/953
 [#958]: https://github.com/userfrosting/UserFrosting/issues/958
 [#963]: https://github.com/userfrosting/UserFrosting/issues/963
+[#965]: https://github.com/userfrosting/UserFrosting/issues/965
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
+[#981]: https://github.com/userfrosting/UserFrosting/issues/981
+[#983]: https://github.com/userfrosting/UserFrosting/issues/983
+[#986]: https://github.com/userfrosting/UserFrosting/issues/986
+[#987]: https://github.com/userfrosting/UserFrosting/issues/987
+[#990]: https://github.com/userfrosting/UserFrosting/issues/990
+[#991]: https://github.com/userfrosting/UserFrosting/issues/991
+[#993]: https://github.com/userfrosting/UserFrosting/issues/993
+[#998]: https://github.com/userfrosting/UserFrosting/issues/998
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
-[v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v4.2.1
+[v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
+[v4.2.2]: https://github.com/userfrosting/UserFrosting/compare/v.4.2.1...v4.2.2
+[v4.2.3]: https://github.com/userfrosting/UserFrosting/compare/v4.2.2...v4.2.3

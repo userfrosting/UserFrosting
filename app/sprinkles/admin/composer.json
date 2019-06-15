@@ -11,9 +11,6 @@
             "homepage": "https://alexanderweissman.com"
         }
     ],
-    "require": {
-        "php": ">=5.6"
-    },
     "autoload": {
         "psr-4": {
             "UserFrosting\\Sprinkle\\Admin\\": "src/"

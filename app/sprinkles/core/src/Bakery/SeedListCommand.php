@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,7 +16,7 @@ use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * seed Bakery Command
- * Perform a database seed
+ * Perform a database seed.
  *
  * @author Louis Charette
  */

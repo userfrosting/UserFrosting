@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -32,14 +33,14 @@ return [
         'SESSION_COMPROMISED' => [
             '@TRANSLATION'  => 'La tua sessione è stata compromessa. Devi eseguire il logout su tutti i dispositivi, quindi accedere nuovamente e assicurarti che i tuoi dati non siano stati manomessi.',
             'TITLE'         => 'Il tuo account potrebbe essere stato compromesso',
-            'TEXT'          => "Qualcuno potrebbe aver utilizzato le tue informazioni di accesso per accedere a questa pagina. Per la tua sicurezza tutte le sessioni sono state disconnesse. <a href=\"{{url}}\">Accedi</a> e controlla l'account per attività sospette. Potresti anche voler cambiare la password."
+            'TEXT'          => "Qualcuno potrebbe aver utilizzato le tue informazioni di accesso per accedere a questa pagina. Per la tua sicurezza tutte le sessioni sono state disconnesse. <a href=\"{{url}}\">Accedi</a> e controlla l'account per attività sospette. Potresti anche voler cambiare la password.",
         ],
         'SESSION_EXPIRED'       => 'La tua sessione è scaduta. Accedi nuovamente.',
 
         'SETTINGS' => [
             '@TRANSLATION'  => 'Impostazioni account',
             'DESCRIPTION'   => 'Aggiorna le impostazioni del tuo account, tra cui email, nome e password.',
-            'UPDATED'       => 'Impostazioni account aggiornate'
+            'UPDATED'       => 'Impostazioni account aggiornate',
         ],
 
         'TOOLS' => 'Strumenti account',
@@ -53,14 +54,14 @@ return [
             'EMAIL'             => "Inserisci l'indirizzo email che hai utilizzato per registrarti e la tua email di verifica sarà inviata nuovamente.",
             'PAGE'              => "Invia nuovamente l'email di verifica per il tuo nuovo account.",
             'SEND'              => 'Invia il collegamento di verifica per il mio account',
-            'TOKEN_NOT_FOUND'   => "Il token non esiste / l'account è già stato attivato"
-        ]
+            'TOKEN_NOT_FOUND'   => "Il token non esiste / l'account è già stato attivato",
+        ],
     ],
 
     'EMAIL' => [
         'INVALID'               => 'Non esiste alcun account per <strong>{{email}}</strong>.',
         'IN_USE'                => "L'email '{{email}}' è già in uso",
-        'VERIFICATION_REQUIRED' => 'Email (verifica richiesta - utilizza un indirizzo reale!)'
+        'VERIFICATION_REQUIRED' => 'Email (verifica richiesta - utilizza un indirizzo reale!)',
     ],
 
     'EMAIL_OR_USERNAME' => 'Nome utente o Indirizzo Email',
@@ -79,7 +80,7 @@ return [
         '@TRANSLATION'      => 'Accesso',
         'ALREADY_COMPLETE'  => "Hai già eseguito l'accesso!",
         'SOCIAL'            => 'O accedi con',
-        'REQUIRED'          => "Devi eseguire l'accesso per accedere a questa risorsa"
+        'REQUIRED'          => "Devi eseguire l'accesso per accedere a questa risorsa",
     ],
     'LOGOUT' => 'Esci',
 
@@ -92,7 +93,7 @@ return [
             'DESCRIPTION'   => 'Accedi al tuo account {{site_name}} o iscriviti per un nuovo account.',
             'SUBTITLE'      => 'Registrati gratuitamente o accedi con un account esistente.',
             'TITLE'         => 'Iniziamo!',
-        ]
+        ],
     ],
 
     'PASSWORD' => [
@@ -108,7 +109,7 @@ return [
         'CREATE'                => [
             '@TRANSLATION'  => 'Crea password',
             'PAGE'          => 'Scegli una password per il tuo nuovo account.',
-            'SET'           => 'Imposta password e accedi'
+            'SET'           => 'Imposta password e accedi',
         ],
         'CURRENT'               => 'Password attuale',
         'CURRENT_EXPLAIN'       => 'Devi confermare la tua password corrente per apportare modifiche',
@@ -123,7 +124,7 @@ return [
             'INVALID'           => 'Questa richiesta di ripristino della password non è stata trovata o è scaduta.  Prova a <a href="{{url}}">reinviare</a> la tua richiesta.',
             'PAGE'              => 'Ottieni un collegamento per reimpostare la tua password.',
             'REQUEST_CANNED'    => 'Richiesta di recupero password annullata.',
-            'REQUEST_SENT'      => "Se l'email <strong>{{email}}</strong> corrisponde a un account, verrà inviato un collegamento per la reimpostazione della password a <strong>{{email}}</strong>."
+            'REQUEST_SENT'      => "Se l'email <strong>{{email}}</strong> corrisponde a un account, verrà inviato un collegamento per la reimpostazione della password a <strong>{{email}}</strong>.",
         ],
 
         'HASH_FAILED'       => "Hash della password fallito. Contatta l'amministratore di sistema.",
@@ -135,15 +136,15 @@ return [
             '@TRANSLATION'      => 'Reimposta la Password',
             'CHOOSE'            => 'Inserisci la tua nuova password',
             'PAGE'              => 'Scegli una nuova password per il tuo account.',
-            'SEND'              => 'Imposta nuova password e accedi'
+            'SEND'              => 'Imposta nuova password e accedi',
         ],
 
-        'UPDATED'           => 'Password aggiornata'
+        'UPDATED'           => 'Password aggiornata',
     ],
 
     'PROFILE'       => [
         'SETTINGS'  => 'Impostazioni profilo',
-        'UPDATED'   => 'Impostazioni profilo aggiornate'
+        'UPDATED'   => 'Impostazioni profilo aggiornate',
     ],
 
     'RATE_LIMIT_EXCEEDED'       => 'Il limite di esecuzioni per questa azione è stato superato. Devi aspettare altri {{delay}} secondi prima che tu possa fare un altro tentativo.',
@@ -155,7 +156,7 @@ return [
         'COMPLETE_TYPE2'    => "Registrazione effettuata con successo. Riceverai presto una mail a <strong>{{email}}</strong> per l'attivazione. Devi attivare il tuo account prima di eseguire il login.",
         'DISABLED'          => 'La registrazione di nuovi account è limitata',
         'LOGOUT'            => "Non è possibile registrare un account mentre hai eseguito l'accesso ad un altro account",
-        'WELCOME'           => 'La registrazione è semplice e veloce'
+        'WELCOME'           => 'La registrazione è semplice e veloce',
     ],
     'REMEMBER_ME'               => 'Ricordami',
     'REMEMBER_ME_ON_COMPUTER'   => 'Ricordami su questo dispositivo (non consigliato per i computer pubblici)',
@@ -175,12 +176,12 @@ return [
         'CHOOSE'        => 'Inserisci il tuo nome utente',
         'INVALID'       => 'Nome utente non valido',
         'IN_USE'        => "Il nome utente '{{user_name}}' è già in uso",
-        'NOT_AVAILABLE' => 'Il nome utente <strong>{{user_name}}</strong> non è disponibile. Scegli un nome diverso, oppure fai clic su "suggerisci".'
+        'NOT_AVAILABLE' => 'Il nome utente <strong>{{user_name}}</strong> non è disponibile. Scegli un nome diverso, oppure fai clic su "suggerisci".',
     ],
 
     'USER_ID_INVALID'       => 'Questo ID utente non esiste',
     'USER_OR_EMAIL_INVALID' => "L'indirizzo mail o il nome utente non sono validi",
     'USER_OR_PASS_INVALID'  => 'Il nome utente o la password non sono validi',
 
-    'WELCOME' => 'Bentornato, {{first_name}}'
+    'WELCOME' => 'Bentornato, {{first_name}}',
 ];
