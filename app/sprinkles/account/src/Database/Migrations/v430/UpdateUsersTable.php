@@ -20,7 +20,7 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
  *
  * See https://laravel.com/docs/5.4/migrations#tables
  *
- * @author Alex Weissman (https://alexanderweissman.com)
+ * @author Amos Folz
  */
 class UpdateUsersTable extends Migration
 {
@@ -40,11 +40,7 @@ class UpdateUsersTable extends Migration
     {
         if ($this->schema->hasTable('users')) {
             $this->schema->table('users', function (Blueprint $table) {
-                $table->dropForeign(['group_id']);
-                $table->unsignedInteger('group_id')->default(null)->comment('The id of the user group.')->nullable()->change();
-            });
-            $this->schema->table('users', function (Blueprint $table) {
-                $table->foreign('group_id')->references('id')->on('groups');
+                $table->unsignedInteger('group_id')->comment('The id of the user group.')->nullable()->change();
             });
         }
     }
@@ -55,11 +51,7 @@ class UpdateUsersTable extends Migration
     public function down()
     {
         $this->schema->table('users', function (Blueprint $table) {
-            $table->dropForeign(['group_id']);
             $table->unsignedInteger('group_id')->default(1)->comment('The id of the user group.')->nullable(false)->change();
-        });
-        $this->schema->table('users', function (Blueprint $table) {
-            $table->foreign('group_id')->references('id')->on('groups');
         });
     }
 }
