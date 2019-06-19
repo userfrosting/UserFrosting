@@ -40,7 +40,7 @@ class UpdateUsersTable extends Migration
     {
         if ($this->schema->hasTable('users')) {
             $this->schema->table('users', function (Blueprint $table) {
-                $table->unsignedInteger('group_id')->comment('The id of the user group.')->nullable()->change();
+                $table->unsignedInteger('group_id')->default(null)->comment('The id of the user group.')->nullable()->change();
             });
         }
     }
