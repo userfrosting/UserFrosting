@@ -66,7 +66,7 @@ return [
         * Cache Service Config
         * ----------------------------------------------------------------------
         * Redis & Memcached driver configuration
-        * See Laravel for more info : https://laravel.com/docs/5.4/cache
+        * See Laravel for more info : https://laravel.com/docs/5.8/cache
         *
         * Edit prefix to something unique when multiple instance of memcached /
         * redis are used on the same server.
@@ -120,7 +120,7 @@ return [
         * should be store in environment variables
         *
         * Multiple connections can also be used.
-        * See Laravel docs : https://laravel.com/docs/5.4/database
+        * See Laravel docs : https://laravel.com/docs/5.8/database
         */
         'db' => [
             'default' => [
@@ -211,7 +211,7 @@ return [
             'host'            => getenv('SMTP_HOST') ?: null,
             'port'            => 587,
             'auth'            => true,
-            'secure'          => 'tls',
+            'secure'          => 'tls', // Enable TLS encryption. Set to `tls`, `ssl` or `false` (to disabled)
             'username'        => getenv('SMTP_USER') ?: null,
             'password'        => getenv('SMTP_PASSWORD') ?: null,
             'smtp_debug'      => 4,

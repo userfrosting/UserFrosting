@@ -166,10 +166,11 @@ class SetupDbCommand extends BaseCommand
         // Ask further questions based on driver
         if ($driver['driver'] == 'sqlite') {
             $name = ($args->getOption('db_name')) ?: $this->io->ask('Database name', $driver['defaultDBName']);
+            $host = ($args->getOption('db_host')) ?: $this->io->ask('Hostname', '127.0.0.1');
 
             return [
                 'driver'   => $driver['driver'],
-                'host'     => '',
+                'host'     => $host,
                 'port'     => '',
                 'database' => $name,
                 'username' => '',

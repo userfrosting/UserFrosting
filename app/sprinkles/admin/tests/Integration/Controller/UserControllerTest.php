@@ -52,8 +52,7 @@ class UserControllerTest extends TestCase
             // Setup database, then setup User & default role
             $this->refreshDatabase();
             $this->setupUser();
-
-        } else if (!static::$initialized) {
+        } elseif (!static::$initialized) {
 
             // Only refresh db once
             $this->refreshDatabase();
@@ -67,8 +66,6 @@ class UserControllerTest extends TestCase
         m::close();
     }
 
-    /**
-     */
     public function testControllerConstructor()
     {
         $controller = $this->getController();
@@ -94,7 +91,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testCreateWithNoUsername(UserController $controller)
     {
@@ -103,7 +100,7 @@ class UserControllerTest extends TestCase
             //'user_name'  => 'foo',
             'first_name' => 'foo name',
             'last_name'  => 'foo last',
-            'email'      => 'foo@bar.com'
+            'email'      => 'foo@bar.com',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -121,7 +118,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testCreateWithNoEmail(UserController $controller)
     {
@@ -148,7 +145,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testCreateWithDuplicateUsername(UserController $controller)
     {
@@ -157,7 +154,7 @@ class UserControllerTest extends TestCase
             'user_name'  => 'userfoo',
             'first_name' => 'foo name',
             'last_name'  => 'foo last',
-            'email'      => 'foo@bar.com'
+            'email'      => 'foo@bar.com',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -176,7 +173,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testCreateWithDuplicateEmail(UserController $controller)
     {
@@ -185,7 +182,7 @@ class UserControllerTest extends TestCase
             'user_name'  => 'barbarbar',
             'first_name' => 'foo name',
             'last_name'  => 'foo last',
-            'email'      => 'bar@foo.com'
+            'email'      => 'bar@foo.com',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -230,18 +227,17 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testCreatePasswordResetWithNotExistingUser(UserController $controller)
     {
         $this->expectException(NotFoundException::class);
         $result = $controller->createPasswordReset($this->getRequest(), $this->getResponse(), ['user_name' => 'potato']);
-
     }
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testDelete(UserController $controller)
     {
@@ -266,7 +262,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testDelete
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testDeleteWithNotExistingUser(UserController $controller)
     {
@@ -277,7 +273,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testDelete
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testDeleteWithReservedIds(UserController $controller)
     {
@@ -288,7 +284,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetActivities(UserController $controller)
     {
@@ -301,7 +297,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetActivities
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetActivitiesWithBadUser(UserController $controller)
     {
@@ -311,7 +307,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetInfo(UserController $controller)
     {
@@ -324,7 +320,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetInfo
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetInfoWithBadUser(UserController $controller)
     {
@@ -334,7 +330,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetList(UserController $controller)
     {
@@ -346,12 +342,12 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalConfirmDelete(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo'
+            'user_name' => 'userfoo',
         ]);
 
         // Get controller stuff
@@ -363,7 +359,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalConfirmDeleteWithNoUser(UserController $controller)
     {
@@ -374,12 +370,12 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalConfirmDeleteWithNonExistingUser(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'foobar'
+            'user_name' => 'foobar',
         ]);
 
         $this->expectException(NotFoundException::class);
@@ -389,14 +385,14 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalConfirmDeleteWithReservedId(UserController $controller)
     {
         $user = User::find($this->ci->config['reserved_user_ids.master']);
 
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => $user->user_name
+            'user_name' => $user->user_name,
         ]);
 
         $this->expectException(BadRequestException::class);
@@ -405,7 +401,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalCreate(UserController $controller)
     {
@@ -417,7 +413,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalCreate
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalCreateWithNoLocale(UserController $controller)
     {
@@ -435,12 +431,12 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalEdit(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo'
+            'user_name' => 'userfoo',
         ]);
 
         $result = $controller->getModalEdit($request, $this->getResponse(), []);
@@ -451,7 +447,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalEdit
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalEditWithNoLocale(UserController $controller)
     {
@@ -463,7 +459,7 @@ class UserControllerTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo'
+            'user_name' => 'userfoo',
         ]);
 
         $result = $controller->getModalEdit($request, $this->getResponse(), []);
@@ -473,12 +469,12 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalEditWithNoUser(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'foobar'
+            'user_name' => 'foobar',
         ]);
 
         $this->expectException(NotFoundException::class);
@@ -487,12 +483,12 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalEditPassword(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo'
+            'user_name' => 'userfoo',
         ]);
 
         $result = $controller->getModalEditPassword($request, $this->getResponse(), []);
@@ -502,12 +498,12 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalEditPasswordWithNoUser(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'foobar'
+            'user_name' => 'foobar',
         ]);
 
         $this->expectException(NotFoundException::class);
@@ -516,12 +512,12 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalEditRoles(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo'
+            'user_name' => 'userfoo',
         ]);
 
         $result = $controller->getModalEditRoles($request, $this->getResponse(), []);
@@ -531,12 +527,12 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetModalEditRolesWithNoUser(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'foobar'
+            'user_name' => 'foobar',
         ]);
 
         $this->expectException(NotFoundException::class);
@@ -545,7 +541,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetPermissions(UserController $controller)
     {
@@ -557,7 +553,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetPermissionsWithNoUser(UserController $controller)
     {
@@ -567,7 +563,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetRoles(UserController $controller)
     {
@@ -579,7 +575,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testGetRolesWithNoUser(UserController $controller)
     {
@@ -589,7 +585,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testPageInfo(UserController $controller)
     {
@@ -600,7 +596,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testPageInfoWithNoLocale(UserController $controller)
     {
@@ -618,7 +614,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testPageInfoWithNoUser(UserController $controller)
     {
@@ -628,7 +624,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testPageList(UserController $controller)
     {
@@ -639,7 +635,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateInfo(UserController $controller)
     {
@@ -680,7 +676,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateInfoWithNoUser(UserController $controller)
     {
@@ -691,7 +687,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateInfoWithValidationError(UserController $controller)
     {
@@ -701,7 +697,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'first_name' => $value
+            'first_name' => $value,
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -724,7 +720,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateInfoWithDuplicateEmail(UserController $controller)
     {
@@ -757,7 +753,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateInfoForMasterUser(UserController $controller)
     {
@@ -791,7 +787,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateField(UserController $controller)
     {
@@ -826,7 +822,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateField
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateFieldWithNoUser(UserController $controller)
     {
@@ -837,7 +833,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateField
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateFieldWithNoUserWithNoValue(UserController $controller)
     {
@@ -848,7 +844,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateField
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateFieldWithMasterUser(UserController $controller)
     {
@@ -883,7 +879,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateField
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateFieldWithValidationError(UserController $controller)
     {
@@ -905,7 +901,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateField
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateFieldForFlagEnabled(UserController $controller)
     {
@@ -935,7 +931,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateFieldForFlagEnabled
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateFieldForFlagEnabledDisabled(UserController $controller)
     {
@@ -965,7 +961,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateField
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateFieldForFlagVerified(UserController $controller)
     {
@@ -995,7 +991,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateField
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateFieldForFlagEnabledWithMasterUser(UserController $controller)
     {
@@ -1016,7 +1012,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateField
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateFieldForPassword(UserController $controller)
     {
@@ -1046,7 +1042,7 @@ class UserControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateField
-     * @param  UserController $controller
+     * @param UserController $controller
      */
     public function testUpdateFieldForRoles(UserController $controller)
     {
@@ -1060,7 +1056,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => [['role_id' => $role->id]]
+            'value' => [['role_id' => $role->id]],
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -1089,8 +1085,6 @@ class UserControllerTest extends TestCase
         return new UserController($this->ci);
     }
 
-    /**
-     */
     private function setupUser()
     {
         // Admin user, WILL have access
@@ -1099,7 +1093,7 @@ class UserControllerTest extends TestCase
         // Create test user
         $this->createTestUser(false, false, [
             'user_name' => 'userfoo',
-            'email'     => 'bar@foo.com'
+            'email'     => 'bar@foo.com',
         ]);
     }
 }
