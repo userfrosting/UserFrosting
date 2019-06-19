@@ -1211,6 +1211,10 @@ class UserController extends SimpleController
             return $response->withJson([], 400);
         }
 
+        if (isset($data['group_id']) && $data['group_id'] == 0) {
+            $data['group_id'] = null;
+        }
+
         // Begin transaction - DB will be rolled back if an exception occurs
         Capsule::transaction(function () use ($data, $user, $currentUser) {
             // Update the user and generate success messages
