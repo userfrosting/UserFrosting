@@ -51,7 +51,7 @@ class UpdateUsersTable extends Migration
     public function down()
     {
         $this->schema->table('users', function (Blueprint $table) {
-            $table->unsignedInteger('group_id')->default(1)->comment('The id of the user group.')->nullable(false)->change();
+            $table->unsignedInteger('group_id')->default(1)->comment('The id of the user group.')->change();
         });
     }
 }
