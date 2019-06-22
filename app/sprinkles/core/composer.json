@@ -32,7 +32,7 @@
         "illuminate/database": "5.8.*",
         "illuminate/events": "5.8.*",
         "illuminate/filesystem": "5.8.*",
-        "league/csv": "^8.1",
+        "league/csv": "^9.2.1",
         "league/flysystem": "~1.0",
         "league/flysystem-aws-s3-v3": "~1.0",
         "league/flysystem-cached-adapter": "~1.0",
