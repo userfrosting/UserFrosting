@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed Dependencies
 - Updated Laravel Illuminate packages to 5.8
+- Updated Twig from 1.x to 2.x
 - Updated PHPUnit to 7.5
 - Updated Mockery to 1.2
 - Updated symfony/console to 4.3
