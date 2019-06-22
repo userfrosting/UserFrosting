@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed minimum PHP Version to 7.1
 
 ### Changed Dependencies
+- Updated league/csv to 9.2.1
 - Updated Laravel Illuminate packages to 5.8
 - Updated PHPUnit to 7.5
 - Updated Mockery to 1.2
