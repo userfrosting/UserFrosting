@@ -131,8 +131,9 @@ class MigrateCommand extends BaseCommand
     }
 
     /**
-     * Display migrator notes
-     * @param  Migrator $migrator
+     * Display migrator notes.
+     *
+     * @param Migrator $migrator
      */
     protected function displayNotes(Migrator $migrator)
     {
