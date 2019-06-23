@@ -39,7 +39,7 @@
         "league/flysystem-rackspace": "~1.0",
         "league/flysystem-sftp": "~1.0",
         "monolog/monolog": "^1",
-        "phpmailer/phpmailer": "5.2.10",
+        "phpmailer/phpmailer": "6.0.7",
         "slim/csrf": "^0.8",
         "slim/slim": "^3",
         "slim/twig-view": "^2.5",
