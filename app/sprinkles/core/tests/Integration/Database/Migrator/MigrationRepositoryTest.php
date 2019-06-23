@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Database\Migrator;
 
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Illuminate\Support\Collection;
 use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
 use UserFrosting\Tests\TestCase;
@@ -20,6 +21,8 @@ use UserFrosting\Tests\TestCase;
  */
 class MigrationRepositoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function tearDown()
     {
         parent::tearDown();
