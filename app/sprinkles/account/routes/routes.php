@@ -21,6 +21,9 @@ $app->group('/account', function () {
     $this->get('/logout', 'UserFrosting\Sprinkle\Account\Controller\AccountController:logout')
         ->add('authGuard');
 
+    $this->get('/reset-password-required', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResetPasswordRequired')
+        ->setName('reset-password-required');
+
     $this->get('/resend-verification', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResendVerification');
 
     $this->get('/set-password/confirm', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResetPassword')

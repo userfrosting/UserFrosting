@@ -442,36 +442,32 @@ class AccountController extends SimpleController
 
         $passwordSecurity = $this->ci->passwordSecurity;
 
-        // Check if the enforce password update setting is configured.
-        if ($passwordSecurity->resetCompromisedEnabled()) {
-            // Check if the password is on the compromised password list.
-            $numberOfBreaches = $passwordSecurity->checkPassword($data['password']);
-
-            if ($passwordSecurity->breachThreshold() != '-1' && $numberOfBreaches > $passwordSecurity->breachThreshold()) {
-
-                // Try to generate a new password reset request.
-                // Use timeout for "reset password"
-                $passwordReset = $this->ci->repoPasswordReset->create($currentUser, $config['password_reset.timeouts.reset']);
-                $token = ['token'=> $passwordReset->getToken()];
-
-                // Load validation rules - note this uses the same schema as "set password"
-                $schema = new RequestSchema('schema://requests/set-password.yaml');
-                $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-
-                $forcePasswordChange = $this->ci->router->pathFor('set-password', [
-                'page' => [
-                  'validators' => [
-                      'set_password'    => $validator->rules('json', false),
-                  ],
-                ],
-              ], $token);
-
-                $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED.COMPROMISED');
-
-                return $response->withRedirect($forcePasswordChange);
-            }
-        }
-
+        /*
+                // Check if the enforce password update setting is configured.
+                if ($passwordSecurity->resetCompromisedEnabled()) {
+                    // Check if the password is on the compromised password list.
+                    $numberOfBreaches = $passwordSecurity->checkPassword($data['password']);
+        
+                    if ($passwordSecurity->breachThreshold() != '-1' && $numberOfBreaches > $passwordSecurity->breachThreshold()) {
+        
+                        // Load validation rules - note this uses the same schema as "set password"
+                        $schema = new RequestSchema('schema://requests/forgot-password.yaml');
+                        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+        
+                        $forcePasswordChange = $this->ci->router->pathFor('reset-password-required', [
+                        'page' => [
+                          'validators' => [
+                              'forgot_password'    => $validator->rules('json', false),
+                          ],
+                        ],
+                      ]);
+        
+                        $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED.COMPROMISED');
+        
+                        return $response->withRedirect($forcePasswordChange);
+                    }
+                }
+        */
         $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
 
         // Set redirect, if relevant
@@ -674,6 +670,37 @@ class AccountController extends SimpleController
                 ],
             ],
             'token' => isset($params['token']) ? $params['token'] : '',
+        ]);
+    }
+
+    /**
+     * Render the "reset password required" page.
+     *
+     * This creates a simple form to allow users who forgot their password to have a time-limited password reset link emailed to them.
+     * By default, this is a "public page" (does not require authentication).
+     * This page is similar to the forgot-password page. The only difference is that a user is directed to this page by the system when a password reset is required.
+     *
+     * AuthGuard: false
+     * Route: /account/reset-password-required
+     * Route Name: reset-password-required
+     * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     */
+    public function pageResetPasswordRequired(Request $request, Response $response, $args)
+    {
+        // Load validation rules
+        $schema = new RequestSchema('schema://requests/forgot-password.yaml');
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        return $this->ci->view->render($response, 'pages/reset-password-required.html.twig', [
+            'page' => [
+                'validators' => [
+                    'forgot_password'    => $validator->rules('json', false),
+                ],
+            ],
         ]);
     }
 
