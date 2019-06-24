@@ -140,6 +140,11 @@ return [
             'CHOOSE'            => 'Please choose a new password to continue.',
             'PAGE'              => 'Choose a new password for your account.',
             'SEND'              => 'Set New Password and Sign In',
+            'REQUIRED'          => [
+'@TRANSLATION' => 'Reset Required',
+'EMAIL'        => 'You are required to update your password before you can login. Please enter the email address you used to sign up. A link with instructions to reset your password will be emailed to you.',
+            ],
+
         ],
 
         'UPDATED'           => 'Account password updated',
