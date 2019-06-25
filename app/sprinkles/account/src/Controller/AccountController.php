@@ -449,6 +449,12 @@ class AccountController extends SimpleController
 
             if ($passwordSecurity->breachThreshold() != -1 && $numberOfBreaches > $passwordSecurity->breachThreshold()) {
                 $passwordSecurity->setPasswordResetRequired($currentUser);
+
+                // Create activity record
+                $this->ci->userActivityLogger->info("User {$currentUser->user_name} must reset their password before they can login as result of being on the compromised password list.", [
+                    'type'    => 'reset_compromised_password',
+                    'user_id' => $currentUser->id,
+                ]);
             }
         }
 
