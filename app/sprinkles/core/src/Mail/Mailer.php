@@ -11,8 +11,8 @@
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 use Monolog\Logger;
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as phpmailerException;
+use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * Mailer Class.
