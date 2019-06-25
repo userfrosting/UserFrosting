@@ -20,6 +20,7 @@ use UserFrosting\Support\Repository\Repository as Config;
  * Handles advanced password security methods for integration with Have I Been Pwned.
  *
  * @see https://haveibeenpwned.com/API/v2
+ *
  * @author Amos Folz
  */
 class PasswordSecurity
