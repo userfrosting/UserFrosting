@@ -152,7 +152,7 @@ return [
               'enforce_no_compromised'   => [
                'breaches' => 0,   // Set to -1 to turn off this feature otherwise an integer which sets the maximum number of times
                                   // that is "acceptable" for a password to have appeared in breaches. The recommended and most secure
-                                  // option is 0 - meaning only passwords that have been exposed through data breaches are allowed.
+                                  // option is 0 - meaning only passwords that have not been exposed through data breaches are allowed.
                'cache'    => 10080, // Duration in minutes to store HIBP API responses in cache.
                 ],
             ],

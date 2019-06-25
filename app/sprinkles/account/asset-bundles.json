@@ -2,7 +2,8 @@
     "bundle": {
         "js/pages/account-settings": {
             "scripts": [
-                "userfrosting/js/pages/account-settings.js"
+                "userfrosting/js/pages/account-settings.js",
+                "userfrosting/js/uf-password-security.js"
             ],
             "options": {
                 "result": {

@@ -141,8 +141,9 @@ return [
             'PAGE'              => 'Choose a new password for your account.',
             'SEND'              => 'Set New Password and Sign In',
             'REQUIRED'          => [
-'@TRANSLATION' => 'Reset Required',
-'EMAIL'        => 'You are required to update your password before you can login. Please enter the email address you used to sign up. A link with instructions to reset your password will be emailed to you.',
+              '@TRANSLATION' => 'Reset Required',
+              'EMAIL'        => 'Please enter the email address you used to sign up. A link with instructions to reset your password will be emailed to you.',
+              'REASON'       => 'The password security policy does not allow use of passwords that have been exposed by a data breach. You are required to reset your password before you can login.',
             ],
 
         ],

@@ -11,9 +11,10 @@
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 use Illuminate\Cache\Repository as Cache;
-use UserFrosting\Support\Repository\Repository as Config;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
+use UserFrosting\Support\Repository\Repository as Config;
 
 /**
  * Handles advanced password security methods for integration with Have I Been Pwned.
@@ -47,6 +48,16 @@ class PasswordSecurity
     }
 
     /**
+     * Checks the maximum number of times that is acceptable for a password to have appeared in breaches with -1 meaning disabled.
+     *
+     * @return int
+     */
+    public function breachThreshold()
+    {
+        return $this->config['site.password_security.enforce_no_compromised.breaches'];
+    }
+
+    /**
      * Generates a list of compromised passwords stored in cache or by querying Have I Been Pwned API.
      *
      * First check the cache to see if the hash prefix is stored.
@@ -72,13 +83,19 @@ class PasswordSecurity
     }
 
     /**
-     * Checks the maximum number of times that is acceptable for a password to have appeared in breaches with -1 meaning disabled.
+     * Checks the `flag_password_reset_required` column for a user.
      *
-     * @return int
+     * @param UserInterface $currentUser
+     *
+     * @return bool True if a password reset is required, false otherwise.
      */
-    public function breachThreshold()
+    public function checkPasswordResetRequired(UserInterface $currentUser)
     {
-        return $this->config['site.password_security.enforce_no_compromised.breaches'];
+        if ($currentUser->flag_password_reset_required) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -89,6 +106,28 @@ class PasswordSecurity
     public function resetCompromisedEnabled()
     {
         return $this->config['site.login.enforce_reset_compromised'];
+    }
+
+    /**
+     * Sets the `flag_password_reset_required` column for a user to true.
+     *
+     * @param UserInterface $currentUser
+     */
+    public function setPasswordResetRequired(UserInterface $currentUser)
+    {
+
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->classMapper;
+
+        // All checks passed!  log events/activities, update user, and send email
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction(function () use ($classMapper, $currentUser) {
+
+            // Load the user, by username
+            $user = $classMapper->getClassMapping('user')::where('user_name', $currentUser['user_name'])->first();
+            $user->flag_password_reset_required = true;
+            $user->save();
+        });
     }
 
     /**
@@ -137,31 +176,5 @@ class PasswordSecurity
         $hashArray = preg_split("/[\n,]+/", $query);
 
         return $hashArray;
-    }
-
-    public function checkPasswordResetRequired($currentUser)
-    {
-        if ($currentUser->flag_password_reset_required) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function setPasswordResetRequired($currentUser)
-    {
-
-        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->classMapper;
-
-        // All checks passed!  log events/activities, update user, and send email
-        // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction(function () use ($classMapper, $currentUser) {
-
-            // Load the user, by username
-            $user = $classMapper->getClassMapping('user')::where('user_name', $currentUser['user_name'])->first();
-            $user->flag_password_reset_required = true;
-            $user->save();
-        });
     }
 }

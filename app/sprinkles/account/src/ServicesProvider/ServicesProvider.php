@@ -437,6 +437,26 @@ class ServicesProvider
         };
 
         /*
+         * Returns a callback that handles setting the `UF-Redirect` header to the password-reset-required page.
+         *
+         * @return callable
+         */
+        $container['redirect.passwordReset'] = function ($c) {
+            /*
+             * This method is invoked when a user completes the login process.
+             *
+             * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
+             * @param  \Psr\Http\Message\ServerRequestInterface $request
+             * @param  \Psr\Http\Message\ResponseInterface      $response
+             * @param  array                                    $args
+             * @return \Psr\Http\Message\ResponseInterface
+             */
+            return function (Request $request, Response $response, array $args) use ($c) {
+                return $response->withHeader('UF-Redirect', $c->router->pathFor('password-reset-required'));
+            };
+        };
+
+        /*
          * Repository for password reset requests.
          *
          * @return \UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository

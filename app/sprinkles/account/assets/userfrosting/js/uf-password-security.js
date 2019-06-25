@@ -4,7 +4,7 @@ $(document).ready(function() {
     var passwordInput = $("form").find('input[name=password]');
     var typingTimer; //timer identifier
     var doneTypingInterval = 200; //time in ms
-    var breachThreshold = site.password_security.enforce_no_compromised.breaches;
+    var breachThreshold = site.password.security.enforce_no_compromised.breaches;
 
 
     //on keyup, start the countdown

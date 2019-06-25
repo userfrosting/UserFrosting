@@ -442,32 +442,32 @@ class AccountController extends SimpleController
 
         $passwordSecurity = $this->ci->passwordSecurity;
 
-        $passwordSecurity->setPasswordResetRequired($currentUser);
-
         // Check if the enforce password update setting is configured.
         if ($passwordSecurity->resetCompromisedEnabled()) {
             // Check if the password is on the compromised password list.
             $numberOfBreaches = $passwordSecurity->checkPassword($data['password']);
 
-            if ($passwordSecurity->breachThreshold() != '-1' && $numberOfBreaches > $passwordSecurity->breachThreshold()) {
-                $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED.COMPROMISED');
+            if ($passwordSecurity->breachThreshold() != -1 && $numberOfBreaches > $passwordSecurity->breachThreshold()) {
+                $passwordSecurity->setPasswordResetRequired($currentUser);
             }
-
-            if ($passwordSecurity->checkPasswordResetRequired($currentUser) == 1) {
-
-                // Destroy the session
-                $this->ci->authenticator->logout();
-
-                return $response->withHeader('UF-Redirect', $this->ci->router->pathFor('reset-password-required'));
-            }
-
-            $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
-
-            // Set redirect, if relevant
-            $redirectOnLogin = $this->ci->get('redirect.onLogin');
-
-            return $redirectOnLogin($request, $response, $args);
         }
+
+        if ($passwordSecurity->checkPasswordResetRequired($currentUser)) {
+
+            // Destroy the session
+            $this->ci->authenticator->logout();
+
+            $redirect = $this->ci->get('redirect.passwordReset');
+
+            return $redirect($request, $response, $args);
+        }
+
+        $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
+
+        // Set redirect, if relevant
+        $redirectOnLogin = $this->ci->get('redirect.onLogin');
+
+        return $redirectOnLogin($request, $response, $args);
     }
 
     /**
@@ -683,16 +683,23 @@ class AccountController extends SimpleController
      * @param Response $response
      * @param array    $args
      */
-    public function pageResetPasswordRequired(Request $request, Response $response, $args)
+    public function pagePasswordResetRequired(Request $request, Response $response, $args)
     {
+        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        $translator = $this->ci->translator;
+
         // Load validation rules
         $schema = new RequestSchema('schema://requests/forgot-password.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        return $this->ci->view->render($response, 'pages/reset-password-required.html.twig', [
+        return $this->ci->view->render($response, 'pages/password-reset-required.html.twig', [
             'page' => [
                 'validators' => [
                     'forgot_password'    => $validator->rules('json', false),
+                ],
+               'messages' => [
+                  'email'  => $translator->translate('PASSWORD.RESET.REQUIRED.EMAIL'),
+                  'reason' => $translator->translate('PASSWORD.RESET.REQUIRED.REASON'),
                 ],
             ],
         ]);
