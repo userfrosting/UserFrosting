@@ -62,8 +62,10 @@ class PasswordSecurity
      *
      * First check the cache to see if the hash prefix is stored.
      * If not found in cache, query Have I Been Pwned API and store response in cache.
-     * @param  string $password
-     * @return int    The number of times a password has been exposed in data breaches.
+     *
+     * @param string $password
+     *
+     * @return int The number of times a password has been exposed in data breaches.
      */
     public function checkPassword($password)
     {
@@ -133,9 +135,10 @@ class PasswordSecurity
     /**
      * Check a password SHA1 hash against an array of compromised password hashes.
      *
-     * @param  string $hash  The hash of the potential password to be used.
-     * @param  array  $array Array of password hashes in the format c2d18a7d49b0d4260769eb03d027066d29a:181 - or <hash>:<number of breaches.
-     * @return int    The number of times a password has been exposed in data breaches.
+     * @param string $hash  The hash of the potential password to be used.
+     * @param array  $array Array of password hashes in the format c2d18a7d49b0d4260769eb03d027066d29a:181 - or <hash>:<number of breaches.
+     *
+     * @return int The number of times a password has been exposed in data breaches.
      */
     private function checkHash($hash, $array)
     {
@@ -159,8 +162,9 @@ class PasswordSecurity
     /**
      * Queries Have I been Pwned API to generate list of hashed compromised password suffixes.
      *
-     * @param  string $hashPrefix The prefix (first 5 characters) of hashed password.
-     * @return array  Array of password hashes in the format c2d18a7d49b0d4260769eb03d027066d29a:181 - or <hash>:<number of breaches.
+     * @param string $hashPrefix The prefix (first 5 characters) of hashed password.
+     *
+     * @return array Array of password hashes in the format c2d18a7d49b0d4260769eb03d027066d29a:181 - or <hash>:<number of breaches.
      */
     private function getHashArrayFromAPI($hashPrefix)
     {

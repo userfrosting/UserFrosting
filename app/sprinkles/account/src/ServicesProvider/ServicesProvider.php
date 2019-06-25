@@ -175,7 +175,7 @@ class ServicesProvider
             return $authenticator;
         };
 
-        /**
+        /*
          * PasswordSecurity service.
          *
          * Handles password security features.
@@ -190,7 +190,7 @@ class ServicesProvider
             return new PasswordSecurity($cache, $config, $classMapper);
         };
 
-        /**
+        /*
          * Sets up the AuthGuard middleware, used to limit access to authenticated users for certain routes.
          *
          * @return \UserFrosting\Sprinkle\Account\Authenticate\AuthGuard
@@ -443,9 +443,7 @@ class ServicesProvider
          */
         $container['redirect.passwordReset'] = function ($c) {
             /*
-             * This method is invoked when a user completes the login process.
-             *
-             * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
+             * Returns a callback that handles setting the `UF-Redirect` header to the password-reset-required page.
              * @param  \Psr\Http\Message\ServerRequestInterface $request
              * @param  \Psr\Http\Message\ResponseInterface      $response
              * @param  array                                    $args

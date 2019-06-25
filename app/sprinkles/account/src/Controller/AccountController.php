@@ -46,7 +46,9 @@ class AccountController extends SimpleController
      * Route: /account/check-password
      * Route Name: {none}
      * Request Type: POST
+     *
      * @see https://haveibeenpwned.com/API/v2
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
