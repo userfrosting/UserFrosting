@@ -369,6 +369,9 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
 
@@ -435,45 +438,36 @@ class AccountController extends SimpleController
         }
 
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
-        /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-        $authenticator = $this->ci->authenticator;
-
         $currentUser = $authenticator->attempt(($isEmail ? 'email' : 'user_name'), $userIdentifier, $data['password'], $data['rememberme']);
 
         $passwordSecurity = $this->ci->passwordSecurity;
 
-        /*
-                // Check if the enforce password update setting is configured.
-                if ($passwordSecurity->resetCompromisedEnabled()) {
-                    // Check if the password is on the compromised password list.
-                    $numberOfBreaches = $passwordSecurity->checkPassword($data['password']);
-        
-                    if ($passwordSecurity->breachThreshold() != '-1' && $numberOfBreaches > $passwordSecurity->breachThreshold()) {
-        
-                        // Load validation rules - note this uses the same schema as "set password"
-                        $schema = new RequestSchema('schema://requests/forgot-password.yaml');
-                        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-        
-                        $forcePasswordChange = $this->ci->router->pathFor('reset-password-required', [
-                        'page' => [
-                          'validators' => [
-                              'forgot_password'    => $validator->rules('json', false),
-                          ],
-                        ],
-                      ]);
-        
-                        $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED.COMPROMISED');
-        
-                        return $response->withRedirect($forcePasswordChange);
-                    }
-                }
-        */
-        $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
+        $passwordSecurity->setPasswordResetRequired($currentUser);
 
-        // Set redirect, if relevant
-        $redirectOnLogin = $this->ci->get('redirect.onLogin');
+        // Check if the enforce password update setting is configured.
+        if ($passwordSecurity->resetCompromisedEnabled()) {
+            // Check if the password is on the compromised password list.
+            $numberOfBreaches = $passwordSecurity->checkPassword($data['password']);
 
-        return $redirectOnLogin($request, $response, $args);
+            if ($passwordSecurity->breachThreshold() != '-1' && $numberOfBreaches > $passwordSecurity->breachThreshold()) {
+                $ms->addMessageTranslated('info', 'PASSWORD.SECURITY.RESET_REQUIRED.COMPROMISED');
+            }
+
+            if ($passwordSecurity->checkPasswordResetRequired($currentUser) == 1) {
+
+                // Destroy the session
+                $this->ci->authenticator->logout();
+
+                return $response->withHeader('UF-Redirect', $this->ci->router->pathFor('reset-password-required'));
+            }
+
+            $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
+
+            // Set redirect, if relevant
+            $redirectOnLogin = $this->ci->get('redirect.onLogin');
+
+            return $redirectOnLogin($request, $response, $args);
+        }
     }
 
     /**

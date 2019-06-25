@@ -12,6 +12,8 @@ namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 use Illuminate\Cache\Repository as Cache;
 use UserFrosting\Support\Repository\Repository as Config;
+use Illuminate\Database\Capsule\Manager as Capsule;
+use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**
  * Handles advanced password security methods for integration with Have I Been Pwned.
@@ -37,10 +39,11 @@ class PasswordSecurity
      * @param Cache  $cache  Cache service instance
      * @param Config $config Config object that contains security settings.
      */
-    public function __construct(Cache $cache, Config $config)
+    public function __construct(Cache $cache, Config $config, ClassMapper $classMapper)
     {
         $this->cache = $cache;
         $this->config = $config;
+        $this->classMapper = $classMapper;
     }
 
     /**
@@ -134,5 +137,31 @@ class PasswordSecurity
         $hashArray = preg_split("/[\n,]+/", $query);
 
         return $hashArray;
+    }
+
+    public function checkPasswordResetRequired($currentUser)
+    {
+        if ($currentUser->flag_password_reset_required) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function setPasswordResetRequired($currentUser)
+    {
+
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->classMapper;
+
+        // All checks passed!  log events/activities, update user, and send email
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction(function () use ($classMapper, $currentUser) {
+
+            // Load the user, by username
+            $user = $classMapper->getClassMapping('user')::where('user_name', $currentUser['user_name'])->first();
+            $user->flag_password_reset_required = true;
+            $user->save();
+        });
     }
 }

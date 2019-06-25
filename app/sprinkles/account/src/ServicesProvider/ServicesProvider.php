@@ -185,8 +185,9 @@ class ServicesProvider
         $container['passwordSecurity'] = function ($c) {
             $cache = $c->cache;
             $config = $c->config;
+            $classMapper = $c->classMapper;
 
-            return new PasswordSecurity($cache, $config);
+            return new PasswordSecurity($cache, $config, $classMapper);
         };
 
         /**
@@ -424,6 +425,7 @@ class ServicesProvider
                 $authorizer = $c->authorizer;
 
                 $currentUser = $c->authenticator->user();
+
                 if ($currentUser->flag_password_reset_required) {
                     return $response->withHeader('UF-Redirect', $c->router->pathFor('reset-password-required'));
                 } elseif ($authorizer->checkAccess($currentUser, 'uri_account_settings')) {
