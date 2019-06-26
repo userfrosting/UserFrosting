@@ -21,4 +21,7 @@ $(document).ready(function() {
     $("#widget-group-users").on("pagerComplete.ufTable", function () {
         bindUserButtons($(this));
     });
+
+$('.icp').iconpicker();
+
 });
