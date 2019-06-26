@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -14,7 +15,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Account\Database\Models\Persistence;
 
 /**
- * Store login tokens in database with PDO class
+ * Store login tokens in database with PDO class.
  *
  * @author Louis Charette
  */
@@ -32,16 +33,17 @@ class PDOStorage implements StorageInterface
     }
 
     /**
-     * @param  mixed  $credential
-     * @param  string $token
-     * @param  string $persistentToken
+     * @param mixed  $credential
+     * @param string $token
+     * @param string $persistentToken
+     *
      * @return int
      */
     public function findTriplet($credential, $token, $persistentToken)
     {
         $result = Persistence::notExpired()->where([
             'user_id'          => $credential,
-            'persistent_token' => sha1($persistentToken)
+            'persistent_token' => sha1($persistentToken),
         ])->first();
 
         if (!$result) {
@@ -65,7 +67,7 @@ class PDOStorage implements StorageInterface
             'user_id'          => $credential,
             'token'            => sha1($token),
             'persistent_token' => sha1($persistentToken),
-            'expires_at'       => date('Y-m-d H:i:s', $expire)
+            'expires_at'       => date('Y-m-d H:i:s', $expire),
         ]);
         $persistence->save();
     }
@@ -78,12 +80,12 @@ class PDOStorage implements StorageInterface
     {
         Persistence::where([
             'user_id'          => $credential,
-            'persistent_token' => sha1($persistentToken)
+            'persistent_token' => sha1($persistentToken),
         ])->delete();
     }
 
     /**
-     * Replace current token after successful authentication
+     * Replace current token after successful authentication.
      *
      * @param mixed  $credential
      * @param string $token

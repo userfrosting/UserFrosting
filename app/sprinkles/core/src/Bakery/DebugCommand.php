@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -64,25 +65,25 @@ class DebugCommand extends BaseCommand
 
     /**
      * Check the minimum version of php.
-     * This is done by composer itself, but we do it again for good mesure
+     * This is done by composer itself, but we do it again for good mesure.
      */
     protected function checkPhpVersion()
     {
         $this->io->writeln('PHP Version : ' . phpversion());
         if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
-            $this->io->error('UserFrosting requires php version '.\UserFrosting\PHP_MIN_VERSION." or above. You'll need to update you PHP version before you can continue.");
+            $this->io->error('UserFrosting requires php version ' . \UserFrosting\PHP_MIN_VERSION . " or above. You'll need to update you PHP version before you can continue.");
             exit(1);
         }
 
         // Check for deprecated versions
         if (version_compare(phpversion(), \UserFrosting\PHP_RECOMMENDED_VERSION, '<')) {
-            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommends version '.\UserFrosting\PHP_RECOMMENDED_VERSION.' or above as '.phpversion().' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
+            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommends version ' . \UserFrosting\PHP_RECOMMENDED_VERSION . ' or above as ' . phpversion() . ' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
         }
     }
 
     /**
      * List all sprinkles defined in the Sprinkles schema file,
-     * making sure this file exist at the same time
+     * making sure this file exist at the same time.
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
@@ -130,7 +131,7 @@ class DebugCommand extends BaseCommand
     }
 
     /**
-     * Display database config as for debug purposes
+     * Display database config as for debug purposes.
      */
     protected function showConfig()
     {
@@ -145,7 +146,7 @@ class DebugCommand extends BaseCommand
             'PORT : ' . $config['db.default.port'],
             'DATABASE : ' . $config['db.default.database'],
             'USERNAME : ' . $config['db.default.username'],
-            'PASSWORD : ' . ($config['db.default.password'] ? '*********' : '')
+            'PASSWORD : ' . ($config['db.default.password'] ? '*********' : ''),
         ]);
     }
 }

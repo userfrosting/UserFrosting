@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,11 +13,13 @@ namespace UserFrosting\Sprinkle\Core\Controller;
 use Interop\Container\ContainerInterface;
 
 /**
- * SimpleController Class
+ * SimpleController Class.
  *
  * Basic controller class, that imports the entire DI container for easy access to services.
  * Your controller classes may extend this controller class.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see http://www.userfrosting.com/navigating/#structure
  */
 class SimpleController

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -37,7 +38,7 @@ trait RefreshDatabase
      *
      * @return bool
      */
-    protected function usingInMemoryDatabase()
+    public function usingInMemoryDatabase()
     {
         $connection = $this->ci->db->getConnection();
 

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -16,7 +17,9 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * Persistence db Model.
  *
  * Represents the persistences table.
+ *
  * @author Louis Charette
+ *
  * @property string user_id
  * @property string token
  * @property string persistent_token
@@ -33,7 +36,7 @@ class Persistence extends Model
         'user_id',
         'token',
         'persistent_token',
-        'expires_at'
+        'expires_at',
     ];
 
     /**
@@ -42,7 +45,7 @@ class Persistence extends Model
     public $timestamps = true;
 
     /**
-     * Relation with the user table
+     * Relation with the user table.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -57,9 +60,10 @@ class Persistence extends Model
     }
 
     /**
-     * Scope a query to only include not expired entries
+     * Scope a query to only include not expired entries.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeNotExpired($query)

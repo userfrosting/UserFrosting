@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -22,11 +23,12 @@ use UserFrosting\Support\Exception\ForbiddenException;
 class ActivityController extends SimpleController
 {
     /**
-     * Returns a list of Activities
+     * Returns a list of Activities.
      *
      * Generates a list of activities, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
@@ -66,6 +68,7 @@ class ActivityController extends SimpleController
      * This page renders a table of user activities.
      * This page requires authentication.
      * Request type: GET
+     *
      * @param Request  $request
      * @param Response $response
      * @param array    $args

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -93,5 +94,5 @@ return [
     'wigeon',
     'woodpecker',
     'wren',
-    'yellowlegs'
+    'yellowlegs',
 ];

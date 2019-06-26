@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,6 +16,6 @@
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => 'Пароли не совпадают.',
-        'USERNAME'          => "Имя может состоять только из строчных букв, цифр, '.', '-' и «_»."
-    ]
+        'USERNAME'          => "Имя может состоять только из строчных букв, цифр, '.', '-' и «_».",
+    ],
 ];

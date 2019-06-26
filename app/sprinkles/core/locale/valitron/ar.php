@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -31,5 +32,5 @@ return [
     'dateFormat'    => "يجب ان يكون تاريخ بهذه الصيغة '%s'",
     'dateBefore'    => "التاريخ يجب ان يكون قبل '%s'",
     'dateAfter'     => "التاريخ يجب ان يكون بعد '%s'",
-    'contains'      => 'يجب ان يحتوي %s'
+    'contains'      => 'يجب ان يحتوي %s',
 ];

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -14,7 +15,8 @@ use UserFrosting\Sprinkle\Core\Facades\Cache;
 use UserFrosting\Sprinkle\Core\Facades\Config;
 
 /**
- * Event for global cache object deletion on model update
+ * Event for global cache object deletion on model update.
+ *
  * @author Louis Charette
  */
 class DeleteUserCacheEvent
