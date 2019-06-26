@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed Dependencies
 - Updated nikic/php-parser to 4.2.2
+- Updated PHPMailer/PHPMailer to 6.0.7
 - Updated league/csv to 9.2.1
 - Updated Laravel Illuminate packages to 5.8
 - Updated Twig from 1.x to 2.x
