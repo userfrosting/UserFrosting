@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -33,7 +34,7 @@ return [
     * to log. This can help debugging your permissions and roles
     */
     'debug' => [
-        'auth' => false
+        'auth' => false,
     ],
 
     /*
@@ -45,8 +46,8 @@ return [
         'algorithm'  => 'sha512',
         'timeouts'   => [
             'create' => 86400,
-            'reset'  => 10800
-        ]
+            'reset'  => 10800,
+        ],
     ],
 
     /*
@@ -54,15 +55,41 @@ return [
     * RememberMe Package Settings
     * ----------------------------------------------------------------------
     * See https://github.com/gbirke/rememberme for an explanation of these settings
+    *
+    * Note that the 'domain' field can be set to match your top-level-domain if you
+    * want to send the rememberme to all hosts in your domain.  An automatic config
+    * of this can be done in your config.php with code similar to this:
+    *
+    * if (!empty($_SERVER['SERVER_NAME']) && filter_var($_SERVER['SERVER_NAME'], \FILTER_VALIDATE_IP) === false) {
+    *    $darr = explode(".", $_SERVER['SERVER_NAME']);
+    *    array_shift($darr);
+    *    $conf['session']['cookie_parameters'] = [ "lifetime" => 86400, "domain" => ".".join(".", $darr), "path" => "/" ];
+    *    $conf['remember_me'] = [ "domain" => ".".join(".", $darr) ];
+    * }
+    *
+    * (Or, for production, you can hard-code the domain rather than calculating it on each page load)
+    *
+    * This is DELIBERATELY NOT TURNED ON BY DEFAULT!
+    *
+    * If you enable the 'domain' (on both the session and the remember_me cookies)
+    * you will be sending your authentication cookies to every machine in the
+    * domain you are using. This may not be bad if you control the domain, but
+    * if you are using a VPS and the hostname of the machine you are connecting to
+    * is, for example, host2.vps.blah.com, and you connect to host20.vps.blah.com,
+    * your browser will send your (super secret) cookies to host20.vps.blah.com.
+    *
+    * You only want to turn this on if you want machine1.foo.com to receive the
+    * cookies that THIS MACHINE (machine2.foo.com) set.
     */
     'remember_me' => [
         'cookie' => [
-            'name' => 'rememberme'
+            'name' => 'rememberme',
         ],
+        'domain'      => null,
         'expire_time' => 604800,
         'session'     => [
-            'path' => '/'
-        ]
+            'path' => '/',
+        ],
     ],
 
     /*
@@ -74,7 +101,7 @@ return [
     */
     'reserved_user_ids' => [
         'guest'  => -1,
-        'master' => 1
+        'master' => 1,
     ],
 
     /*
@@ -86,8 +113,8 @@ return [
     'session' => [
         'keys' => [
             'current_user_id'  => 'account.current_user_id',    // the key to use for storing the authenticated user's id
-            'captcha'          => 'account.captcha'             // Key used to store a captcha hash during captcha verification
-        ]
+            'captcha'          => 'account.captcha',             // Key used to store a captcha hash during captcha verification
+        ],
     ],
 
     /*
@@ -95,11 +122,12 @@ return [
     * Account Site Settings
     * ----------------------------------------------------------------------
     * "Site" settings that are automatically passed to Twig. Use theses
-    * settings to control the login and registration process
+    * settings to control the login, password (re)set and registration
+    * processes
     */
     'site' => [
         'login' => [
-            'enable_email' => true // Set to false to allow login by username only
+            'enable_email' => true, // Set to false to allow login by username only
         ],
         'registration' => [
             'enabled'                    => true, //if this set to false, you probably want to also set require_email_verification to false as well to disable the link on the signup page
@@ -110,10 +138,16 @@ return [
                 'locale' => 'en_US',
                 'group'  => 'terran',
                 'roles'  => [
-                    'user' => true
-                ]
-            ]
-        ]
+                    'user' => true,
+                ],
+            ],
+        ],
+        'password' => [
+            'length' => [
+                'min' => 8,
+                'max' => 25,
+            ],
+        ],
     ],
 
     /*
@@ -129,7 +163,7 @@ return [
         'password_reset_request' => null,
         'registration_attempt'   => null,
         'sign_in_attempt'        => null,
-        'verification_request'   => null
+        'verification_request'   => null,
     ],
 
     /*
@@ -139,6 +173,6 @@ return [
     */
     'verification' => [
         'algorithm' => 'sha512',
-        'timeout'   => 10800
-    ]
+        'timeout'   => 10800,
+    ],
 ];

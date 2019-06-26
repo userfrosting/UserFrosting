@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -9,14 +10,14 @@
 
 namespace UserFrosting\System;
 
-use RocketTheme\Toolbox\Event\EventDispatcher;
 use RocketTheme\Toolbox\Event\Event;
+use RocketTheme\Toolbox\Event\EventDispatcher;
 use Slim\App;
 use Slim\Container;
 use UserFrosting\Support\Exception\FileNotFoundException;
 
 /**
- * UserFrosting Main Class
+ * UserFrosting Main Class.
  */
 class UserFrosting
 {
@@ -58,8 +59,9 @@ class UserFrosting
     /**
      * Fires an event with optional parameters.
      *
-     * @param  string     $eventName
-     * @param  Event|null $event
+     * @param string     $eventName
+     * @param Event|null $event
+     *
      * @return Event
      */
     public function fireEvent($eventName, Event $event = null)
@@ -99,7 +101,7 @@ class UserFrosting
     }
 
     /**
-     * Register system services, load all sprinkles, and add their resources and services
+     * Register system services, load all sprinkles, and add their resources and services.
      */
     protected function setupSprinkles()
     {
@@ -163,7 +165,7 @@ class UserFrosting
         ob_clean();
         $title = 'UserFrosting Application Error';
         $errorMessage = 'Unable to start site. Contact owner.<br/><br/>' .
-            'Version: UserFrosting '.\UserFrosting\VERSION.'<br/>' .
+            'Version: UserFrosting ' . \UserFrosting\VERSION . '<br/>' .
             $errorMessage;
         $output = sprintf(
             "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .

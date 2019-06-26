@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,6 +16,6 @@
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => '密码不一致.',
-        'USERNAME'          => "用户名必须以小写字母, 数字, '.', '-', 和 '_'组成."
-    ]
+        'USERNAME'          => "用户名必须以小写字母, 数字, '.', '-', 和 '_'组成.",
+    ],
 ];

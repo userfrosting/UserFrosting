@@ -13,8 +13,7 @@
     ],
     "require": {
         "birke/rememberme" : "^2.0",
-        "nikic/php-parser" : "^1",
-        "php": ">=5.6"
+        "nikic/php-parser" : "^1"
     },
     "autoload": {
         "psr-4": {

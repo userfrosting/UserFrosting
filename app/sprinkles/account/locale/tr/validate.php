@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -15,6 +16,6 @@
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => 'Şifreniz ve onaylama şifreniz eşleşmiyor.',
-        'USERNAME'          => "Kullanıcı adınız sadece küçük harfler, sayılar, '.', '-', ve '_' içerebilir."
-    ]
+        'USERNAME'          => "Kullanıcı adınız sadece küçük harfler, sayılar, '.', '-', ve '_' içerebilir.",
+    ],
 ];

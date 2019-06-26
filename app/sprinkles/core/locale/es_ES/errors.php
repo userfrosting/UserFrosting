@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -26,14 +27,14 @@ return [
             'DESCRIPTION' => 'Parece que no podemos encontrar lo que buscas.',
             'DETAIL'      => 'Intentamos encontrar tu página ...',
             'EXPLAIN'     => 'No pudimos encontrar la página que buscabas.',
-            'RETURN'      => 'De cualquier manera, haz clic en <a href="{{url}}"> aquí </a> para volver a la página principal.'
+            'RETURN'      => 'De cualquier manera, haz clic en <a href="{{url}}"> aquí </a> para volver a la página principal.',
         ],
 
         'CONFIG' => [
             'TITLE'       => '¡Problema de configuración del Servidor!',
             'DESCRIPTION' => 'Algunos requisitos de configuración de Servidor no se han cumplido.',
             'DETAIL'      => 'Algo no está bien aquí.',
-            'RETURN'      => 'Corrije los siguientes errores, luego <a href="{{url}}"> recargue </a>.'
+            'RETURN'      => 'Corrije los siguientes errores, luego <a href="{{url}}"> recargue </a>.',
         ],
 
         'DESCRIPTION' => 'Hemos sentido una gran perturbación en la Fuerza.',
@@ -48,5 +49,5 @@ return [
         'SERVER' => '¡Vaya! Parece que nuestro servidor pudo haber metido la pata. Si eres un administrador, comprueba los registros de errores de PHP o el log de UserFrosting.',
 
         'TITLE' => 'Perturbación en la Fuerza',
-    ]
+    ],
 ];

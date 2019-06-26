@@ -1,0 +1,13 @@
+finder:
+  exclude:
+    - "tests"
+  name: "*.php"
+  not-name:
+    - "*Stub.php"
+    - "*Test.php"
+
+enabled:
+  - concat_with_spaces
+
+disabled:
+  - concat_without_spaces

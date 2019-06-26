@@ -47,12 +47,13 @@
             </div>
             <div class="form-group">
                 <label for="r-form-password">{{translate('PASSWORD')}}</label>
-                <input type="password" name="password" placeholder="{{translate('PASSWORD.BETWEEN', {min: 12, max: 100})}}" class="form-control" id="r-form-password">
+                <input type="password" name="password" placeholder="{{translate('PASSWORD.BETWEEN', {min: site.password.length.min, max: site.password.length.max})}}" class="form-control" id="r-form-password">
             </div>
             <div class="form-group">
                 <label class="sr-only" for="r-form-passwordc">{{translate('PASSWORD.CONFIRM')}}</label>
                 <input type="password" name="passwordc" placeholder="{{translate('PASSWORD.CONFIRM')}}" class="form-control" id="r-form-passwordc">
             </div>
+            {% if 'locale' not in fields.hidden %}
             <div class="form-group">
                 <label for="r-form-locale" class="control-label">{{translate("LOCALE")}}</label>
                 <select id="r-form-locale" class="form-control js-select2" name="locale">
@@ -64,6 +65,7 @@
                 </select>
                 <p class="help-block">{{translate("LOCALE.ACCOUNT")}}.</p>
             </div>
+            {% endif %}
             {% if site.registration.captcha %}
                 <div class="form-group">
                     <label class="sr-only" for="r-form-passwordc">{{translate('CAPTCHA.VERIFY')}}</label>

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -27,7 +28,7 @@ class ForbiddenExceptionHandler extends HttpExceptionHandler
     protected function determineUserMessages()
     {
         return [
-            new UserMessage('ACCOUNT.ACCESS_DENIED')
+            new UserMessage('ACCOUNT.ACCESS_DENIED'),
         ];
     }
 }

@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -12,7 +13,7 @@ namespace UserFrosting\Sprinkle\Admin\Sprunje;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * GroupSprunje
+ * GroupSprunje.
  *
  * Implements Sprunje for the groups API.
  *
@@ -24,12 +25,12 @@ class GroupSprunje extends Sprunje
 
     protected $sortable = [
         'name',
-        'description'
+        'description',
     ];
 
     protected $filterable = [
         'name',
-        'description'
+        'description',
     ];
 
     /**

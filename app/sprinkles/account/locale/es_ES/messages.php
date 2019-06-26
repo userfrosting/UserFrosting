@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
@@ -30,14 +31,14 @@ return [
         'SESSION_COMPROMISED' => [
             '@TRANSLATION'  => 'Tu sesión ha sido comprometida. Debes desconectarse de todos los dispositivos y, a continuación, volver a iniciar sesión y asegurarte de que sus datos no han sido manipulados.',
             'TITLE'         => 'Es posible que tu cuenta se haya visto comprometida.',
-            'TEXT'          => 'Alguien puede haber utilizado tu información de acceso para acceder a esta página. Para tu seguridad, todas las sesiones se cerraron. <a href="{{url}}"> ingrese </a> y comprueba si tu actividad es sospechosa en tu cuenta. También puedes cambiar su contraseña.'
+            'TEXT'          => 'Alguien puede haber utilizado tu información de acceso para acceder a esta página. Para tu seguridad, todas las sesiones se cerraron. <a href="{{url}}"> ingrese </a> y comprueba si tu actividad es sospechosa en tu cuenta. También puedes cambiar su contraseña.',
         ],
         'SESSION_EXPIRED' => 'Tu sesión ha caducado. Inicie sesión nuevamente.',
 
         'SETTINGS' => [
             '@TRANSLATION' => 'Configuraciones de la cuenta',
             'DESCRIPTION'  => 'Actualiza la configuración de su cuenta, incluido el correo electrónico, el nombre y la contraseña.',
-            'UPDATED'      => 'Configuración de la cuenta actualizada'
+            'UPDATED'      => 'Configuración de la cuenta actualizada',
         ],
 
         'TOOLS' => 'Herramientas de la cuenta',
@@ -52,13 +53,13 @@ return [
             'PAGE'            => 'Vuelve a enviar el correo electrónico de verificación de tu nueva cuenta.',
             'SEND'            => 'Reenviar correo de verificación',
             'TOKEN_NOT_FOUND' => 'El token de verificación no existe / La cuenta ya está verificada',
-        ]
+        ],
     ],
 
     'EMAIL' => [
         'INVALID'               => 'No hay cuenta para <strong> {{email}} </strong>.',
         'IN_USE'                => 'El correo electrónico <strong> {{email}} </strong> ya está en uso.',
-        'VERIFICATION_REQUIRED' => 'Correo electrónico (se requiere verificación - ¡usa una dirección real!)'
+        'VERIFICATION_REQUIRED' => 'Correo electrónico (se requiere verificación - ¡usa una dirección real!)',
     ],
 
     'EMAIL_OR_USERNAME' => 'Nombre de usuario o dirección de correo electrónico',
@@ -71,14 +72,14 @@ return [
 
     'LOCALE' => [
         'ACCOUNT' => 'El idioma y la configuración regional para utilizar en tu cuenta',
-        'INVALID' => '<strong>{{locale}}</strong> no es un idioma válido.'
+        'INVALID' => '<strong>{{locale}}</strong> no es un idioma válido.',
     ],
 
     'LOGIN' => [
         '@TRANSLATION'     => 'Acceder',
         'ALREADY_COMPLETE' => '¡Ya te has autentificado!',
         'SOCIAL'           => 'O ingresa con',
-        'REQUIRED'         => 'Lo sentimos, debes iniciar sesión para acceder a este recurso.'
+        'REQUIRED'         => 'Lo sentimos, debes iniciar sesión para acceder a este recurso.',
     ],
 
     'LOGOUT' => 'Cerrar sesión',
@@ -92,13 +93,13 @@ return [
             'DESCRIPTION' => 'Inicia sesión en tu cuenta de {{site_name}} o regístrate para obtener una nueva cuenta.',
             'SUBTITLE'    => 'Regístrate gratis o inicia sesión con una cuenta existente.',
             'TITLE'       => '¡Empecemos!',
-        ]
+        ],
     ],
 
     'PASSWORD' => [
         '@TRANSLATION' => 'Contraseña',
 
-        'BETWEEN' => 'Entre {{min}} - {{max}} (recomendado 12)',
+        'BETWEEN' => 'Entre {{min}} - {{max}}',
 
         'CONFIRM'             => 'Confirmar contraseña',
         'CONFIRM_CURRENT'     => 'Por favor, confirma tu contraseña actual',
@@ -108,7 +109,7 @@ return [
         'CREATE'              => [
             '@TRANSLATION'  => 'Crear contraseña',
             'PAGE'          => 'Elije una contraseña para su nueva cuenta.',
-            'SET'           => 'Establecer contraseña e iniciar sesión'
+            'SET'           => 'Establecer contraseña e iniciar sesión',
         ],
         'CURRENT'         => 'Contraseña actual',
         'CURRENT_EXPLAIN' => 'Debes confirmar tu contraseña actual para realizar cambios',
@@ -123,26 +124,26 @@ return [
             'INVALID'          => 'No se pudo encontrar esta solicitud de restablecimiento de contraseña o ha caducado. Intenta <a href="{{url}}"> volver a enviar tu solicitud <a>.',
             'PAGE'             => 'Obtén un enlace para restablecer tu contraseña.',
             'REQUEST_CANNED'   => 'Se ha cancelado la solicitud de contraseña perdida.',
-            'REQUEST_SENT'     => 'Se ha enviado un enlace de restablecimiento de contraseña a <strong> {{email}} </strong>.'
+            'REQUEST_SENT'     => 'Se ha enviado un enlace de restablecimiento de contraseña a <strong> {{email}} </strong>.',
         ],
 
         'RESET' => [
             '@TRANSLATION' => 'Restablecer la contraseña',
             'CHOOSE'       => 'Por favor, elije una nueva contraseña para continuar.',
             'PAGE'         => 'Elige una nueva contraseña para tu cuenta.',
-            'SEND'         => 'Establecer nueva contraseña e iniciar sesión'
+            'SEND'         => 'Establecer nueva contraseña e iniciar sesión',
         ],
 
         'HASH_FAILED'       => 'El hash de la contraseña ha fallado. Ponte en contacto con un administrador del sitio.',
         'INVALID'           => 'La contraseña actual no coincide con la que tenemos registrada',
         'NEW'               => 'Nueva contraseña',
         'NOTHING_TO_UPDATE' => 'No se puede actualizar con la misma contraseña',
-        'UPDATED'           => 'Contraseña de la cuenta actualizada'
+        'UPDATED'           => 'Contraseña de la cuenta actualizada',
     ],
 
     'PROFILE' => [
         'SETTINGS' => 'Configuración de perfil',
-        'UPDATED'  => 'Configuración del perfil actualizada'
+        'UPDATED'  => 'Configuración del perfil actualizada',
     ],
 
     'RATE_LIMIT_EXCEEDED' => 'Se ha superado el límite de velocidad para esta acción. Debe esperar otro {{delay}} segundos antes de que se le permita hacer otro intento.',
@@ -155,7 +156,7 @@ return [
         'COMPLETE_TYPE2' => 'Te has registrado exitosamente. Se ha enviado un enlace para activar tu cuenta a <strong> {{email}} </strong>. No podrás iniciar sesión hasta que complete este paso.',
         'DISABLED'       => 'Lo sentimos, el registro de cuenta se ha deshabilitado.',
         'LOGOUT'         => 'Lo siento, no puedes registrarte para una cuenta mientras está conectado. Por favor, cierra la sesión primero.',
-        'WELCOME'        => 'El registro es rápido y sencillo.'
+        'WELCOME'        => 'El registro es rápido y sencillo.',
     ],
 
     'REMEMBER_ME'             => '¡Recuérdame!',
@@ -178,12 +179,12 @@ return [
         'CHOOSE'        => 'Elige un nombre de usuario único',
         'INVALID'       => 'Nombre de usuario no válido',
         'IN_USE'        => 'El nombre de usuario <strong> {{user_name}} </strong> ya está en uso.',
-        'NOT_AVAILABLE' => 'El nombre de usuario <strong> {{user_name}} </strong> no está disponible. Elija otro nombre o haga clic en "sugerir".'
+        'NOT_AVAILABLE' => 'El nombre de usuario <strong> {{user_name}} </strong> no está disponible. Elija otro nombre o haga clic en "sugerir".',
     ],
 
     'USER_ID_INVALID'       => 'El ID de usuario solicitado no existe.',
     'USER_OR_EMAIL_INVALID' => 'El nombre de usuario o la dirección de correo electrónico no son válidos.',
     'USER_OR_PASS_INVALID'  => 'Usuario no encontrado o la contraseña no es válida.',
 
-    'WELCOME' => 'Bienvenido de nuevo, {{first_name}}'
+    'WELCOME' => 'Bienvenido de nuevo, {{first_name}}',
 ];
