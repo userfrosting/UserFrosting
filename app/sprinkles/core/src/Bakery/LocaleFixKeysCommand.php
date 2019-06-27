@@ -135,6 +135,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
             foreach ($files as $key => $file) {
                 $base = $this->parseFile("$sprinklePath/locale/{$baseLocale}/{$file}");
                 $alt = $this->parseFile("$sprinklePath/locale/{$altLocale}/{$file}");
+
                 $filePath = "$sprinklePath/locale/{$altLocale}/{$file}";
                 $missing = $this->arrayFlatten($this->getDifference($base, $alt));
 
@@ -159,6 +160,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
      */
     protected function fix($base, $alt, $filePath)
     {
+
         //If the directory does not exist we need to create it recursively.
         if (!file_exists(dirname($filePath))) {
             mkdir(dirname($filePath), 0777, true);
@@ -168,7 +170,10 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
         // Any keys not in the $alt locale will be the original left from the $base locales value.
         $repository = new Repository();
         $repository->mergeItems(null, $base);
-        $repository->mergeItems(null, $alt);
+
+        if (gettype($alt) == []) {
+            $repository->mergeItems(null, $alt);
+        }
 
         // Check if this is an existing locale file with docblock.
         $temp = file_get_contents($filePath);
@@ -200,7 +205,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
         // Insert 'return' into the file.
         file_put_contents($filePath, preg_replace('/\[/', 'return [', file_get_contents($filePath), 1));
 
-        return "$filePath";
+        return $filePath;
     }
 
     /**
