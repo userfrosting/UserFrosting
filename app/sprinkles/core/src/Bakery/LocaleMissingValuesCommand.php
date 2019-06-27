@@ -41,7 +41,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         ->setHelp("This command provides a summary of missing values for locale translation files. Missing keys are found by searching for empty and/or duplicate values. Either option can be turned off - see options for this command. E.g. running 'locale:missing-values -b en_US -c es_ES' will compare all es_ES and en_US locale files and find any values that are identical between the two locales, as well as searching all es_ES locale files for empty ('') values.")
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale used for comparison and translation preview.', 'en_US')
         ->addOption('check', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null)
-        ->addOption('length', 'l', InputOption::VALUE_REQUIRED, 'Set max length for preview column text.', 60)
+        ->addOption('length', 'l', InputOption::VALUE_REQUIRED, 'Set the length for preview column text.', 50)
         ->addOption('empty', 'e', InputOption::VALUE_NONE, 'Setting this will skip check for empty strings.')
         ->addOption('duplicates', 'd', InputOption::VALUE_NONE, 'Setting this will skip comparison check.');
 
@@ -58,10 +58,10 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         // Option -c. The locales to be checked.
         $this->localesToCheck = $input->getOption('check');
 
-        $this->maxLength = $input->getOption('length');
-
         // The locale for the 'preview' column. Defaults to en_US if not set.
         $baseLocale = $input->getOption('base');
+
+        $this->length = $input->getOption('length');
 
         $this->setTranslation($baseLocale);
 
@@ -76,8 +76,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         if ($input->getOption('empty') != true) {
             $this->io->section('Searching for empty values.');
 
-            $this->table = new Table($output);
-            $this->table->setStyle('borderless');
+            $this->newTable($output);
 
             $missing[] = $this->searchFilesForNull($files);
 
@@ -96,12 +95,11 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         if ($input->getOption('duplicates') != true) {
             $this->io->section('Searching for duplicate values.');
 
-            $this->table = new Table($output);
-            $this->table->setStyle('borderless');
-
             foreach ($locales as $key => $altLocale) {
                 $duplicates[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
             }
+
+            $this->newTable($output);
 
             $this->table->addRows([
               ['FILE PATH', 'KEY', 'DUPLICATE VALUE'],
@@ -162,7 +160,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
                 //We need to loop through it.
                 $this->buildTable($value, ($level + 1));
             } elseif (strpos($key, '@') === false) {
-                $this->table->addRow([$this->path, $key, substr($this->translator->translate($key), 0, $this->maxLength)]);
+                $this->table->addRow([$this->path, $key, $this->translator->translate($key)]);
             }
         }
     }
@@ -230,6 +228,13 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
 
         // Get nested array [0].
         return array_values((array) $loader)[0];
+    }
+
+    protected function newTable($output)
+    {
+        $this->table = new Table($output);
+        $this->table->setStyle('compact');
+        $this->table->setColumnMaxWidth(2, $this->length);
     }
 
     /**
