@@ -52,7 +52,7 @@
         "userfrosting/i18n": "~4.3.0",
         "userfrosting/session": "~4.3.0",
         "userfrosting/support": "~4.3.0",
-        "vlucas/phpdotenv": "^2"
+        "vlucas/phpdotenv": "^3.4.0"
     },
     "autoload": {
         "files" : [
