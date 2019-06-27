@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed Requirements
 - Changed minimum PHP Version to 7.1
 
+### Changed Dependencies
+- Updated Laravel Illuminate packages to 5.8
+- Updated Twig to 2.11
+- Updated PHPUnit to 7.5
+- Updated Mockery to 1.2
+- Updated nikic/php-parser to 4.2.2
+- Updated PHPMailer/PHPMailer to 6.0.7
+- Updated league/csv to 9.2.1
+- Updated symfony/console to 4.3
+- Updated vlucas/phpdotenv to 3.4.0
+
 ### Added
 - Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
 
