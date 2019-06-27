@@ -173,8 +173,6 @@ class LocaleMissingKeysCommand extends BaseCommand
             if (is_array($value)) {
                 if (!isset($array2[$key])) {
                     $difference[$key] = $value;
-                } elseif (!is_array($array2[$value])) {
-                    $difference[$key] = $key;
                 } else {
                     $new_diff = $this->getDifference($value, $array2[$key]);
                     if ($new_diff != false) {
