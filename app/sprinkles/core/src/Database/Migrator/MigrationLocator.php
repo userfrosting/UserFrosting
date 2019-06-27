@@ -56,7 +56,7 @@ class MigrationLocator implements MigrationLocatorInterface
         foreach ($migrationFiles as $migrationFile) {
             // Note that PSR4 insists that all php files must end in PHP, so ignore all
             // files that don't end in PHP.
-            if (preg_match('/php$/', $migrationFile)) {
+            if ($migrationFile->getExtension() == 'php') {
                 $migrations[] = $this->getMigrationDetails($migrationFile);
             }
         }
