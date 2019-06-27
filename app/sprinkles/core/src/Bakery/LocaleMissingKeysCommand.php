@@ -46,7 +46,7 @@ class LocaleMissingKeysCommand extends BaseCommand
     protected function configure()
     {
         $this->setName('locale:missing-keys')
-        ->setHelp("This command provides a summary of missing keys for locale translation files. E.g. running 'locale:missing-keys -b en_US -c es_ES' will compare all es_ES and en_US locale files and generate a table listing the filepath, missing key, and a preview of the key's value from the 'base' (-b) locale.")
+        ->setHelp("This command provides a summary of missing keys for locale translation files. E.g. running 'locale:missing-keys -b en_US -c es_ES' will compare all es_ES and en_US locale files and generate a table listing the filepath and missing keys found from the `-c` locale.")
         ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale to compare against.', 'en_US')
         ->addOption('check', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null);
 
@@ -108,6 +108,7 @@ class LocaleMissingKeysCommand extends BaseCommand
                 $result[$prefix . $key] = $value;
             }
         }
+        //  print_r($result);
 
         return $result;
     }
@@ -171,8 +172,8 @@ class LocaleMissingKeysCommand extends BaseCommand
         foreach ($array1 as $key => $value) {
             if (is_array($value)) {
                 if (!isset($array2[$key])) {
-                    $difference[$key] = $key;
-                } elseif (!is_array($array2[$key])) {
+                    $difference[$key] = $value;
+                } elseif (!is_array($array2[$value])) {
                     $difference[$key] = $key;
                 } else {
                     $new_diff = $this->getDifference($value, $array2[$key]);
@@ -184,6 +185,7 @@ class LocaleMissingKeysCommand extends BaseCommand
                 $difference[$key] = $key;
             }
         }
+        //  print_r($difference);
 
         return !isset($difference) ? 0 : $difference;
     }
