@@ -21,8 +21,13 @@ UserFrosting uses Docker Compose to orchastrate the infrustructure. It provides 
    ```
 
 4. Install composer and npm dependencies
+   >`composer update` needs to be run twice to overcome some oddities that manifest commonly under the current Docker configuration.<br/>
+   >`wikimedia/composer-merge-plugin` which is responsible for installing Composer dependencies of sprinkles has known issues with reliably respecting the `--ignore-platform-reqs` flag. If you experience issues try running the command again, or failing that fallback to running `composer update` natively.
    ```bash
-   docker run --rm -itv `pwd -W 2>/dev/null || pwd`:/app composer update  --ignore-platform-reqs
+   # First run acquires composer.json merge plugin
+   docker run --rm -itv `pwd -W 2>/dev/null || pwd`:/app composer update --ignore-platform-reqs
+   # Second run uses composer.json merge plugin to acquire
+   docker run --rm -itv `pwd -W 2>/dev/null || pwd`:/app composer update --ignore-platform-reqs
    docker run --rm -itv `pwd -W 2>/dev/null || pwd`:/app node:alpine sh -c "cd /app/build ; npm install ; npm run uf-assets-install"
    ```
 
@@ -73,6 +78,12 @@ UserFrosting uses Docker Compose to orchastrate the infrustructure. It provides 
   ```
   >Removing all services will also remove database data.
 
+* Rebuild service images
+  >Docker will automatically perform this the first time services are started, however it may need to be performed manually after a UserFrosting update to ensure the latest version of the images are used.
+  ```bash
+  docker-compose build
+  ```
+
 * Run a bakery command
   ```bash
   docker_container=$(docker ps -q --filter="ancestor=userfrosting_php")
@@ -85,6 +96,9 @@ UserFrosting uses Docker Compose to orchastrate the infrustructure. It provides 
 * Performance under Windows may be poor due to Docker using a Hyper-V virtual machine to run the Linux images our configuration depends on. Long term, this should be addressed by [Docker for Windows being overhauled to use WSL 2](https://engineering.docker.com/2019/06/docker-hearts-wsl-2/).
 * The current Docker configuration is not suitable for production workloads. Another deployment strategy is required at this time.
 * Database environment variables are overriden by values hard coded in the Docker configuration, and cannot be overriden in `app/.env`.
+* Certain `bakery` commands will not work under the current Docker configuration, known broken commands include;
+  - `bake`
+  - `build-assets`
 
 ---
 
