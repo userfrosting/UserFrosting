@@ -1,60 +1,97 @@
-# Docker Development Environment
+# Using Docker with UserFrosting
 
->Docker support is currently at **experimental** stability. Expect quirks and documentation gaps.<br/>
->This is also documented at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
+>Docker support is currently at **experimental** stability, and is **not yet ready for production**. Expect quirks and documentation gaps, workarounds may be required in places.
 
-**This is not (yet) meant for production!**
+>Refer to [UserFrosting Learn - Docker](https://learn.userfrosting.com/installation/environment/docker) for more comprehensive documentation.
 
-You may be tempted to run with this in production but this setup has not been security-hardened. For example:
+UserFrosting includes support for Docker. This allows you to run UserFrosting without needing to set up your own local web server with traditonal WAMP/MAMP stacks. It also provides a consistent environment between developers for writing and debugging code changes more productively.
 
-- Database is exposed on port 8593 so you can access MySQL using your favorite client at localhost:8593. However,
-  the way Docker exposes this actually bypasses common firewalls like `ufw` so this should not be exposed in production.
-- Database credentials are hard-coded so obviously not secure.
-- File permissions may be more open than necessary.
-- HTTPS not implemented fully
-- It just hasn't been thoroughly tested in the capacity of being a production system.
+UserFrosting uses Docker Compose to orchastrate the infrustructure. It provides PHP 7.2, NGINX, and MySQL 5.7. To keep the footprint small, the `alpine` image variants are used where possible.
 
+## Get Started
 
-## Environment Dependencies
+1. Download and Install [Docker Compose](https://docs.docker.com/compose/install/)
 
-Though Docker will take care of this for the most part, there are 2 things you'll need to get started.
+2. Clone your fork of UserFrosting (if not done already)
 
-* [Docker Compose](https://docs.docker.com/compose/install/)
-* Bash plus the common Linux tools (for Windows users, Git Bash will cover this)
+3. Create `sprinkles.json` and `.env` from examples
+   ```bash
+   cp app/sprinkles.example.json app/sprinkles.json
+   cp app/.env.example app/.env
+   ```
 
-## First Run
+4. Install composer and npm dependencies
+   ```bash
+   docker run --rm -itv `pwd -W 2>/dev/null || pwd`:/app composer update  --ignore-platform-reqs
+   docker run --rm -itv `pwd -W 2>/dev/null || pwd`:/app node:alpine sh -c "cd /app/build ; npm install ; npm run uf-assets-install"
+   ```
 
->Certain `bakery` commands such as `bake` that use NodeJS are not currently supported but should work provided a suitable image is used.
+5. Allow UserFrosting write access to necessary folders
+   ```bash
+   chmod 777 app/{logs,cache,sessions}
+   ```
 
-Run the following through `bash` from the project root directory;
+6. Start the services, this includes MySQL, NGINX, and PHP
+   ```bash
+   docker-compose up -d
+   ```
 
-```bash
-# Create ".env" and "sprinkles.json" from examples
-cp app/sprinkles.example.json app/sprinkles.json
-cp app/.env.example app/.env # This will need to be updated to reflect docker-compose.yml
+7. Capture name of PHP service, this is needed to run commands against the active instance
+   ```bash
+   docker_container=$(docker ps -q --filter="ancestor=userfrosting_php")
+   ```
 
-# Install composer dependencies
-docker run --rm -it -v `pwd -W || pwd`:/app composer update  --ignore-platform-reqs --no-scripts
-# Alternative (deprecated): docker-compose run composer install --ignore-platform-reqs --no-scripts
+8. Perform database migration
+   ```bash
+   docker exec -it -u www-data $docker_container sh -c "php bakery migrate"
+   ```
 
-# Install npm dependencies
-docker run --rm -it -v `pwd -W || pwd`:/app node:alpine sh -c "cd /app/build ; npm install ; npm run uf-assets-install"
-# Alternative (deprecated): docker-compose run node  sh -c "cd /app/build ; npm install ; npm run uf-assets-install"
+9. Create admin account
+   ```bash
+   docker exec -it -u www-data $docker_container sh -c "php bakery create-admin"
+   ```
 
-# Prepare folder permissions
-chmod 777 app/{logs,cache,sessions}
+10. Access UserFrosting at `http://localhost:8591/`
 
-# Bring up the stack
-docker-compose up -d
+## Additional Commands
 
-# Capture container name
-docker_container=$(docker ps -q --filter="ancestor=userfrosting_php")
+* Start all services
+  >You may wish to run this without the detached (`-d`) flag for debugging purposes.<br/>
+  >This command may be safely run multiple times to restart stopped services.
+  ```bash
+  docker-compose up -d
+  ```
 
-# Perform database migration
-docker exec -it -u www-data $docker_container sh -c "php bakery migrate"
+* Stop all services
+  ```bash
+  docker-compose stop
+  ```
 
-# Create admin account
-docker exec -it -u www-data $docker_container sh -c "php bakery create-admin"
-```
+* Stop and remove all services
+  ```bash
+  docker-compose down
+  ```
+  >Removing all services will also remove database data.
 
-Now visit `http://localhost:8591/` to see your UserFrosting homepage!
+* Run a bakery command
+  ```bash
+  docker_container=$(docker ps -q --filter="ancestor=userfrosting_php")
+  docker exec -it -u www-data $docker_container sh -c "php bakery COMMAND_NAME"
+  ```
+  >Not all bakery commands are supported under the current Docker configuration, such as the `bake` quick start command. This will be addressed in a future release.
+
+## Known Limitations
+
+* Performance under Windows may be poor due to Docker using a Hyper-V virtual machine to run the Linux images our configuration depends on. Long term, this should be addressed by [Docker for Windows being overhauled to use WSL 2](https://engineering.docker.com/2019/06/docker-hearts-wsl-2/).
+* The current Docker configuration is not suitable for production workloads. Another deployment strategy is required at this time.
+* Database environment variables are overriden by values hard coded in the Docker configuration, and cannot be overriden in `app/.env`.
+
+---
+
+## MySQL Access
+
+- Hostname: 127.0.0.1
+- Username: docker
+- Password: secret
+- Database: userfrosting
+- Port: 8593
