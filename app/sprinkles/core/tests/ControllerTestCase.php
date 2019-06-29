@@ -17,7 +17,7 @@ use UserFrosting\Tests\TestCase;
  *
  * @see https://akrabat.com/testing-slim-framework-actions/
  * @author Louis Charette
- * @deprecated Use `withController` Trait instead
+ * @deprecated Since 4.2.2. Use `withController` Trait instead
  */
 class ControllerTestCase extends TestCase
 {
