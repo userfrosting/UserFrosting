@@ -16,7 +16,7 @@
  */
 return [
   'VALIDATE' => [
-    'PASSWORD_MISMATCH' => 'يجب أن تكون كلمة المرور وكلمة المرور التأكيدية نفس',
+    'PASSWORD_MISMATCH' => 'Your password and confirmation password must match.',
     'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
   ],
 ];
