@@ -460,6 +460,9 @@ class AccountController extends SimpleController
             }
         }
 
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
+        $currentUser = $this->ci->authenticator->user();
+
         if ($passwordSecurity->checkPasswordResetRequired($currentUser)) {
 
             // Destroy the session
