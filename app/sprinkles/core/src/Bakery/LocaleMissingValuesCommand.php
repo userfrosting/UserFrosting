@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -76,20 +76,23 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         if ($input->getOption('empty') != true) {
             $this->io->section('Searching for empty values.');
 
-            $this->newTable($output);
-
             $missing[] = $this->searchFilesForNull($files);
 
-            $this->table->addRows([
-              ['FILE PATH', 'KEY', 'TRANSLATION PREVIEW'],
-              new TableSeparator(),
-            ]);
+            if (!empty($missing[0])) {
+                $this->newTable($output);
 
-            // Build the table.
-            $this->buildTable($missing);
+                $this->table->setHeaders([
+                ['File path', 'Key', 'Translation preview'],
+              ]);
 
-            $this->table->render();
-            $this->io->newline(2);
+                // Build the table.
+                $this->buildTable($missing);
+
+                $this->table->render();
+                $this->io->newline(2);
+            } else {
+                $this->io->writeln('No empty values found!');
+            }
         }
 
         if ($input->getOption('duplicates') != true) {
@@ -99,16 +102,23 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
                 $duplicates[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
             }
 
-            $this->newTable($output);
+            if (!empty($duplicates[0])) {
+                $this->newTable($output);
 
-            $this->table->addRows([
-              ['FILE PATH', 'KEY', 'DUPLICATE VALUE'],
-              new TableSeparator(),
-            ]);
-            $this->buildTable($duplicates);
+                $this->table->setHeaders([
+                ['File path', 'Key', 'Translation preview'],
+              ]);
+
+                $this->newTable($output);
+                $this->table->setHeaders([
+                ['File path', 'Key', 'Duplicate value'],
+              ]);
+                $this->buildTable($duplicates);
+                $this->table->render();
+            } else {
+                $this->io->writeln('No empty values found!');
+            }
         }
-
-        return $this->table->render();
     }
 
     /**
@@ -135,15 +145,17 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
                     }
                 }
             }
-
-            return $primary_array;
+            // We only want empty values.
+            return array_filter($primary_array, function ($key) {
+                return strpos($key, '@') === false;
+            }, ARRAY_FILTER_USE_KEY);
         } else {
             return [];
         }
     }
 
     /**
-     * Populate table with file paths, keys of missing/duplicate values, and a preview in a specific locale.
+     * Populate a table with data.
      *
      * @param array $array File paths and missing keys.
      * @param int   $level Nested array depth.
@@ -159,7 +171,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
             if (is_array($value)) {
                 //We need to loop through it.
                 $this->buildTable($value, ($level + 1));
-            } elseif (strpos($key, '@') === false) {
+            } else {
                 $this->table->addRow([$this->path, $key, $this->translator->translate($key)]);
             }
         }
@@ -185,11 +197,15 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
             }
         }
 
-        return $missing;
+        return array_filter($missing);
     }
 
     /**
-     * Find keys with missing values. Collapses keys into array dot syntax.
+     * Find keys with missing values.
+     * Collapses keys into array dot syntax.
+     * Missing values are identified using the same rules as the empty() method.
+     *
+     * @see https://www.php.net/manual/en/function.empty.php#refsect1-function.empty-returnvalues
      *
      * @param array $array Locale translation file.
      *
@@ -207,9 +223,10 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         }
 
         // We only want empty values.
-        return array_filter($result, function ($key) {
-            return empty($key);
-        });
+        return array_filter($result, function ($val, $key) {
+            return empty($val) && strpos($key, '@') === false;
+        },
+      ARRAY_FILTER_USE_BOTH);
     }
 
     /**
@@ -230,17 +247,28 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         return array_values((array) $loader)[0];
     }
 
+    /**
+     * Set up new table with Bakery formatting.
+     *
+     * @param OutputInterface $output
+     */
     protected function newTable($output)
     {
+        $tableStyle = new TableStyle();
+        $tableStyle
+        ->setVerticalBorderChars(' ')
+        ->setDefaultCrossingChar(' ')
+        ->setCellHeaderFormat('<info>%s</info>');
+
         $this->table = new Table($output);
-        $this->table->setStyle('compact');
+        $this->table->setStyle($tableStyle);
         $this->table->setColumnMaxWidth(2, $this->length);
     }
 
     /**
      * Search through locale files and find empty values.
      *
-     * @param array $files Filenames to search.
+     * @param array $files File paths to search.
      *
      * @return array
      */
@@ -248,6 +276,10 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
     {
         foreach ($files as $key => $file) {
             $missing[$file] = $this->findMissing($this->parseFile($file));
+
+            if (empty($missing[$file])) {
+                unset($missing[$file]);
+            }
         }
 
         return $missing;
@@ -260,7 +292,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      */
     protected function setTranslation(string $locale)
     {
-        // Setup the translator. Set with -t or defaults to en_US
+        // Setup the translator. Set with -b or defaults to en_US
         $locator = $this->ci->locator;
         $builder = new LocalePathBuilder($locator, 'locale://', [$locale]);
         $loader = new ArrayFileLoader($builder->buildPaths());

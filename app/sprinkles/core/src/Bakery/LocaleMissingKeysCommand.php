@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -60,9 +60,6 @@ class LocaleMissingKeysCommand extends BaseCommand
     {
         $this->io->title('Missing Locale Keys');
 
-        $this->table = new Table($output);
-        $this->table->setStyle('borderless');
-
         // The "base" locale to compare other locales against. Defaults to en_US if not set.
         $baseLocale = $input->getOption('base');
 
@@ -81,11 +78,15 @@ class LocaleMissingKeysCommand extends BaseCommand
             $difference[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
         }
 
-        $this->table->addRows([['FILE PATH', 'MISSING KEY'], new TableSeparator()]);
-
         // Build the table.
         if (!empty($difference)) {
+            $this->newTable($output);
+
+            $this->table->setHeaders(['File path', 'Missing key']);
+
             $this->buildTable($difference);
+        } else {
+            $this->io->writeln('No missing keys found!');
         }
 
         return $this->table->render();
@@ -108,7 +109,6 @@ class LocaleMissingKeysCommand extends BaseCommand
                 $result[$prefix . $key] = $value;
             }
         }
-        //  print_r($result);
 
         return $result;
     }
@@ -183,7 +183,6 @@ class LocaleMissingKeysCommand extends BaseCommand
                 $difference[$key] = $key;
             }
         }
-        //  print_r($difference);
 
         return !isset($difference) ? 0 : $difference;
     }
@@ -217,6 +216,23 @@ class LocaleMissingKeysCommand extends BaseCommand
             //Need to filter the base locale to prevent false positive.
             return array_diff(array_keys($this->ci->config['site']['locales']['available']), [$baseLocale]);
         }
+    }
+
+    /**
+     * Set up new table with Bakery formatting.
+     *
+     * @param OutputInterface $output
+     */
+    protected function newTable($output)
+    {
+        $tableStyle = new TableStyle();
+        $tableStyle
+        ->setVerticalBorderChars(' ')
+        ->setDefaultCrossingChar(' ')
+        ->setCellHeaderFormat('<info>%s</info>');
+
+        $this->table = new Table($output);
+        $this->table->setStyle($tableStyle);
     }
 
     /**
