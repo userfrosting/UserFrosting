@@ -17,21 +17,21 @@
  */
 return [
   'VALIDATE' => [
-    'ARRAY'         => 'The values for <strong>{{label}}</strong> must be in an array.',
-    'BOOLEAN'       => 'The value for <strong>{{label}}</strong> must be either \'0\' or \'1\'.',
-    'INTEGER'       => 'The value for <strong>{{label}}</strong> must be an integer.',
-    'INVALID_EMAIL' => 'Invalid email address.',
-    'LENGTH_RANGE'  => '{{label}} must be between {{min}} and {{max}} characters in length.',
+    'ARRAY'         => 'I valori per <strong>{{label}}</strong> devono essere in un array.',
+    'BOOLEAN'       => 'Il valore per <strong>{{label}}</strong> deve essere \'0\' o \'1\'.',
+    'INTEGER'       => 'Il valore per <strong>{{label}}</strong> deve essere un numero intero.',
+    'INVALID_EMAIL' => 'Indirizzo email non valido',
+    'LENGTH_RANGE'  => '{{label}} deve essere compreso tra {{min}} e {{max}} caratteri di lunghezza.',
     'MAX_LENGTH'    => '{{label}} must be maximum {{max}} characters in length.',
     'MIN_LENGTH'    => '{{label}} must be minimum {{min}} characters in length.',
-    'NO_LEAD_WS'    => 'The value for <strong>{{label}}</strong> cannot begin with spaces, tabs, or other whitespace.',
-    'NO_TRAIL_WS'   => 'The value for <strong>{{label}}</strong> cannot end with spaces, tabs, or other whitespace.',
+    'NO_LEAD_WS'    => 'Il valore di <strong>{{label}}</strong> non può iniziare con spazi, tab o altri spazi vuoti.',
+    'NO_TRAIL_WS'   => 'Il valore di <strong>{{label}}</strong> non può terminare con spazi, tab o altri spazi vuoti.',
     'RANGE'         => 'The value for <strong>{{label}}</strong> must be between {{min}} and {{max}}.',
-    'REQUIRED'      => 'Please specify a value for <strong>{{label}}</strong>.',
+    'REQUIRED'      => 'Il campo <strong>{{label}}</strong> deve essere specificato.',
     'SPRUNJE'       => [
-      'BAD_FILTER' => '<strong>{{name}}</strong> is not a valid filter for this Sprunje.',
-      'BAD_LIST'   => '<strong>{{name}}</strong> is not a valid list for this Sprunje.',
-      'BAD_SORT'   => '<strong>{{name}}</strong> is not a valid sort field for this Sprunje.',
+      'BAD_FILTER' => '<strong>{{name}}</strong> non è un filtro valido per questo Sprunje.',
+      'BAD_LIST'   => '<strong> {{name}}</strong> non è un elenco valido per questo Sprunje.',
+      'BAD_SORT'   => '<strong>{{name}}</strong> non è un campo di ordinamento valido per questo Sprunje.',
     ],
   ],
 ];

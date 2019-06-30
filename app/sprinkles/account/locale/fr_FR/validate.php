@@ -15,7 +15,7 @@
  */
 return [
   'VALIDATE' => [
-    'PASSWORD_MISMATCH' => 'Your password and confirmation password must match.',
+    'PASSWORD_MISMATCH' => 'Votre mot de passe et votre mot de passe de confirmation doivent correspondre.',
     'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
   ],
 ];
