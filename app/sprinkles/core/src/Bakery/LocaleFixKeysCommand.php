@@ -168,7 +168,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
         $repository->mergeItems(null, $base);
 
         // If $alt is something other than string and we try to merge it in, $repository will become null.
-        if (gettype($alt) == []) {
+        if (is_array($alt)) {
             $repository->mergeItems(null, $alt);
         }
 
