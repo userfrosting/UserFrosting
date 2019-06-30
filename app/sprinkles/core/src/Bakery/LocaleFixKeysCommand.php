@@ -11,7 +11,6 @@
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -65,9 +64,6 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     {
         $this->io->title('Fixing Locale Keys');
 
-        $this->$table = new Table($output);
-        $this->$table->setStyle('compact');
-
         // The "base" locale to compare other locales against. Defaults to en_US if not set.
         $this->baseLocale = $input->getOption('base');
 
@@ -102,7 +98,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
     }
 
     /**
-     * Populate table with a list of files that were fixed.
+     * Build a list of files that were fixed.
      *
      * @param array $array File paths and missing keys.
      * @param int   $level Nested array depth.
@@ -198,6 +194,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
         }
 
         file_put_contents($filePath, var_export($repository->all(), true), FILE_APPEND);
+
         passthru("echo \; >> $filePath");
 
         // Final check with php-cs-fixer
