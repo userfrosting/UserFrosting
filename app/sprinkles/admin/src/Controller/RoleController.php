@@ -88,12 +88,12 @@ class RoleController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Check if name or slug already exists
-        if ($classMapper->staticMethod('role', 'where', 'name', $data['name'])->first()) {
+        if ($classMapper->getClassMapping('role')::where('name', $data['name'])->first()) {
             $ms->addMessageTranslated('danger', 'ROLE.NAME_IN_USE', $data);
             $error = true;
         }
 
-        if ($classMapper->staticMethod('role', 'where', 'slug', $data['slug'])->first()) {
+        if ($classMapper->getClassMapping('role')::where('slug', $data['slug'])->first()) {
             $ms->addMessageTranslated('danger', 'SLUG_IN_USE', $data);
             $error = true;
         }
@@ -173,7 +173,7 @@ class RoleController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Check that we are not deleting a default role
-        $defaultRoleSlugs = $classMapper->staticMethod('role', 'getDefaultSlugs');
+        $defaultRoleSlugs = $classMapper->getClassMapping('role')::getDefaultSlugs();
 
         // Need to use loose comparison for now, because some DBs return `id` as a string
         if (in_array($role->slug, $defaultRoleSlugs)) {
@@ -248,7 +248,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $role = $classMapper->staticMethod('role', 'where', 'slug', $slug)->first();
+        $role = $classMapper->getClassMapping('role')::where('slug', $slug)->first();
 
         // If the role doesn't exist, return 404
         if (!$role) {
@@ -343,7 +343,7 @@ class RoleController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Check that we are not deleting a default role
-        $defaultRoleSlugs = $classMapper->staticMethod('role', 'getDefaultSlugs');
+        $defaultRoleSlugs = $classMapper->getClassMapping('role')::getDefaultSlugs();
 
         // Need to use loose comparison for now, because some DBs return `id` as a string
         if (in_array($role->slug, $defaultRoleSlugs)) {
@@ -851,7 +851,7 @@ class RoleController extends SimpleController
         if (
             isset($data['name']) &&
             $data['name'] != $role->name &&
-            $classMapper->staticMethod('role', 'where', 'name', $data['name'])->first()
+            $classMapper->getClassMapping('role')::where('name', $data['name'])->first()
         ) {
             $ms->addMessageTranslated('danger', 'ROLE.NAME_IN_USE', $data);
             $error = true;
@@ -860,7 +860,7 @@ class RoleController extends SimpleController
         if (
             isset($data['slug']) &&
             $data['slug'] != $role->slug &&
-            $classMapper->staticMethod('role', 'where', 'slug', $data['slug'])->first()
+            $classMapper->getClassMapping('role')::where('slug', $data['slug'])->first()
         ) {
             $ms->addMessageTranslated('danger', 'SLUG_IN_USE', $data);
             $error = true;
@@ -957,6 +957,8 @@ class RoleController extends SimpleController
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/role/edit-field.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1049,7 +1051,7 @@ class RoleController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Get the role
-        $role = $classMapper->staticMethod('role', 'where', 'slug', $data['slug'])
+        $role = $classMapper->getClassMapping('role')::where('slug', $data['slug'])
             ->first();
 
         return $role;

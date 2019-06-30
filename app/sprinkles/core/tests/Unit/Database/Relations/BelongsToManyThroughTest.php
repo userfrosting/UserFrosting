@@ -13,6 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Tests\Unit\Database\Relations;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use UserFrosting\Sprinkle\Core\Database\Builder as QueryBuilder;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
@@ -23,6 +24,8 @@ use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
  */
 class BelongsToManyThroughTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function tearDown()
     {
         parent::tearDown();
@@ -76,7 +79,7 @@ class BelongsToManyThroughTest extends TestCase
         // Mock the intermediate role->permission BelongsToMany relation
         $intermediateRelationship = m::mock(BelongsToMany::class);
         $intermediateRelationship->shouldReceive('getTable')->once()->andReturn('permission_roles');
-        $intermediateRelationship->shouldReceive('getQualifiedRelatedKeyName')->once()->andReturn('permission_roles.role_id');
+        $intermediateRelationship->shouldReceive('getQualifiedRelatedPivotKeyName')->once()->andReturn('permission_roles.role_id');
         // Crazy pivot query stuff
         $newPivot = m::mock('\Illuminate\Database\Eloquent\Relations\Pivot');
         $newPivot->shouldReceive('getForeignKey')->andReturn('permission_id');
@@ -97,7 +100,8 @@ class BelongsToManyThroughTest extends TestCase
             'role_users',
             'role_id',
             'user_id',
-            'relation_name'
+            'relation_name',
+            'id'
         );
     }
 }

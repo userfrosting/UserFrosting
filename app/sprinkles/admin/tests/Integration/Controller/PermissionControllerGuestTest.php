@@ -16,7 +16,6 @@ use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\withController;
 use UserFrosting\Support\Exception\ForbiddenException;
-use UserFrosting\Support\Exception\NotFoundException;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -47,8 +46,7 @@ class PermissionControllerGuestTest extends TestCase
             // Setup database, then setup User & default role
             $this->refreshDatabase();
             $this->setupUser();
-
-        } else if (!static::$initialized) {
+        } elseif (!static::$initialized) {
 
             // Only refresh db once
             $this->refreshDatabase();
@@ -56,8 +54,6 @@ class PermissionControllerGuestTest extends TestCase
         }
     }
 
-    /**
-     */
     public function testControllerConstructor()
     {
         $controller = $this->getController();
@@ -93,7 +89,7 @@ class PermissionControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  PermissionController $controller
+     * @param PermissionController $controller
      */
     public function testGetInfo_ForbiddenException(PermissionController $controller)
     {
@@ -103,7 +99,7 @@ class PermissionControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  PermissionController $controller
+     * @param PermissionController $controller
      */
     public function testGetListWithNoPermission(PermissionController $controller)
     {
@@ -113,7 +109,7 @@ class PermissionControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  PermissionController $controller
+     * @param PermissionController $controller
      */
     public function testGetUsersWithNoPermission(PermissionController $controller)
     {
@@ -123,7 +119,7 @@ class PermissionControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  PermissionController $controller
+     * @param PermissionController $controller
      */
     public function testpageInfoWithNoPermission(PermissionController $controller)
     {
@@ -133,7 +129,7 @@ class PermissionControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param  PermissionController $controller
+     * @param PermissionController $controller
      */
     public function testpageListWithNoPermission(PermissionController $controller)
     {
@@ -149,8 +145,6 @@ class PermissionControllerGuestTest extends TestCase
         return new PermissionController($this->ci);
     }
 
-    /**
-     */
     private function setupUser()
     {
         $this->createTestUser(false, true);
