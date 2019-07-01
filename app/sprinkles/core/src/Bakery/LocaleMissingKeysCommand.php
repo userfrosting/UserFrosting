@@ -78,8 +78,6 @@ class LocaleMissingKeysCommand extends BaseCommand
             $difference[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
         }
 
-        print_r($difference);
-
         // Build the table.
         if (!empty($difference[0])) {
             $this->newTable($output);

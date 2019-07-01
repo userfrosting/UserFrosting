@@ -15,7 +15,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Support\Repository\Repository;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 
 /**
  * locale:fix-keys command.
@@ -156,10 +155,6 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
      */
     protected function fix($base, $alt, $filePath, $missing)
     {
-
-        //      Debug::debug(print_r($base, true));
-        //      Debug::debug(print_r($alt, true));
-
         //If the directory does not exist we need to create it recursively.
         if (!file_exists(dirname($filePath))) {
             mkdir(dirname($filePath), 0777, true);
@@ -175,12 +170,8 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
             $repository->mergeItems(null, $alt);
         }
 
-        //  print_r($repository);
         foreach ($missing as $key => $value) {
-            //    print_r($key);
-
             if (!$repository->has($key)) {
-                //      print_r("DOES NOT HAVE KEY $key\r\n");
                 if (strpos($key, '@TRANSLATION') !== false) {
                     $val = $repository->get(str_replace('.@TRANSLATION', '', $key));
                     $repository->set($key, $val);
@@ -190,7 +181,6 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
             }
         }
 
-        //  print_r($repository);
         // Check if this is an existing locale file with docblock.
         $temp = file_get_contents($filePath);
 
