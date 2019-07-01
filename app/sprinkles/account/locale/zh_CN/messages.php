@@ -24,7 +24,7 @@ return [
     'MY'                  => '我的账户',
     'SESSION_COMPROMISED' => [
       '@TRANSLATION' => '你的会话已泄露.  你应该在所有的设备上注销, 然后再登陆确保你的数据没被修改.',
-      'TITLE'        => 'Your account may have been compromised',
+      'TITLE'        => '你的账户可能被盗用',
       'TEXT'         => 'Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{url}}">log in</a> and check your account for suspicious activity.  You may also wish to change your password.',
     ],
     'SESSION_EXPIRED' => '会话已过期.  请重新登陆.',
@@ -44,7 +44,6 @@ return [
       'SEND'            => '为我的账户发送验证邮件',
       'TOKEN_NOT_FOUND' => '验证令牌不存在 / 账户已经验证',
     ],
-    'SESSION_COMPROMISED_TITLE' => '你的账户可能被盗用',
   ],
   'EMAIL' => [
     'INVALID'               => '<strong>{{email}}</strong> 没有账户注册.',
