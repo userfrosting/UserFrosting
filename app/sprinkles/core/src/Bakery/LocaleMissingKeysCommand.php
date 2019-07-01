@@ -78,18 +78,20 @@ class LocaleMissingKeysCommand extends BaseCommand
             $difference[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
         }
 
+        print_r($difference);
+
         // Build the table.
-        if (!empty($difference)) {
+        if (!empty($difference[0])) {
             $this->newTable($output);
 
             $this->table->setHeaders(['File path', 'Missing key']);
 
             $this->buildTable($difference);
+
+            $this->table->render();
         } else {
             $this->io->writeln('No missing keys found!');
         }
-
-        return $this->table->render();
     }
 
     /**
@@ -156,7 +158,7 @@ class LocaleMissingKeysCommand extends BaseCommand
             }
         }
 
-        return $difference;
+        return array_filter($difference);
     }
 
     /**

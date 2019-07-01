@@ -132,9 +132,7 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
             foreach ($files as $key => $file) {
                 $base = $this->parseFile("$sprinklePath/locale/{$baseLocale}/{$file}");
                 $alt = $this->parseFile("$sprinklePath/locale/{$altLocale}/{$file}");
-
                 $filePath = "$sprinklePath/locale/{$altLocale}/{$file}";
-                $filePath2 = "$sprinklePath/locale/{$baseLocale}/{$file}";
                 $missing = $this->arrayFlatten($this->getDifference($base, $alt));
 
                 // The files with missing keys.
@@ -179,12 +177,14 @@ class LocaleFixKeysCommand extends LocaleMissingKeysCommand
 
         //  print_r($repository);
         foreach ($missing as $key => $value) {
-            print_r($key);
+            //    print_r($key);
 
             if (!$repository->has($key)) {
-                print_r("DOES NOT HAVE KEY $key\r\n");
-                if (strpos($key, '@TRANSLATION' !== false)) {
-                    print_r('WE FOUND @TRANSLATION');
+                //      print_r("DOES NOT HAVE KEY $key\r\n");
+                if (strpos($key, '@TRANSLATION') !== false) {
+                    $val = $repository->get(str_replace('.@TRANSLATION', '', $key));
+                    $repository->set($key, $val);
+                } else {
                     $repository->set($key, $value);
                 }
             }
