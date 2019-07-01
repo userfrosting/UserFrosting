@@ -180,7 +180,7 @@ class LocaleMissingKeysCommand extends BaseCommand
                     }
                 }
             } elseif (!isset($array2[$key])) {
-                $difference[$key] = $key;
+                $difference[$key] = $value;
             }
         }
 
