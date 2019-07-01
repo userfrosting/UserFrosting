@@ -49,7 +49,8 @@ class GroupControllerTest extends TestCase
             // Setup database, then setup User & default role
             $this->refreshDatabase();
             $this->setupUser();
-        } elseif (!static::$initialized) {
+
+        } else if (!static::$initialized) {
 
             // Only refresh db once
             $this->refreshDatabase();
@@ -57,6 +58,8 @@ class GroupControllerTest extends TestCase
         }
     }
 
+    /**
+     */
     public function testControllerConstructor()
     {
         $controller = $this->getController();
@@ -81,7 +84,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetInfoWithNotFoundException(GroupController $controller)
     {
@@ -91,7 +94,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetInfo(GroupController $controller)
     {
@@ -104,7 +107,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetList(GroupController $controller)
     {
@@ -116,7 +119,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetUsersWithBadSlug(GroupController $controller)
     {
@@ -126,7 +129,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetUsersWithNoSlug(GroupController $controller)
     {
@@ -136,7 +139,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetUsers(GroupController $controller)
     {
@@ -148,7 +151,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testpageInfo(GroupController $controller)
     {
@@ -159,7 +162,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testpageInfoWithBadSlug(GroupController $controller)
     {
@@ -169,7 +172,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testpageList(GroupController $controller)
     {
@@ -180,7 +183,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testCreate(GroupController $controller)
     {
@@ -188,7 +191,7 @@ class GroupControllerTest extends TestCase
         $data = [
             'name' => 'foo',
             'slug' => 'bar',
-            'icon' => 'icon',
+            'icon' => 'icon'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -212,7 +215,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testCreate
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testCreateWithMissingName(GroupController $controller)
     {
@@ -220,7 +223,7 @@ class GroupControllerTest extends TestCase
         $data = [
             'name' => '',
             'slug' => 'missingName',
-            'icon' => 'foo',
+            'icon' => 'foo'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -244,7 +247,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testCreate
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testCreateWithDuplicateSlug(GroupController $controller)
     {
@@ -252,7 +255,7 @@ class GroupControllerTest extends TestCase
         $data = [
             'name' => 'bar',
             'slug' => 'foo',
-            'icon' => 'foo',
+            'icon' => 'foo'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -272,7 +275,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testCreate
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testCreateWithDuplicateName(GroupController $controller)
     {
@@ -280,7 +283,7 @@ class GroupControllerTest extends TestCase
         $data = [
             'name' => 'bar',
             'slug' => 'duplicateName',
-            'icon' => 'foo',
+            'icon' => 'foo'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -303,7 +306,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testDelete(GroupController $controller)
     {
@@ -330,7 +333,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testDelete
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testDeleteWithNotExistingGroup(GroupController $controller)
     {
@@ -341,7 +344,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testDelete
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testDeleteWithDefaultGroup(GroupController $controller)
     {
@@ -369,7 +372,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testDeleteWithDefaultGroup
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testDeleteWithUserInGroup(GroupController $controller)
     {
@@ -390,12 +393,12 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testDeleteWithUserInGroup
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetModalConfirmDelete(GroupController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo',
+            'slug' => 'foo'
         ]);
 
         // Get controller stuff
@@ -407,7 +410,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetModalConfirmDeleteWithNoGetData(GroupController $controller)
     {
@@ -418,12 +421,12 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetModalConfirmDeleteWithNonExistingGroup(GroupController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foobar',
+            'slug' => 'foobar'
         ]);
 
         $this->expectException(NotFoundException::class);
@@ -433,7 +436,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalConfirmDelete
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetModalConfirmDeleteWithUserInGroup(GroupController $controller)
     {
@@ -448,7 +451,7 @@ class GroupControllerTest extends TestCase
         $testUser->save();
 
         $request = $this->getRequest()->withQueryParams([
-            'slug' => $group->slug,
+            'slug' => $group->slug
         ]);
 
         $this->expectException(BadRequestException::class);
@@ -457,7 +460,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetModalCreate(GroupController $controller)
     {
@@ -468,12 +471,12 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetModalEdit(GroupController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo',
+            'slug' => 'foo'
         ]);
 
         // Get controller stuff
@@ -485,7 +488,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalEdit
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetModalEditWithNoGetData(GroupController $controller)
     {
@@ -496,12 +499,12 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testGetModalEdit
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testGetModalEditWithNonExistingGroup(GroupController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foobar',
+            'slug' => 'foobar'
         ]);
 
         $this->expectException(NotFoundException::class);
@@ -510,7 +513,7 @@ class GroupControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testUpdateInfo(GroupController $controller)
     {
@@ -525,7 +528,7 @@ class GroupControllerTest extends TestCase
         $data = [
             'name' => 'barbarbar',
             'slug' => 'foofoo',
-            'icon' => 'icon',
+            'icon' => 'icon'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -551,7 +554,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testUpdateInfoWithMissingName(GroupController $controller)
     {
@@ -559,7 +562,7 @@ class GroupControllerTest extends TestCase
         $data = [
             'name' => '',
             'slug' => 'foo',
-            'icon' => 'foo',
+            'icon' => 'foo'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -583,7 +586,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testUpdateInfoWithMissingSlug(GroupController $controller)
     {
@@ -591,7 +594,7 @@ class GroupControllerTest extends TestCase
         $data = [
             'name' => 'bar',
             'slug' => '',
-            'icon' => 'foo',
+            'icon' => 'foo'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -615,7 +618,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testUpdateInfoWithDuplicateSlug(GroupController $controller)
     {
@@ -625,7 +628,7 @@ class GroupControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'slug' => $group2->slug,
+            'slug' => $group2->slug
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -645,7 +648,7 @@ class GroupControllerTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testUpdateInfo
-     * @param GroupController $controller
+     * @param  GroupController $controller
      */
     public function testUpdateInfoWithDuplicateName(GroupController $controller)
     {
@@ -655,7 +658,7 @@ class GroupControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'name' => $group2->name,
+            'name' => $group2->name
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -672,6 +675,7 @@ class GroupControllerTest extends TestCase
         $this->assertSame('danger', end($messages)['type']);
     }
 
+
     /**
      * @return GroupController
      */
@@ -680,6 +684,8 @@ class GroupControllerTest extends TestCase
         return new GroupController($this->ci);
     }
 
+    /**
+     */
     private function setupUser()
     {
         // Admin user, WILL have access
@@ -689,7 +695,7 @@ class GroupControllerTest extends TestCase
         $fm = $this->ci->factory;
         $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
             'slug' => 'foo',
-            'name' => 'bar',
+            'name' => 'bar'
         ]);
     }
 }

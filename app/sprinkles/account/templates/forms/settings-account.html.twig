@@ -16,7 +16,7 @@
             {% if page.visibility != "disabled" %}
                 <div class="form-group">
                     <label for="input-password" class="control-label">{{translate("PASSWORD.NEW")}}</label>
-                    <input type="password" id="input-password" class="form-control" name="password" placeholder="{{translate("PASSWORD.BETWEEN", {min: site.password.length.min, max: site.password.length.max})}} ({{translate("OPTIONAL")}})">
+                    <input type="password" id="input-password" class="form-control" name="password" placeholder="{{translate("PASSWORD.BETWEEN", {min: 12, max: 100})}} ({{translate("OPTIONAL")}})">
                 </div>
                 <div class="form-group">
                     <label for="input-passwordc" class="control-label">{{translate("PASSWORD.CONFIRM_NEW")}}</label>

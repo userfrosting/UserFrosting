@@ -198,7 +198,7 @@ trait Unique
 
         $constrainedBuilder = $constrainedBuilder->distinct();
 
-        return $constrainedBuilder->count($this->relatedPivotKey);
+        return $constrainedBuilder->count($this->relatedKey);
     }
 
     /**
@@ -216,7 +216,7 @@ trait Unique
         return $this->getRelationExistenceQuery(
             $query,
             $parentQuery,
-            new Expression("count(distinct {$this->relatedPivotKey})")
+            new Expression("count(distinct {$this->relatedKey})")
         );
     }
 
@@ -232,7 +232,7 @@ trait Unique
     public function match(array $models, Collection $results, $relation)
     {
         // Build dictionary of parent (e.g. user) to related (e.g. permission) models
-        list($dictionary, $nestedTertiaryDictionary) = $this->buildDictionary($results, $this->foreignPivotKey);
+        list($dictionary, $nestedTertiaryDictionary) = $this->buildDictionary($results, $this->foreignKey);
 
         // Once we have an array dictionary of child objects we can easily match the
         // children back to their parent using the dictionary and the keys on the
@@ -299,12 +299,12 @@ trait Unique
         // Instead, we perform an additional query with grouping and limit/offset to determine
         // the desired set of unique model _ids_, and then constrain our final query
         // to these models with a whereIn clause.
-        $relatedPivotKeyName = $this->related->getQualifiedKeyName();
+        $relatedKeyName = $this->related->getQualifiedKeyName();
 
         // Apply an additional scope to override any selected columns in other global scopes
-        $uniqueIdScope = function ($subQuery) use ($relatedPivotKeyName) {
-            $subQuery->addSelect($relatedPivotKeyName)
-                     ->groupBy($relatedPivotKeyName);
+        $uniqueIdScope = function ($subQuery) use ($relatedKeyName) {
+            $subQuery->addSelect($relatedKeyName)
+                     ->groupBy($relatedKeyName);
         };
 
         $identifier = spl_object_hash($uniqueIdScope);
@@ -323,7 +323,7 @@ trait Unique
         $modelIds = $constrainedBuilder->get()->pluck($primaryKeyName)->toArray();
 
         // Modify the unconstrained query to limit to these models
-        return $query->whereIn($relatedPivotKeyName, $modelIds);
+        return $query->whereIn($relatedKeyName, $modelIds);
     }
 
     /**
@@ -524,7 +524,7 @@ trait Unique
             unset($model->pivot->$column);
         }
         // Copy the related key pivot as well, but don't unset on the related model
-        $pivotAttributes[$this->relatedPivotKey] = $model->pivot->{$this->relatedPivotKey};
+        $pivotAttributes[$this->relatedKey] = $model->pivot->{$this->relatedKey};
 
         // Set the tertiary key pivot as well
         $pivotAttributes[$this->tertiaryKey] = $tertiaryModel->getKey();

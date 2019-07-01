@@ -298,11 +298,8 @@ class CreateAdminUser extends BaseCommand
      */
     protected function askPassword($password = '', $requireConfirmation = true)
     {
-        $passwordMin = $this->ci->config['site.password.length.min'];
-        $passwordMax = $this->ci->config['site.password.length.max'];
-
         while (!isset($password) || !$this->validatePassword($password) || !$this->confirmPassword($password, $requireConfirmation)) {
-            $password = $this->io->askHidden('Enter password (' . $passwordMin . '-' . $passwordMax . ' characters)');
+            $password = $this->io->askHidden('Enter password (12-255 characters)');
         }
 
         return $password;
@@ -317,11 +314,9 @@ class CreateAdminUser extends BaseCommand
      */
     protected function validatePassword($password)
     {
-        $passwordMin = $this->ci->config['site.password.length.min'];
-        $passwordMax = $this->ci->config['site.password.length.max'];
-
-        if (strlen($password) < $passwordMin || strlen($password) > $passwordMax) {
-            $this->io->error('Password must be between ' . $passwordMin . ' and ' . $passwordMax . ' characters');
+        //TODO Config for this ??
+        if (strlen($password) < 12 || strlen($password) > 255) {
+            $this->io->error('Password must be between 12-255 characters');
 
             return false;
         }

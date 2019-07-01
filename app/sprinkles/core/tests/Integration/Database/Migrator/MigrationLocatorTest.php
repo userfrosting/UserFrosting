@@ -90,13 +90,6 @@ class MigrationLocatorTest extends TestCase
             new Resource($resourceStream, $resourceAccountLocation, 'one/CreatePasswordResetsTable.php'),
             new Resource($resourceStream, $resourceAccountLocation, 'two/CreateFlightsTable.php'),
             new Resource($resourceStream, $resourceAccountLocation, 'CreateMainTable.php'),
-
-            // Theses shoudn't be returned by the migrator
-            new Resource($resourceStream, $resourceAccountLocation, 'README.md'),
-            new Resource($resourceStream, $resourceAccountLocation, 'php.md'),
-            new Resource($resourceStream, $resourceAccountLocation, 'foo.foophp'),
-            new Resource($resourceStream, $resourceAccountLocation, 'blah.phpphp'),
-            new Resource($resourceStream, $resourceAccountLocation, 'bar.phpbar'),
         ]);
 
         // Create a new MigrationLocator instance with our simulated ResourceLocation
@@ -116,6 +109,7 @@ class MigrationLocatorTest extends TestCase
         ];
 
         // Test results match expectations
+        $this->assertCount(8, $results);
         $this->assertEquals($expected, $results);
 
         return $locator;

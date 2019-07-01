@@ -47,7 +47,8 @@ class RoleControllerGuestTest extends TestCase
             // Setup database, then setup User & default role
             $this->refreshDatabase();
             $this->setupUser();
-        } elseif (!static::$initialized) {
+
+        } else if (!static::$initialized) {
 
             // Only refresh db once
             $this->refreshDatabase();
@@ -55,6 +56,8 @@ class RoleControllerGuestTest extends TestCase
         }
     }
 
+    /**
+     */
     public function testControllerConstructor()
     {
         $controller = $this->getController();
@@ -80,7 +83,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testCreateWithNoPermission(RoleController $controller)
     {
@@ -91,7 +94,7 @@ class RoleControllerGuestTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @todo test individual permissions too
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testDeleteWithNoPermission(RoleController $controller)
     {
@@ -104,7 +107,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testGetInfoWithGuestUser(RoleController $controller)
     {
@@ -114,7 +117,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testGetListWithNoPermission(RoleController $controller)
     {
@@ -124,12 +127,12 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testGetModalConfirmDeleteWithNoPermission(RoleController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo',
+            'slug' => 'foo'
         ]);
 
         $this->expectException(ForbiddenException::class);
@@ -138,7 +141,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testGetModalCreateWithNoPermission(RoleController $controller)
     {
@@ -148,12 +151,12 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testGetModalEditWithNoPermission(RoleController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo',
+            'slug' => 'foo'
         ]);
 
         $this->expectException(ForbiddenException::class);
@@ -162,12 +165,12 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testGetModalEditPermissionsWithNoPermission(RoleController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'slug' => 'foo',
+            'slug' => 'foo'
         ]);
 
         $this->expectException(ForbiddenException::class);
@@ -176,7 +179,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testGetPermissionsWithNoPermission(RoleController $controller)
     {
@@ -186,7 +189,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testUpdateFieldWithNoPermission(RoleController $controller)
     {
@@ -196,7 +199,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testGetUsersWithNoPermission(RoleController $controller)
     {
@@ -206,7 +209,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testpageInfoWithNoPermission(RoleController $controller)
     {
@@ -216,7 +219,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testpageInfoWithPartialPermissions(RoleController $controller)
     {
@@ -237,7 +240,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testpageListWithNoPermission(RoleController $controller)
     {
@@ -247,14 +250,14 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testUpdateInfoWithNoPermission(RoleController $controller)
     {
         // Set post data
         $data = [
             'name' => 'foo',
-            'slug' => 'foo',
+            'slug' => 'foo'
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -267,7 +270,7 @@ class RoleControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param RoleController $controller
+     * @param  RoleController $controller
      */
     public function testUpdateInfoWithNoRole(RoleController $controller)
     {
@@ -283,6 +286,8 @@ class RoleControllerGuestTest extends TestCase
         return new RoleController($this->ci);
     }
 
+    /**
+     */
     private function setupUser()
     {
         // Guest user, won't have any access
@@ -292,7 +297,7 @@ class RoleControllerGuestTest extends TestCase
         $fm = $this->ci->factory;
         $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
             'slug' => 'foo',
-            'name' => 'bar',
+            'name' => 'bar'
         ]);
     }
 }

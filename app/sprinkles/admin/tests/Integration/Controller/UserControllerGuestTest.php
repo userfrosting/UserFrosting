@@ -51,7 +51,8 @@ class UserControllerGuestTest extends TestCase
             // Setup database, then setup User & default role
             $this->refreshDatabase();
             $this->setupUser();
-        } elseif (!static::$initialized) {
+
+        } else if (!static::$initialized) {
 
             // Only refresh db once
             $this->refreshDatabase();
@@ -65,6 +66,8 @@ class UserControllerGuestTest extends TestCase
         m::close();
     }
 
+    /**
+     */
     public function testControllerConstructor()
     {
         $controller = $this->getController();
@@ -90,7 +93,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testCreateWithNoPermissions(UserController $controller)
     {
@@ -119,7 +122,7 @@ class UserControllerGuestTest extends TestCase
             'first_name' => 'foo name',
             'last_name'  => 'foo last',
             'email'      => 'foo@bar.com',
-            'group_id'   => $group->id,
+            'group_id'   => $group->id
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -130,7 +133,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testCreatePasswordResetWithNoPermissions(UserController $controller)
     {
@@ -141,7 +144,7 @@ class UserControllerGuestTest extends TestCase
     /**
      * @depends testControllerConstructorWithUser
      * @depends testCreatePasswordResetWithNoPermissions
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testCreatePasswordResetWithPartialPermissions(UserController $controller)
     {
@@ -169,7 +172,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testDeleteWithNoPermission(UserController $controller)
     {
@@ -179,7 +182,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetActivitiesWithNoPermission(UserController $controller)
     {
@@ -189,7 +192,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetActivitiesWithPartialPermission(UserController $controller)
     {
@@ -210,7 +213,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetInfoWithNoPermission(UserController $controller)
     {
@@ -220,7 +223,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetInfoWithPartialPermission(UserController $controller)
     {
@@ -241,7 +244,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetListWithNoPermission(UserController $controller)
     {
@@ -251,12 +254,12 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetModalConfirmDeleteWithNoPermission(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo',
+            'user_name' => 'userfoo'
         ]);
 
         $this->expectException(ForbiddenException::class);
@@ -265,12 +268,12 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetModalCreateWithNoPermission(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo',
+            'user_name' => 'userfoo'
         ]);
 
         $this->expectException(ForbiddenException::class);
@@ -279,7 +282,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetModalCreateWithNoUserGroup(UserController $controller)
     {
@@ -299,12 +302,12 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetModalEditWithNoPermissions(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo',
+            'user_name' => 'userfoo'
         ]);
 
         $this->expectException(ForbiddenException::class);
@@ -313,7 +316,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetModalEditWithPartialPermissions(UserController $controller)
     {
@@ -327,7 +330,7 @@ class UserControllerGuestTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo',
+            'user_name' => 'userfoo'
         ]);
 
         $result = $controller->getModalEdit($request, $this->getResponse(), []);
@@ -337,7 +340,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetModalEditWithNoGroupPermissions(UserController $controller)
     {
@@ -351,7 +354,7 @@ class UserControllerGuestTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo',
+            'user_name' => 'userfoo'
         ]);
 
         $result = $controller->getModalEdit($request, $this->getResponse(), []);
@@ -361,12 +364,12 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetModalEditPasswordWithNoPermissions(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo',
+            'user_name' => 'userfoo'
         ]);
 
         $this->expectException(ForbiddenException::class);
@@ -375,7 +378,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetModalEditPasswordWithPartialPermissions(UserController $controller)
     {
@@ -389,7 +392,7 @@ class UserControllerGuestTest extends TestCase
         $controller = $this->getController();
 
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo',
+            'user_name' => 'userfoo'
         ]);
 
         $result = $controller->getModalEditPassword($request, $this->getResponse(), []);
@@ -399,12 +402,12 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetModalEditRolesWithNoPermission(UserController $controller)
     {
         $request = $this->getRequest()->withQueryParams([
-            'user_name' => 'userfoo',
+            'user_name' => 'userfoo'
         ]);
 
         $this->expectException(ForbiddenException::class);
@@ -413,7 +416,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetPermissionsWithNoPermissions(UserController $controller)
     {
@@ -423,7 +426,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetPermissionsWithPartialPermissions(UserController $controller)
     {
@@ -444,7 +447,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetRolesWithNoPermissions(UserController $controller)
     {
@@ -454,7 +457,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testGetRolesWithPartialPermissions(UserController $controller)
     {
@@ -475,7 +478,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testPageInfoWithNoPermissions(UserController $controller)
     {
@@ -485,7 +488,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testPageInfoWithPartialPermissions(UserController $controller)
     {
@@ -505,7 +508,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testPageListWithNoPermission(UserController $controller)
     {
@@ -515,14 +518,14 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testUpdateInfoWithNoPermissions(UserController $controller)
     {
         // Create a user
         $fm = $this->ci->factory;
         $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-            'user_name'  => 'testUpdateInfoWithNoPermissions',
+            'user_name' => 'testUpdateInfoWithNoPermissions',
             'first_name' => 'foo',
         ]);
 
@@ -538,7 +541,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testUpdateInfoWithPartialPermissions(UserController $controller)
     {
@@ -554,7 +557,7 @@ class UserControllerGuestTest extends TestCase
         // Create a user
         $fm = $this->ci->factory;
         $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-            'user_name'  => 'testUpdateInfoWithPartialPermissions',
+            'user_name' => 'testUpdateInfoWithPartialPermissions',
             'first_name' => 'foo',
         ]);
 
@@ -590,7 +593,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testUpdateInfoForMasterUserWithNoPermissions(UserController $controller)
     {
@@ -610,7 +613,7 @@ class UserControllerGuestTest extends TestCase
         if (!$user) {
             $fm = $this->ci->factory;
             $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-                'id' => $this->ci->config['reserved_user_ids.master'],
+                'id' => $this->ci->config['reserved_user_ids.master']
             ]);
         }
 
@@ -627,7 +630,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testUpdateFieldWithNoPermissions(UserController $controller)
     {
@@ -637,7 +640,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testUpdateFieldWithPartialPermissions(UserController $controller)
     {
@@ -653,7 +656,7 @@ class UserControllerGuestTest extends TestCase
         // Create a user
         $fm = $this->ci->factory;
         $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-            'user_name'  => 'testUpdateFieldWithPartialPermissions',
+            'user_name' => 'testUpdateFieldWithPartialPermissions',
             'first_name' => 'foo',
         ]);
 
@@ -684,7 +687,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testUpdateFieldWithMasterUserWithNoPermissions(UserController $controller)
     {
@@ -704,7 +707,7 @@ class UserControllerGuestTest extends TestCase
         if (!$user) {
             $fm = $this->ci->factory;
             $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
-                'id' => $this->ci->config['reserved_user_ids.master'],
+                'id' => $this->ci->config['reserved_user_ids.master']
             ]);
         }
 
@@ -721,7 +724,7 @@ class UserControllerGuestTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param UserController $controller
+     * @param  UserController $controller
      */
     public function testUpdateFieldForFlagEnabledWithCurrentUser(UserController $controller)
     {
@@ -753,6 +756,8 @@ class UserControllerGuestTest extends TestCase
         return new UserController($this->ci);
     }
 
+    /**
+     */
     private function setupUser()
     {
         // Admin user, WILL have access
@@ -763,7 +768,7 @@ class UserControllerGuestTest extends TestCase
         $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
             'id'        => '9999',
             'user_name' => 'userfoo',
-            'email'     => 'bar@foo.com',
+            'email'     => 'bar@foo.com'
         ]);
     }
 }

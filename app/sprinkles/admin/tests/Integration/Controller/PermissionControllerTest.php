@@ -49,7 +49,8 @@ class PermissionControllerTest extends TestCase
             // Setup database, then setup User & default role
             $this->refreshDatabase();
             $this->setupUser();
-        } elseif (!static::$initialized) {
+
+        } else if (!static::$initialized) {
 
             // Only refresh db once
             $this->refreshDatabase();
@@ -57,6 +58,8 @@ class PermissionControllerTest extends TestCase
         }
     }
 
+    /**
+     */
     public function testControllerConstructor()
     {
         $controller = $this->getController();
@@ -82,7 +85,7 @@ class PermissionControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param PermissionController $controller
+     * @param  PermissionController $controller
      */
     public function testGetInfoWithNotFoundException(PermissionController $controller)
     {
@@ -92,7 +95,7 @@ class PermissionControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param PermissionController $controller
+     * @param  PermissionController $controller
      */
     public function testGetInfo(PermissionController $controller)
     {
@@ -105,7 +108,7 @@ class PermissionControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param PermissionController $controller
+     * @param  PermissionController $controller
      */
     public function testGetList(PermissionController $controller)
     {
@@ -117,7 +120,7 @@ class PermissionControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param PermissionController $controller
+     * @param  PermissionController $controller
      */
     public function testGetUsers(PermissionController $controller)
     {
@@ -129,7 +132,7 @@ class PermissionControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param PermissionController $controller
+     * @param  PermissionController $controller
      */
     public function testpageInfo(PermissionController $controller)
     {
@@ -140,7 +143,7 @@ class PermissionControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param PermissionController $controller
+     * @param  PermissionController $controller
      */
     public function testpageInfoWithNotFoundPermission(PermissionController $controller)
     {
@@ -150,7 +153,7 @@ class PermissionControllerTest extends TestCase
 
     /**
      * @depends testControllerConstructorWithUser
-     * @param PermissionController $controller
+     * @param  PermissionController $controller
      */
     public function testpageList(PermissionController $controller)
     {
@@ -167,6 +170,8 @@ class PermissionControllerTest extends TestCase
         return new PermissionController($this->ci);
     }
 
+    /**
+     */
     private function setupUser()
     {
         // Admin user, WILL have access
@@ -176,7 +181,7 @@ class PermissionControllerTest extends TestCase
         $fm = $this->ci->factory;
         $permission = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Permission', [
             'slug' => 'foo',
-            'name' => 'bar',
+            'name' => 'bar'
         ]);
 
         self::$permissionID = $permission->id;

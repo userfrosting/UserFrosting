@@ -99,7 +99,7 @@ return [
     'PASSWORD' => [
         '@TRANSLATION' => 'Contraseña',
 
-        'BETWEEN' => 'Entre {{min}} - {{max}}',
+        'BETWEEN' => 'Entre {{min}} - {{max}} (recomendado 12)',
 
         'CONFIRM'             => 'Confirmar contraseña',
         'CONFIRM_CURRENT'     => 'Por favor, confirma tu contraseña actual',

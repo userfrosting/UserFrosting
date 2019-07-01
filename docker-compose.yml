@@ -49,6 +49,19 @@ services:
     volumes:
       - userfrosting-db:/var/lib/mysql
 
+  composer:
+    image: "composer"
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  node:
+    build:
+      context: ./docker/node
+    volumes:
+      - .:/app
+    working_dir: /app/build
+
 volumes:
   userfrosting-db:
     driver: local

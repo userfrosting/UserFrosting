@@ -22,7 +22,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
- * @see https://github.com/laravel/framework/blob/5.8/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
+ * @see https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
  */
 class BelongsToManyThrough extends BelongsToMany
 {
@@ -42,17 +42,15 @@ class BelongsToManyThrough extends BelongsToMany
      * @param \Illuminate\Database\Eloquent\Model              $parent
      * @param \Illuminate\Database\Eloquent\Relations\Relation $intermediateRelation
      * @param string                                           $table
-     * @param string                                           $foreignPivotKey
-     * @param string                                           $relatedPivotKey
-     * @param string                                           $parentKey
+     * @param string                                           $foreignKey
      * @param string                                           $relatedKey
      * @param string                                           $relationName
      */
-    public function __construct(Builder $query, Model $parent, Relation $intermediateRelation, $table, $foreignPivotKey, $relatedPivotKey, $parentKey, $relatedKey, $relationName = null)
+    public function __construct(Builder $query, Model $parent, Relation $intermediateRelation, $table, $foreignKey, $relatedKey, $relationName = null)
     {
         $this->intermediateRelation = $intermediateRelation;
 
-        parent::__construct($query, $parent, $table, $foreignPivotKey, $relatedPivotKey, $parentKey, $relatedKey, $relationName);
+        parent::__construct($query, $parent, $table, $foreignKey, $relatedKey, $relationName);
     }
 
     /**
@@ -77,7 +75,7 @@ class BelongsToManyThrough extends BelongsToMany
      */
     public function getExistenceCompareKey()
     {
-        return $this->intermediateRelation->getQualifiedForeignPivotKeyName();
+        return $this->intermediateRelation->getQualifiedForeignKeyName();
     }
 
     /**
@@ -93,7 +91,7 @@ class BelongsToManyThrough extends BelongsToMany
         $this->tertiaryRelated = $this->intermediateRelation->getRelated();
 
         // Set tertiary key and related model
-        $this->tertiaryKey = $this->foreignPivotKey;
+        $this->tertiaryKey = $this->foreignKey;
 
         $this->tertiaryRelationName = is_null($viaRelationName) ? $this->intermediateRelation->getRelationName() . '_via' : $viaRelationName;
 
@@ -114,7 +112,7 @@ class BelongsToManyThrough extends BelongsToMany
     public function addEagerConstraints(array $models)
     {
         // Constraint to only load models where the intermediate relation's foreign key matches the parent model
-        $intermediateForeignKeyName = $this->intermediateRelation->getQualifiedForeignPivotKeyName();
+        $intermediateForeignKeyName = $this->intermediateRelation->getQualifiedForeignKeyName();
 
         return $this->query->whereIn($intermediateForeignKeyName, $this->getKeys($models));
     }
@@ -169,7 +167,7 @@ class BelongsToManyThrough extends BelongsToMany
 
                 // Remove the tertiary pivot key from the condensed models
                 foreach ($items as $relatedModel) {
-                    unset($relatedModel->pivot->{$this->foreignPivotKey});
+                    unset($relatedModel->pivot->{$this->foreignKey});
                 }
 
                 $model->setRelation(
@@ -190,7 +188,7 @@ class BelongsToManyThrough extends BelongsToMany
     protected function unsetTertiaryPivots(Collection $models)
     {
         foreach ($models as $model) {
-            unset($model->pivot->{$this->foreignPivotKey});
+            unset($model->pivot->{$this->foreignKey});
         }
     }
 
@@ -212,9 +210,9 @@ class BelongsToManyThrough extends BelongsToMany
         // model instance. Then we can set the "where" for the parent models.
         $intermediateTable = $this->intermediateRelation->getTable();
 
-        $key = $this->intermediateRelation->getQualifiedRelatedPivotKeyName();
+        $key = $this->intermediateRelation->getQualifiedRelatedKeyName();
 
-        $query->join($intermediateTable, $key, '=', $this->getQualifiedForeignPivotKeyName());
+        $query->join($intermediateTable, $key, '=', $this->getQualifiedForeignKeyName());
 
         return $this;
     }
@@ -228,7 +226,7 @@ class BelongsToManyThrough extends BelongsToMany
      */
     protected function aliasedPivotColumns()
     {
-        $defaults = [$this->foreignPivotKey, $this->relatedPivotKey];
+        $defaults = [$this->foreignKey, $this->relatedKey];
         $aliasedPivotColumns = collect(array_merge($defaults, $this->pivotColumns))->map(function ($column) {
             return $this->table . '.' . $column . ' as pivot_' . $column;
         });
@@ -236,7 +234,7 @@ class BelongsToManyThrough extends BelongsToMany
         $parentKeyName = $this->getParentKeyName();
 
         // Add pivot column for the intermediate relation
-        $aliasedPivotColumns[] = "{$this->intermediateRelation->getQualifiedForeignPivotKeyName()} as pivot_$parentKeyName";
+        $aliasedPivotColumns[] = "{$this->intermediateRelation->getQualifiedForeignKeyName()} as pivot_$parentKeyName";
 
         return $aliasedPivotColumns->unique()->all();
     }

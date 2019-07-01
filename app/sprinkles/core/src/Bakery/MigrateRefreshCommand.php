@@ -71,13 +71,13 @@ class MigrateRefreshCommand extends MigrateCommand
         try {
             $rolledback = $migrator->rollback(['pretend' => false, 'steps' => $steps]);
         } catch (\Exception $e) {
-            $this->displayNotes($migrator);
+            $this->io->writeln($migrator->getNotes());
             $this->io->error($e->getMessage());
             exit(1);
         }
 
         // Get notes and display them
-        $this->displayNotes($migrator);
+        $this->io->writeln($migrator->getNotes());
 
         // Stop if nothing was rolledback
         if (empty($rolledback)) {
@@ -88,7 +88,7 @@ class MigrateRefreshCommand extends MigrateCommand
 
         // Run back up again
         $migrated = $migrator->run(['pretend' => false, 'step' => false]);
-        $this->displayNotes($migrator);
+        $this->io->writeln($migrator->getNotes());
 
         // If all went well, there's no fatal errors and we have migrated
         // something, show some success

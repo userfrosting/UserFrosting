@@ -13,7 +13,6 @@
  *
  * @author Lena Stergatou
  */
-
 return [
     'VALIDATE' => [
             'ARRAY'         => 'Οι τιμές για <strong>{{label}}</strong> πρέπει να βρίσκονται σε πίνακα.',

@@ -35,7 +35,7 @@ fi
 if [ "$DB" == "sqlite" ] ; then
     echo "Setting up sqlite ..."
     touch userfrosting.db
-    printf "UF_MODE=\"debug\"\nDB_DRIVER=\"sqlite\"\nDB_HOST=127.0.0.1\nDB_NAME=\"userfrosting.db\"\nTEST_DB=\"default\"\n" > app/.env
+    printf "UF_MODE=\"debug\"\nDB_DRIVER=\"sqlite\"\nDB_NAME=\"userfrosting.db\"\nTEST_DB=\"default\"\n" > app/.env
 fi
 
 #

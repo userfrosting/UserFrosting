@@ -14,7 +14,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\ConfirmableTrait;
-use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -80,13 +79,13 @@ class MigrateCommand extends BaseCommand
         try {
             $migrated = $migrator->run(['pretend' => $pretend, 'step' => $step]);
         } catch (\Exception $e) {
-            $this->displayNotes($migrator);
+            $this->io->writeln($migrator->getNotes());
             $this->io->error($e->getMessage());
             exit(1);
         }
 
         // Get notes and display them
-        $this->displayNotes($migrator);
+        $this->io->writeln($migrator->getNotes());
 
         // If all went well, there's no fatal errors and we have migrated
         // something, show some success
@@ -128,17 +127,5 @@ class MigrateCommand extends BaseCommand
         }
 
         return $migrator;
-    }
-
-    /**
-     * Display migrator notes.
-     *
-     * @param Migrator $migrator
-     */
-    protected function displayNotes(Migrator $migrator)
-    {
-        if (!empty($notes = $migrator->getNotes())) {
-            $this->io->writeln($notes);
-        }
     }
 }

@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use Mockery as m;
+use League\FactoryMuffin\Faker\Facade as Faker;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\UserController;
@@ -19,6 +20,8 @@ use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\withController;
+use UserFrosting\Support\Exception\BadRequestException;
+use UserFrosting\Support\Exception\NotFoundException;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -49,6 +52,8 @@ class UserControllerCreateTest extends TestCase
         m::close();
     }
 
+    /**
+     */
     public function testCreate()
     {
         $fm = $this->ci->factory;
@@ -78,7 +83,7 @@ class UserControllerCreateTest extends TestCase
             'first_name' => 'foo name',
             'last_name'  => 'foo last',
             'email'      => 'foo@bar.com',
-            'group_id'   => $group->id,
+            'group_id'   => $group->id
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
