@@ -57,7 +57,7 @@ return [
   'HEADER_MESSAGE_ROOT' => 'تسجيل الدخول باسم المستخدم ROOT',
   'LAST_NAME'           => 'اسم العائلة',
   'LOCALE'              => [
-    'ACCOUNT' => 'The language and locale to use for your account',
+    'ACCOUNT' => 'اللغة التي تستخدم لحسابك',
     'INVALID' => '<strong>{{locale}}</strong> is not a valid locale.',
   ],
   'LOGIN' => [
@@ -149,5 +149,4 @@ return [
   'USER_OR_EMAIL_INVALID' => 'اسم المستخدم أو عنوان البريد الإلكتروني غير صالح',
   'USER_OR_PASS_INVALID'  => 'اسم المستخدم أو كلمة المرور غير صالحة',
   'WELCOME'               => 'مرحبا بعودتك, {{first_name}}',
-  'LOCALEACCOUNT'         => 'اللغة التي تستخدم لحسابك',
 ];

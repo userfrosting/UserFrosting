@@ -99,7 +99,6 @@ return [
     'PERMISSIONS_UPDATED' => 'Permissions updated for role <strong>{{name}}</strong>',
     'SUMMARY'             => 'Role Summary',
     'UPDATED'             => 'Cargo <strong>{{name}}</strong> atualizado',
-    'UPDATE'              => 'Atualizar cargos',
   ],
   'SYSTEM_INFO' => [
     '@TRANSLATION' => 'Informação do sistema',

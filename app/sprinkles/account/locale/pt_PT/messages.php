@@ -55,7 +55,7 @@ return [
   'HEADER_MESSAGE_ROOT' => 'INICIOU SESSÃO COM A CONTA ROOT',
   'LAST_NAME'           => 'Último nome',
   'LOCALE'              => [
-    'ACCOUNT' => 'The language and locale to use for your account',
+    'ACCOUNT' => 'Linguagem e localização a utilizar na sua conta',
     'INVALID' => '<strong>{{locale}}</strong> is not a valid locale.',
   ],
   'LOGIN' => [
@@ -147,5 +147,4 @@ return [
   'USER_OR_EMAIL_INVALID' => 'Nome de utilizador ou endereço de email inválidos.',
   'USER_OR_PASS_INVALID'  => 'Nome de utilizador ou password inválidos.',
   'WELCOME'               => 'Bem-vindo, {{first_name}}',
-  'LOCALE.ACCOUNT'        => 'Linguagem e localização a utilizar na sua conta',
 ];

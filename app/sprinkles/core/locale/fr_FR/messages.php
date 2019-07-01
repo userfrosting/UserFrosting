@@ -21,7 +21,6 @@ return [
     'FAIL'         => 'La valeur du captcha n\'a pas été entrée correctement.',
     'SPECIFY'      => 'Entrer la valeur du captcha',
     'VERIFY'       => 'Vérification du captcha',
-    '@TRANSLATE'   => 'Captcha',
   ],
   'CSRF_MISSING' => 'Jeton CSRF manquant. Essayez de rafraîchir la page et de soumettre de nouveau?',
   'DB_INVALID'   => 'Impossible de se connecter à la base de données. Si vous êtes un administrateur, vérifiez votre journal d\'erreurs.',

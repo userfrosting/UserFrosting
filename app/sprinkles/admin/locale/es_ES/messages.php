@@ -142,8 +142,4 @@ return [
     1 => '{{plural}} usuario',
     2 => '{{plural}} usuarios',
   ],
-  'ADMIN' => [
-    'PANEL' => 'Panel de administración',
-  ],
-  'NO_DATA' => 'No puede quedar vacio.',
 ];

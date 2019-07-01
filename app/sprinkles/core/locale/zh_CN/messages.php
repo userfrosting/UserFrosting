@@ -99,5 +99,4 @@ return [
   'BUILT_WITH_UF'            => '使用 <a href="http://www.userfrosting.com">UserFrosting</a>',
   'ADMINLTE_THEME_BY'        => '主题作者 <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong>保留所有权',
   'WELCOME_TO'               => 'Welcome to {{title}}!',
-  'MAIL_ERROR'               => '尝试发送邮件发送致命错误, 联系网站管理员.  如果你是管理员，请检查UF邮件错误日志.',
 ];

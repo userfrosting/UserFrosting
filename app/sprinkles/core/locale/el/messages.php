@@ -81,7 +81,7 @@ return [
   'OVERRIDE'                 => 'Παράκαμψη',
   'RESET'                    => 'Επαναφορά',
   'SAVE'                     => 'Αποθήκευση',
-  'SEARCH'                   => 'Search',
+  'SEARCH'                   => 'Αναζήτηση',
   'SORT'                     => 'Ταξινόμηση',
   'SUBMIT'                   => 'Υποβολή',
   'PRINT'                    => 'Εκτύπωση',
@@ -94,5 +94,4 @@ return [
   'BUILT_WITH_UF'            => 'Κατασκευάστηκε με το <a href="http://www.userfrosting.com">UserFrosting </a>',
   'ADMINLTE_THEME_BY'        => 'Θέμα από <strong> <a href="http://almsaeedstudio.com\\>> Almsaeed Studio </a>. </ Strong> Όλα τα δικαιώματα διατηρούνται',
   'WELCOME_TO'               => 'Καλώς ορίσατε στο {{title}}!',
-  'ΑΝΑΖΗΤΗΣΗ'                => 'Αναζήτηση',
 ];
