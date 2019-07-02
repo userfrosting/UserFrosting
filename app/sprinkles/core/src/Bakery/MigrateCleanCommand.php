@@ -14,12 +14,13 @@ use Illuminate\Support\Collection;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
 
 /**
- * migrate:rollback Bakery Command
- * Rollback the last migrations ran against the database.
+ * migrate:clean Bakery Command
+ * Remove stale migrations from the database.
  *
- * @author Louis Charette
+ * @author Amos Folz
  */
 class MigrateCleanCommand extends MigrateCommand
 {
@@ -29,12 +30,8 @@ class MigrateCleanCommand extends MigrateCommand
     protected function configure()
     {
         $this->setName('migrate:clean')
-             ->setDescription('Clean stale records from migrations database')
-             ->addOption('pretend', 'p', InputOption::VALUE_NONE, 'Run migrations in "dry run" mode.')
-             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the operation to run when in production.')
-             ->addOption('database', 'd', InputOption::VALUE_REQUIRED, 'The database connection to use.')
-             ->addOption('migration', 'm', InputOption::VALUE_REQUIRED, 'The specific migration to rollback.')
-             ->addOption('steps', 's', InputOption::VALUE_REQUIRED, 'Number of batch to rollback.', 1);
+             ->setDescription('Remove stale migrations from the database.')
+             ->addOption('database', 'd', InputOption::VALUE_REQUIRED, 'The database connection to use.');
     }
 
     /**
@@ -61,26 +58,36 @@ class MigrateCleanCommand extends MigrateCommand
         $available = $migrator->getAvailableMigrations();
 
         $stale = $this->getStaleRecords($ran, $available);
-        //    print_r($stale);
 
-        $this->cleanStaleRecords($stale, $migrator);
+        if ($stale->count() > 0) {
+            $this->io->section('Stale migrations');
+            $this->io->listing($stale->toArray());
 
-        // Display ran migrations
-        $this->io->section('Cleaned migrations');
-        if ($ran->count() > 0) {
+            if (!$this->io->confirm('Continue and remove stale migrations?', false)) {
+                exit;
+            }
+            $this->io->section('Cleaned migrations');
+            $this->cleanStaleRecords($stale, $migrator);
+            $this->io->listing($stale->toArray());
         } else {
-            $this->io->note('No installed migrations');
+            $this->io->note('No stale migrations');
         }
     }
 
-    protected function cleanStaleRecords(array $stale, $migrator)
+    /**
+     * Delete stale migrations from the database.
+     *
+     * @param Collection $stale    Collection of stale migartion classes.
+     * @param Migrator   $migrator Migrator object
+     */
+    protected function cleanStaleRecords(Collection $stale, Migrator $migrator)
     {
-        //  print_r($stale);
-        foreach ($stale as $staleFile) {
-            print_r($staleFile);
-            print_r($staleFile['migration']);
-            $migrator->$repository->delete($staleFile['migration']);
-        }
+        $migrationRepository = $migrator->getRepository();
+
+        //Delete the stale migration classes from the database.
+        $stale->each(function ($class) use ($migrationRepository) {
+            $migrationRepository->delete($class);
+        });
     }
 
     /**
@@ -96,6 +103,6 @@ class MigrateCleanCommand extends MigrateCommand
     {
         return  $filtered = collect($ran)->filter(function ($migration) use ($available) {
             return !in_array($migration->migration, $available);
-        })->toArray();
+        })->pluck('migration');
     }
 }
