@@ -31,7 +31,9 @@ class MigrateCleanCommand extends MigrateCommand
     {
         $this->setName('migrate:clean')
              ->setDescription('Remove stale migrations from the database.')
-             ->addOption('database', 'd', InputOption::VALUE_REQUIRED, 'The database connection to use.');
+             ->setHelp('Removes stale migrations, which are simply migration class files that have been removed from the Filesystem. E.g. if you run a migration and then delete the migration class file prior to running `down()` for that migration it becomes stale. If a migration is a dependency of another migration you probably want to try to restore the files instead of running this command to avoid further issues.')
+             ->addOption('database', 'd', InputOption::VALUE_REQUIRED, 'The database connection to use.')
+             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Do not prompt for confirmation.');
     }
 
     /**
@@ -60,11 +62,13 @@ class MigrateCleanCommand extends MigrateCommand
         $stale = $this->getStaleRecords($ran, $available);
 
         if ($stale->count() > 0) {
-            $this->io->section('Stale migrations');
-            $this->io->listing($stale->toArray());
+            if (!$input->getOption('force')) {
+                $this->io->section('Stale migrations');
+                $this->io->listing($stale->toArray());
 
-            if (!$this->io->confirm('Continue and remove stale migrations?', false)) {
-                exit;
+                if (!$this->io->confirm('Continue and remove stale migrations?', false)) {
+                    exit;
+                }
             }
             $this->io->section('Cleaned migrations');
             $this->cleanStaleRecords($stale, $migrator);
