@@ -6,7 +6,8 @@ services:
   - mysql
   - postgresql
   - memcached
-  - redis-server
+  # Temporary disabled as it's not compatible with PHP 5.6
+  # - redis-server
 
 php:
   - 5.6
