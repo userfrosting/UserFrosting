@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fix
 - `bake` command return error if account sprinkle is not included ([#944])
+- Email is case-sensitive ([#881]; [#1012])
 
 ### Changed
 - Account sprinkle now extend the Core `BakeCommand` class to add the `create-admin` to the general bake command. Any sprinkle already extending the Core `BakeCommand` might need adjustments.
@@ -785,6 +786,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#854]: https://github.com/userfrosting/UserFrosting/issues/854
 [#869]: https://github.com/userfrosting/UserFrosting/issues/869
 [#872]: https://github.com/userfrosting/UserFrosting/issues/872
+[#881]: https://github.com/userfrosting/UserFrosting/issues/881
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
 [#893]: https://github.com/userfrosting/UserFrosting/issues/893
 [#919]: https://github.com/userfrosting/UserFrosting/issues/919
@@ -806,6 +808,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#991]: https://github.com/userfrosting/UserFrosting/issues/991
 [#993]: https://github.com/userfrosting/UserFrosting/issues/993
 [#998]: https://github.com/userfrosting/UserFrosting/issues/998
+[#1012]: https://github.com/userfrosting/UserFrosting/issues/1012
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
