@@ -20,4 +20,9 @@ $(document).ready(function() {
         dataUrl: site.uri.public + '/api/roles/r/' + page.role_slug + '/users',
         useLoadingTransition: site.uf_table.use_loading_transition
     });
+
+    // Bind table buttons
+    $("#widget-role-users").on("pagerComplete.ufTable", function () {
+        bindUserButtons($(this));
+    });
 });
