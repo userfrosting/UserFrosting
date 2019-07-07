@@ -67,6 +67,13 @@ class Mailer
                 $this->phpMailer->Password = $config['password'];
                 $this->phpMailer->SMTPDebug = $config['smtp_debug'];
 
+                // Disable opportunistic encryption if secure is unset. This is
+                // required if you have an incorrect or invalid SSL Certificate on
+                // your SMTP host, but the server offers STARTTLS.
+                if (!$config['secure']) {
+                    $this->phpMailer->SMTPAutoTLS = false;
+                }
+
                 if (isset($config['smtp_options'])) {
                     $this->phpMailer->SMTPOptions = $config['smtp_options'];
                 }

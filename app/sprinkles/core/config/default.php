@@ -97,7 +97,7 @@ return [
         * Note : CSRF Middleware should only be disabled for dev or debug purposes.
         */
         'csrf' => [
-            'enabled'          => getenv('CSRF_ENABLED') ?: true,
+            'enabled'          => (getenv('CSRF_ENABLED') !== false) ? getenv('CSRF_ENABLED') : true,
             'name'             => 'csrf',
             'storage_limit'    => 200,
             'strength'         => 16,
@@ -211,7 +211,7 @@ return [
             'host'            => getenv('SMTP_HOST') ?: null,
             'port'            => 587,
             'auth'            => true,
-            'secure'          => 'tls',
+            'secure'          => 'tls', // Enable TLS encryption. Set to `tls`, `ssl` or `false` (to disabled)
             'username'        => getenv('SMTP_USER') ?: null,
             'password'        => getenv('SMTP_PASSWORD') ?: null,
             'smtp_debug'      => 4,

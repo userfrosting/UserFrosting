@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.2.3]
+
+### Added
+- Config to set Domain of RememberMe Cookie ([#990], [#991]; Thanks @xrobau !)
+- Config settings for password min/max length ([#993])
+- `migrate:clean` bakery command ([#1007])
+
+### Fixed
+- [PHPMailer] Turn off opportunistic TLS when disabled ([#986], [#987])
+- Migrator now ignore files that don't end in `.php` ([#965], [#998])
+- Respects CSRF_ENABLED environment variable ([#976]; Thanks @Poldovico !)
+- Checkbox bug on password change form ([#1008])
+- On role page, users table action buttons not working ([#1010])
+
 ## [v4.2.2]
 
 ### Added
@@ -755,10 +769,22 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#953]: https://github.com/userfrosting/UserFrosting/issues/953
 [#958]: https://github.com/userfrosting/UserFrosting/issues/958
 [#963]: https://github.com/userfrosting/UserFrosting/issues/963
+[#965]: https://github.com/userfrosting/UserFrosting/issues/965
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
+[#976]: https://github.com/userfrosting/UserFrosting/issues/976
 [#981]: https://github.com/userfrosting/UserFrosting/issues/981
 [#983]: https://github.com/userfrosting/UserFrosting/issues/983
+[#986]: https://github.com/userfrosting/UserFrosting/issues/986
+[#987]: https://github.com/userfrosting/UserFrosting/issues/987
+[#990]: https://github.com/userfrosting/UserFrosting/issues/990
+[#991]: https://github.com/userfrosting/UserFrosting/issues/991
+[#993]: https://github.com/userfrosting/UserFrosting/issues/993
+[#998]: https://github.com/userfrosting/UserFrosting/issues/998
+[#1007]: https://github.com/userfrosting/UserFrosting/issues/1007
+[#1008]: https://github.com/userfrosting/UserFrosting/issues/1008
+[#1010]: https://github.com/userfrosting/UserFrosting/issues/1010
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
 [v4.2.2]: https://github.com/userfrosting/UserFrosting/compare/v.4.2.1...v4.2.2
+[v4.2.3]: https://github.com/userfrosting/UserFrosting/compare/v4.2.2...v4.2.3

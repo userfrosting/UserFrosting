@@ -35,7 +35,8 @@ before_install:
   - nvm install 10.12.0
   # Install Redis and Memcached
   - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - printf "\n" | pecl install -f redis
+  # Temporary disabled as it's not compatible with PHP 5.6
+  # - printf "\n" | pecl install -f redis
 
 before_script:
   # install deps and UF

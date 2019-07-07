@@ -453,7 +453,7 @@ class Migrator
     public function resolve($migrationClassName)
     {
         if (!class_exists($migrationClassName)) {
-            throw new BadClassNameException("Unable to find the migration class '$migrationClassName'.");
+            throw new BadClassNameException("Unable to find the migration class '$migrationClassName'. Run 'php bakery migrate:clean' to remove stale migrations.");
         }
 
         $migration = new $migrationClassName($this->getSchemaBuilder());

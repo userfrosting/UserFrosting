@@ -46,7 +46,6 @@ class SlimCsrfProvider implements CsrfProviderInterface
             $e->addUserMessage('CSRF_MISSING');
 
             throw $e;
-            return $next($request, $response);
         };
 
         return new Guard($ci->config['csrf.name'], $csrfStorage, $onFailure, $ci->config['csrf.storage_limit'], $ci->config['csrf.strength'], $ci->config['csrf.persistent_token']);
