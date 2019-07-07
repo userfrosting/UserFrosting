@@ -1,6 +1,6 @@
 /*! AdminLTE userfrosting.js
  * ================
- * Userfrosting JS file for AdminLTE v2. This file
+ * Userfrosting JS file for AdminLTE v2.4.12 This file
  * should be included in all pages. It controls some layout
  * options and implements functions related to Userfrosting.
  *
@@ -10,9 +10,13 @@
  * @license MIT <http://opensource.org/licenses/MIT>
  */
 
+//Make sure jQuery has been loaded before app.js
+if (typeof jQuery === "undefined") {
+    throw new Error("AdminLTE requires jQuery");
+}
 
-// Add class 'active' to
-
+// Change background for currently selected menu item.
+// See: https://github.com/ColorlibHQ/AdminLTE/issues/1482#issuecomment-349304120
 var url = window.location;
 // for sidebar menu entirely but not cover treeview
 $('ul.sidebar-menu a').filter(function() {
@@ -30,13 +34,6 @@ $('ul.treeview-menu a').filter(function() {
 }).parentsUntil(".sidebar-menu > .treeview-menu").addClass('active');
 
 
-
-
-
-
-
-
-
 $(function() {
     // Apply select2 to all js-select2 elements
     $('.js-select2').select2({
@@ -49,7 +46,6 @@ $(function() {
         radioClass: 'iradio_square-blue',
         increaseArea: '20%' // optional
     });
-
 
     // Remember the sidebar collapse state
     // See: https://github.com/almasaeed2010/AdminLTE/issues/896#issuecomment-264723101
