@@ -20,7 +20,7 @@ if (typeof jQuery === "undefined") {
  * Activate the menu based on the url and href attr.
  *
  * @type Function
- * @Usage: $.AdminLTE.initMenu('.sidebar')
+ * @Usage: $.initMenu('ul.sidebar-menu a');
  */
 $.initMenu = function(searchElement) {
     var _this = this;
