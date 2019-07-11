@@ -1,5 +1,6 @@
-# Ignores my text editor metadata
+# Ignores text editor metadata
 *.komodoproject
+.php_cs.cache
 
 # Ignores Mac metadata.  You can configure this globally if you use a Mac: http://islegend.com/development/setting-global-gitignore-mac-windows/
 .DS_Store
@@ -14,15 +15,17 @@ app/.env
 composer.lock
 composer.phar
 
-# Ignore log, cache, and sessions directories
+# Ignore log, cache, sessions and storage directories
 app/cache/*
 app/logs/*
 app/sessions/*
+app/storage/*
 
-# Unignore log, cache, and sessions .gitkeeps
+# Unignore log, cache, sessions and storage .gitkeeps
 !app/cache/.gitkeep
 !app/logs/.gitkeep
 !app/sessions/.gitkeep
+!app/storage/.gitkeep
 
 # Ignore bower vendor assets
 /app/sprinkles/*/assets/vendor/
@@ -58,3 +61,17 @@ public/css/min/*
 
 # Ignore personal config files (v0.3.x)
 app/config-userfrosting.php
+
+# Physical database storage for containers (?)
+app/database/userfrosting.db
+
+# Ignore vendor assets
+app/assets/*
+
+# Ignore Vagrant & Homestead VM
+vagrant/Homestead/
+.vagrant/*
+
+# Igore npm lockfile
+build/package-lock.json
+build/package.lock

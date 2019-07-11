@@ -36,6 +36,24 @@ Handlebars.registerHelper('ifx', function (v1, operator, v2, options) {
 });
 
 /**
+ * Perform simple calculations.
+ * 
+ * usage: {{calc x '+' 2}}
+ */
+Handlebars.registerHelper('calc', function (v1, operator, v2, options) {
+    lvalue = parseFloat(v1);
+    rvalue = parseFloat(v2);
+
+    return {
+        "+": lvalue + rvalue,
+        "-": lvalue - rvalue,
+        "*": lvalue * rvalue,
+        "/": lvalue / rvalue,
+        "%": lvalue % rvalue
+    }[operator];
+});
+
+/**
  * format an ISO date using Moment.js
  * 
  * moment syntax example: moment(Date("2011-07-18T15:50:52")).format("MMMM YYYY")

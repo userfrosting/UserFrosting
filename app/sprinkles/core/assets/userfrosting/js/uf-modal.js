@@ -180,13 +180,13 @@
 
         // CASE: method called before init
         } else if ( !instance ) {
-            $.error( 'Plugin must be initialised before using method: ' + methodOrOptions );
+            console.warn( 'Plugin must be initialised before using method: ' + methodOrOptions );
 
         // CASE: invalid method
         } else if ( methodOrOptions.indexOf('_') == 0 ) {
-            $.error( 'Method ' +  methodOrOptions + ' is private!' );
+            console.warn( 'Method ' +  methodOrOptions + ' is private!' );
         } else {
-            $.error( 'Method ' +  methodOrOptions + ' does not exist.' );
+            console.warn( 'Method ' +  methodOrOptions + ' does not exist.' );
         }
     };
 })(jQuery);

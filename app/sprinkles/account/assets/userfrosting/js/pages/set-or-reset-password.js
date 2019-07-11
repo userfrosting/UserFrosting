@@ -9,7 +9,7 @@
 $(document).ready(function() {
 
     $("#set-or-reset-password").ufForm({
-        validators: page.validators.set_password,
+        validator: page.validators.set_password,
         msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function() {
         // Forward to home page on success

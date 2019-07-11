@@ -9,6 +9,12 @@
 
 $(document).ready(function() {
     $("#widget-permission-users").ufTable({
-        dataUrl: site.uri.public + '/api/permissions/p/' + page.permission_id + '/users'
+        dataUrl: site.uri.public + '/api/permissions/p/' + page.permission_id + '/users',
+        useLoadingTransition: site.uf_table.use_loading_transition
+    });
+
+    // Bind table buttons
+    $("#widget-permission-users").on("pagerComplete.ufTable", function () {
+        bindUserButtons($(this));
     });
 });

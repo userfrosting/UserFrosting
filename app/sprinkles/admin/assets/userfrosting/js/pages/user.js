@@ -9,10 +9,17 @@
 
 $(document).ready(function() {
     // Control buttons
-    bindUserButtons($("#view-user"));
+    bindUserButtons($("#view-user"), { delete_redirect: page.delete_redirect });
 
     // Table of activities
     $("#widget-user-activities").ufTable({
-        dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/activities'
+        dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/activities',
+        useLoadingTransition: site.uf_table.use_loading_transition
+    });
+
+    // Table of permissions
+    $("#widget-permissions").ufTable({
+        dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/permissions',
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 });

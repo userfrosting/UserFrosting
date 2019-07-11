@@ -11,9 +11,9 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="{{table.sortlist}}">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="name" data-column-template="#group-table-column-info">{{translate('GROUP')}} <i class="fa fa-sort"></i></th>
-                <th class="sorter-metatext" data-column-name="description" data-column-template="#group-table-column-description">{{translate("DESCRIPTION")}} <i class="fa fa-sort"></i></th>
-                <th data-column-template="#group-table-column-actions" data-sorter="false" data-filter="false">{{translate("ACTIONS")}}</th>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#group-table-column-info" data-priority="1">{{translate('GROUP')}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="description" data-column-template="#group-table-column-description" data-priority="2">{{translate("DESCRIPTION")}} <i class="fa fa-sort"></i></th>
+                <th data-column-template="#group-table-column-actions" data-sorter="false" data-filter="false" data-priority="1">{{translate("ACTIONS")}}</th>
             </tr>
         </thead>
         <tbody>

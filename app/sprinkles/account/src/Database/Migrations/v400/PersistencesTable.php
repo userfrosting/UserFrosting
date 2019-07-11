@@ -1,29 +1,31 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\Builder;
-use UserFrosting\System\Bakery\Migration;
+use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
  * Persistences table migration
  * Many-to-many mapping between roles and users.
- * Version 4.0.0
+ * Version 4.0.0.
  *
- * See https://laravel.com/docs/5.4/migrations#tables
- * @extends Migration
+ * See https://laravel.com/docs/5.8/migrations#tables
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class PersistencesTable extends Migration
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function up()
     {
@@ -48,7 +50,7 @@ class PersistencesTable extends Migration
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function down()
     {

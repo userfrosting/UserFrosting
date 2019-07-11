@@ -1,14 +1,17 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 /**
- * Default XML Error Renderer
+ * Default XML Error Renderer.
  */
 class XmlRenderer extends ErrorRenderer
 {
@@ -22,15 +25,15 @@ class XmlRenderer extends ErrorRenderer
         if ($this->displayErrorDetails) {
             do {
                 $xml .= "  <exception>\n";
-                $xml .= "    <type>" . get_class($e) . "</type>\n";
-                $xml .= "    <code>" . $e->getCode() . "</code>\n";
-                $xml .= "    <message>" . $this->createCdataSection($e->getMessage()) . "</message>\n";
-                $xml .= "    <file>" . $e->getFile() . "</file>\n";
-                $xml .= "    <line>" . $e->getLine() . "</line>\n";
+                $xml .= '    <type>' . get_class($e) . "</type>\n";
+                $xml .= '    <code>' . $e->getCode() . "</code>\n";
+                $xml .= '    <message>' . $this->createCdataSection($e->getMessage()) . "</message>\n";
+                $xml .= '    <file>' . $e->getFile() . "</file>\n";
+                $xml .= '    <line>' . $e->getLine() . "</line>\n";
                 $xml .= "  </exception>\n";
             } while ($e = $e->getPrevious());
         }
-        $xml .= "</error>";
+        $xml .= '</error>';
 
         return $xml;
     }
@@ -38,7 +41,8 @@ class XmlRenderer extends ErrorRenderer
     /**
      * Returns a CDATA section with the given content.
      *
-     * @param  string $content
+     * @param string $content
+     *
      * @return string
      */
     private function createCdataSection($content)

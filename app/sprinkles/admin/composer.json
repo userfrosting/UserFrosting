@@ -1,6 +1,6 @@
 {
     "name": "userfrosting/sprinkle-admin",
-    "type": "sprinkle",
+    "type": "userfrosting-sprinkle",
     "description": "Administrative management module for UserFrosting.",
     "keywords": ["php user management", "usercake", "bootstrap"],
     "homepage": "https://github.com/userfrosting/UserFrosting",
@@ -11,13 +11,14 @@
             "homepage": "https://alexanderweissman.com"
         }
     ],
-    "version": "4.0",
-    "require": {
-        "php": ">=5.6"
-    },
     "autoload": {
         "psr-4": {
             "UserFrosting\\Sprinkle\\Admin\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "UserFrosting\\Sprinkle\\Admin\\Tests\\": "tests/"
         }
     }
 }

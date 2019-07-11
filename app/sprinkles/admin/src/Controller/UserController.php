@@ -1,32 +1,31 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Carbon\Carbon;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
-use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
-use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
-use UserFrosting\Support\Exception\HttpException;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Controller class for user-related requests, including listing users, CRUD for users, etc.
@@ -43,26 +42,37 @@ class UserController extends SimpleController
      * 2. The logged-in user has the necessary permissions to update the posted field(s);
      * 3. The submitted data is valid.
      * This route requires authentication.
+     *
      * Request type: POST
+     *
      * @see getModalCreate
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function create($request, $response, $args)
+    public function create(Request $request, Response $response, $args)
     {
         // Get POST parameters: user_name, first_name, last_name, email, locale, (group)
         $params = $request->getParsedBody();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
+
+        /** @var \UserFrosting\Support\Repository\Repository $config */
+        $config = $this->ci->config;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'create_user')) {
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -74,6 +84,11 @@ class UserController extends SimpleController
 
         $error = false;
 
+        // Ensure that in the case of using a single locale, that the locale is set bu inheriting from current user
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $data['locale'] = $currentUser->locale;
+        }
+
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
@@ -81,31 +96,31 @@ class UserController extends SimpleController
             $error = true;
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        // Check if username or email already exists
-        if ($classMapper->staticMethod('user', 'exists', $data['user_name'], 'user_name')) {
+        // Check if username or email already exists. If not set, validator will pick it up
+        if (isset($data['user_name']) && $classMapper->getClassMapping('user')::findUnique($data['user_name'], 'user_name')) {
             $ms->addMessageTranslated('danger', 'USERNAME.IN_USE', $data);
             $error = true;
         }
 
-        if ($classMapper->staticMethod('user', 'exists', $data['email'], 'email')) {
+        if (isset($data['email']) && $classMapper->getClassMapping('user')::findUnique($data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
         // If currentUser does not have permission to set the group, but they try to set it to something other than their own group,
         // throw an exception.
         if (!$authorizer->checkAccess($currentUser, 'create_user_field', [
-            'fields' => ['group']
+            'fields' => ['group'],
         ])) {
             if (isset($data['group_id']) && $data['group_id'] != $currentUser->group_id) {
                 throw new ForbiddenException();
@@ -118,16 +133,16 @@ class UserController extends SimpleController
         }
 
         $data['flag_verified'] = 1;
-        if(!isset($data['value'])){
+        if (!isset($data['value'])) {
             // Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
             $data['password'] = '';
-        }else{
+        } else {
             $data['password'] = Password::hash($data['value']);
         }
-        
+
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $currentUser) {
             // Create the user
             $user = $classMapper->createInstance('user', $data);
 
@@ -136,13 +151,13 @@ class UserController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} created a new account for {$user->user_name}.", [
-                'type' => 'account_create',
-                'user_id' => $currentUser->id
+                'type'    => 'account_create',
+                'user_id' => $currentUser->id,
             ]);
-            
+
             // Load default roles
-            $defaultRoleSlugs = $classMapper->staticMethod('role', 'getDefaultSlugs');
-            $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
+            $defaultRoleSlugs = $classMapper->getClassMapping('role')::getDefaultSlugs();
+            $defaultRoles = $classMapper->getClassMapping('role')::whereIn('slug', $defaultRoleSlugs)->get();
             $defaultRoleIds = $defaultRoles->pluck('id')->all();
 
             // Attach default roles
@@ -152,25 +167,25 @@ class UserController extends SimpleController
             $passwordRequest = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.create']);
 
             // If the password_mode is manual, do not send an email to set it. Else, send the email.
-            if(!isset($data['value'])){
+            if (!isset($data['value'])) {
                 // Create and send welcome email with password set link
                 $message = new TwigMailMessage($this->ci->view, 'mail/password-create.html.twig');
 
                 $message->from($config['address_book.admin'])
-                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-                        ->addParams([
-                            'user' => $user,
-                            'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . ' hours',
-                            'token' => $passwordRequest->getToken()
-                        ]);
+                    ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                    ->addParams([
+                        'user'                       => $user,
+                        'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . ' hours',
+                        'token'                      => $passwordRequest->getToken(),
+                    ]);
 
                 $this->ci->mailer->send($message);
             }
-            
+
             $ms->addMessageTranslated('success', 'USER.CREATED', $data);
         });
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -182,39 +197,47 @@ class UserController extends SimpleController
      * 3. We're not trying to disable the master account;
      * 4. The submitted data is valid.
      * This route requires authentication.
+     *
      * Request type: POST
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If user is not found
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function createPasswordReset($request, $response, $args)
+    public function createPasswordReset(Request $request, Response $response, $args)
     {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
 
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit "password" for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['password']
+            'fields' => ['password'],
         ])) {
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($user, $config) {
+        Capsule::transaction(function () use ($user, $config) {
 
             // Create a password reset and shoot off an email
             $passwordReset = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.reset']);
@@ -225,18 +248,19 @@ class UserController extends SimpleController
             $message->from($config['address_book.admin'])
                     ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                     ->addParams([
-                        'user' => $user,
-                        'token' => $passwordReset->getToken(),
-                        'request_date' => Carbon::now()->format('Y-m-d H:i:s')
+                        'user'         => $user,
+                        'token'        => $passwordReset->getToken(),
+                        'request_date' => Carbon::now()->format('Y-m-d H:i:s'),
                     ]);
 
             $this->ci->mailer->send($message);
         });
 
-        $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", [
-            'email' => $user->email
+        $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_SENT', [
+            'email' => $user->email,
         ]);
-        return $response->withStatus(200);
+
+        return $response->withJson([], 200);
     }
 
     /**
@@ -247,31 +271,40 @@ class UserController extends SimpleController
      * 1. You are not trying to delete the master account;
      * 2. You have permission to delete the target user's account.
      * This route requires authentication (and should generally be limited to admins or the root user).
+     *
      * Request type: DELETE
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException   If user is not found
+     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws BadRequestException
      */
-    public function delete($request, $response, $args)
+    public function delete(Request $request, Response $response, $args)
     {
         $user = $this->getUserFromParams($args);
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_user', [
-            'user' => $user
+            'user' => $user,
         ])) {
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
         // Check that we are not deleting the master account
@@ -279,31 +312,32 @@ class UserController extends SimpleController
         if ($user->id == $config['reserved_user_ids.master']) {
             $e = new BadRequestException();
             $e->addUserMessage('DELETE_MASTER');
+
             throw $e;
         }
 
         $userName = $user->user_name;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($user, $userName, $currentUser) {
+        Capsule::transaction(function () use ($user, $userName, $currentUser) {
             $user->delete();
             unset($user);
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted the account for {$userName}.", [
-                'type' => 'account_delete',
-                'user_id' => $currentUser->id
+                'type'    => 'account_delete',
+                'user_id' => $currentUser->id,
             ]);
         });
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'DELETION_SUCCESSFUL', [
-            'user_name' => $userName
+            'user_name' => $userName,
         ]);
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -311,32 +345,39 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If user is not found
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getActivities($request, $response, $args)
+    public function getActivities(Request $request, Response $response, $args)
     {
         $user = $this->getUserFromParams($args);
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
             'user' => $user,
-            'property' => 'activities'
+            'property' => 'activities',
         ])) {
             throw new ForbiddenException();
         }
@@ -357,17 +398,24 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If user is not found
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getInfo($request, $response, $args)
+    public function getInfo(Request $request, Response $response, $args)
     {
         $user = $this->getUserFromParams($args);
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Join user's most recent activity
@@ -377,21 +425,18 @@ class UserController extends SimpleController
                             ->with('lastActivity', 'group')
                             ->first();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_user', [
-            'user' => $user
+            'user' => $user,
         ])) {
             throw new ForbiddenException();
         }
-
-        // Exclude password from result set
-        unset($user->password);
 
         $result = $user->toArray();
 
@@ -401,21 +446,27 @@ class UserController extends SimpleController
     }
 
     /**
-     * Returns a list of Users
+     * Returns a list of Users.
      *
      * Generates a list of users, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getList($request, $response, $args)
+    public function getList(Request $request, Response $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -423,7 +474,7 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         $sprunje = $classMapper->createInstance('user_sprunje', $classMapper, $params);
@@ -439,8 +490,16 @@ class UserController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException   If user is not found
+     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws BadRequestException
      */
-    public function getModalConfirmDelete($request, $response, $args)
+    public function getModalConfirmDelete(Request $request, Response $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -449,23 +508,23 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_user', [
-            'user' => $user
+            'user' => $user,
         ])) {
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
         // Check that we are not deleting the master account
@@ -473,6 +532,7 @@ class UserController extends SimpleController
         if ($user->id == $config['reserved_user_ids.master']) {
             $e = new BadRequestException();
             $e->addUserMessage('DELETE_MASTER');
+
             throw $e;
         }
 
@@ -480,7 +540,7 @@ class UserController extends SimpleController
             'user' => $user,
             'form' => [
                 'action' => "api/users/u/{$user->user_name}",
-            ]
+            ],
         ]);
     }
 
@@ -490,21 +550,25 @@ class UserController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * If the currently logged-in user has permission to modify user group membership, then the group toggle will be displayed.
      * Otherwise, the user will be added to the default group and receive the default roles automatically.
+     *
      * This page requires authentication.
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getModalCreate($request, $response, $args)
+    public function getModalCreate(Request $request, Response $response, $args)
     {
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\MessageTranslator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled page
@@ -512,17 +576,17 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
         // Determine form fields to hide/disable
         // TODO: come back to this when we finish implementing theming
         $fields = [
-            'hidden' => ['theme'],
-            'disabled' => []
+            'hidden'   => ['theme'],
+            'disabled' => [],
         ];
 
         // Get a list of all locales
@@ -531,21 +595,26 @@ class UserController extends SimpleController
         // Determine if currentUser has permission to modify the group.  If so, show the 'group' dropdown.
         // Otherwise, set to the currentUser's group and disable the dropdown.
         if ($authorizer->checkAccess($currentUser, 'create_user_field', [
-            'fields' => ['group']
+            'fields' => ['group'],
         ])) {
             // Get a list of all groups
-            $groups = $classMapper->staticMethod('group', 'all');
+            $groups = $classMapper->getClassMapping('group')::all();
         } else {
             // Get the current user's group
-            $groups = $classMapper->staticMethod('group', 'where', 'id', $currentUser->group_id);
+            $groups = $currentUser->group()->get();
             $fields['disabled'][] = 'group';
+        }
+
+        // Hide the locale field if there is only 1 locale available
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $fields['hidden'][] = 'locale';
         }
 
         // Create a dummy user to prepopulate fields
         $data = [
             'group_id' => $currentUser->group_id,
             'locale'   => $config['site.registration.user_defaults.locale'],
-            'theme'    => ''
+            'theme'    => '',
         ];
 
         $user = $classMapper->createInstance('user', $data);
@@ -555,18 +624,18 @@ class UserController extends SimpleController
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'modals/user.html.twig', [
-            'user' => $user,
-            'groups' => $groups,
+            'user'    => $user,
+            'groups'  => $groups,
             'locales' => $locales,
-            'form' => [
-                'action' => 'api/users',
-                'method' => 'POST',
-                'fields' => $fields,
-                'submit_text' => $translator->translate("CREATE")
+            'form'    => [
+                'action'      => 'api/users',
+                'method'      => 'POST',
+                'fields'      => $fields,
+                'submit_text' => $translator->translate('CREATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -575,9 +644,17 @@ class UserController extends SimpleController
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
+     *
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If user is not found
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getModalEdit($request, $response, $args)
+    public function getModalEdit(Request $request, Response $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -586,36 +663,37 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Get the user to edit
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $user->user_name)
+        $user = $classMapper->getClassMapping('user')
+            ::where('user_name', $user->user_name)
             ->with('group')
             ->first();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "email", "locale" for this user
         $fieldNames = ['name', 'email', 'locale'];
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => $fieldNames
+            'fields' => $fieldNames,
         ])) {
             throw new ForbiddenException();
         }
 
         // Get a list of all groups
-        $groups = $classMapper->staticMethod('group', 'all');
+        $groups = $classMapper->getClassMapping('group')::all();
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
         // Get a list of all locales
@@ -623,16 +701,21 @@ class UserController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => ['theme', 'password'],
-            'disabled' => ['user_name']
+            'hidden'   => ['theme', 'password'],
+            'disabled' => ['user_name'],
         ];
 
         // Disable group field if currentUser doesn't have permission to modify group
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['group']
+            'fields' => ['group'],
         ])) {
             $fields['disabled'][] = 'group';
+        }
+
+        // Hide the locale field if there is only 1 locale available
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $fields['hidden'][] = 'locale';
         }
 
         // Load validation rules
@@ -642,18 +725,18 @@ class UserController extends SimpleController
         $translator = $this->ci->translator;
 
         return $this->ci->view->render($response, 'modals/user.html.twig', [
-            'user' => $user,
-            'groups' => $groups,
+            'user'    => $user,
+            'groups'  => $groups,
             'locales' => $locales,
-            'form' => [
-                'action' => "api/users/u/{$user->user_name}",
-                'method' => 'PUT',
-                'fields' => $fields,
-                'submit_text' => $translator->translate("UPDATE")
+            'form'    => [
+                'action'      => "api/users/u/{$user->user_name}",
+                'method'      => 'PUT',
+                'fields'      => $fields,
+                'submit_text' => $translator->translate('UPDATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -662,9 +745,17 @@ class UserController extends SimpleController
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
      * This page requires authentication.
+     *
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If user is not found
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getModalEditPassword($request, $response, $args)
+    public function getModalEditPassword(Request $request, Response $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -673,32 +764,39 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
+
+        /** @var \UserFrosting\Support\Repository\Repository $config */
+        $config = $this->ci->config;
 
         // Access-controlled resource - check that currentUser has permission to edit "password" field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['password']
+            'fields' => ['password'],
         ])) {
             throw new ForbiddenException();
         }
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/user/edit-password.yaml');
+        $schema->set('value.validators.length.min', $config['site.password.length.min']);
+        $schema->set('value.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'modals/user-set-password.html.twig', [
             'user' => $user,
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -707,9 +805,17 @@ class UserController extends SimpleController
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
      * This page requires authentication.
+     *
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If user is not found
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getModalEditRoles($request, $response, $args)
+    public function getModalEditRoles(Request $request, Response $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -718,26 +824,77 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit "roles" field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['roles']
+            'fields' => ['roles'],
         ])) {
             throw new ForbiddenException();
         }
 
         return $this->ci->view->render($response, 'modals/user-manage-roles.html.twig', [
-            'user' => $user
+            'user' => $user,
         ]);
+    }
+
+    /**
+     * Returns a list of effective Permissions for a specified User.
+     *
+     * Generates a list of permissions, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If user is not found
+     * @throws ForbiddenException If user is not authozied to access page
+     */
+    public function getPermissions(Request $request, Response $response, $args)
+    {
+        $user = $this->getUserFromParams($args);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException();
+        }
+
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
+            'user' => $user,
+            'property' => 'permissions',
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $params['user_id'] = $user->id;
+        $sprunje = $classMapper->createInstance('user_permission_sprunje', $classMapper, $params);
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
     }
 
     /**
@@ -745,32 +902,39 @@ class UserController extends SimpleController
      *
      * This page requires authentication.
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If user is not found
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getRoles($request, $response, $args)
+    public function getRoles(Request $request, Response $response, $args)
     {
         $user = $this->getUserFromParams($args);
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
             'user' => $user,
-            'property' => 'roles'
+            'property' => 'roles',
         ])) {
             throw new ForbiddenException();
         }
@@ -791,33 +955,39 @@ class UserController extends SimpleController
      * This checks that the currently logged-in user has permission to view the requested user's info.
      * It checks each field individually, showing only those that you have permission to view.
      * This will also try to show buttons for activating, disabling/enabling, deleting, and editing the user.
+     *
      * This page requires authentication.
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function pageInfo($request, $response, $args)
+    public function pageInfo(Request $request, Response $response, $args)
     {
         $user = $this->getUserFromParams($args);
 
         // If the user no longer exists, forward to main user listing page
         if (!$user) {
-            $usersPage = $this->ci->router->pathFor('uri_users');
-            return $response->withRedirect($usersPage, 404);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_user', [
-                'user' => $user
+                'user' => $user,
             ])) {
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
         // Get a list of all locales
@@ -829,70 +999,96 @@ class UserController extends SimpleController
         // Generate form
         $fields = [
             // Always hide these
-            'hidden' => ['theme']
+            'hidden' => ['theme'],
         ];
 
         // Determine which fields should be hidden
         foreach ($fieldNames as $field) {
             if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
                 'user' => $user,
-                'property' => $field
+                'property' => $field,
             ])) {
                 $fields['hidden'][] = $field;
             }
         }
 
+        // Hide the locale field if there is only 1 locale available
+        if (count($config->getDefined('site.locales.available')) <= 1) {
+            $fields['hidden'][] = 'locale';
+        }
+
         // Determine buttons to display
         $editButtons = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['name', 'email', 'locale']
+            'fields' => ['name', 'email', 'locale'],
         ])) {
             $editButtons['hidden'][] = 'edit';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['flag_enabled']
+            'fields' => ['flag_enabled'],
         ])) {
             $editButtons['hidden'][] = 'enable';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['flag_verified']
+            'fields' => ['flag_verified'],
         ])) {
             $editButtons['hidden'][] = 'activate';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['password']
+            'fields' => ['password'],
         ])) {
             $editButtons['hidden'][] = 'password';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => ['roles']
+            'fields' => ['roles'],
         ])) {
             $editButtons['hidden'][] = 'roles';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'delete_user', [
-            'user' => $user
+            'user' => $user,
         ])) {
             $editButtons['hidden'][] = 'delete';
         }
 
-        return $this->ci->view->render($response, 'pages/user.html.twig', [
+        // Determine widgets to display
+        $widgets = [
+            'hidden' => [],
+        ];
+
+        if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
             'user' => $user,
-            'locales' => $locales,
-            'fields' => $fields,
-            'tools' => $editButtons
+            'property' => 'permissions',
+        ])) {
+            $widgets['hidden'][] = 'permissions';
+        }
+
+        if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
+            'user' => $user,
+            'property' => 'activities',
+        ])) {
+            $widgets['hidden'][] = 'activities';
+        }
+
+        return $this->ci->view->render($response, 'pages/user.html.twig', [
+            'user'            => $user,
+            'locales'         => $locales,
+            'fields'          => $fields,
+            'tools'           => $editButtons,
+            'widgets'         => $widgets,
+            'delete_redirect' => $this->ci->router->pathFor('uri_users'),
         ]);
     }
 
@@ -901,15 +1097,22 @@ class UserController extends SimpleController
      *
      * This page renders a table of users, with dropdown menus for admin actions for each user.
      * Actions typically include: edit user details, activate user, enable/disable user, delete user.
+     *
      * This page requires authentication.
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function pageList($request, $response, $args)
+    public function pageList(Request $request, Response $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -921,31 +1124,39 @@ class UserController extends SimpleController
     }
 
     /**
-     * Processes the request to update an existing user's basic details (first_name, last_name, email, locale, group_id)
+     * Processes the request to update an existing user's basic details (first_name, last_name, email, locale, group_id).
      *
      * Processes the request from the user update form, checking that:
      * 1. The target user's new email address, if specified, is not already in use;
      * 2. The logged-in user has the necessary permissions to update the putted field(s);
      * 3. The submitted data is valid.
+     *
      * This route requires authentication.
      * Request type: PUT
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If user is not found
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function updateInfo($request, $response, $args)
+    public function updateInfo(Request $request, Response $response, $args)
     {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
 
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
         // Get PUT parameters
         $params = $request->getParsedBody();
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -976,16 +1187,16 @@ class UserController extends SimpleController
             }
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => array_values(array_unique($fieldNames))
+            'fields' => array_values(array_unique($fieldNames)),
         ])) {
             throw new ForbiddenException();
         }
@@ -998,25 +1209,25 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Check if email already exists
         if (
             isset($data['email']) &&
             $data['email'] != $user->email &&
-            $classMapper->staticMethod('user', 'exists', $data['email'], 'email')
+            $classMapper->getClassMapping('user')::findUnique($data['email'], 'email')
         ) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($data, $user, $currentUser) {
+        Capsule::transaction(function () use ($data, $user, $currentUser) {
             // Update the user and generate success messages
             foreach ($data as $name => $value) {
                 if ($value != $user->$name) {
@@ -1028,15 +1239,16 @@ class UserController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated basic account info for user {$user->user_name}.", [
-                'type' => 'account_update_info',
-                'user_id' => $currentUser->id
+                'type'    => 'account_update_info',
+                'user_id' => $currentUser->id,
             ]);
         });
 
         $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
-            'user_name' => $user->user_name
+            'user_name' => $user->user_name,
         ]);
-        return $response->withStatus(200);
+
+        return $response->withJson([], 200);
     }
 
     /**
@@ -1047,36 +1259,45 @@ class UserController extends SimpleController
      * 1. The logged-in user has the necessary permissions to update the putted field(s);
      * 2. We're not trying to disable the master account;
      * 3. The submitted data is valid.
+     *
      * This route requires authentication.
      * Request type: PUT
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException   If user is not found
+     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws BadRequestException
      */
-    public function updateField($request, $response, $args)
+    public function updateField(Request $request, Response $response, $args)
     {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
 
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // Get key->value pair from URL and request body
         $fieldName = $args['field'];
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit the specified field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
-            'fields' => [$fieldName]
+            'fields' => [$fieldName],
         ])) {
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
         // Only the master account can edit the master account!
@@ -1096,11 +1317,13 @@ class UserController extends SimpleController
 
         // Create and validate key -> value pair
         $params = [
-            $fieldName => $put['value']
+            $fieldName => $put['value'],
         ];
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/user/edit-field.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1112,42 +1335,47 @@ class UserController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
         // Get validated and transformed value
         $fieldValue = $data[$fieldName];
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Special checks and transformations for certain fields
         if ($fieldName == 'flag_enabled') {
             // Check that we are not disabling the master account
-            if (($user->id == $config['reserved_user_ids.master']) &&
+            if (
+                ($user->id == $config['reserved_user_ids.master']) &&
                 ($fieldValue == '0')
             ) {
                 $e = new BadRequestException();
                 $e->addUserMessage('DISABLE_MASTER');
+
                 throw $e;
-            } else if (($user->id == $currentUser->id) &&
+            } elseif (
+                ($user->id == $currentUser->id) &&
                 ($fieldValue == '0')
             ) {
                 $e = new BadRequestException();
                 $e->addUserMessage('DISABLE_SELF');
+
                 throw $e;
             }
-        } else if ($fieldName == 'password') {
+        } elseif ($fieldName == 'password') {
             $fieldValue = Password::hash($fieldValue);
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($fieldName, $fieldValue, $user, $currentUser) {
-            if ($fieldName == "roles") {
+        Capsule::transaction(function () use ($fieldName, $fieldValue, $user, $currentUser) {
+            if ($fieldName == 'roles') {
                 $newRoles = collect($fieldValue)->pluck('role_id')->all();
                 $user->roles()->sync($newRoles);
             } else {
@@ -1157,8 +1385,8 @@ class UserController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for user {$user->user_name}.", [
-                'type' => 'account_update_field',
-                'user_id' => $currentUser->id
+                'type'    => 'account_update_field',
+                'user_id' => $currentUser->id,
             ]);
         });
 
@@ -1166,26 +1394,35 @@ class UserController extends SimpleController
         if ($fieldName == 'flag_enabled') {
             if ($fieldValue == '1') {
                 $ms->addMessageTranslated('success', 'ENABLE_SUCCESSFUL', [
-                    'user_name' => $user->user_name
+                    'user_name' => $user->user_name,
                 ]);
             } else {
                 $ms->addMessageTranslated('success', 'DISABLE_SUCCESSFUL', [
-                    'user_name' => $user->user_name
+                    'user_name' => $user->user_name,
                 ]);
             }
-        } else if ($fieldName == 'flag_verified') {
+        } elseif ($fieldName == 'flag_verified') {
             $ms->addMessageTranslated('success', 'MANUALLY_ACTIVATED', [
-                'user_name' => $user->user_name
+                'user_name' => $user->user_name,
             ]);
         } else {
             $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
-                'user_name' => $user->user_name
+                'user_name' => $user->user_name,
             ]);
         }
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
+    /**
+     * Get User instance from params.
+     *
+     * @param array $params
+     *
+     * @throws BadRequestException
+     *
+     * @return User
+     */
     protected function getUserFromParams($params)
     {
         // Load the request schema
@@ -1201,18 +1438,20 @@ class UserController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Get the user to delete
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])
+        $user = $classMapper->getClassMapping('user')
+            ::where('user_name', $data['user_name'])
             ->first();
 
         return $user;

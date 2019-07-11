@@ -1,18 +1,20 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * ActivitySprunje
+ * ActivitySprunje.
  *
  * Implements Sprunje for the activities API.
  *
@@ -23,13 +25,13 @@ class ActivitySprunje extends Sprunje
     protected $sortable = [
         'occurred_at',
         'user',
-        'description'
+        'description',
     ];
 
     protected $filterable = [
         'occurred_at',
         'user',
-        'description'
+        'description',
     ];
 
     protected $name = 'activities';
@@ -45,51 +47,40 @@ class ActivitySprunje extends Sprunje
     }
 
     /**
-     * {@inheritDoc}
-     */
-    protected function applyTransformations($collection)
-    {
-        // Exclude password field from results
-        $collection->transform(function ($item, $key) {
-            if (isset($item->user)) {
-                unset($item->user->password);
-            }
-            return $item;
-        });
-
-        return $collection;
-    }
-
-    /**
      * Filter LIKE the user info.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterUser($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
+        $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
-                $query = $query->orLike('users.first_name', $value)
-                                ->orLike('users.last_name', $value)
-                                ->orLike('users.email', $value);
+                $query->orLike('users.first_name', $value)
+                    ->orLike('users.last_name', $value)
+                    ->orLike('users.email', $value);
             }
-            return $query;
         });
+
+        return $this;
     }
 
     /**
      * Sort based on user last name.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return Builder
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortUser($query, $direction)
     {
-        return $query->orderBy('users.last_name', $direction);
+        $query->orderBy('users.last_name', $direction);
+
+        return $this;
     }
 }

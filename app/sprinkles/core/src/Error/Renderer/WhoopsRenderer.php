@@ -1,19 +1,26 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 use InvalidArgumentException;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Symfony\Component\VarDumper\Cloner\AbstractCloner;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use UnexpectedValueException;
+use UserFrosting\Sprinkle\Core\Util\Util;
 use Whoops\Exception\Formatter;
 use Whoops\Exception\Inspector;
+use Whoops\Handler\Handler;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Util\Misc;
 use Whoops\Util\TemplateHelper;
@@ -55,7 +62,7 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * @var string
      */
-    private $pageTitle = "Whoops! There was an error.";
+    private $pageTitle = 'Whoops! There was an error.';
 
     /**
      * @var array[]
@@ -66,13 +73,13 @@ class WhoopsRenderer extends ErrorRenderer
      * @var array[]
      */
     private $blacklist = [
-        '_GET' => [],
-        '_POST' => [],
-        '_FILES' => [],
-        '_COOKIE' => [],
+        '_GET'     => [],
+        '_POST'    => [],
+        '_FILES'   => [],
+        '_COOKIE'  => [],
         '_SESSION' => [],
-        '_SERVER' => ['DB_PASSWORD', 'SMTP_PASSWORD'],
-        '_ENV' => ['DB_PASSWORD', 'SMTP_PASSWORD'],
+        '_SERVER'  => ['DB_PASSWORD', 'SMTP_PASSWORD'],
+        '_ENV'     => ['DB_PASSWORD', 'SMTP_PASSWORD'],
     ];
 
     /**
@@ -83,21 +90,23 @@ class WhoopsRenderer extends ErrorRenderer
      *
      * @example
      *  "txmt://open?url=%file&line=%line"
-     * @var mixed $editor
+     *
+     * @var mixed
      */
     protected $editor;
 
     /**
-     * A list of known editor strings
+     * A list of known editor strings.
+     *
      * @var array
      */
     protected $editors = [
-        "sublime"  => "subl://open?url=file://%file&line=%line",
-        "textmate" => "txmt://open?url=file://%file&line=%line",
-        "emacs"    => "emacs://open?url=file://%file&line=%line",
-        "macvim"   => "mvim://open/?url=file://%file&line=%line",
-        "phpstorm" => "phpstorm://open?file=%file&line=%line",
-        "idea"     => "idea://open?file=%file&line=%line",
+        'sublime'  => 'subl://open?url=file://%file&line=%line',
+        'textmate' => 'txmt://open?url=file://%file&line=%line',
+        'emacs'    => 'emacs://open?url=file://%file&line=%line',
+        'macvim'   => 'mvim://open/?url=file://%file&line=%line',
+        'phpstorm' => 'phpstorm://open?file=%file&line=%line',
+        'idea'     => 'idea://open?file=%file&line=%line',
     ];
 
     /**
@@ -111,9 +120,9 @@ class WhoopsRenderer extends ErrorRenderer
     private $templateHelper;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function __construct($request, $response, $exception, $displayErrorDetails = false)
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response, $exception, $displayErrorDetails = false)
     {
         $this->request = $request;
         $this->response = $response;
@@ -128,7 +137,7 @@ class WhoopsRenderer extends ErrorRenderer
         }
 
         // Add the default, local resource search path:
-        $this->searchPaths[] = \UserFrosting\VENDOR_DIR . "/filp/whoops/src/Whoops/Resources";
+        $this->searchPaths[] = \UserFrosting\VENDOR_DIR . '/filp/whoops/src/Whoops/Resources';
 
         // blacklist php provided auth based values
         $this->blacklist('_SERVER', 'PHP_AUTH_PW');
@@ -159,20 +168,20 @@ class WhoopsRenderer extends ErrorRenderer
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function render()
     {
         if (!$this->handleUnconditionally()) {
             // Check conditions for outputting HTML:
             // @todo: Make this more robust
-            if (php_sapi_name() === 'cli') {
+            if (PHP_SAPI === 'cli') {
                 // Help users who have been relying on an internal test value
                 // fix their code to the proper method
                 if (isset($_ENV['whoops-test'])) {
                     throw new \Exception(
                         'Use handleUnconditionally instead of whoops-test'
-                        .' environment variable'
+                        . ' environment variable'
                     );
                 }
 
@@ -180,18 +189,32 @@ class WhoopsRenderer extends ErrorRenderer
             }
         }
 
-        $templateFile = $this->getResource("views/layout.html.php");
-        $cssFile      = $this->getResource("css/whoops.base.css");
-        $zeptoFile    = $this->getResource("js/zepto.min.js");
-        $clipboard    = $this->getResource("js/clipboard.min.js");
-        $jsFile       = $this->getResource("js/whoops.base.js");
+        $templateFile = $this->getResource('views/layout.html.php');
+        $cssFile = $this->getResource('css/whoops.base.css');
+        $zeptoFile = $this->getResource('js/zepto.min.js');
+        $prettifyFile = $this->getResource('js/prettify.min.js');
+        $clipboard = $this->getResource('js/clipboard.min.js');
+        $jsFile = $this->getResource('js/whoops.base.js');
 
         if ($this->customCss) {
             $customCssFile = $this->getResource($this->customCss);
         }
 
         $inspector = $this->getInspector();
-        $frames    = $inspector->getFrames();
+        $frames = $inspector->getFrames();
+
+        // Detect frames that belong to the application.
+        if ($this->getApplicationPaths()) {
+            /* @var \Whoops\Exception\Frame $frame */
+            foreach ($frames as $frame) {
+                foreach ($this->getApplicationPaths() as $path) {
+                    if (strpos($frame->getFile(), $path) === 0) {
+                        $frame->setApplication(true);
+                        break;
+                    }
+                }
+            }
+        }
 
         $code = $inspector->getException()->getCode();
 
@@ -200,72 +223,64 @@ class WhoopsRenderer extends ErrorRenderer
             $code = Misc::translateErrorCode($inspector->getException()->getSeverity());
         }
 
-        // Detect frames that belong to the application.
-        if ($this->applicationPaths) {
-            /* @var \Whoops\Exception\Frame $frame */
-            foreach ($frames as $frame) {
-                foreach ($this->applicationPaths as $path) {
-                    if (substr($frame->getFile(), 0, strlen($path)) === $path) {
-                        $frame->setApplication(true);
-                        break;
-                    }
-                }
-            }
-        }
-
         // Nicely format the session object
-        $session = isset($_SESSION) ? $this->masked($_SESSION, '_SESSION') :  [];
-        $session = ['session' => $this->prettyPrint($session)];
+        $session = isset($_SESSION) ? $this->masked($_SESSION, '_SESSION') : [];
+        $session = ['session' => Util::prettyPrintArray($session)];
 
         // List of variables that will be passed to the layout template.
         $vars = [
-            "page_title" => $this->getPageTitle(),
+            'page_title' => $this->getPageTitle(),
 
             // @todo: Asset compiler
-            "stylesheet" => file_get_contents($cssFile),
-            "zepto"      => file_get_contents($zeptoFile),
-            "clipboard"  => file_get_contents($clipboard),
-            "javascript" => file_get_contents($jsFile),
+            'stylesheet' => file_get_contents($cssFile),
+            'zepto'      => file_get_contents($zeptoFile),
+            'prettify'   => file_get_contents($prettifyFile),
+            'clipboard'  => file_get_contents($clipboard),
+            'javascript' => file_get_contents($jsFile),
 
             // Template paths:
-            "header"                     => $this->getResource("views/header.html.php"),
-            "header_outer"               => $this->getResource("views/header_outer.html.php"),
-            "frame_list"                 => $this->getResource("views/frame_list.html.php"),
-            "frames_description"         => $this->getResource("views/frames_description.html.php"),
-            "frames_container"           => $this->getResource("views/frames_container.html.php"),
-            "panel_details"              => $this->getResource("views/panel_details.html.php"),
-            "panel_details_outer"        => $this->getResource("views/panel_details_outer.html.php"),
-            "panel_left"                 => $this->getResource("views/panel_left.html.php"),
-            "panel_left_outer"           => $this->getResource("views/panel_left_outer.html.php"),
-            "frame_code"                 => $this->getResource("views/frame_code.html.php"),
-            "env_details"                => $this->getResource("views/env_details.html.php"),
+            'header'                     => $this->getResource('views/header.html.php'),
+            'header_outer'               => $this->getResource('views/header_outer.html.php'),
+            'frame_list'                 => $this->getResource('views/frame_list.html.php'),
+            'frames_description'         => $this->getResource('views/frames_description.html.php'),
+            'frames_container'           => $this->getResource('views/frames_container.html.php'),
+            'panel_details'              => $this->getResource('views/panel_details.html.php'),
+            'panel_details_outer'        => $this->getResource('views/panel_details_outer.html.php'),
+            'panel_left'                 => $this->getResource('views/panel_left.html.php'),
+            'panel_left_outer'           => $this->getResource('views/panel_left_outer.html.php'),
+            'frame_code'                 => $this->getResource('views/frame_code.html.php'),
+            'env_details'                => $this->getResource('views/env_details.html.php'),
 
-            "title"          => $this->getPageTitle(),
-            "name"           => explode("\\", $inspector->getExceptionName()),
-            "message"        => $inspector->getException()->getMessage(),
-            "code"           => $code,
-            "plain_exception" => Formatter::formatExceptionPlain($inspector),
-            "frames"         => $frames,
-            "has_frames"     => !!count($frames),
-            "handler"        => $this,
-            "handlers"       => [$this],
+            'title'            => $this->getPageTitle(),
+            'name'             => explode('\\', $inspector->getExceptionName()),
+            'message'          => $inspector->getExceptionMessage(),
+            'previousMessages' => $inspector->getPreviousExceptionMessages(),
+            'docref_url'       => $inspector->getExceptionDocrefUrl(),
+            'code'             => $code,
+            'previousCodes'    => $inspector->getPreviousExceptionCodes(),
+            'plain_exception'  => Formatter::formatExceptionPlain($inspector),
+            'frames'           => $frames,
+            'has_frames'       => (bool) count($frames),
+            'handler'          => $this,
+            'handlers'         => [$this],
+            'prettify'         => true,
 
-            "active_frames_tab" => count($frames) && $frames->offsetGet(0)->isApplication() ?  'application' : 'all',
-            "has_frames_tabs"   => $this->getApplicationPaths(),
+            'active_frames_tab' => count($frames) && $frames->offsetGet(0)->isApplication() ? 'application' : 'all',
+            'has_frames_tabs'   => $this->getApplicationPaths(),
 
-            "tables"      => [
-                "GET Data"              => $this->masked($_GET, '_GET'),
-                "POST Data"             => $this->masked($_POST, '_POST'),
-                "Files"                 => isset($_FILES) ? $this->masked($_FILES, '_FILES') : [],
-                "Cookies"               => $this->masked($_COOKIE, '_COOKIE'),
-                "Session"               => $session,
-                "Server/Request Data"   => $this->masked($_SERVER, '_SERVER'),
-                "Environment Variables" => $this->masked($_ENV, '_ENV'),
+            'tables'      => [
+                'GET Data'              => $this->masked($_GET, '_GET'),
+                'POST Data'             => $this->masked($_POST, '_POST'),
+                'Files'                 => isset($_FILES) ? $this->masked($_FILES, '_FILES') : [],
+                'Cookies'               => $this->masked($_COOKIE, '_COOKIE'),
+                'Session'               => $session,
+                'Server/Request Data'   => $this->masked($_SERVER, '_SERVER'),
+                'Environment Variables' => $this->masked($_ENV, '_ENV'),
             ],
         ];
 
         if (isset($customCssFile)) {
-            $vars["stylesheet"] .= file_get_contents($customCssFile);
+            $vars['stylesheet'] .= file_get_contents($customCssFile);
         }
 
         // Add extra entries list of data tables:
@@ -273,12 +288,12 @@ class WhoopsRenderer extends ErrorRenderer
         $extraTables = array_map(function ($table) use ($inspector) {
             return $table instanceof \Closure ? $table($inspector) : $table;
         }, $this->getDataTables());
-        $vars["tables"] = array_merge($extraTables, $vars["tables"]);
+        $vars['tables'] = array_merge($extraTables, $vars['tables']);
 
         $plainTextHandler = new PlainTextHandler();
         $plainTextHandler->setException($this->getException());
         $plainTextHandler->setInspector($this->getInspector());
-        $vars["preface"] = "<!--\n\n\n" . $plainTextHandler->generateResponse() . "\n\n\n\n\n\n\n\n\n\n\n-->";
+        $vars['preface'] = "<!--\n\n\n" . $plainTextHandler->generateResponse() . "\n\n\n\n\n\n\n\n\n\n\n-->";
 
         $this->templateHelper->setVariables($vars);
 
@@ -286,13 +301,15 @@ class WhoopsRenderer extends ErrorRenderer
         $this->templateHelper->render($templateFile);
 
         $result = ob_get_clean();
+
         return $result;
     }
 
     /**
      * Adds an entry to the list of tables displayed in the template.
      * The expected data is a simple associative array. Any nested arrays
-     * will be flattened with print_r
+     * will be flattened with print_r.
+     *
      * @param string $label
      * @param array  $data
      */
@@ -307,9 +324,10 @@ class WhoopsRenderer extends ErrorRenderer
      * it should produce a simple associative array. Any nested arrays will
      * be flattened with print_r.
      *
+     * @param string   $label
+     * @param callable $callback Callable returning an associative array
+     *
      * @throws InvalidArgumentException If $callback is not callable
-     * @param  string                   $label
-     * @param  callable                 $callback Callable returning an associative array
      */
     public function addDataTableCallback($label, /* callable */ $callback)
     {
@@ -333,8 +351,8 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * blacklist a sensitive value within one of the superglobal arrays.
      *
-     * @param $superGlobalName string the name of the superglobal array, e.g. '_GET'
-     * @param $key string the key within the superglobal
+     * @param string $superGlobalName The name of the superglobal array, e.g. '_GET'
+     * @param string $key             The key within the superglobal
      */
     public function blacklist($superGlobalName, $key)
     {
@@ -345,7 +363,9 @@ class WhoopsRenderer extends ErrorRenderer
      * Returns all the extra data tables registered with this handler.
      * Optionally accepts a 'label' parameter, to only return the data
      * table under that label.
-     * @param  string|null      $label
+     *
+     * @param string|null $label
+     *
      * @return array[]|callable
      */
     public function getDataTables($label = null)
@@ -362,7 +382,9 @@ class WhoopsRenderer extends ErrorRenderer
      * Allows to disable all attempts to dynamically decide whether to
      * handle or return prematurely.
      * Set this to ensure that the handler will perform no matter what.
-     * @param  bool|null $value
+     *
+     * @param bool|null $value
+     *
      * @return bool|null
      */
     public function handleUnconditionally($value = null)
@@ -387,6 +409,7 @@ class WhoopsRenderer extends ErrorRenderer
      *       unlink($file);
      *       return "http://stackoverflow.com";
      *   });
+     *
      * @param string $identifier
      * @param string $resolver
      */
@@ -406,15 +429,16 @@ class WhoopsRenderer extends ErrorRenderer
      * @example
      *   $run->setEditor('sublime');
      *
+     * @param string|callable $editor
+     *
      * @throws InvalidArgumentException If invalid argument identifier provided
-     * @param  string|callable          $editor
      */
     public function setEditor($editor)
     {
         if (!is_callable($editor) && !isset($this->editors[$editor])) {
             throw new InvalidArgumentException(
                 "Unknown editor identifier: $editor. Known editors:" .
-                implode(",", array_keys($this->editors))
+                implode(',', array_keys($this->editors))
             );
         }
 
@@ -427,9 +451,11 @@ class WhoopsRenderer extends ErrorRenderer
      * a string that may be used as the href property for that
      * file reference.
      *
+     * @param string $filePath
+     * @param int    $line
+     *
      * @throws InvalidArgumentException If editor resolver does not return a string
-     * @param  string                   $filePath
-     * @param  int                      $line
+     *
      * @return string|bool
      */
     public function getEditorHref($filePath, $line)
@@ -444,12 +470,12 @@ class WhoopsRenderer extends ErrorRenderer
         // %line and %file placeholders:
         if (!isset($editor['url']) || !is_string($editor['url'])) {
             throw new UnexpectedValueException(
-                __METHOD__ . " should always resolve to a string or a valid editor array; got something else instead."
+                __METHOD__ . ' should always resolve to a string or a valid editor array; got something else instead.'
             );
         }
 
-        $editor['url'] = str_replace("%line", rawurlencode($line), $editor['url']);
-        $editor['url'] = str_replace("%file", rawurlencode($filePath), $editor['url']);
+        $editor['url'] = str_replace('%line', rawurlencode($line), $editor['url']);
+        $editor['url'] = str_replace('%file', rawurlencode($filePath), $editor['url']);
 
         return $editor['url'];
     }
@@ -457,11 +483,13 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * Given a boolean if the editor link should
      * act as an Ajax request. The editor must be a
-     * valid callable function/closure
+     * valid callable function/closure.
      *
-     * @throws UnexpectedValueException  If editor resolver does not return a boolean
-     * @param  string                   $filePath
-     * @param  int                      $line
+     * @param string $filePath
+     * @param int    $line
+     *
+     * @throws UnexpectedValueException If editor resolver does not return a boolean
+     *
      * @return bool
      */
     public function getEditorAjax($filePath, $line)
@@ -471,15 +499,15 @@ class WhoopsRenderer extends ErrorRenderer
         // Check that the ajax is a bool
         if (!isset($editor['ajax']) || !is_bool($editor['ajax'])) {
             throw new UnexpectedValueException(
-                __METHOD__ . " should always resolve to a bool; got something else instead."
+                __METHOD__ . ' should always resolve to a bool; got something else instead.'
             );
         }
+
         return $editor['ajax'];
     }
 
     /**
-     * @param  string $title
-     * @return void
+     * @param string $title
      */
     public function setPageTitle($title)
     {
@@ -498,10 +526,9 @@ class WhoopsRenderer extends ErrorRenderer
      * Adds a path to the list of paths to be searched for
      * resources.
      *
-     * @throws InvalidArgumentException If $path is not a valid directory
+     * @param string $path
      *
-     * @param  string $path
-     * @return void
+     * @throws InvalidArgumentException If $path is not a valid directory
      */
     public function addResourcePath($path)
     {
@@ -517,8 +544,7 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * Adds a custom css file to be loaded.
      *
-     * @param  string $name
-     * @return void
+     * @param string $name
      */
     public function addCustomCss($name)
     {
@@ -549,8 +575,7 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * @deprecated
      *
-     * @param  string $resourcesPath
-     * @return void
+     * @param string $resourcesPath
      */
     public function setResourcesPath($resourcesPath)
     {
@@ -590,10 +615,11 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * Given a boolean if the editor link should
      * act as an Ajax request. The editor must be a
-     * valid callable function/closure
+     * valid callable function/closure.
      *
-     * @param  string $filePath
-     * @param  int    $line
+     * @param string $filePath
+     * @param int    $line
+     *
      * @return array
      */
     protected function getEditor($filePath, $line)
@@ -603,9 +629,9 @@ class WhoopsRenderer extends ErrorRenderer
         }
 
         if (is_string($this->editor) && isset($this->editors[$this->editor]) && !is_callable($this->editors[$this->editor])) {
-           return [
+            return [
                 'ajax' => false,
-                'url' => $this->editors[$this->editor],
+                'url'  => $this->editors[$this->editor],
             ];
         }
 
@@ -619,13 +645,13 @@ class WhoopsRenderer extends ErrorRenderer
             if (is_string($callback)) {
                 return [
                     'ajax' => false,
-                    'url' => $callback,
+                    'url'  => $callback,
                 ];
             }
 
             return [
                 'ajax' => isset($callback['ajax']) ? $callback['ajax'] : false,
-                'url' => isset($callback['url']) ? $callback['url'] : $callback,
+                'url'  => isset($callback['url']) ? $callback['url'] : $callback,
             ];
         }
 
@@ -654,9 +680,10 @@ class WhoopsRenderer extends ErrorRenderer
      * way back to the first, enabling a cascading-type system of overrides
      * for all resources.
      *
+     * @param string $resource
+     *
      * @throws RuntimeException If resource cannot be found in any of the available paths
      *
-     * @param  string $resource
      * @return string
      */
     protected function getResource($resource)
@@ -675,6 +702,7 @@ class WhoopsRenderer extends ErrorRenderer
             if (is_file($fullPath)) {
                 // Cache the result:
                 $this->resourceCache[$resource] = $fullPath;
+
                 return $fullPath;
             }
         }
@@ -682,7 +710,7 @@ class WhoopsRenderer extends ErrorRenderer
         // If we got this far, nothing was found.
         throw new RuntimeException(
             "Could not find resource '$resource' in any resource paths."
-            . "(searched: " . join(", ", $this->searchPaths). ")"
+            . '(searched: ' . implode(', ', $this->searchPaths) . ')'
         );
     }
 
@@ -692,8 +720,9 @@ class WhoopsRenderer extends ErrorRenderer
      *
      * We intentionally dont rely on $GLOBALS as it depends on 'auto_globals_jit' php.ini setting.
      *
-     * @param $superGlobal array One of the superglobal arrays
-     * @param $superGlobalName string the name of the superglobal array, e.g. '_GET'
+     * @param array  $superGlobal     One of the superglobal arrays
+     * @param string $superGlobalName the name of the superglobal array, e.g. '_GET'
+     *
      * @return array $values without sensitive data
      */
     private function masked(array $superGlobal, $superGlobalName)
@@ -701,76 +730,12 @@ class WhoopsRenderer extends ErrorRenderer
         $blacklisted = $this->blacklist[$superGlobalName];
 
         $values = $superGlobal;
-        foreach($blacklisted as $key) {
+        foreach ($blacklisted as $key) {
             if (isset($superGlobal[$key])) {
                 $values[$key] = str_repeat('*', strlen($superGlobal[$key]));
             }
         }
+
         return $values;
-    }
-
-    /**
-     * Nicely format an array for printing.
-     * See https://stackoverflow.com/a/9776726/2970321
-     *
-     * @param array
-     * @return string
-     */
-    private function prettyPrint($arr)
-    {
-        $json = json_encode($arr);
-        $result = '';
-        $level = 0;
-        $in_quotes = false;
-        $in_escape = false;
-        $ends_line_level = NULL;
-        $json_length = strlen( $json );
-
-        for( $i = 0; $i < $json_length; $i++ ) {
-            $char = $json[$i];
-            $new_line_level = NULL;
-            $post = "";
-            if( $ends_line_level !== NULL ) {
-                $new_line_level = $ends_line_level;
-                $ends_line_level = NULL;
-            }
-            if ( $in_escape ) {
-                $in_escape = false;
-            } else if( $char === '"' ) {
-                $in_quotes = !$in_quotes;
-            } else if( ! $in_quotes ) {
-                switch( $char ) {
-                    case '}': case ']':
-                        $level--;
-                        $ends_line_level = NULL;
-                        $new_line_level = $level;
-                        break;
-
-                    case '{': case '[':
-                        $level++;
-                    case ',':
-                        $ends_line_level = $level;
-                        break;
-
-                    case ':':
-                        $post = " ";
-                        break;
-
-                    case " ": case "\t": case "\n": case "\r":
-                        $char = "";
-                        $ends_line_level = $new_line_level;
-                        $new_line_level = NULL;
-                        break;
-                }
-            } else if ( $char === '\\' ) {
-                $in_escape = true;
-            }
-            if( $new_line_level !== NULL ) {
-                $result .= "<br>".str_repeat( "&nbsp;", $new_line_level );
-            }
-            $result .= $char.$post;
-        }
-
-        return $result;
     }
 }

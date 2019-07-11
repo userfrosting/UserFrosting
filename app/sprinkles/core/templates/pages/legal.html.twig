@@ -5,7 +5,7 @@
 {# Overrides blocks in head of base template #}
 {% block page_title %}{{translate("LEGAL")}}{% endblock %}
 
-{% block page_description %}Our legal policy applies to your usage of this website and our services.{% endblock %}
+{% block page_description %}{{translate("LEGAL.DESCRIPTION")}}{% endblock %}
 
 {% block body_matter %}
     {% include 'pages/partials/legal.html.twig' %}

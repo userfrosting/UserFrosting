@@ -10,7 +10,8 @@
 $(document).ready(function() {
     // Set up table of users
     $("#widget-users").ufTable({
-        dataUrl: site.uri.public + "/api/users"
+        dataUrl: site.uri.public + "/api/users",
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 
     // Bind creation button

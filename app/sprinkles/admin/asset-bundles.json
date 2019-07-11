@@ -6,7 +6,7 @@
                 "userfrosting/js/handlebars-helpers.js",
                 "vendor/tablesorter/dist/js/jquery.tablesorter.js",
                 "vendor/tablesorter/dist/js/jquery.tablesorter.widgets.js",
-                "vendor/tablesorter/dist/js/widgets/widget-sort2Hash.min.js",
+                "userfrosting/js/tablesorter/widget-sort2Hash.js",
                 "vendor/tablesorter/dist/js/widgets/widget-columnSelector.min.js",
                 "vendor/tablesorter/dist/js/widgets/widget-reflow.min.js",
                 "vendor/tablesorter/dist/js/widgets/widget-pager.min.js",
@@ -62,6 +62,7 @@
         },
         "js/pages/permission": {
             "scripts": [
+                "userfrosting/js/widgets/users.js",
                 "userfrosting/js/pages/permission.js"
             ],
             "options": {

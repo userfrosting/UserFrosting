@@ -1,18 +1,20 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * PermissionSprunje
+ * PermissionSprunje.
  *
  * Implements Sprunje for the permissions API.
  *
@@ -24,35 +26,34 @@ class PermissionSprunje extends Sprunje
 
     protected $sortable = [
         'name',
-        'properties'
+        'properties',
     ];
 
     protected $filterable = [
         'name',
         'properties',
-        'info'
+        'info',
     ];
 
     protected $excludeForAll = [
-        'info'
+        'info',
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function baseQuery()
     {
-        $query = $this->classMapper->createInstance('permission');
-
-        return $query;
+        return $this->classMapper->createInstance('permission')->newQuery();
     }
 
     /**
      * Filter LIKE the slug, conditions, or description.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterInfo($query, $value)
     {
@@ -63,32 +64,37 @@ class PermissionSprunje extends Sprunje
      * Filter LIKE the slug, conditions, or description.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterProperties($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
+        $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
-                $query = $query->orLike('slug', $value)
-                                ->orLike('conditions', $value)
-                                ->orLike('description', $value);
+                $query->orLike('slug', $value)
+                        ->orLike('conditions', $value)
+                        ->orLike('description', $value);
             }
-            return $query;
         });
+
+        return $this;
     }
 
     /**
      * Sort based on slug.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return Builder
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortProperties($query, $direction)
     {
-        return $query->orderBy('slug', $direction);
+        $query->orderBy('slug', $direction);
+
+        return $this;
     }
 }

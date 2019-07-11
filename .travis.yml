@@ -1,0 +1,53 @@
+sudo: false
+dist: trusty
+language: php
+
+services:
+  - mysql
+  - postgresql
+  - memcached
+  - redis-server
+
+php:
+  - 7.1
+  - 7.2
+  - 7.3
+
+env:
+  matrix:
+    - DB=mysql
+    - DB=sqlite
+    - DB=pgsql
+    - DB=memory
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_install:
+  # copy sprinkles.json
+  - cp app/sprinkles.example.json app/sprinkles.json
+  # set up db
+  - bash build/before_install.sh $DB
+  # update node
+  - nvm install 10.12.0
+  # Install Redis and Memcached
+  - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - printf "\n" | pecl install -f redis
+
+before_script:
+  # install deps and UF
+  - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install --no-interaction
+  - php bakery debug
+  - php bakery build-assets
+  - php bakery migrate
+
+script:
+  # run unit tests
+  - app/vendor/bin/phpunit --coverage-clover=coverage.xml
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+after_failure:
+  - cat app/log/userfrosting.log

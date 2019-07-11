@@ -1,20 +1,25 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Eloquent\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
  * Permission Class.
  *
  * Represents a permission for a role or user.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @property string slug
  * @property string name
  * @property string conditions
@@ -25,13 +30,13 @@ class Permission extends Model
     /**
      * @var string The name of the table for the current model.
      */
-    protected $table = "permissions";
+    protected $table = 'permissions';
 
     protected $fillable = [
-        "slug",
-        "name",
-        "conditions",
-        "description"
+        'slug',
+        'name',
+        'conditions',
+        'description',
     ];
 
     /**
@@ -41,7 +46,6 @@ class Permission extends Model
 
     /**
      * Delete this permission from the database, removing associations with roles.
-     *
      */
     public function delete()
     {
@@ -61,7 +65,7 @@ class Permission extends Model
      */
     public function roles()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->belongsToMany($classMapper->getClassMapping('role'), 'permission_roles', 'permission_id', 'role_id')->withTimestamps();
@@ -70,9 +74,10 @@ class Permission extends Model
     /**
      * Query scope to get all permissions assigned to a specific role.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $roleId
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder $query
+     * @param int     $roleId
+     *
+     * @return Builder
      */
     public function scopeForRole($query, $roleId)
     {
@@ -85,9 +90,10 @@ class Permission extends Model
     /**
      * Query scope to get all permissions NOT associated with a specific role.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $roleId
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder $query
+     * @param int     $roleId
+     *
+     * @return Builder
      */
     public function scopeNotForRole($query, $roleId)
     {
@@ -104,7 +110,7 @@ class Permission extends Model
      */
     public function users()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->belongsToManyThrough(

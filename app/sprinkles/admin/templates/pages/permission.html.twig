@@ -15,7 +15,7 @@
         <div class="col-lg-4">
             <div id="view-permission" class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{translate('PERMISSION.SUMMARY')}}</h3>
+                    <h3 class="box-title">{{translate("PERMISSION.SUMMARY")}}</h3>
                 </div>
                 <div class="box-body box-profile">
                     <div class="text-center">
@@ -31,10 +31,10 @@
                     <strong>{{translate("PERMISSION.ID")}}: </strong>
                     <span class="js-copy-container">
                         <span class="js-copy-target" style="margin: 0 5px;">{{permission.id}}</span>
-                        <i class="fa fa-copy text-blue js-copy-trigger"></i>
+                        <i class="fa fa-copy text-blue uf-copy-trigger js-copy-trigger"></i>
                     </span>
                     <hr>
-                    <strong>Slug/conditions</strong>
+                    <strong>{{translate("SLUG_CONDITION")}}</strong>
                     <br>
                     <br>
                     <p>
@@ -45,20 +45,21 @@
                     </p>
                 </div>
                 <div class="box-footer">
-                    {{translate('PERMISSION.NOTE_READ_ONLY')}}
+                    {{translate("PERMISSION.NOTE_READ_ONLY")}}
                 </div>
             </div>
         </div>
         <div class="col-lg-8">
             <div id="widget-permission-users" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-fw fa-key"></i> {{translate('USER.WITH_PERMISSION')}}</h3>
+                    <h3 class="box-title"><i class="fa fa-fw fa-key"></i> {{translate("USER.WITH_PERMISSION")}}</h3>
                     {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
-                    {% include "tables/permission-users.html.twig" with {
+                    {% include "tables/users.html.twig" with {
                             "table" : {
-                                "id" : "table-permission-users"
+                                "id" : "table-permission-users",
+                                "columns" : ["via_roles"]
                             }
                         }
                     %}

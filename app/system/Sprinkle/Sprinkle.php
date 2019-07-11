@@ -1,18 +1,20 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\System\Sprinkle;
 
 use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventSubscriberInterface;
-use Slim\App;
 
 /**
- * Sprinkle class
+ * Sprinkle class.
  *
  * Represents a sprinkle (plugin, theme, site, etc), and the code required to boot up that sprinkle.
  *

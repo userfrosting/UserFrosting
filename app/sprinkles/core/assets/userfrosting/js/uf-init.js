@@ -12,6 +12,15 @@ $(document).ready(function() {
     $.uf.copy('.js-copy-trigger');
 
     // Display page alerts
-    $("#alerts-page").ufAlerts();
-    $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
+    if ($("#alerts-page").length) {
+        $("#alerts-page").ufAlerts();
+        $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
+    }
+
+    // Set any JS variables that might be missing from config.js.twig
+    if (typeof site.uf_table === 'undefined') {
+        site['uf_table'] = {
+            use_loading_transition: true
+        };
+    }
 });

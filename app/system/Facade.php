@@ -1,15 +1,18 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\System;
 
-use Illuminate\Support\Facades\Mockery;
-use Illuminate\Support\Facades\Mockery\MockInterface;
 use Interop\Container\ContainerInterface;
+use Mockery;
+use Mockery\MockInterface;
 use RuntimeException;
 
 /**
@@ -18,7 +21,9 @@ use RuntimeException;
  * Adapted from the Laravel Facade class: https://github.com/laravel/framework/blob/5.3/src/Illuminate/Support/Facades/Facade.php
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @see https://laravel.com/docs/5.2/facades
+ *
  * @license https://github.com/laravel/framework/blob/5.3/LICENSE.md (MIT License)
  */
 abstract class Facade
@@ -26,7 +31,7 @@ abstract class Facade
     /**
      * The Pimple container being facaded.
      *
-     * @var \Interop\Container\ContainerInterface
+     * @var ContainerInterface
      */
     protected static $container;
 
@@ -40,8 +45,7 @@ abstract class Facade
     /**
      * Hotswap the underlying service instance behind the facade.
      *
-     * @param  mixed  $instance
-     * @return void
+     * @param mixed $instance
      */
     public static function swap($instance)
     {
@@ -57,7 +61,6 @@ abstract class Facade
     /**
      * Initiate a mock expectation on the facade.
      *
-     * @param  mixed
      * @return \Mockery\Expectation
      */
     public static function shouldReceive()
@@ -76,7 +79,8 @@ abstract class Facade
     /**
      * Create a fresh mock instance for the given class.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return \Mockery\Expectation
      */
     protected static function createFreshMockInstance($name)
@@ -95,7 +99,8 @@ abstract class Facade
     /**
      * Create a fresh mock instance for the given class.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return \Mockery\Expectation
      */
     protected static function createMockByName($name)
@@ -142,8 +147,6 @@ abstract class Facade
     /**
      * Get the registered name of the component.
      *
-     * @return string
-     *
      * @throws \RuntimeException
      */
     protected static function getFacadeAccessor()
@@ -154,7 +157,8 @@ abstract class Facade
     /**
      * Resolve the facade root instance from the container.
      *
-     * @param  string|object  $name
+     * @param string|object $name
+     *
      * @return mixed
      */
     protected static function resolveFacadeInstance($name)
@@ -173,8 +177,7 @@ abstract class Facade
     /**
      * Clear a resolved facade instance.
      *
-     * @param  string  $name
-     * @return void
+     * @param string $name
      */
     public static function clearResolvedInstance($name)
     {
@@ -183,8 +186,6 @@ abstract class Facade
 
     /**
      * Clear all of the resolved instances.
-     *
-     * @return void
      */
     public static function clearResolvedInstances()
     {
@@ -194,7 +195,7 @@ abstract class Facade
     /**
      * Get the container instance behind the facade.
      *
-     * @return \Interop\Container\ContainerInterface
+     * @return ContainerInterface
      */
     public static function getFacadeContainer()
     {
@@ -204,10 +205,9 @@ abstract class Facade
     /**
      * Set the container instance.
      *
-     * @param  \Interop\Container\ContainerInterface $container
-     * @return void
+     * @param ContainerInterface $container
      */
-    public static function setFacadeContainer($container)
+    public static function setFacadeContainer(ContainerInterface $container)
     {
         static::$container = $container;
     }
@@ -215,17 +215,18 @@ abstract class Facade
     /**
      * Handle dynamic, static calls to the object.
      *
-     * @param  string  $method
-     * @param  array   $args
-     * @return mixed
+     * @param string $method
+     * @param array  $args
      *
      * @throws \RuntimeException
+     *
+     * @return mixed
      */
     public static function __callStatic($method, $args)
     {
         $instance = static::getFacadeRoot();
 
-        if (! $instance) {
+        if (!$instance) {
             throw new RuntimeException('A facade root has not been set.');
         }
 

@@ -7,7 +7,7 @@
 
  * ufAlerts can be initialized on any container element as follows:
  *
- * $("#myDiv").ufAlerts(options);
+ * $('#myDiv').ufAlerts(options);
  *
  * `options` is an object containing any of the following parameters:
  * @param {string} url The absolute URL from which to fetch flash alerts.
@@ -34,17 +34,17 @@
  * @author Alexander Weissman <https://alexanderweissman.com>
  */
 ;(function($, window, document, undefined) {
-	"use strict";
+	'use strict';
 
     // Define plugin name and defaults.
-    var pluginName = "ufAlerts",
+    var pluginName = 'ufAlerts',
         defaults = {
-            url                 : site.uri.public + "/alerts",
+            url                 : site.uri.public + '/alerts',
             scrollToTop         : true,
             scrollWhenVisible   : false,
             agglomerate         : false,
-            alertMessageClass   : "uf-alert-message",
-            alertTemplateId     : "uf-alert-template",
+            alertMessageClass   : 'uf-alert-message',
+            alertTemplateId     : 'uf-alert-template',
             DEBUG               : false
         };
 
@@ -62,7 +62,7 @@
         // Plugin variables
         this.alerts = [];
         this._newAlertsPromise = $.Deferred().resolve();
-        this._alertTemplateHtml = $("#" + this.settings.alertTemplateId).html();
+        this._alertTemplateHtml = $('#' + this.settings.alertTemplateId).html();
         this._alertTypePriorities = {
             danger : 3,
             warning: 2,
@@ -70,10 +70,10 @@
             info   : 0
         };
         this._alertTypeIcon = {
-            danger : "fa-ban",
-            warning: "fa-warning",
-            success: "fa-check",
-            info   : "fa-info"
+            danger : 'fa-ban',
+            warning: 'fa-warning',
+            success: 'fa-check',
+            info   : 'fa-info'
         };
 
         return this;
@@ -89,11 +89,11 @@
             this.alerts.length = 0;
 
             if (this.settings.agglomerate) {
-                this.element.toggleClass("alert", false)
-                    .toggleClass("alert-info", false)
-                    .toggleClass("alert-success", false)
-                    .toggleClass("alert-warning", false)
-                    .toggleClass("alert-danger", false);
+                this.element.toggleClass('alert', false)
+                    .toggleClass('alert-info', false)
+                    .toggleClass('alert-success', false)
+                    .toggleClass('alert-warning', false)
+                    .toggleClass('alert-danger', false);
             }
 
             // Clear any alert HTML
@@ -106,9 +106,15 @@
          */
         fetch: function() {
             // Set a promise, so that any chained calls after fetch can wait until the messages have been retrieved
-            this._newAlertsPromise = $.getJSON(this.settings.url)
-                .done($.proxy(this._fetchSuccess, this))
-                .fail($.proxy(this._fetchFailure, this));
+            this._newAlertsPromise = $.ajax({
+                url: this.settings.url,
+                cache: false
+            }).then(
+                // Success
+                this._fetchSuccess.bind(this),
+                // Failure
+                this._fetchFailure.bind(this)
+            );
             
             return this.$element;
         },
@@ -116,20 +122,20 @@
          * Success callback for fetch
          */
         _fetchSuccess: function(alerts) {
-            this.alerts = $.merge(this.alerts, alerts);
-            this.$element.trigger("fetch." + this._name);
+            if (alerts != null) this.alerts = $.merge(this.alerts, alerts);
+            this.$element.trigger('fetch.' + this._name);
         },
         /**
          * Failure callback for fetch
          */
         _fetchFailure: function(response) {
-            this.$element.trigger("error." + this._name);
-            if ((typeof site !== "undefined") && site.debug.ajax && response.responseText) {
+            this.$element.trigger('error.' + this._name);
+            if ((typeof site !== 'undefined') && site.debug.ajax && response.responseText) {
                 document.write(response.responseText);
                 document.close();
             } else {
                 if (this.settings.DEBUG) {
-                    $.error("Error (" + response.status + "): " + response.responseText );
+                    console.warn('Error (' + response.status + '): ' + response.responseText );
                 }
             }
         },
@@ -138,8 +144,8 @@
          */
         push: function(options) {
             this.alerts.push({
-                "type"   : options[0],
-                "message": options[1]
+                type   : options[0],
+                message: options[1]
             });
 
             return this.$element;
@@ -149,11 +155,11 @@
          */
         render: function() {
             // Wait for promise completion, only if promise is unresolved.
-            if (this._newAlertsPromise.state() == "resolved" || this._newAlertsPromise.state() == "rejected") {
+            if (this._newAlertsPromise.state() == 'resolved' || this._newAlertsPromise.state() == 'rejected') {
                 this._render();
             }
             else {
-                $.when(this._newAlertsPromise).then($.proxy(this._render, this));
+                $.when(this._newAlertsPromise).then(this._render.bind(this));
             }
 
             return this.$element;
@@ -163,7 +169,7 @@
          */
         _render: function() {
             // Holds generated HTML
-            var alertHtml = "";
+            var alertHtml = '';
             // Only compile alerts if there are alerts to display
             if (this.alerts.length > 0) {
                 // Prepare template
@@ -172,10 +178,10 @@
                 // If agglomeration is enabled, set the container to the highest priority alert type
                 if (this.settings.agglomerate) {
                     // Holds generated agglomerated alerts
-                    var alertMessage = "<ul>";
+                    var alertMessage = '<ul>';
 
                     // Determine overall alert priority
-                    var alertContainerType = "info";
+                    var alertContainerType = 'info';
                     for (i = 0; i < this.alerts.length; i++) {
                         if (this._alertTypePriorities[this.alerts[i].type] > this._alertTypePriorities[alertContainerType]) {
                             alertContainerType = this.alerts[i].type;
@@ -183,12 +189,12 @@
                     }
 
                     // Compile each alert
-                    var aggTemplate = Handlebars.compile("<li class=" + this.settings.alertMessageClass + ">{{ message }}</li>");
+                    var aggTemplate = Handlebars.compile('<li class=' + this.settings.alertMessageClass + '>{{ message }}</li>');
                     for (i = 0; i < this.alerts.length; i++) {
                         alertMessage += aggTemplate(this.alerts[i]);
                     }
 
-                    alertMessage += "</ul>";
+                    alertMessage += '</ul>';
 
                     // Generate complete alert HTML
                     alertHtml = alertTemplate({
@@ -200,7 +206,7 @@
                 else {
                     // Compile each alert.
                     for (i = 0; i < this.alerts.length; i++) {
-                        alert = this.alerts[i];
+                        var alert = this.alerts[i];
 
                         // Inject icon
                         alert.icon = this._alertTypeIcon[alert.type];
@@ -214,15 +220,15 @@
             this.$element.html(alertHtml);
 
             // Scroll to top of alert location is new alerts output, and auto scrolling is enabled
-            if (this.settings.scrollToTop && alertHtml !== "") {
+            if (this.settings.scrollToTop && alertHtml !== '') {
                 // Don't scroll if already visible, unless scrollWhenVisible is true
                 if (!this._alertsVisible() || this.settings.scrollWhenVisible) {
-                    $("html, body").animate({ scrollTop: this.$element.offset().top }, "fast");
+                    $('html, body').animate({ scrollTop: this.$element.offset().top }, 'fast');
                 }
             }
 
             // Trigger render events
-            this.$element.trigger("render." + this._name);
+            this.$element.trigger('render.' + this._name);
         },
         /**
          * Returns true if alerts container is completely within the viewport.
@@ -243,13 +249,10 @@
             // Unbind any bound events
             this.$element.off('.' + this._name);
 
-            // Grab jQuery wrapped element before plugin destruction
-            var $element = this.$element;
-
             // Remove plugin from element
             this.$element.removeData(this._name);
 
-            return $element;
+            return this.$element;
         }
     });
 
@@ -272,11 +275,11 @@
                 return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
             }
             else {
-                $.error( 'Method ' +  methodOrOptions + ' is private!' );
+                console.warn('Method ' +  methodOrOptions + ' is private!');
             }
         }
         else {
-            $.error( 'Method ' +  methodOrOptions + ' does not exist.' );
+            console.warn('Method ' +  methodOrOptions + ' does not exist.');
         }
     };
 })(jQuery, window, document);

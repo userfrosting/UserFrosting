@@ -8,7 +8,9 @@
  */
 $(document).ready(function() {
     // TOS modal
-    $(this).find('.js-show-tos').click(function() {
+    $(this).find('.js-show-tos').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/account/tos",
             msgTarget: $("#alerts-page")
@@ -81,7 +83,7 @@ $(document).ready(function() {
 
     // Handles form submission
     $("#register").ufForm({
-        validators: registrationValidators,
+        validator: registrationValidators,
         msgTarget: $("#alerts-page"),
         keyupDelay: 500
     }).on("submitSuccess.ufForm", function() {

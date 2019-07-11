@@ -1,23 +1,26 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\System\Sprinkle;
 
 use Illuminate\Support\Str;
 use Interop\Container\ContainerInterface;
-use RocketTheme\Toolbox\Event\EventDispatcher;
-use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use UserFrosting\Support\Exception\FileNotFoundException;
+use UserFrosting\Support\Exception\JsonException;
 
 /**
  * Sprinkle manager class.
  *
  * Manages a collection of loaded Sprinkles for the application.
  * Handles Sprinkle class creation, event subscription, services registration, and resource stream registration.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class SprinkleManager
@@ -33,14 +36,9 @@ class SprinkleManager
     protected $sprinkles = [];
 
     /**
-     * @var string The full absolute base path to the sprinkles directory.
+     * @var string Path to the sprinkles directory. Will be used to register the location with the ResourceLocator
      */
-    protected $sprinklesPath;
-
-    /**
-     * @var string[] Keeps track of a mapping from resource stream names to relative paths.
-     */
-    protected $resourcePaths;
+    protected $sprinklesPath = \UserFrosting\SPRINKLES_DIR . \UserFrosting\DS;
 
     /**
      * Create a new SprinkleManager object.
@@ -50,60 +48,93 @@ class SprinkleManager
     public function __construct(ContainerInterface $ci)
     {
         $this->ci = $ci;
-        $this->sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
-
-        $this->resourcePaths = [
-            'assets' => \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME,
-            'config' => \UserFrosting\DS . \UserFrosting\CONFIG_DIR_NAME,
-            'extra' => \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME,
-            'factories' => \UserFrosting\DS . \UserFrosting\FACTORY_DIR_NAME,
-            'locale' => \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME,
-            'routes' => \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME,
-            'schema' => \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME,
-            'sprinkles' => '',
-            'templates' => \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME
-        ];
-    }
-
-    /**
-     * Adds the relative path for a specified resource type in a Sprinkle to the resource's stream.
-     *
-     * @param string $resourceName
-     * @param string $sprinkleName
-     * @return string|bool The full path to specified resource for the specified Sprinkle (if found).
-     */
-    public function addResource($resourceName, $sprinkleName)
-    {
-        $resourcePath = $this->resourcePaths[$resourceName];
-        $fullPath = $this->sprinklesPath . $sprinkleName . $resourcePath;
-
-        $this->ci->locator->addPath($resourceName, '', $fullPath);
-
-        return $this->ci->locator->findResource("$resourceName://", true, false);
-
-        /* This would allow a stream to subnavigate to a specific sprinkle (e.g. "templates://core/")
-           Not sure if we need this.
-           $locator->addPath('templates', '$name', $sprinklesDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
-         */
     }
 
     /**
      * Register resource streams for all base sprinkles.
+     * For each sprinkle, register its resources and then run its initializer.
      */
     public function addResources()
     {
-        // For each sprinkle, register its resources and then run its initializer
         foreach ($this->sprinkles as $sprinkleName => $sprinkle) {
-            $this->addResource('config', $sprinkleName);
-            $this->addResource('assets', $sprinkleName);
-            $this->addResource('extra', $sprinkleName);
-            $this->addResource('factories', $sprinkleName);
-            $this->addResource('locale', $sprinkleName);
-            $this->addResource('routes', $sprinkleName);
-            $this->addResource('schema', $sprinkleName);
-            $this->addResource('sprinkles', $sprinkleName);
-            $this->addResource('templates', $sprinkleName);
+            $this->addSprinkleResources($sprinkleName);
         }
+    }
+
+    /**
+     * Register a sprinkle as a locator location.
+     *
+     * @param string $sprinkleName
+     */
+    public function addSprinkleResources($sprinkleName)
+    {
+        /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
+        $locator = $this->ci->locator;
+        $locator->registerLocation($sprinkleName, $this->getSprinklePath($sprinkleName));
+    }
+
+    /**
+     * Returns sprinkle base path from name.
+     *
+     * @param string $sprinkleName
+     *
+     * @return string
+     */
+    public function getSprinklePath($sprinkleName)
+    {
+        // Get Sprinkle and make sure it exist
+        $sprinkle = $this->getSprinkle($sprinkleName);
+        if (!$sprinkle) {
+            throw new FileNotFoundException("Sprinkle `$sprinkleName` doesn't exist.");
+        }
+
+        // Get path and make sure it exist
+        $path = $this->getSprinklesPath() . $sprinkle;
+        if (!file_exists($path)) {
+            throw new FileNotFoundException("Sprinkle `$sprinkleName` should be found at `$path`, but that directory doesn't exist.");
+        }
+
+        return $path;
+    }
+
+    /**
+     * Returns the sprinkle class.
+     *
+     * @param string $sprinkleName
+     *
+     * @return string
+     */
+    protected function getSprinkleClass($sprinkleName)
+    {
+        $className = Str::studly($sprinkleName);
+
+        return $this->getSprinkleClassNamespace($sprinkleName) . "\\$className";
+    }
+
+    /**
+     * Returns the claculated sprinkle namespace.
+     *
+     * @param string $sprinkleName
+     *
+     * @return string The Sprinkle Namespace
+     */
+    public function getSprinkleClassNamespace($sprinkleName)
+    {
+        $className = Str::studly($sprinkleName);
+
+        return "UserFrosting\\Sprinkle\\$className";
+    }
+
+    /**
+     * Returns the sprinkle service provider class.
+     *
+     * @param string $sprinkleName
+     *
+     * @return string
+     */
+    protected function getSprinkleDefaultServiceProvider($sprinkleName)
+    {
+        return $this->getSprinkleClassNamespace($sprinkleName) . '\\ServicesProvider\\ServicesProvider';
     }
 
     /**
@@ -111,19 +142,22 @@ class SprinkleManager
      *
      * Creates an object of a subclass of UserFrosting\System\Sprinkle\Sprinkle if defined for the sprinkle (converting to StudlyCase).
      * Otherwise, returns null.
-     * @param $name The name of the Sprinkle to initialize.
+     *
+     * @param string $sprinkleName The name of the Sprinkle to initialize.
+     *
+     * @return mixed Sprinkle class instance or null if no such class exist
      */
-    public function bootSprinkle($name)
+    public function bootSprinkle($sprinkleName)
     {
-        $className = Str::studly($name);
-        $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
+        $fullClassName = $this->getSprinkleClass($sprinkleName);
 
         // Check that class exists.  If not, set to null
         if (class_exists($fullClassName)) {
             $sprinkle = new $fullClassName($this->ci);
+
             return $sprinkle;
         } else {
-            return null;
+            return;
         }
     }
 
@@ -151,9 +185,9 @@ class SprinkleManager
      * Initialize a list of Sprinkles, instantiating their boot classes (if they exist),
      * and subscribing them to the event dispatcher.
      *
-     * @param string[] $baseSprinkleNames
+     * @param string[] $sprinkleNames
      */
-    public function init($sprinkleNames)
+    public function init(array $sprinkleNames)
     {
         foreach ($sprinkleNames as $sprinkleName) {
             $sprinkle = $this->bootSprinkle($sprinkleName);
@@ -168,7 +202,7 @@ class SprinkleManager
     }
 
     /**
-     * Initialize all base sprinkles in a specified sprinkles.json schema file.
+     * Initialize all base sprinkles in a specified Sprinkles schema file (e.g. 'sprinkles.json').
      *
      * @param string $schemaPath
      */
@@ -180,15 +214,34 @@ class SprinkleManager
 
     /**
      * Return if a Sprinkle is available
-     * Can be used by other Sprinkles to test if their dependencies are met
+     * Can be used by other Sprinkles to test if their dependencies are met.
      *
-     * @param $name The name of the Sprinkle
+     * @param string $sprinkleName The name of the Sprinkle
+     *
+     * @return bool
      */
-    public function isAvailable($name)
+    public function isAvailable($sprinkleName)
     {
-        return in_array($name, $this->getSprinkleNames());
+        return (bool) $this->getSprinkle($sprinkleName);
     }
 
+    /**
+     * Find sprinkle value from the sprinkles.json.
+     *
+     * @param string $sprinkleName
+     *
+     * @return string|false Return sprinkle name or false if sprinkle not found
+     */
+    public function getSprinkle($sprinkleName)
+    {
+        $mathches = preg_grep("/^$sprinkleName$/i", $this->getSprinkleNames());
+
+        if (count($mathches) <= 0) {
+            return false;
+        }
+
+        return array_values($mathches)[0];
+    }
 
     /**
      * Interate through the list of loaded Sprinkles, and invoke their ServiceProvider classes.
@@ -202,11 +255,12 @@ class SprinkleManager
 
     /**
      * Register services for a specified Sprinkle.
+     *
+     * @param string $sprinkleName
      */
-    public function registerServices($name)
+    public function registerServices($sprinkleName)
     {
-        $className = Str::studly($name);
-        $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\ServicesProvider\\ServicesProvider";
+        $fullClassName = $this->getSprinkleDefaultServiceProvider($sprinkleName);
 
         // Check that class exists, and register services
         if (class_exists($fullClassName)) {
@@ -217,20 +271,53 @@ class SprinkleManager
     }
 
     /**
-     * Load list of Sprinkles from a JSON schema file (e.g. sprinkles.json).
+     * Returns sprinklePath parameter.
+     *
+     * @return string
+     */
+    public function getSprinklesPath()
+    {
+        return $this->sprinklesPath;
+    }
+
+    /**
+     * Sets sprinklePath parameter.
+     *
+     * @param string $sprinklesPath
+     *
+     * @return static
+     */
+    public function setSprinklesPath($sprinklesPath)
+    {
+        $this->sprinklesPath = $sprinklesPath;
+
+        return $this;
+    }
+
+    /**
+     * Load list of Sprinkles from a JSON schema file (e.g. 'sprinkles.json').
      *
      * @param string $schemaPath
+     *
      * @return string[]
      */
     protected function loadSchema($schemaPath)
     {
-        $sprinklesFile = file_get_contents($schemaPath);
+        $sprinklesFile = @file_get_contents($schemaPath);
 
         if ($sprinklesFile === false) {
-            $errorMessage = "Error: Unable to determine Sprinkle load order.  File '$schemaPath' not found or unable to read. Please create a 'sprinkles.json' file and try again.";
+            $errorMessage = "Error: Unable to determine Sprinkle load order. File '$schemaPath' not found or unable to read. Please create a 'sprinkles.json' file and try again.";
+
             throw new FileNotFoundException($errorMessage);
         }
 
-        return json_decode($sprinklesFile);
+        // Make sure sprinkle contains valid json
+        if (!$data = json_decode($sprinklesFile)) {
+            $errorMessage = "Error: Unable to determine Sprinkle load order. File '$schemaPath' doesn't contain valid json : " . json_last_error_msg();
+
+            throw new JsonException($errorMessage);
+        }
+
+        return $data;
     }
 }

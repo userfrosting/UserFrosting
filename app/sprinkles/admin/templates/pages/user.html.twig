@@ -100,7 +100,7 @@
                                 <hr>
                                 <strong><i class="fa fa-envelope margin-r-5"></i> {{translate("EMAIL")}}</strong>
                                 <p class="text-muted box-profile-property js-copy-container">
-                                    <i class="fa fa-copy js-copy-trigger"></i>
+                                    <i class="fa fa-copy uf-copy-trigger js-copy-trigger"></i>
                                     <span class="js-copy-target">{{user.email}}</span>
                                 </p>
                             {% endif %}
@@ -129,6 +129,7 @@
                 {% endblock %}
             </div>
         </div>
+        {% if 'activities' not in widgets.hidden %}
         <div class="col-lg-8">
             {% block activity_box %}
                 <div id="widget-user-activities" class="box box-primary">
@@ -147,7 +148,29 @@
                 </div>
             {% endblock %}
         </div>
+        {% endif %}
     </div>
+    {% if 'permissions' not in widgets.hidden %}
+    <div class="row">
+        <div class="col-md-12">
+            <div id="widget-permissions" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title pull-left"><i class="fa fa-key fa-fw"></i> {{translate('PERMISSION', 2)}}</h3>
+                    {% include "tables/table-tool-menu.html.twig" %}
+                </div>
+                <div class="box-body">
+                    {% include "tables/permissions.html.twig" with {
+                            "table" : {
+                                "id" : "table-permissions",
+                                "columns" : ["via_roles"]
+                            }
+                        }
+                    %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
 {% block scripts_page %}
     <!-- Include page variables -->
@@ -156,9 +179,10 @@
 
     // Add user name
     page = $.extend(
-        true,               // deep extend
+        true, // deep extend
         {
-            "user_name": "{{user.user_name}}"
+            user_name: "{{user.user_name}}",
+            delete_redirect: "{{delete_redirect}}"
         },
         page
     );

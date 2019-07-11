@@ -11,11 +11,11 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 1]]">
         <thead>
             <tr>
-                <th class="sorter-metanum" data-column-name="occurred_at" data-column-template="#activity-table-column-occurred-at">{{translate('ACTIVITY.TIME')}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metanum" data-column-name="occurred_at" data-column-template="#activity-table-column-occurred-at" data-priority="1">{{translate('ACTIVITY.TIME')}} <i class="fa fa-sort"></i></th>
                 {% if 'user' in table.columns %}
-                    <th class="sorter-metatext" data-column-name="user" data-column-template="#activity-table-column-user">{{translate('USER')}} <i class="fa fa-sort"></i></th>
+                    <th class="sorter-metatext" data-column-name="user" data-column-template="#activity-table-column-user" data-priority="1">{{translate('USER')}} <i class="fa fa-sort"></i></th>
                 {% endif %}
-                <th class="sorter-metatext" data-column-name="description" data-column-template="#activity-table-column-description">{{translate("DESCRIPTION")}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="description" data-column-template="#activity-table-column-description" data-priority="1">{{translate("DESCRIPTION")}} <i class="fa fa-sort"></i></th>
             </tr>
         </thead>
         <tbody>
@@ -45,13 +45,17 @@
 
     <script id="activity-table-column-user" type="text/x-handlebars-template">
         <td data-text="{{row.user.last_name}}">
-            <strong>
-                <a href="{{site.uri.public}}/users/u/{{row.user.user_name}}">{{row.user.first_name}} {{row.user.last_name}} ({{row.user.user_name}})</a>
-            </strong>
-            <div class="js-copy-container">
-                <span class="js-copy-target">{{row.user.email}}</span>
-                <button class="btn btn-xs js-copy-trigger"><i class="fa fa-copy"></i></button>
-            </div>
+            {{#if row.user }}
+                <strong>
+                    <a href="{{site.uri.public}}/users/u/{{row.user.user_name}}">{{row.user.first_name}} {{row.user.last_name}} ({{row.user.user_name}})</a>
+                </strong>
+                <div class="js-copy-container">
+                    <span class="js-copy-target">{{row.user.email}}</span>
+                    <button class="btn btn-xs uf-copy-trigger js-copy-trigger"><i class="fa fa-copy"></i></button>
+                </div>
+            {{ else }}
+                <i>{% endverbatim %}{{translate("USER.DELETED")}}{% verbatim %}</i>
+            {{/if }}
         </td>
     </script>
 

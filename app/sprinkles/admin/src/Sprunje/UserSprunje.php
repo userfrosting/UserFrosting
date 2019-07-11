@@ -1,19 +1,21 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Facades\Translator;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * UserSprunje
+ * UserSprunje.
  *
  * Implements Sprunje for the users API.
  *
@@ -24,27 +26,27 @@ class UserSprunje extends Sprunje
     protected $name = 'users';
 
     protected $listable = [
-        'status'
+        'status',
     ];
 
     protected $sortable = [
         'name',
         'last_activity',
-        'status'
+        'status',
     ];
 
     protected $filterable = [
         'name',
         'last_activity',
-        'status'
+        'status',
     ];
 
     protected $excludeForAll = [
-        'last_activity'
+        'last_activity',
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function baseQuery()
     {
@@ -55,84 +57,76 @@ class UserSprunje extends Sprunje
     }
 
     /**
-     * {@inheritDoc}
-     */
-    protected function applyTransformations($collection)
-    {
-        // Exclude password field from results
-        $collection->transform(function ($item, $key) {
-            unset($item['password']);
-            return $item;
-        });
-
-        return $collection;
-    }
-
-    /**
      * Filter LIKE the last activity description.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterLastActivity($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
+        $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
-                $query = $query->orLike('activities.description', $value);
+                $query->orLike('activities.description', $value);
             }
-            return $query;
         });
+
+        return $this;
     }
 
     /**
      * Filter LIKE the first name, last name, or email.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterName($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
+        $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
-                $query = $query->orLike('first_name', $value)
-                                ->orLike('last_name', $value)
-                                ->orLike('email', $value);
+                $query->orLike('first_name', $value)
+                        ->orLike('last_name', $value)
+                        ->orLike('email', $value);
             }
-            return $query;
         });
+
+        return $this;
     }
 
     /**
-     * Filter by status (active, disabled, unactivated)
+     * Filter by status (active, disabled, unactivated).
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterStatus($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
+        $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
                 if ($value == 'disabled') {
-                    $query = $query->orWhere('flag_enabled', 0);
+                    $query->orWhere('flag_enabled', 0);
                 } elseif ($value == 'unactivated') {
-                    $query = $query->orWhere('flag_verified', 0);
+                    $query->orWhere('flag_verified', 0);
                 } elseif ($value == 'active') {
-                    $query = $query->orWhere(function ($query) {
-                        return $query->where('flag_enabled', 1)->where('flag_verified', 1);
+                    $query->orWhere(function ($query) {
+                        $query->where('flag_enabled', 1)->where('flag_verified', 1);
                     });
                 }
             }
-            return $query;
         });
+
+        return $this;
     }
 
     /**
@@ -145,16 +139,16 @@ class UserSprunje extends Sprunje
         return [
             [
                 'value' => 'active',
-                'text' => Translator::translate('ACTIVE')
+                'text'  => Translator::translate('ACTIVE'),
             ],
             [
                 'value' => 'unactivated',
-                'text' => Translator::translate('UNACTIVATED')
+                'text'  => Translator::translate('UNACTIVATED'),
             ],
             [
                 'value' => 'disabled',
-                'text' => Translator::translate('DISABLED')
-            ]
+                'text'  => Translator::translate('DISABLED'),
+            ],
         ];
     }
 
@@ -162,35 +156,44 @@ class UserSprunje extends Sprunje
      * Sort based on last activity time.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return Builder
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortLastActivity($query, $direction)
     {
-        return $query->orderBy('activities.occurred_at', $direction);
+        $query->orderBy('activities.occurred_at', $direction);
+
+        return $this;
     }
 
     /**
      * Sort based on last name.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return Builder
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortName($query, $direction)
     {
-        return $query->orderBy('last_name', $direction);
+        $query->orderBy('last_name', $direction);
+
+        return $this;
     }
 
     /**
-     * Sort active, unactivated, disabled
+     * Sort active, unactivated, disabled.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return Builder
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortStatus($query, $direction)
     {
-        return $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
+        $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
+
+        return $this;
     }
 }

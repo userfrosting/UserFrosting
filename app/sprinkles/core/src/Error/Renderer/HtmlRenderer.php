@@ -1,10 +1,13 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 class HtmlRenderer extends ErrorRenderer
@@ -40,12 +43,12 @@ class HtmlRenderer extends ErrorRenderer
 
         $output = sprintf(
             "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
-            "<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana," .
-            "sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{" .
-            "display:inline-block;width:65px;}table,th,td{font:12px Helvetica,Arial,Verdana," .
-            "sans-serif;border:1px solid black;border-collapse:collapse;padding:5px;text-align: left;}" .
-            "th{font-weight:600;}" .
-            "</style></head><body><h1>%s</h1>%s</body></html>",
+            '<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,' .
+            'sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{' .
+            'display:inline-block;width:65px;}table,th,td{font:12px Helvetica,Arial,Verdana,' .
+            'sans-serif;border:1px solid black;border-collapse:collapse;padding:5px;text-align: left;}' .
+            'th{font-weight:600;}' .
+            '</style></head><body><h1>%s</h1>%s</body></html>',
             $title,
             $title,
             $html
@@ -57,10 +60,11 @@ class HtmlRenderer extends ErrorRenderer
     /**
      * Render a summary of the exception.
      *
-     * @param Exception $exception
+     * @param \Exception $exception
+     *
      * @return string
      */
-    public function renderException($exception)
+    public function renderException(\Exception $exception)
     {
         $html = sprintf('<div><strong>Type:</strong> %s</div>', get_class($exception));
 

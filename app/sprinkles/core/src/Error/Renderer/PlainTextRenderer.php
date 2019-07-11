@@ -1,14 +1,17 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 /**
- * Plain Text Error Renderer
+ * Plain Text Error Renderer.
  */
 class PlainTextRenderer extends ErrorRenderer
 {
@@ -21,11 +24,16 @@ class PlainTextRenderer extends ErrorRenderer
         return $this->exception->getMessage();
     }
 
+    /**
+     * Format Exception Body.
+     *
+     * @return string
+     */
     public function formatExceptionBody()
     {
         $e = $this->exception;
 
-        $text = 'Slim Application Error:' . PHP_EOL;
+        $text = 'UserFrosting Application Error:' . PHP_EOL;
         $text .= $this->formatExceptionFragment($e);
 
         while ($e = $e->getPrevious()) {
@@ -38,6 +46,7 @@ class PlainTextRenderer extends ErrorRenderer
 
     /**
      * @param \Exception|\Throwable $e
+     *
      * @return string
      */
     public function formatExceptionFragment($e)

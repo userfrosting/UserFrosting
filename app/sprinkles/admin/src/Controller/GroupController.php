@@ -1,29 +1,27 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
-use Carbon\Carbon;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
-use UserFrosting\Support\Exception\HttpException;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Controller class for group-related requests, including listing groups, CRUD for groups, etc.
@@ -40,18 +38,26 @@ class GroupController extends SimpleController
      * 2. The user has permission to create a new group;
      * 3. The submitted data is valid.
      * This route requires authentication (and should generally be limited to admins or the root user).
+     *
      * Request type: POST
+     *
      * @see getModalCreateGroup
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function create($request, $response, $args)
+    public function create(Request $request, Response $response, $args)
     {
         // Get POST parameters: name, slug, icon, description
         $params = $request->getParsedBody();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -59,7 +65,7 @@ class GroupController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -78,30 +84,30 @@ class GroupController extends SimpleController
             $error = true;
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Check if name or slug already exists
-        if ($classMapper->staticMethod('group', 'where', 'name', $data['name'])->first()) {
+        if ($classMapper->getClassMapping('group')::where('name', $data['name'])->first()) {
             $ms->addMessageTranslated('danger', 'GROUP.NAME.IN_USE', $data);
             $error = true;
         }
 
-        if ($classMapper->staticMethod('group', 'where', 'slug', $data['slug'])->first()) {
+        if ($classMapper->getClassMapping('group')::where('slug', $data['slug'])->first()) {
             $ms->addMessageTranslated('danger', 'GROUP.SLUG.IN_USE', $data);
             $error = true;
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
         // All checks passed!  log events/activities and create group
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $currentUser) {
             // Create the group
             $group = $classMapper->createInstance('group', $data);
 
@@ -110,14 +116,14 @@ class GroupController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} created group {$group->name}.", [
-                'type' => 'group_create',
-                'user_id' => $currentUser->id
+                'type'    => 'group_create',
+                'user_id' => $currentUser->id,
             ]);
 
             $ms->addMessageTranslated('success', 'GROUP.CREATION_SUCCESSFUL', $data);
         });
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -130,31 +136,40 @@ class GroupController extends SimpleController
      * 3. The group is empty (does not have any users);
      * 4. The submitted data is valid.
      * This route requires authentication (and should generally be limited to admins or the root user).
+     *
      * Request type: DELETE
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException   If group is not found
+     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws BadRequestException
      */
-    public function delete($request, $response, $args)
+    public function delete(Request $request, Response $response, $args)
     {
         $group = $this->getGroupFromParams($args);
 
         // If the group doesn't exist, return 404
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_group', [
-            'group' => $group
+            'group' => $group,
         ])) {
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Config\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
         // Check that we are not deleting the default group
@@ -162,60 +177,66 @@ class GroupController extends SimpleController
         if ($group->slug == $config['site.registration.user_defaults.group']) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.DELETE_DEFAULT', $group->toArray());
+
             throw $e;
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Check if there are any users in this group
-        $countGroupUsers = $classMapper->staticMethod('user', 'where', 'group_id', $group->id)->count();
+        $countGroupUsers = $classMapper->getClassMapping('user')::where('group_id', $group->id)->count();
         if ($countGroupUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.NOT_EMPTY', $group->toArray());
+
             throw $e;
         }
 
         $groupName = $group->name;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($group, $groupName, $currentUser) {
+        Capsule::transaction(function () use ($group, $groupName, $currentUser) {
             $group->delete();
             unset($group);
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted group {$groupName}.", [
-                'type' => 'group_delete',
-                'user_id' => $currentUser->id
+                'type'    => 'group_delete',
+                'user_id' => $currentUser->id,
             ]);
         });
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'GROUP.DELETION_SUCCESSFUL', [
-            'name' => $groupName
+            'name' => $groupName,
         ]);
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
-     * Returns a list of Groups
+     * Returns info for a single group.
      *
-     * Generates a list of groups, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
+     *
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
+     * @throws NotFoundException  If group is not found
      */
-    public function getList($request, $response, $args)
+    public function getInfo(Request $request, Response $response, $args)
     {
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -223,7 +244,57 @@ class GroupController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $slug = $args['slug'];
+
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $group = $classMapper->getClassMapping('group')::where('slug', $slug)->first();
+
+        // If the group doesn't exist, return 404
+        if (!$group) {
+            throw new NotFoundException();
+        }
+
+        // Get group
+        $result = $group->toArray();
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Returns a list of Groups.
+     *
+     * Generates a list of groups, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     *
+     * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
+     */
+    public function getList(Request $request, Response $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_groups')) {
+            throw new ForbiddenException();
+        }
+
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         $sprunje = $classMapper->createInstance('group_sprunje', $classMapper, $params);
@@ -233,7 +304,18 @@ class GroupController extends SimpleController
         return $sprunje->toResponse($response);
     }
 
-    public function getModalConfirmDelete($request, $response, $args)
+    /**
+     * Get deletetion confirmation modal.
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException   If group is not found
+     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws BadRequestException
+     */
+    public function getModalConfirmDelete(Request $request, Response $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -242,38 +324,39 @@ class GroupController extends SimpleController
 
         // If the group no longer exists, forward to main group listing page
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_group', [
-            'group' => $group
+            'group' => $group,
         ])) {
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Check if there are any users in this group
-        $countGroupUsers = $classMapper->staticMethod('user', 'where', 'group_id', $group->id)->count();
+        $countGroupUsers = $classMapper->getClassMapping('user')::where('group_id', $group->id)->count();
         if ($countGroupUsers > 0) {
             $e = new BadRequestException();
             $e->addUserMessage('GROUP.NOT_EMPTY', $group->toArray());
+
             throw $e;
         }
 
         return $this->ci->view->render($response, 'modals/confirm-delete-group.html.twig', [
             'group' => $group,
-            'form' => [
+            'form'  => [
                 'action' => "api/groups/g/{$group->slug}",
-            ]
+            ],
         ]);
     }
 
@@ -282,20 +365,24 @@ class GroupController extends SimpleController
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
+     *
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getModalCreate($request, $response, $args)
+    public function getModalCreate(Request $request, Response $response, $args)
     {
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\MessageTranslator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled page
@@ -303,7 +390,7 @@ class GroupController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Create a dummy group to prepopulate fields
@@ -313,8 +400,8 @@ class GroupController extends SimpleController
 
         $fieldNames = ['name', 'slug', 'icon', 'description'];
         $fields = [
-            'hidden' => [],
-            'disabled' => []
+            'hidden'   => [],
+            'disabled' => [],
         ];
 
         // Load validation rules
@@ -323,15 +410,15 @@ class GroupController extends SimpleController
 
         return $this->ci->view->render($response, 'modals/group.html.twig', [
             'group' => $group,
-            'form' => [
-                'action' => 'api/groups',
-                'method' => 'POST',
-                'fields' => $fields,
-                'submit_text' => $translator->translate("CREATE")
+            'form'  => [
+                'action'      => 'api/groups',
+                'method'      => 'POST',
+                'fields'      => $fields,
+                'submit_text' => $translator->translate('CREATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
@@ -340,9 +427,17 @@ class GroupController extends SimpleController
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
+     *
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If group is not found
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getModalEdit($request, $response, $args)
+    public function getModalEdit(Request $request, Response $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -351,34 +446,34 @@ class GroupController extends SimpleController
 
         // If the group doesn't exist, return 404
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\MessageTranslator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "slug", "icon", "description" for this group
         $fieldNames = ['name', 'slug', 'icon', 'description'];
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
             'group' => $group,
-            'fields' => $fieldNames
+            'fields' => $fieldNames,
         ])) {
             throw new ForbiddenException();
         }
 
         // Generate form
         $fields = [
-            'hidden' => [],
-            'disabled' => []
+            'hidden'   => [],
+            'disabled' => [],
         ];
 
         // Load validation rules
@@ -387,45 +482,55 @@ class GroupController extends SimpleController
 
         return $this->ci->view->render($response, 'modals/group.html.twig', [
             'group' => $group,
-            'form' => [
-                'action' => "api/groups/g/{$group->slug}",
-                'method' => 'PUT',
-                'fields' => $fields,
-                'submit_text' => $translator->translate('UPDATE')
+            'form'  => [
+                'action'      => "api/groups/g/{$group->slug}",
+                'method'      => 'PUT',
+                'fields'      => $fields,
+                'submit_text' => $translator->translate('UPDATE'),
             ],
             'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+                'validators' => $validator->rules('json', false),
+            ],
         ]);
     }
 
-    public function getUsers($request, $response, $args)
+    /**
+     * Users List API.
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If group is not found
+     * @throws ForbiddenException If user is not authozied to access page
+     */
+    public function getUsers(Request $request, Response $response, $args)
     {
         $group = $this->getGroupFromParams($args);
 
         // If the group no longer exists, forward to main group listing page
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
 
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
             'group' => $group,
-            'property' => 'users'
+            'property' => 'users',
         ])) {
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         $sprunje = $classMapper->createInstance('user_sprunje', $classMapper, $params);
@@ -445,27 +550,33 @@ class GroupController extends SimpleController
      * It checks each field individually, showing only those that you have permission to view.
      * This will also try to show buttons for deleting, and editing the group.
      * This page requires authentication.
+     *
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function pageInfo($request, $response, $args)
+    public function pageInfo(Request $request, Response $response, $args)
     {
         $group = $this->getGroupFromParams($args);
 
         // If the group no longer exists, forward to main group listing page
         if (!$group) {
-            $redirectPage = $this->ci->router->pathFor('uri_groups');
-            return $response->withRedirect($redirectPage, 404);
+            throw new NotFoundException();
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_group', [
-                'group' => $group
+                'group' => $group,
             ])) {
             throw new ForbiddenException();
         }
@@ -475,13 +586,13 @@ class GroupController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         foreach ($fieldNames as $field) {
             if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
                 'group' => $group,
-                'property' => $field
+                'property' => $field,
             ])) {
                 $fields['hidden'][] = $field;
             }
@@ -489,26 +600,27 @@ class GroupController extends SimpleController
 
         // Determine buttons to display
         $editButtons = [
-            'hidden' => []
+            'hidden' => [],
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
             'group' => $group,
-            'fields' => ['name', 'slug', 'icon', 'description']
+            'fields' => ['name', 'slug', 'icon', 'description'],
         ])) {
             $editButtons['hidden'][] = 'edit';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'delete_group', [
-            'group' => $group
+            'group' => $group,
         ])) {
             $editButtons['hidden'][] = 'delete';
         }
 
         return $this->ci->view->render($response, 'pages/group.html.twig', [
-            'group' => $group,
-            'fields' => $fields,
-            'tools' => $editButtons
+            'group'           => $group,
+            'fields'          => $fields,
+            'tools'           => $editButtons,
+            'delete_redirect' => $this->ci->router->pathFor('uri_groups'),
         ]);
     }
 
@@ -518,14 +630,21 @@ class GroupController extends SimpleController
      * This page renders a table of groups, with dropdown menus for admin actions for each group.
      * Actions typically include: edit group, delete group.
      * This page requires authentication.
+     *
      * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function pageList($request, $response, $args)
+    public function pageList(Request $request, Response $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -544,25 +663,31 @@ class GroupController extends SimpleController
      * 2. The user has the necessary permissions to update the posted field(s);
      * 3. The submitted data is valid.
      * This route requires authentication (and should generally be limited to admins or the root user).
+     *
      * Request type: PUT
+     *
      * @see getModalGroupEdit
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @throws NotFoundException  If group is not found
+     * @throws ForbiddenException If user is not authozied to access page
      */
-    public function updateInfo($request, $response, $args)
+    public function updateInfo(Request $request, Response $response, $args)
     {
         // Get the group based on slug in URL
         $group = $this->getGroupFromParams($args);
 
         if (!$group) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException();
         }
-
-        /** @var UserFrosting\Config\Config $config */
-        $config = $this->ci->config;
 
         // Get PUT parameters: (name, slug, icon, description)
         $params = $request->getParsedBody();
 
-        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -587,28 +712,28 @@ class GroupController extends SimpleController
             $fieldNames[] = $name;
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this group
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
             'group' => $group,
-            'fields' => array_values(array_unique($fieldNames))
+            'fields' => array_values(array_unique($fieldNames)),
         ])) {
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Check if name or slug already exists
         if (
             isset($data['name']) &&
             $data['name'] != $group->name &&
-            $classMapper->staticMethod('group', 'where', 'name', $data['name'])->first()
+            $classMapper->getClassMapping('group')::where('name', $data['name'])->first()
         ) {
             $ms->addMessageTranslated('danger', 'GROUP.NAME.IN_USE', $data);
             $error = true;
@@ -617,18 +742,18 @@ class GroupController extends SimpleController
         if (
             isset($data['slug']) &&
             $data['slug'] != $group->slug &&
-            $classMapper->staticMethod('group', 'where', 'slug', $data['slug'])->first()
+            $classMapper->getClassMapping('group')::where('slug', $data['slug'])->first()
         ) {
             $ms->addMessageTranslated('danger', 'GROUP.SLUG.IN_USE', $data);
             $error = true;
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($data, $group, $currentUser) {
+        Capsule::transaction(function () use ($data, $group, $currentUser) {
             // Update the group and generate success messages
             foreach ($data as $name => $value) {
                 if ($value != $group->$name) {
@@ -640,18 +765,27 @@ class GroupController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated details for group {$group->name}.", [
-                'type' => 'group_update_info',
-                'user_id' => $currentUser->id
+                'type'    => 'group_update_info',
+                'user_id' => $currentUser->id,
             ]);
         });
 
         $ms->addMessageTranslated('success', 'GROUP.UPDATE', [
-            'name' => $group->name
+            'name' => $group->name,
         ]);
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
+    /**
+     * Get group from params.
+     *
+     * @param array $params
+     *
+     * @throws BadRequestException
+     *
+     * @return Group
+     */
     protected function getGroupFromParams($params)
     {
         // Load the request schema
@@ -667,18 +801,19 @@ class GroupController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
+
             throw $e;
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Get the group
-        $group = $classMapper->staticMethod('group', 'where', 'slug', $data['slug'])
+        $group = $classMapper->getClassMapping('group')::where('slug', $data['slug'])
             ->first();
 
         return $group;

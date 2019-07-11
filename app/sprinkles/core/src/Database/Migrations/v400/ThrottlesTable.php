@@ -1,27 +1,28 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\Builder;
-use UserFrosting\System\Bakery\Migration;
+use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
  * Throttles table migration
- * Version 4.0.0
+ * Version 4.0.0.
  *
- * @extends Migration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class ThrottlesTable extends Migration
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function up()
     {
@@ -43,7 +44,7 @@ class ThrottlesTable extends Migration
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function down()
     {

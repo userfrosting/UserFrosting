@@ -1,10 +1,13 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Log;
 
 use Monolog\Formatter\LineFormatter;
@@ -15,17 +18,19 @@ use Monolog\Formatter\LineFormatter;
  * This class extends the basic Monolog LineFormatter class, and provides basically the same functionality but with one exception:
  * if the second parameter of any logging method (debug, error, info, etc) is an array, it will print it as a nicely formatted,
  * multi-line JSON object instead of all on a single line.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class MixedFormatter extends LineFormatter
 {
-
     /**
-     * Return the JSON representation of a value
+     * Return the JSON representation of a value.
      *
-     * @param  mixed             $data
-     * @param  bool              $ignoreErrors
+     * @param mixed $data
+     * @param bool  $ignoreErrors
+     *
      * @throws \RuntimeException if encoding fails and errors are not ignored
+     *
      * @return string
      */
     protected function toJson($data, $ignoreErrors = false)
@@ -45,7 +50,8 @@ class MixedFormatter extends LineFormatter
     }
 
     /**
-     * @param  mixed  $data
+     * @param mixed $data
+     *
      * @return string JSON encoded data or null on failure
      */
     private function jsonEncodePretty($data)

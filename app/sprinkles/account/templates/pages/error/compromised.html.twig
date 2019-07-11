@@ -1,7 +1,11 @@
 {% extends "pages/abstract/error.html.twig" %}
 
-{% block page_title %}{{ translate('ACCOUNT.SESSION_COMPROMISED_TITLE') }}{% endblock %}
+{% block page_title %}{{ translate('ACCOUNT.SESSION_COMPROMISED.TITLE') }}{% endblock %}
 
-{% block page_description %}{{ translate('ACCOUNT.SESSION_COMPROMISED_TITLE') }}{% endblock %}
+{% block page_description %}{{ translate('ACCOUNT.SESSION_COMPROMISED.TITLE') }}{% endblock %}
 
-{% block heading %}<i class="fa fa-warning text-yellow"></i> Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{site.uri.public}}/account/sign-in">log in</a> and check your account for suspicious activity.  You may also wish to change your password.{% endblock %}
+{% block heading %}
+    <i class="fa fa-warning text-yellow"></i> {{ translate('ACCOUNT.SESSION_COMPROMISED.TEXT', {
+        'url' : site.uri.public ~ '/account/sign-in'
+    }) | raw }}
+{% endblock %}

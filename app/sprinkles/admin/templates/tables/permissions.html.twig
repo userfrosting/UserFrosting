@@ -11,8 +11,11 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="{{table.sortlist}}">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="name" data-column-template="#permission-table-column-name">{{translate('PERMISSION')}} <i class="fa fa-sort"></i></th>
-                <th class="sorter-metatext" data-column-name="properties" data-column-template="#permission-table-column-properties">{{translate('SLUG_CONDITION')}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#permission-table-column-name" data-priority="1">{{translate('PERMISSION')}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="properties" data-column-template="#permission-table-column-properties" data-priority="1">{{translate('SLUG_CONDITION')}} <i class="fa fa-sort"></i></th>
+                {% if 'via_roles' in table.columns %}
+                    <th data-column-template="#permission-table-column-via-roles" data-sorter="false" data-filter="false" data-priority="2">{{translate('PERMISSION.VIA_ROLES')}}</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -49,6 +52,14 @@
             <div>
                 <i>{{row.description}}</i>
             </div>
+        </td>
+    </script>
+
+    <script id="permission-table-column-via-roles" type="text/x-handlebars-template">
+        <td>
+            {{#each row.roles_via }}
+                <a href="{% endverbatim %}{# Handlebars can't access variables in the global scope, so we have to use Twig to insert the base url #}{{site.uri.public}}{% verbatim %}/roles/r/{{this.slug}}" class="label label-primary" title="{{this.description}}">{{this.name}}</a>
+            {{/each}}
         </td>
     </script>
     {% endverbatim %}

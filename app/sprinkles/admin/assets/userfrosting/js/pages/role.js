@@ -9,9 +9,15 @@
 
 $(document).ready(function() {
     // Control buttons
-    bindRoleButtons($("#view-role"));
+    bindRoleButtons($("#view-role"), { delete_redirect: page.delete_redirect });
 
     $("#widget-role-permissions").ufTable({
-        dataUrl: site.uri.public + '/api/roles/r/' + page.role_slug + '/permissions'
+        dataUrl: site.uri.public + '/api/roles/r/' + page.role_slug + '/permissions',
+        useLoadingTransition: site.uf_table.use_loading_transition
+    });
+
+    $("#widget-role-users").ufTable({
+        dataUrl: site.uri.public + '/api/roles/r/' + page.role_slug + '/users',
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 });

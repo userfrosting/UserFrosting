@@ -6,7 +6,9 @@
  */
 
 $(document).ready(function() {
-    $('.js-clear-cache').click(function() {
+    $('.js-clear-cache').click(function(e) {
+        e.preventDefault();
+
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/dashboard/clear-cache",
             ajaxParams: {
@@ -28,20 +30,28 @@ $(document).ready(function() {
     });
 
     // Table of site activities
-    $("#widget-activities").ufTable({
-        dataUrl: site.uri.public + "/api/activities"
-    });
+    var activities = $("#widget-activities");
+    if (activities.length) {
+        activities.ufTable({
+            dataUrl: site.uri.public + "/api/activities",
+            useLoadingTransition: site.uf_table.use_loading_transition
+        });
+    }
 
     // Table of users in current user's group
-    $("#widget-group-users").ufTable({
-        dataUrl: site.uri.public + '/api/groups/g/' + page.group_slug + '/users'
-    });
+    var groupUsers = $("#widget-group-users");
+    if (groupUsers.length) {
+        groupUsers.ufTable({
+            dataUrl: site.uri.public + "/api/groups/g/" + page.group_slug + "/users",
+            useLoadingTransition: site.uf_table.use_loading_transition
+        });
 
-    // Bind user creation button
-    bindUserCreationButton($("#widget-group-users"));
+        // Bind user creation button
+        bindUserCreationButton(groupUsers);
 
-    // Bind user table buttons
-    $("#widget-group-users").on("pagerComplete.ufTable", function () {
-        bindUserButtons($(this));
-    });
+        // Bind user table buttons
+        groupUsers.on("pagerComplete.ufTable", function () {
+            bindUserButtons($(this));
+        });
+    }
 });

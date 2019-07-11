@@ -13,9 +13,13 @@
             <tr>
                 <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info" data-priority="1">{{translate('USER')}} <i class="fa fa-sort"></i></th>
                 {% if 'last_activity' in table.columns %}
-                    <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity" data-priority="2">{{translate("ACTIVITY.LAST")}} <i class="fa fa-sort"></i></th>
+                    <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity" data-priority="3">{{translate("ACTIVITY.LAST")}} <i class="fa fa-sort"></i></th>
                 {% endif %}
-                <th class="filter-select filter-metatext" data-column-name="status" data-column-template="#user-table-column-actions" data-priority="1">{{translate("STATUS")}}/{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
+                {% if 'via_roles' in table.columns %}
+                    <th data-column-template="#user-table-column-via-roles" data-sorter="false" data-filter="false" data-priority="1">{{translate('PERMISSION.VIA_ROLES')}}</th>
+                {% endif %}
+                <th class="filter-select filter-metatext" data-column-name="status" data-column-template="#user-table-column-status" data-priority="2">{{translate("STATUS")}} <i class="fa fa-sort"></i></th>
+                <th data-column-name="actions" data-column-template="#user-table-column-actions" data-sorter="false" data-filter="false" data-priority="1">{{translate("ACTIONS")}}</th>
             </tr>
         </thead>
         <tbody>
@@ -38,7 +42,7 @@
             </strong>
             <div class="js-copy-container">
                 <span class="js-copy-target">{{row.email}}</span>
-                <button class="btn btn-xs js-copy-trigger"><i class="fa fa-copy"></i></button>
+                <button class="btn btn-xs uf-copy-trigger js-copy-trigger"><i class="fa fa-copy"></i></button>
             </div>
         </td>
     </script>
@@ -57,7 +61,7 @@
         {{/if }}
     </script>
 
-    <script id="user-table-column-actions" type="text/x-handlebars-template">
+    <script id="user-table-column-status" type="text/x-handlebars-template">
         <td
             {{#ifx row.flag_enabled '==' 0 }}
                 data-text="disabled"
@@ -69,26 +73,28 @@
                 {{/ifx }}
             {{/ifx }}
         >
-            <div class="btn-group">
-                {{#ifx row.flag_enabled '==' 0 }}
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        {% endverbatim %}{{translate("DISABLED")}}{% verbatim %}
-                        <span class="caret"></span>
-                    </button>
+            {{#ifx row.flag_enabled '==' 0 }}
+                <span class="text-muted">
+                    {% endverbatim %}{{translate("DISABLED")}}{% verbatim %}
+                </span>
+            {{ else }}
+                {{#ifx row.flag_verified '==' 0 }}
+                    <span class="text-yellow">
+                        {% endverbatim %}{{translate("UNACTIVATED")}}{% verbatim %}
+                    </span>
                 {{ else }}
-                    {{#ifx row.flag_verified '==' 0 }}
-                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-                            {% endverbatim %}{{translate("UNACTIVATED")}}{% verbatim %}
-                            <span class="caret"></span>
-                        </button>
-                    {{ else }}
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            {% endverbatim %}{{translate("ACTIVE")}}{% verbatim %}
-                            <span class="caret"></span>
-                        </button>
-                    {{/ifx }}
+                    <span>
+                        {% endverbatim %}{{translate("ACTIVE")}}{% verbatim %}
+                    </span>
                 {{/ifx }}
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            {{/ifx }}
+        </td>
+    </script>
+    <script id="user-table-column-actions" type="text/x-handlebars-template">
+        <td class="uf-table-fit-width">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">{% endverbatim %}{{translate("ACTIONS")}}{% verbatim %}<span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right-responsive" role="menu">
                     {{#ifx row.flag_verified '==' 0 }}
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-activate">
@@ -129,6 +135,14 @@
                     </li>
                 </ul>
             </div>
+        </td>
+    </script>
+
+    <script id="user-table-column-via-roles" type="text/x-handlebars-template">
+        <td>
+            {{#each row.roles_via }}
+                <a href="{% endverbatim %}{# Handlebars can't access variables in the global scope, so we have to use Twig to insert the base url #}{{site.uri.public}}{% verbatim %}/roles/r/{{this.slug}}" class="label label-primary" title="{{this.description}}">{{this.name}}</a>
+            {{/each}}
         </td>
     </script>
     {% endverbatim %}
