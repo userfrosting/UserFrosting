@@ -80,13 +80,13 @@ class MigrateRollbackCommand extends MigrateCommand
                 $migrated = $migrator->rollback(['pretend' => $pretend, 'steps' => $steps]);
             }
         } catch (\Exception $e) {
-            $this->io->writeln($migrator->getNotes());
+            $this->displayNotes($migrator);
             $this->io->error($e->getMessage());
             exit(1);
         }
 
         // Get notes and display them
-        $this->io->writeln($migrator->getNotes());
+        $this->displayNotes($migrator);
 
         // If all went well, there's no fatal errors and we have migrated
         // something, show some success
