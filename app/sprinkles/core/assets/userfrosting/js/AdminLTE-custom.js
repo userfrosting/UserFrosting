@@ -15,26 +15,29 @@ if (typeof jQuery === "undefined") {
     throw new Error("AdminLTE requires jQuery");
 }
 
-// Change background for currently selected menu item.
-// See: https://github.com/ColorlibHQ/AdminLTE/issues/1482#issuecomment-349304120
-var url = window.location;
-// for sidebar menu entirely but not cover treeview
-$('ul.sidebar-menu a').filter(function() {
-    return this.href != url;
-}).parent().removeClass('active');
-
-// for sidebar menu entirely but not cover treeview
-$('ul.sidebar-menu a').filter(function() {
-    return this.href == url;
-}).parent().addClass('active');
-
-// for treeview
-$('ul.treeview-menu a').filter(function() {
-    return this.href == url;
-}).parentsUntil(".sidebar-menu > .treeview-menu").addClass('active');
-
+/* initMenu()
+ * ======
+ * Activate the menu based on the url and href attr.
+ *
+ * @type Function
+ * @Usage: $.AdminLTE.initMenu('.sidebar')
+ */
+$.initMenu = function(searchElement) {
+    var _this = this;
+    var element = $(searchElement).filter(function() {
+        // Strip out everything after the hash, if present
+        var url_head = window.location.href.split('#', 1)[0];
+        return this.href == url_head; // || url.href.indexOf(this.href) == 0   // Include this if you want to color all parent URIs as well
+    }).parent();
+    $(element).addClass('active');
+    $(element).parents('.treeview').addClass('active');
+    $(element).parents('.treeview-menu').addClass('menu-open');
+};
 
 $(function() {
+    //Init menu and trees
+    $.initMenu('ul.sidebar-menu a');
+
     // Apply select2 to all js-select2 elements
     $('.js-select2').select2({
         minimumResultsForSearch: Infinity
