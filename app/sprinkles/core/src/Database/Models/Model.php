@@ -68,7 +68,7 @@ abstract class Model extends LaravelModel
      */
     public static function findUnique($value, $identifier, $checkDeleted = true)
     {
-        $query = static::where($identifier, $value);
+        $query = static::whereRaw("LOWER($identifier) = ?", [mb_strtolower($value)]);
 
         if ($checkDeleted) {
             $query = $query->withTrashed();
