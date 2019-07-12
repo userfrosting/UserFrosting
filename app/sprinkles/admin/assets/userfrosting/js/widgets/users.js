@@ -6,7 +6,7 @@
  * Set up the form in a modal after being successfully attached to the body.
  */
 function attachUserForm() {
-    $("body").on('renderSuccess.ufModal', function (data) {
+    $("body").on('renderSuccess.ufModal', function(data) {
         var modal = $(this).ufModal('getModal');
         var form = modal.find('.js-form');
 
@@ -15,6 +15,8 @@ function attachUserForm() {
             width: '100%'
         });
 
+
+
         // Set up the form for submission
         form.ufForm({
             validator: page.validators
@@ -22,7 +24,7 @@ function attachUserForm() {
             // Reload page on success
             window.location.reload();
         });
-        
+
         toggleSetPasswordMode(modal, 'link');
 
         // On submission, submit either the PUT request, or POST for a password reset, depending on the toggle state
@@ -47,14 +49,14 @@ function toggleSetPasswordMode(el, changePasswordMode) {
         if (validator) {
             //Iterate through named elements inside of the form, and mark them as error free
             el.find("input[type='password']").each(function() {
-              validator.successList.push(this); //mark as error free
+                validator.successList.push(this); //mark as error free
             });
-            validator.resetForm();//remove error class on name elements and clear history
-            validator.reset();//remove all error and success data
+            validator.resetForm(); //remove error class on name elements and clear history
+            validator.reset(); //remove all error and success data
         }
         el.find("input[type='password']").closest('.form-group')
-        .removeClass('has-error has-success');
-        el.find('.form-control-feedback').each(function () {
+            .removeClass('has-error has-success');
+        el.find('.form-control-feedback').each(function() {
             $(this).remove();
         });
     } else {
@@ -80,14 +82,14 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
         if (validator) {
             //Iterate through named elements inside of the form, and mark them as error free
             el.find("input[type='password']").each(function() {
-              validator.successList.push(this); //mark as error free
+                validator.successList.push(this); //mark as error free
             });
-            validator.resetForm();//remove error class on name elements and clear history
-            validator.reset();//remove all error and success data
+            validator.resetForm(); //remove error class on name elements and clear history
+            validator.reset(); //remove all error and success data
         }
         el.find("input[type='password']").closest('.form-group')
-        .removeClass('has-error has-success');
-        el.find('.form-control-feedback').each(function () {
+            .removeClass('has-error has-success');
+        el.find('.form-control-feedback').each(function() {
             $(this).remove();
         });
     } else {
@@ -130,19 +132,19 @@ function updateUser(userName, fieldName, fieldValue) {
                         return $.parseJSON(result);
                     }
                 } catch (e) {
-                   // statements to handle any exceptions
-                   console.log("Warning: Could not parse expected JSON response.");
-                   return {};
+                    // statements to handle any exceptions
+                    console.log("Warning: Could not parse expected JSON response.");
+                    return {};
                 }
             }
         }
-    }).fail(function (jqXHR) {
+    }).fail(function(jqXHR) {
         // Error messages
         if (debugAjax && jqXHR.responseText) {
             document.write(jqXHR.responseText);
             document.close();
         } else {
-            console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+            console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText);
 
             // Display errors on failure
             // TODO: ufAlerts widget should have a 'destroy' method
@@ -151,12 +153,12 @@ function updateUser(userName, fieldName, fieldValue) {
             } else {
                 $("#alerts-page").ufAlerts('clear');
             }
-    
+
             $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
         }
 
         return jqXHR;
-    }).done(function (response) {
+    }).done(function(response) {
         window.location.reload();
     });
 }
@@ -166,8 +168,8 @@ function updateUser(userName, fieldName, fieldValue) {
  * @param {module:jQuery} el jQuery wrapped element to target.
  * @param {{delete_redirect: string}} options Options used to modify behaviour of button actions.
  */
- function bindUserButtons(el, options) {
-     if (!options) options = {};
+function bindUserButtons(el, options) {
+    if (!options) options = {};
 
     /**
      * Buttons that launch a modal dialog
@@ -200,38 +202,38 @@ function updateUser(userName, fieldName, fieldValue) {
             msgTarget: $("#alerts-page")
         });
 
-        $("body").on('renderSuccess.ufModal', function (data) {
+        $("body").on('renderSuccess.ufModal', function(data) {
             var modal = $(this).ufModal('getModal');
             var form = modal.find('.js-form');
 
             // Set up collection widget
             var roleWidget = modal.find('.js-form-roles');
             roleWidget.ufCollection({
-                dropdown : {
+                dropdown: {
                     ajax: {
-                        url     : site.uri.public + '/api/roles'
+                        url: site.uri.public + '/api/roles'
                     },
-                    placeholder : "Select a role"
+                    placeholder: "Select a role"
                 },
                 dropdownTemplate: modal.find('#user-roles-select-option').html(),
-                rowTemplate     : modal.find('#user-roles-row').html()
+                rowTemplate: modal.find('#user-roles-row').html()
             });
 
             // Get current roles and add to widget
             $.getJSON(site.uri.public + '/api/users/u/' + userName + '/roles')
-            .done(function (data) {
-                $.each(data.rows, function (idx, role) {
-                    role.text = role.name;
-                    roleWidget.ufCollection('addRow', role);
+                .done(function(data) {
+                    $.each(data.rows, function(idx, role) {
+                        role.text = role.name;
+                        roleWidget.ufCollection('addRow', role);
+                    });
                 });
-            });
 
             // Set up form for submission
             form.ufForm()
-            .on("submitSuccess.ufForm", function() {
-                // Reload page on success
-                window.location.reload();
-            });
+                .on("submitSuccess.ufForm", function() {
+                    // Reload page on success
+                    window.location.reload();
+                });
         });
     });
 
@@ -248,7 +250,7 @@ function updateUser(userName, fieldName, fieldValue) {
             msgTarget: $("#alerts-page")
         });
 
-        $("body").on('renderSuccess.ufModal', function () {
+        $("body").on('renderSuccess.ufModal', function() {
             var modal = $(this).ufModal('getModal');
             var form = modal.find('.js-form');
 
@@ -284,16 +286,16 @@ function updateUser(userName, fieldName, fieldValue) {
             msgTarget: $("#alerts-page")
         });
 
-        $("body").on('renderSuccess.ufModal', function () {
+        $("body").on('renderSuccess.ufModal', function() {
             var modal = $(this).ufModal('getModal');
             var form = modal.find('.js-form');
 
             form.ufForm()
-            .on("submitSuccess.ufForm", function() {
-                // Navigate or reload page on success
-                if (options.delete_redirect) window.location.href = options.delete_redirect;
-                else window.location.reload();
-            });
+                .on("submitSuccess.ufForm", function() {
+                    // Navigate or reload page on success
+                    if (options.delete_redirect) window.location.href = options.delete_redirect;
+                    else window.location.reload();
+                });
         });
     });
 
@@ -307,12 +309,12 @@ function updateUser(userName, fieldName, fieldValue) {
         updateUser(btn.data('user_name'), 'flag_verified', '1');
     });
 
-    el.find('.js-user-enable').click(function () {
+    el.find('.js-user-enable').click(function() {
         var btn = $(this);
         updateUser(btn.data('user_name'), 'flag_enabled', '1');
     });
 
-    el.find('.js-user-disable').click(function () {
+    el.find('.js-user-disable').click(function() {
         var btn = $(this);
         updateUser(btn.data('user_name'), 'flag_enabled', '0');
     });
