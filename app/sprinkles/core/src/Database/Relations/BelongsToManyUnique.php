@@ -18,7 +18,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
- * @see https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
+ * @see https://github.com/laravel/framework/blob/5.8/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
  */
 class BelongsToManyUnique extends BelongsToMany
 {

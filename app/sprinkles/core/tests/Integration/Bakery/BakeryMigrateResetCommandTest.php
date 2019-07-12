@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Bakery;
 
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use UserFrosting\Sprinkle\Core\Bakery\MigrateResetCommand;
@@ -21,6 +22,8 @@ use UserFrosting\Tests\TestCase;
  */
 class BakeryMigrateResetCommandTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function tearDown()
     {
         parent::tearDown();

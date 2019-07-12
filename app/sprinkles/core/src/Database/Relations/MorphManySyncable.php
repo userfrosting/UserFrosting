@@ -18,7 +18,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Syncable;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
- * @see https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/MorphMany.php
+ * @see https://github.com/laravel/framework/blob/5.8/src/Illuminate/Database/Eloquent/Relations/MorphMany.php
  */
 class MorphManySyncable extends MorphMany
 {
