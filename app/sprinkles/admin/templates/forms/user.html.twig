@@ -25,6 +25,8 @@
                             <input type="text" class="form-control" name="theme" value="{{user.group.name}}" disabled>
                         {% else %}
                             <select id="input-group" class="form-control js-select2" name="group_id">
+                                <option value="0">{{translate('GROUP.NONE')}}</option>
+                                <option disabled="disabled">-----</option>
                                 {% for group in groups %}
                                 <option value="{{group.id}}" {% if (group.id == user.group_id) %}selected{% endif %}>{{group.name}}</option>
                                 {% endfor %}

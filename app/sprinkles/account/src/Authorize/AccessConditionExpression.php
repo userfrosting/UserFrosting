@@ -12,9 +12,8 @@ namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Monolog\Logger;
 use PhpParser\Error as PhpParserException;
-use PhpParser\Lexer\Emulative as EmulativeLexer;
 use PhpParser\NodeTraverser;
-use PhpParser\Parser as Parser;
+use PhpParser\ParserFactory as Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
@@ -75,7 +74,7 @@ class AccessConditionExpression
     {
         $this->nodeVisitor = $nodeVisitor;
         $this->user = $user;
-        $this->parser = new Parser(new EmulativeLexer());
+        $this->parser = (new Parser())->create(Parser::ONLY_PHP7);
         $this->traverser = new NodeTraverser();
         $this->traverser->addVisitor($nodeVisitor);
         $this->prettyPrinter = new StandardPrettyPrinter();
@@ -119,7 +118,7 @@ class AccessConditionExpression
             $stmts = $this->traverser->traverse($stmts);
 
             // Evaluate boolean statement.  It is safe to use eval() here, because our expression has been reduced entirely to a boolean expression.
-            $expr = $this->prettyPrinter->prettyPrintExpr($stmts[0]);
+            $expr = $this->prettyPrinter->prettyPrintExpr($stmts[0]->expr);
             $expr_eval = 'return ' . $expr . ";\n";
             $result = eval($expr_eval);
 

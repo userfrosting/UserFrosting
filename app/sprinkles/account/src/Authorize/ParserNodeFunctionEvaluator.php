@@ -71,7 +71,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     {
         // Look for function calls
         if ($node instanceof \PhpParser\Node\Expr\FuncCall) {
-            $eval = new \PhpParser\Node\Scalar\LNumber();
+            $eval = new \PhpParser\Node\Scalar\LNumber(0);
 
             // Get the method name
             $callbackName = $node->name->toString();
