@@ -94,7 +94,7 @@
                                     <i class="fa fa-fw fa-bolt fa-lg text-yellow" title="{{translate('UNACTIVATED')}}"></i>
                                 {% endif %}
                             </div>
-                            <h4 class="text-muted text-center">{{user.user_name}}{% if 'group' not in fields.hidden %} • {{user.group.name}}{% endif %}</h4>
+                            <h4 class="text-muted text-center">{{user.user_name}}{% if 'group' not in fields.hidden and user.group.name is not null %} • {{user.group.name}}{% endif %}</h4>
 
                             {% if 'email' not in fields.hidden %}
                                 <hr>
