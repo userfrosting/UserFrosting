@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
+- Allow null group assignment for users ([#867]; [#964])
 
 ### Fix
 - `bake` command return error if account sprinkle is not included ([#944])
@@ -31,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Account sprinkle now extend the Core `BakeCommand` class to add the `create-admin` to the general bake command. Any sprinkle already extending the Core `BakeCommand` might need adjustments.
 - Updated custom Eloquent relations (`belongsToManyThrough`, `morphToManyUnique`, `belongsToManyUnique`, `morphToManyUnique`, etc.) to support Laravel 5.8. See [The `belongsToMany` Method](https://laravel.com/docs/5.5/upgrade#upgrade-5.5.0).
+- Update to AdminLTE 2.3.11 ([#1014])
 
 ### Removed
 - Removed `belongsToManyConstrained` (deprecated in 4.1.6)
@@ -784,6 +786,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#838]: https://github.com/userfrosting/UserFrosting/issues/838
 [#853]: https://github.com/userfrosting/UserFrosting/issues/853
 [#854]: https://github.com/userfrosting/UserFrosting/issues/854
+[#867]: https://github.com/userfrosting/UserFrosting/issues/867
 [#869]: https://github.com/userfrosting/UserFrosting/issues/869
 [#872]: https://github.com/userfrosting/UserFrosting/issues/872
 [#881]: https://github.com/userfrosting/UserFrosting/issues/881
@@ -797,6 +800,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#953]: https://github.com/userfrosting/UserFrosting/issues/953
 [#958]: https://github.com/userfrosting/UserFrosting/issues/958
 [#963]: https://github.com/userfrosting/UserFrosting/issues/963
+[#964]: https://github.com/userfrosting/UserFrosting/issues/964
 [#965]: https://github.com/userfrosting/UserFrosting/issues/965
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
 [#976]: https://github.com/userfrosting/UserFrosting/issues/976
@@ -809,6 +813,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#993]: https://github.com/userfrosting/UserFrosting/issues/993
 [#998]: https://github.com/userfrosting/UserFrosting/issues/998
 [#1012]: https://github.com/userfrosting/UserFrosting/issues/1012
+[#1014]: https://github.com/userfrosting/UserFrosting/issues/1014
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
