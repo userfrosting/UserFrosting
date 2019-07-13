@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `bake` command return error if account sprinkle is not included ([#944])
 - Email is case-sensitive ([#881]; [#1012])
 - Update vulnerable handlebars@^3.0.3 to ^4.0.12 ([#921])
+- Moved `handlebars-helpers.js` from `core` to `admin` sprinkle ([#897])
 
 ### Changed
 - Account sprinkle now extend the Core `BakeCommand` class to add the `create-admin` to the general bake command. Any sprinkle already extending the Core `BakeCommand` might need adjustments.
@@ -794,6 +795,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#881]: https://github.com/userfrosting/UserFrosting/issues/881
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
 [#893]: https://github.com/userfrosting/UserFrosting/issues/893
+[#897]: https://github.com/userfrosting/UserFrosting/issues/897
 [#919]: https://github.com/userfrosting/UserFrosting/issues/919
 [#921]: https://github.com/userfrosting/UserFrosting/issues/921
 [#940]: https://github.com/userfrosting/UserFrosting/issues/940
