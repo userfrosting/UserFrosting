@@ -10,15 +10,32 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed Requirements
 - Changed minimum PHP Version to 7.1
 
+### Changed Dependencies
+- Updated Laravel Illuminate packages to 5.8
+- Updated Twig to 2.11
+- Updated PHPUnit to 7.5
+- Updated Mockery to 1.2
+- Updated nikic/php-parser to 4.2.2
+- Updated PHPMailer/PHPMailer to 6.0.7
+- Updated league/csv to 9.2.1
+- Updated symfony/console to 4.3
+- Updated vlucas/phpdotenv to 3.4.0
+- [Frontend] Updated handlebar from 3.0.x to 4.1.2
+
 ### Added
 - Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
+- Allow null group assignment for users ([#867]; [#964])
 
 ### Fix
 - `bake` command return error if account sprinkle is not included ([#944])
+- Email is case-sensitive ([#881]; [#1012])
+- Update vulnerable handlebars@^3.0.3 to ^4.0.12 ([#921])
+- Moved `handlebars-helpers.js` from `core` to `admin` sprinkle ([#897])
 
 ### Changed
 - Account sprinkle now extend the Core `BakeCommand` class to add the `create-admin` to the general bake command. Any sprinkle already extending the Core `BakeCommand` might need adjustments.
 - Updated custom Eloquent relations (`belongsToManyThrough`, `morphToManyUnique`, `belongsToManyUnique`, `morphToManyUnique`, etc.) to support Laravel 5.8. See [The `belongsToMany` Method](https://laravel.com/docs/5.5/upgrade#upgrade-5.5.0).
+- Update to AdminLTE 2.3.11 ([#1014])
 
 ### Removed
 - Removed `belongsToManyConstrained` (deprecated in 4.1.6)
@@ -26,12 +43,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v4.2.3]
 
 ### Added
-- Config to set Domain of RememberMe Cookie ([#990]; [#991]; Thanks @xrobau!)
+- Config to set Domain of RememberMe Cookie ([#990], [#991]; Thanks @xrobau !)
 - Config settings for password min/max length ([#993])
 
 ### Fixed
-- [PHPMailer] Turn off opportunistic TLS when disabled ([#986]; [#987])
-- Migrator now ignore files that don't end in `.php` ([#965]; Temporary fix for [#998])
+- [PHPMailer] Turn off opportunistic TLS when disabled ([#986], [#987])
+- Migrator now ignore files that don't end in `.php` ([#965], [#998])
+- Respects CSRF_ENABLED environment variable ([#976]; Thanks @Poldovico !)
 
 ## [v4.2.2]
 
@@ -771,11 +789,15 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#838]: https://github.com/userfrosting/UserFrosting/issues/838
 [#853]: https://github.com/userfrosting/UserFrosting/issues/853
 [#854]: https://github.com/userfrosting/UserFrosting/issues/854
+[#867]: https://github.com/userfrosting/UserFrosting/issues/867
 [#869]: https://github.com/userfrosting/UserFrosting/issues/869
 [#872]: https://github.com/userfrosting/UserFrosting/issues/872
+[#881]: https://github.com/userfrosting/UserFrosting/issues/881
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
 [#893]: https://github.com/userfrosting/UserFrosting/issues/893
+[#897]: https://github.com/userfrosting/UserFrosting/issues/897
 [#919]: https://github.com/userfrosting/UserFrosting/issues/919
+[#921]: https://github.com/userfrosting/UserFrosting/issues/921
 [#940]: https://github.com/userfrosting/UserFrosting/issues/940
 [#950]: https://github.com/userfrosting/UserFrosting/issues/950
 [#951]: https://github.com/userfrosting/UserFrosting/issues/951
@@ -783,8 +805,10 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#953]: https://github.com/userfrosting/UserFrosting/issues/953
 [#958]: https://github.com/userfrosting/UserFrosting/issues/958
 [#963]: https://github.com/userfrosting/UserFrosting/issues/963
+[#964]: https://github.com/userfrosting/UserFrosting/issues/964
 [#965]: https://github.com/userfrosting/UserFrosting/issues/965
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
+[#976]: https://github.com/userfrosting/UserFrosting/issues/976
 [#981]: https://github.com/userfrosting/UserFrosting/issues/981
 [#983]: https://github.com/userfrosting/UserFrosting/issues/983
 [#986]: https://github.com/userfrosting/UserFrosting/issues/986
@@ -793,6 +817,8 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#991]: https://github.com/userfrosting/UserFrosting/issues/991
 [#993]: https://github.com/userfrosting/UserFrosting/issues/993
 [#998]: https://github.com/userfrosting/UserFrosting/issues/998
+[#1012]: https://github.com/userfrosting/UserFrosting/issues/1012
+[#1014]: https://github.com/userfrosting/UserFrosting/issues/1014
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1

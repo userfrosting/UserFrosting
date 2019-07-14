@@ -87,13 +87,13 @@ class MigrateResetCommand extends MigrateCommand
         try {
             $resetted = $migrator->reset($pretend);
         } catch (\Exception $e) {
-            $this->io->writeln($migrator->getNotes());
+            $this->displayNotes($migrator);
             $this->io->error($e->getMessage());
             exit(1);
         }
 
         // Get notes and display them
-        $this->io->writeln($migrator->getNotes());
+        $this->displayNotes($migrator);
 
         // Delete the repository
         if (!$pretend && $migrator->repositoryExists()) {
