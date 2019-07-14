@@ -188,6 +188,11 @@ return [
                 /*
                  * Amazon S3 Bucket Config. Config should go in .env file. For help, see :
                  * https://aws.amazon.com/en/blogs/security/wheres-my-secret-access-key/
+                 *
+                 * As of version 4.3, https://github.com/thephpleague/flysystem-aws-s3-v3
+                 * is required inside a custom Sprinkle to use this filesystem.
+                 *
+                 * Include thephpleague/flysystem-aws-s3-v3 in a custom Sprinkle to use.
                  */
                 's3' => [
                     'driver' => 's3',
@@ -196,6 +201,25 @@ return [
                     'region' => getenv('AWS_DEFAULT_REGION') ?: '', // See : http://docs.aws.amazon.com/general/latest/gr/rande.html
                     'bucket' => getenv('AWS_BUCKET') ?: '',
                     'url'    => getenv('AWS_URL') ?: '',
+                ],
+
+                /*
+                 * Rackspace Config. Config should go in .env file. see :
+                 * https://laravel.com/docs/5.8/filesystem#configuration
+                 *
+                 * As of version 4.3, https://github.com/thephpleague/flysystem-rackspace
+                 * is required inside a custom Sprinkle to use this filesystem.
+                 *
+                 * Include thephpleague/flysystem-rackspace in a custom Sprinkle to use.
+                 */
+                'rackspace' => [
+                  'driver'    => 'rackspace',
+                  'username'  => getenv('RACKSPACE_USERNAME') ?: '',
+                  'key'       => getenv('RACKSPACE_KEY') ?: '',
+                  'container' => getenv('RACKSPACE_CONTAINER') ?: '',
+                  'endpoint'  => getenv('RACKSPACE_ENDPOINT') ?: '',
+                  'region'    => getenv('RACKSPACE_REGION') ?: '',
+                  'url_type'  => getenv('RACKSPACE_URL_TYPE') ?: '',
                 ],
            ],
         ],
