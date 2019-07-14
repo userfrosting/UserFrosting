@@ -202,7 +202,6 @@ return [
                     'bucket' => getenv('AWS_BUCKET') ?: '',
                     'url'    => getenv('AWS_URL') ?: '',
                 ],
-
                 /*
                  * Rackspace Config. Config should go in .env file. see :
                  * https://laravel.com/docs/5.8/filesystem#configuration
