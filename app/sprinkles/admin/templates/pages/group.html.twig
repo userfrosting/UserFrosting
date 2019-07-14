@@ -20,7 +20,7 @@
                         <div class="box-tools pull-right">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fas fa-gear"></i> <span class="caret"></span>
+                                  <i class="fas fa-cog"></i> <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu box-tool-menu">
                                     {% block tools %}
@@ -32,7 +32,7 @@
                                         {% if 'delete' not in tools.hidden %}
                                             <li>
                                                 <a href="#" class="js-group-delete" data-slug="{{group.slug}}">
-                                                    <i class="fas fa-trash-o fa-fw"></i> {{translate('DELETE')}}
+                                                    <i class="fas fa-trash-alt fa-fw"></i> {{translate('DELETE')}}
                                                 </a>
                                             </li>
                                         {% endif %}
