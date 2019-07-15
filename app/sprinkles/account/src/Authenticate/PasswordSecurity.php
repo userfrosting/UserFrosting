@@ -59,7 +59,7 @@ class PasswordSecurity
     }
 
     /**
-     * Generates a list of compromised passwords stored in cache or by querying Have I Been Pwned API.
+     * Generates a list of compromised passwords from cache or by querying Have I Been Pwned API.
      *
      * First check the cache to see if the hash prefix is stored.
      * If not found in cache, query Have I Been Pwned API and store response in cache.
@@ -77,7 +77,7 @@ class PasswordSecurity
 
         $cacheMinutes = $this->config['site.password_security.enforce_no_compromised.cache'];
 
-        // We can use the comparison list directly from cache if it is found. Otherwise, we query Have I Been Pwned API and then save response to cache.
+        // Check to see if it already exists in cache. If not, we query Have I Been Pwned API and then save response to cache.
         $hashArray = $this->cache->remember($hashPrefix, $cacheMinutes, function () use ($hashPrefix) {
             return $this->getHashArrayFromAPI($hashPrefix);
         });
