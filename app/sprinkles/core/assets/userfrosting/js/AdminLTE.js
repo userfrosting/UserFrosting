@@ -6,7 +6,7 @@
  *
  * @author Colorlib
  * @support <https://github.com/ColorlibHQ/AdminLTE/issues>
- * @version 2.4.13
+ * @version 2.4.14
  * @repository git://github.com/ColorlibHQ/AdminLTE.git
  * @license MIT <http://opensource.org/licenses/MIT>
  */
@@ -1063,7 +1063,7 @@ function($) {
         var headerHeight = $(Selector.mainHeader).outerHeight() || 0;
         var neg = headerHeight + footerHeight;
         var windowHeight = $(window).height();
-        var sidebarHeight = $(Selector.sidebar).height() || 0;
+        var sidebarHeight = $(Selector.sidebar).outerHeight() || 0;
 
         // Set the min-height of the content and sidebar based on
         // the height of the document.
