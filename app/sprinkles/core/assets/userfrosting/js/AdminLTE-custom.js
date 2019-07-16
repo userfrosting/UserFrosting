@@ -1,6 +1,6 @@
 /*! AdminLTE userfrosting.js
  * ================
- * Userfrosting JS file for AdminLTE v2.4.12 This file
+ * Userfrosting JS file for AdminLTE v2.4.15 This file
  * should be included in all pages. It controls some layout
  * options and implements functions related to Userfrosting.
  *
