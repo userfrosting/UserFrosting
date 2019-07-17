@@ -396,7 +396,7 @@ class GroupController extends SimpleController
         // Create a dummy group to prepopulate fields
         $group = $classMapper->createInstance('group', []);
 
-        $group->icon = 'fa fa-user';
+        $group->icon = 'fas fa-user';
 
         $fieldNames = ['name', 'slug', 'icon', 'description'];
         $fields = [

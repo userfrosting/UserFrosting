@@ -257,7 +257,8 @@ a:focus {
   background-color: transparent;
   background-image: none;
   padding: 15px 15px;
-  font-family: fontAwesome;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
 }
 .main-header .sidebar-toggle:before {
   content: "\f0c9";
@@ -1345,17 +1346,17 @@ a:focus {
   padding-left: 0;
 }
 /* support Font Awesome icons in form-control */
-.form-control-feedback.fa {
+.form-control-feedback.fas {
   line-height: 34px;
 }
 .input-lg + .form-control-feedback.fa,
 .input-group-lg + .form-control-feedback.fa,
-.form-group-lg .form-control + .form-control-feedback.fa {
+.form-group-lg .form-control + .form-control-feedback.fas {
   line-height: 46px;
 }
 .input-sm + .form-control-feedback.fa,
 .input-group-sm + .form-control-feedback.fa,
-.form-group-sm .form-control + .form-control-feedback.fa {
+.form-group-sm .form-control + .form-control-feedback.fas {
   line-height: 30px;
 }
 /*
@@ -1735,7 +1736,7 @@ a:focus {
   border-radius: 3px;
 }
 .box .overlay > .fa,
-.overlay-wrapper .overlay > .fa {
+.overlay-wrapper .overlay > .fas {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -2996,7 +2997,7 @@ table.text-center th {
 .carousel-control.right {
   background-image: none;
 }
-.carousel-control > .fa {
+.carousel-control > .fas {
   font-size: 40px;
   position: absolute;
   top: 50%;
@@ -4244,7 +4245,7 @@ table.text-center th {
   margin-right: 5px;
   line-height: 30px;
 }
-.fc-color-picker > li .fa {
+.fc-color-picker > li .fas {
   -webkit-transition: -webkit-transform linear 0.3s;
   -moz-transition: -moz-transform linear 0.3s;
   -o-transition: -o-transform linear 0.3s;

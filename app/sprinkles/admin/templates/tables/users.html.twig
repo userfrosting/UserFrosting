@@ -11,14 +11,14 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="{{table.sortlist}}">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info" data-priority="1">{{translate('USER')}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info" data-priority="1">{{translate('USER')}} <i class="fas fa-sort"></i></th>
                 {% if 'last_activity' in table.columns %}
-                    <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity" data-priority="3">{{translate("ACTIVITY.LAST")}} <i class="fa fa-sort"></i></th>
+                    <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity" data-priority="3">{{translate("ACTIVITY.LAST")}} <i class="fas fa-sort"></i></th>
                 {% endif %}
                 {% if 'via_roles' in table.columns %}
                     <th data-column-template="#user-table-column-via-roles" data-sorter="false" data-filter="false" data-priority="1">{{translate('PERMISSION.VIA_ROLES')}}</th>
                 {% endif %}
-                <th class="filter-select filter-metatext" data-column-name="status" data-column-template="#user-table-column-status" data-priority="2">{{translate("STATUS")}} <i class="fa fa-sort"></i></th>
+                <th class="filter-select filter-metatext" data-column-name="status" data-column-template="#user-table-column-status" data-priority="2">{{translate("STATUS")}} <i class="fas fa-sort"></i></th>
                 <th data-column-name="actions" data-column-template="#user-table-column-actions" data-sorter="false" data-filter="false" data-priority="1">{{translate("ACTIONS")}}</th>
             </tr>
         </thead>
@@ -42,7 +42,7 @@
             </strong>
             <div class="js-copy-container">
                 <span class="js-copy-target">{{row.email}}</span>
-                <button class="btn btn-xs uf-copy-trigger js-copy-trigger"><i class="fa fa-copy"></i></button>
+                <button class="btn btn-xs uf-copy-trigger js-copy-trigger"><i class="fas fa-copy"></i></button>
             </div>
         </td>
     </script>
@@ -98,39 +98,39 @@
                     {{#ifx row.flag_verified '==' 0 }}
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-activate">
-                        <i class="fa fa-bolt"></i> {% endverbatim %}{{translate("USER.ACTIVATE")}}{% verbatim %}
+                        <i class="fas fa-bolt"></i> {% endverbatim %}{{translate("USER.ACTIVATE")}}{% verbatim %}
                         </a>
                     </li>
                     {{/ifx }}
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-edit">
-                        <i class="fa fa-edit"></i> {% endverbatim %}{{translate("USER.EDIT")}}{% verbatim %}
+                        <i class="fas fa-edit"></i> {% endverbatim %}{{translate("USER.EDIT")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-roles">
-                        <i class="fa fa-drivers-license"></i> {% endverbatim %}{{translate("ROLE.MANAGE")}}{% verbatim %}
+                        <i class="fas fa-id-card"></i> {% endverbatim %}{{translate("ROLE.MANAGE")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-password">
-                        <i class="fa fa-key"></i> {% endverbatim %}{{translate("USER.ADMIN.CHANGE_PASSWORD")}}{% verbatim %}
+                        <i class="fas fa-key"></i> {% endverbatim %}{{translate("USER.ADMIN.CHANGE_PASSWORD")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                     {{#ifx row.flag_enabled '==' 1 }}
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-disable">
-                        <i class="fa fa-minus-circle"></i> {% endverbatim %}{{translate("USER.DISABLE")}}{% verbatim %}
+                        <i class="fas fa-minus-circle"></i> {% endverbatim %}{{translate("USER.DISABLE")}}{% verbatim %}
                         </a>
                     {{ else }}
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-enable">
-                        <i class="fa fa-plus-circle"></i> {% endverbatim %}{{translate("USER.ENABLE")}}{% verbatim %}
+                        <i class="fas fa-plus-circle"></i> {% endverbatim %}{{translate("USER.ENABLE")}}{% verbatim %}
                         </a>
                     {{/ifx }}
                     </li>
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-delete">
-                        <i class="fa fa-trash-o"></i> {% endverbatim %}{{translate("USER.DELETE")}}{% verbatim %}
+                        <i class="fas fa-trash-alt"></i> {% endverbatim %}{{translate("USER.DELETE")}}{% verbatim %}
                         </a>
                     </li>
                 </ul>
