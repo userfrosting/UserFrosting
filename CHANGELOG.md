@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated symfony/console to 4.3
 - Updated vlucas/phpdotenv to 3.4.0
 - [Frontend] Updated handlebar from 3.0.x to 4.1.2
+- [Frontend] Updated AdminLTE theme to 2.4.15 ([#994; #1015])
 
 ### Added
 - Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
@@ -816,9 +817,11 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#990]: https://github.com/userfrosting/UserFrosting/issues/990
 [#991]: https://github.com/userfrosting/UserFrosting/issues/991
 [#993]: https://github.com/userfrosting/UserFrosting/issues/993
+[#994]: https://github.com/userfrosting/UserFrosting/issues/994
 [#998]: https://github.com/userfrosting/UserFrosting/issues/998
 [#1012]: https://github.com/userfrosting/UserFrosting/issues/1012
 [#1014]: https://github.com/userfrosting/UserFrosting/issues/1014
+[#1015]: https://github.com/userfrosting/UserFrosting/issues/1015
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
