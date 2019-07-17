@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated symfony/console to 4.3
 - Updated vlucas/phpdotenv to 3.4.0
 - [Frontend] Updated handlebar from 3.0.x to 4.1.2
-- [Frontend] Updated AdminLTE theme to 2.4.15 ([#994; #1015])
+- [Frontend] Updated AdminLTE theme to 2.4.15 ([#994; #1014; #1015])
 
 ### Added
 - Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
@@ -36,7 +36,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Account sprinkle now extend the Core `BakeCommand` class to add the `create-admin` to the general bake command. Any sprinkle already extending the Core `BakeCommand` might need adjustments.
 - Updated custom Eloquent relations (`belongsToManyThrough`, `morphToManyUnique`, `belongsToManyUnique`, `morphToManyUnique`, etc.) to support Laravel 5.8. See [The `belongsToMany` Method](https://laravel.com/docs/5.5/upgrade#upgrade-5.5.0).
-- Update to AdminLTE 2.3.11 ([#1014])
 
 ### Removed
 - Removed `belongsToManyConstrained` (deprecated in 4.1.6)
