@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Email is case-sensitive ([#881]; [#1012])
 - Update vulnerable handlebars@^3.0.3 to ^4.0.12 ([#921])
 - Moved `handlebars-helpers.js` from `core` to `admin` sprinkle ([#897])
+- Remove `Package guzzle/guzzle is abandoned, you should avoid using it. Use guzzlehttp/guzzle instead` message ([#1016])
 
 ### Changed
 - Account sprinkle now extend the Core `BakeCommand` class to add the `create-admin` to the general bake command. Any sprinkle already extending the Core `BakeCommand` might need adjustments.
@@ -39,6 +40,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 - Removed `belongsToManyConstrained` (deprecated in 4.1.6)
+- Remove `league/flysystem-aws-s3-v3` and `league/flysystem-rackspace` as core dependencies ([#1018])
 
 ## [v4.2.3]
 
@@ -821,6 +823,8 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1012]: https://github.com/userfrosting/UserFrosting/issues/1012
 [#1014]: https://github.com/userfrosting/UserFrosting/issues/1014
 [#1015]: https://github.com/userfrosting/UserFrosting/issues/1015
+[#1016]: https://github.com/userfrosting/UserFrosting/issues/1016
+[#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
