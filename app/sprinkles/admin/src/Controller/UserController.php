@@ -133,11 +133,11 @@ class UserController extends SimpleController
         }
 
         $data['flag_verified'] = 1;
-        if (!isset($data['value'])) {
+        if (!isset($data['password'])) {
             // Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
             $data['password'] = '';
         } else {
-            $data['password'] = Password::hash($data['value']);
+            $data['password'] = Password::hash($data['password']);
         }
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
