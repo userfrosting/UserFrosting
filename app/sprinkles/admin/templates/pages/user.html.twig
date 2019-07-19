@@ -24,33 +24,33 @@
                                 <div class="box-tools pull-right">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          <i class="fa fa-gear"></i> <span class="caret"></span>
+                                          <i class="fas fa-cog"></i> <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu box-tool-menu">
                                             {% block tools %}
                                                 <li>
                                                     <a href="#" class="js-user-edit" data-user_name="{{user.user_name}}">
-                                                        <i class="fa fa-edit fa-fw"></i> {{translate('EDIT')}}
+                                                        <i class="fas fa-edit fa-fw"></i> {{translate('EDIT')}}
                                                     </a>
                                                 </li>
                                                 {% if 'password' not in tools.hidden %}
                                                     <li>
                                                         <a href="#" class="js-user-password" data-user_name="{{user.user_name}}">
-                                                            <i class="fa fa-lock fa-fw"></i> {{translate('PASSWORD')}}
+                                                            <i class="fas fa-lock fa-fw"></i> {{translate('PASSWORD')}}
                                                         </a>
                                                     </li>
                                                 {% endif %}
                                                 {% if 'roles' not in tools.hidden %}
                                                     <li>
                                                         <a href="#" class="js-user-roles" data-user_name="{{user.user_name}}">
-                                                            <i class="fa fa-drivers-license fa-fw"></i> {{translate('ROLE', 2)}}
+                                                            <i class="fas fa-id-card fa-fw"></i> {{translate('ROLE', 2)}}
                                                         </a>
                                                     </li>
                                                 {% endif %}
                                                 {% if 'activate' not in tools.hidden and user.flag_verified == "0" %}
                                                     <li>
                                                         <a href="#" class="js-user-activate" data-user_name="{{user.user_name}}">
-                                                            <i class="fa fa-bolt fa-fw"></i> {{translate('ACTIVATE')}}
+                                                            <i class="fas fa-bolt fa-fw"></i> {{translate('ACTIVATE')}}
                                                         </a>
                                                     </li>
                                                 {% endif %}
@@ -58,13 +58,13 @@
                                                     {% if user.flag_enabled == "1" %}
                                                         <li>
                                                             <a href="#" class="js-user-disable" data-user_name="{{user.user_name}}">
-                                                                <i class="fa fa-minus-circle fa-fw"></i> {{translate('DISABLE')}}
+                                                                <i class="fas fa-minus-circle fa-fw"></i> {{translate('DISABLE')}}
                                                             </a>
                                                         </li>
                                                     {% else %}
                                                         <li>
                                                             <a href="#" class="js-user-enable" data-user_name="{{user.user_name}}">
-                                                                <i class="fa fa-plus-circle fa-fw"></i> {{translate('ENABLE')}}
+                                                                <i class="fas fa-plus-circle fa-fw"></i> {{translate('ENABLE')}}
                                                             </a>
                                                         </li>
                                                     {% endif %}
@@ -72,7 +72,7 @@
                                                 {% if 'delete' not in tools.hidden %}
                                                     <li>
                                                         <a href="#" class="js-user-delete" data-user_name="{{user.user_name}}">
-                                                            <i class="fa fa-trash-o fa-fw"></i> {{translate('DELETE')}}
+                                                            <i class="fas fa-trash-alt fa-fw"></i> {{translate('DELETE')}}
                                                         </a>
                                                     </li>
                                                 {% endif %}
@@ -88,26 +88,26 @@
                             <h3 class="profile-username text-center">{{user.full_name}}</h3>
                             <div class="text-center">
                                 {% if user.flag_enabled == 0 %}
-                                    <i class="fa fa-fw fa-minus-circle fa-lg text-red" title="{{translate('DISABLED')}}"></i>
+                                    <i class="fas fa-fw fa-minus-circle fa-lg text-red" title="{{translate('DISABLED')}}"></i>
                                 {% endif %}
                                 {% if user.flag_verified == 0 %}
-                                    <i class="fa fa-fw fa-bolt fa-lg text-yellow" title="{{translate('UNACTIVATED')}}"></i>
+                                    <i class="fas fa-fw fa-bolt fa-lg text-yellow" title="{{translate('UNACTIVATED')}}"></i>
                                 {% endif %}
                             </div>
                             <h4 class="text-muted text-center">{{user.user_name}}{% if 'group' not in fields.hidden and user.group.name is not null %} • {{user.group.name}}{% endif %}</h4>
 
                             {% if 'email' not in fields.hidden %}
                                 <hr>
-                                <strong><i class="fa fa-envelope margin-r-5"></i> {{translate("EMAIL")}}</strong>
+                                <strong><i class="fas fa-envelope margin-r-5"></i> {{translate("EMAIL")}}</strong>
                                 <p class="text-muted box-profile-property js-copy-container">
-                                    <i class="fa fa-copy uf-copy-trigger js-copy-trigger"></i>
+                                    <i class="fas fa-copy uf-copy-trigger js-copy-trigger"></i>
                                     <span class="js-copy-target">{{user.email}}</span>
                                 </p>
                             {% endif %}
 
                             {% if 'locale' not in fields.hidden %}
                                 <hr>
-                                <strong><i class="fa fa-language margin-r-5"></i> {{translate("LOCALE")}}</strong>
+                                <strong><i class="fas fa-language margin-r-5"></i> {{translate("LOCALE")}}</strong>
                                 <p class="text-muted box-profile-property">
                                     {{locales[user.locale]}}
                                 </p>
@@ -117,7 +117,7 @@
 
                             {% if 'roles' not in fields.hidden %}
                                 <hr>
-                                <strong><i class="fa fa-drivers-license margin-r-5"></i> {{translate("ROLE", 2)}}</strong>
+                                <strong><i class="fas fa-id-card margin-r-5"></i> {{translate("ROLE", 2)}}</strong>
                                 <p class="box-profile-property">
                                     {% for role in user.roles %}
                                         <span class="label label-primary" title="{{role.description}}">{{role.name}}</span>
@@ -134,7 +134,7 @@
             {% block activity_box %}
                 <div id="widget-user-activities" class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title"><i class="fa fa-fw fa-tasks"></i> {{translate('ACTIVITY', 2)}}</h3>
+                        <h3 class="box-title"><i class="fas fa-fw fa-tasks"></i> {{translate('ACTIVITY', 2)}}</h3>
                         {% include "tables/table-tool-menu.html.twig" %}
                     </div>
                     <div class="box-body">
@@ -155,7 +155,7 @@
         <div class="col-md-12">
             <div id="widget-permissions" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title pull-left"><i class="fa fa-key fa-fw"></i> {{translate('PERMISSION', 2)}}</h3>
+                    <h3 class="box-title pull-left"><i class="fas fa-key fa-fw"></i> {{translate('PERMISSION', 2)}}</h3>
                     {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
