@@ -11,8 +11,8 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="{{table.sortlist}}">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="name" data-column-template="#role-table-column-info" data-priority="1">{{translate('ROLE')}} <i class="fa fa-sort"></i></th>
-                <th class="sorter-metatext" data-column-name="description" data-column-template="#role-table-column-description" data-priority="2">{{translate('DESCRIPTION')}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#role-table-column-info" data-priority="1">{{translate('ROLE')}} <i class="fas fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="description" data-column-template="#role-table-column-description" data-priority="2">{{translate('DESCRIPTION')}} <i class="fas fa-sort"></i></th>
                 <th data-column-template="#role-table-column-actions" data-sorter="false" data-filter="false" data-priority="1">{{translate('ACTIONS')}}</th>
             </tr>
         </thead>
@@ -53,17 +53,17 @@
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-role-permissions">
-                        <i class="fa fa-key"></i> {% endverbatim %}{{translate("PERMISSION.MANAGE")}}{% verbatim %}
+                        <i class="fas fa-key"></i> {% endverbatim %}{{translate("PERMISSION.MANAGE")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-role-edit">
-                        <i class="fa fa-edit"></i> {% endverbatim %}{{translate("ROLE.EDIT")}}{% verbatim %}
+                        <i class="fas fa-edit"></i> {% endverbatim %}{{translate("ROLE.EDIT")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-role-delete">
-                        <i class="fa fa-trash-o"></i> {% endverbatim %}{{translate("ROLE.DELETE")}}{% verbatim %}
+                        <i class="fas fa-trash-alt"></i> {% endverbatim %}{{translate("ROLE.DELETE")}}{% verbatim %}
                         </a>
                     </li>
                 </ul>

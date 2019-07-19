@@ -11,8 +11,8 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="{{table.sortlist}}">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="name" data-column-template="#group-table-column-info" data-priority="1">{{translate('GROUP')}} <i class="fa fa-sort"></i></th>
-                <th class="sorter-metatext" data-column-name="description" data-column-template="#group-table-column-description" data-priority="2">{{translate("DESCRIPTION")}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#group-table-column-info" data-priority="1">{{translate('GROUP')}} <i class="fas fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="description" data-column-template="#group-table-column-description" data-priority="2">{{translate("DESCRIPTION")}} <i class="fas fa-sort"></i></th>
                 <th data-column-template="#group-table-column-actions" data-sorter="false" data-filter="false" data-priority="1">{{translate("ACTIONS")}}</th>
             </tr>
         </thead>
@@ -53,12 +53,12 @@
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-group-edit">
-                        <i class="fa fa-edit"></i> {% endverbatim %}{{translate("GROUP.EDIT")}}{% verbatim %}
+                        <i class="fas fa-edit"></i> {% endverbatim %}{{translate("GROUP.EDIT")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-group-delete">
-                        <i class="fa fa-trash-o"></i> {% endverbatim %}{{translate("GROUP.DELETE")}}{% verbatim %}
+                        <i class="fas fa-trash-alt"></i> {% endverbatim %}{{translate("GROUP.DELETE")}}{% verbatim %}
                         </a>
                     </li>
                 </ul>

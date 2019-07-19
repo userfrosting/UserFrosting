@@ -5,7 +5,7 @@
 {% block page_description %}{{ translate('ACCOUNT.SESSION_COMPROMISED.TITLE') }}{% endblock %}
 
 {% block heading %}
-    <i class="fa fa-warning text-yellow"></i> {{ translate('ACCOUNT.SESSION_COMPROMISED.TEXT', {
+    <i class="fas fa-warning text-yellow"></i> {{ translate('ACCOUNT.SESSION_COMPROMISED.TEXT', {
         'url' : site.uri.public ~ '/account/sign-in'
     }) | raw }}
 {% endblock %}

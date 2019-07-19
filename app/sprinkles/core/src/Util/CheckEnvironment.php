@@ -158,13 +158,13 @@ class CheckEnvironment
                 if (!in_array($module, $apache_modules)) {
                     $problemsFound = true;
                     $this->resultsFailed['apache-' . $module] = [
-                        'title'   => "<i class='fa fa-server fa-fw'></i> Missing Apache module <b>$module</b>.",
+                        'title'   => "<i class='fas fa-server fa-fw'></i> Missing Apache module <b>$module</b>.",
                         'message' => "Please make sure that the <code>$module</code> Apache module is installed and enabled.  If you use shared hosting, you will need to ask your web host to do this for you.",
                         'success' => false,
                     ];
                 } else {
                     $this->resultsSuccess['apache-' . $module] = [
-                        'title'   => "<i class='fa fa-server fa-fw'></i> Apache module <b>$module</b> is installed and enabled.",
+                        'title'   => "<i class='fas fa-server fa-fw'></i> Apache module <b>$module</b> is installed and enabled.",
                         'message' => "Great, we found the <code>$module</code> Apache module!",
                         'success' => true,
                     ];
@@ -185,13 +185,13 @@ class CheckEnvironment
         if (!(extension_loaded('gd') && function_exists('gd_info'))) {
             $problemsFound = true;
             $this->resultsFailed['gd'] = [
-                'title'   => "<i class='fa fa-image fa-fw'></i> GD library not installed",
+                'title'   => "<i class='fas fa-image fa-fw'></i> GD library not installed",
                 'message' => 'We could not confirm that the <code>GD</code> library is installed and enabled.  GD is an image processing library that UserFrosting uses to generate captcha codes for user account registration.',
                 'success' => false,
             ];
         } else {
             $this->resultsSuccess['gd'] = [
-                'title'   => "<i class='fa fa-image fa-fw'></i> GD library installed!",
+                'title'   => "<i class='fas fa-image fa-fw'></i> GD library installed!",
                 'message' => 'Great, you have <code>GD</code> installed and enabled.',
                 'success' => true,
             ];
@@ -224,13 +224,13 @@ class CheckEnvironment
             if (!function_exists($func)) {
                 $problemsFound = true;
                 $this->resultsFailed['function-' . $func] = [
-                    'title'   => "<i class='fa fa-code fa-fw'></i> Missing image manipulation function.",
+                    'title'   => "<i class='fas fa-code fa-fw'></i> Missing image manipulation function.",
                     'message' => "It appears that function <code>$func</code> is not available.  UserFrosting needs this to render captchas.",
                     'success' => false,
                 ];
             } else {
                 $this->resultsSuccess['function-' . $func] = [
-                    'title'   => "<i class='fa fa-code fa-fw'></i> Function <b>$func</b> is available!",
+                    'title'   => "<i class='fas fa-code fa-fw'></i> Function <b>$func</b> is available!",
                     'message' => 'Sweet!',
                     'success' => true,
                 ];
@@ -250,13 +250,13 @@ class CheckEnvironment
         if (!class_exists('PDO')) {
             $problemsFound = true;
             $this->resultsFailed['pdo'] = [
-                'title'   => "<i class='fa fa-database fa-fw'></i> PDO is not installed.",
+                'title'   => "<i class='fas fa-database fa-fw'></i> PDO is not installed.",
                 'message' => "I'm sorry, you must have PDO installed and enabled in order for UserFrosting to access the database.  If you don't know what PDO is, please see <a href='http://php.net/manual/en/book.pdo.php'>http://php.net/manual/en/book.pdo.php</a>.",
                 'success' => false,
             ];
         } else {
             $this->resultsSuccess['pdo'] = [
-                'title'   => "<i class='fa fa-database fa-fw'></i> PDO is installed!",
+                'title'   => "<i class='fas fa-database fa-fw'></i> PDO is installed!",
                 'message' => "You've got PDO installed.  Good job!",
                 'success' => true,
             ];
@@ -325,7 +325,7 @@ class CheckEnvironment
             if ($assertWriteable !== $writeable) {
                 $problemsFound = true;
                 $this->resultsFailed['file-' . $file] = [
-                        'title'   => "<i class='fa fa-file-o fa-fw'></i> Incorrect permissions for file or directory.",
+                        'title'   => "<i class='fas fa-file-o fa-fw'></i> Incorrect permissions for file or directory.",
                         'message' => "<code>$file</code> is "
                             . ($writeable ? 'writeable' : 'not writeable')
                             . ', but it should '
@@ -337,7 +337,7 @@ class CheckEnvironment
                     ];
             } else {
                 $this->resultsSuccess['file-' . $file] = [
-                        'title'   => "<i class='fa fa-file-o fa-fw'></i> File/directory check passed!",
+                        'title'   => "<i class='fas fa-file-o fa-fw'></i> File/directory check passed!",
                         'message' => "<code>$file</code> exists and is correctly set as <b>"
                             . ($writeable ? 'writeable' : 'not writeable')
                             . '</b>.',
@@ -360,13 +360,13 @@ class CheckEnvironment
         if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
             $problemsFound = true;
             $this->resultsFailed['phpVersion'] = [
-                'title'   => "<i class='fa fa-code fa-fw'></i> You need to upgrade your PHP installation.",
+                'title'   => "<i class='fas fa-code fa-fw'></i> You need to upgrade your PHP installation.",
                 'message' => "I'm sorry, UserFrosting requires version " . \UserFrosting\PHP_MIN_VERSION . ' or greater.  Please upgrade your version of PHP, or contact your web hosting service and ask them to upgrade it for you.',
                 'success' => false,
             ];
         } else {
             $this->resultsSuccess['phpVersion'] = [
-                'title'   => "<i class='fa fa-code fa-fw'></i> PHP version checks out!",
+                'title'   => "<i class='fas fa-code fa-fw'></i> PHP version checks out!",
                 'message' => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION . 'or higher.  Great!',
                 'success' => true,
             ];
