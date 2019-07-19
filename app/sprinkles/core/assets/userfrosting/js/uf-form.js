@@ -40,7 +40,7 @@
         defaults = {
             DEBUG: false,
             site: site, // global site variables
-            submittingText: "<i class='fa fa-spinner fa-spin'></i>",
+            submittingText: "<i class='fas fa-spinner fa-spin'></i>",
             beforeSubmitCallback: null,
             binaryCheckboxes: true, // submit checked/unchecked checkboxes as 0/1 values
             keyupDelay: 0,

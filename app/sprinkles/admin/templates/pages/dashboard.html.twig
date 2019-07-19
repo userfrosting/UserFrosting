@@ -11,7 +11,7 @@
         <div class="col-md-4 col-sm-6 col-xs-12">
           <a href="{{site.uri.public}}/users">
             <div class="info-box">
-              <span class="info-box-icon bg-aqua"><i class="fa fa-user fa-fw"></i></span>
+              <span class="info-box-icon bg-aqua"><i class="fas fa-user fa-fw"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">{{ translate("USER", 2) }}</span>
                 <span class="info-box-number">{{counter.users}}</span>
@@ -26,7 +26,7 @@
         <div class="col-md-4 col-sm-6 col-xs-12">
           <a href="{{site.uri.public}}/roles">
             <div class="info-box">
-              <span class="info-box-icon bg-red"><i class="fa fa-drivers-license"></i></span>
+              <span class="info-box-icon bg-red"><i class="fas fa-id-card"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">{{ translate("ROLE", 2) }}</span>
                 <span class="info-box-number">{{counter.roles}}</span>
@@ -41,7 +41,7 @@
         <div class="col-md-4 col-sm-6 col-xs-12">
           <a href="{{site.uri.public}}/groups">
             <div class="info-box">
-              <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
+              <span class="info-box-icon bg-green"><i class="fas fa-users"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">{{ translate("GROUP", 2) }}</span>
                 <span class="info-box-number">{{counter.groups}}</span>
@@ -72,7 +72,7 @@
         <!-- /.col -->
         <div class="col-sm-6 col-xs-12">
           <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="fa fa-user fa-fw"></i></span>
+            <span class="info-box-icon bg-aqua"><i class="fas fa-user fa-fw"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{ translate("USER", 2) }}</span>
               <span class="info-box-number">{{current_user.group.users.count}}</span>
@@ -187,7 +187,7 @@
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div id="widget-activities" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-tasks fa-fw"></i> {{translate('ACTIVITY', 2)}}</h3>
+                    <h3 class="box-title"><i class="fas fa-tasks fa-fw"></i> {{translate('ACTIVITY', 2)}}</h3>
                     {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
@@ -208,7 +208,7 @@
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div id="widget-group-users" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
+                    <h3 class="box-title"><i class="fas fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
                     {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
@@ -221,7 +221,7 @@
                 </div>
                 <div class="box-footer">
                     <button type="button" class="btn btn-success js-user-create">
-                        <i class="fa fa-plus-square"></i>  {{translate("USER.CREATE")}}
+                        <i class="fas fa-plus-square"></i>  {{translate("USER.CREATE")}}
                     </button>
                 </div>
             </div>
