@@ -9,7 +9,7 @@
                 <div class="form-group">
                     <label>{{translate("GROUP.NAME")}}</label>
                     <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-edit fa-fw"></i></span>
+                        <span class="input-group-addon"><i class="fas fa-edit fa-fw"></i></span>
                         <input type="text" class="form-control" name="name" autocomplete="off" value="{{group.name}}" placeholder="{{translate("GROUP.NAME_EXPLAIN")}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
                     </div>
                 </div>
@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <label>{{translate("SLUG")}}</label>
                     <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-tag fa-fw"></i></span>
+                        <span class="input-group-addon"><i class="fas fa-tag fa-fw"></i></span>
                         <input type="text" class="form-control" name="slug" autocomplete="off" value="{{group.slug}}" placeholder="{{translate("SLUG")}}" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
                         {% if 'slug' not in form.fields.disabled %}
                             <span class="input-group-btn" data-toggle="buttons">

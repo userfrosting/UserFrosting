@@ -15,7 +15,7 @@
         <div class="col-md-12">
             <div id="widget-users" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title pull-left"><i class="fa fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
+                    <h3 class="box-title pull-left"><i class="fas fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
                     {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
@@ -30,7 +30,7 @@
                 {% if checkAccess('create_user') %}
                 <div class="box-footer">
                     <button type="button" class="btn btn-success js-user-create">
-                        <i class="fa fa-plus-square"></i>  {{ translate("USER.CREATE")}}
+                        <i class="fas fa-plus-square"></i>  {{ translate("USER.CREATE")}}
                     </button>
                 </div>
                 {% endif %}
