@@ -133,8 +133,12 @@ class UserController extends SimpleController
         }
 
         $data['flag_verified'] = 1;
-        // Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
-        $data['password'] = '';
+        if (!isset($data['password'])) {
+            // Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
+            $data['password'] = '';
+        } else {
+            $data['password'] = Password::hash($data['password']);
+        }
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
@@ -162,10 +166,12 @@ class UserController extends SimpleController
             // Try to generate a new password request
             $passwordRequest = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.create']);
 
-            // Create and send welcome email with password set link
-            $message = new TwigMailMessage($this->ci->view, 'mail/password-create.html.twig');
+            // If the password_mode is manual, do not send an email to set it. Else, send the email.
+            if (!isset($data['value'])) {
+                // Create and send welcome email with password set link
+                $message = new TwigMailMessage($this->ci->view, 'mail/password-create.html.twig');
 
-            $message->from($config['address_book.admin'])
+                $message->from($config['address_book.admin'])
                     ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                     ->addParams([
                         'user'                       => $user,
@@ -173,7 +179,8 @@ class UserController extends SimpleController
                         'token'                      => $passwordRequest->getToken(),
                     ]);
 
-            $this->ci->mailer->send($message);
+                $this->ci->mailer->send($message);
+            }
 
             $ms->addMessageTranslated('success', 'USER.CREATED', $data);
         });
@@ -694,7 +701,7 @@ class UserController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden'   => ['theme'],
+            'hidden'   => ['theme', 'password'],
             'disabled' => ['user_name'],
         ];
 
