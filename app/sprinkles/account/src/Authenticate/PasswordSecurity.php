@@ -171,13 +171,21 @@ class PasswordSecurity
     {
         $ch = curl_init();
         $optionsArray = [
-        CURLOPT_URL            => 'https://api.pwnedpasswords.com/range/' . $hashPrefix,
-        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_URL                    => 'https://api.pwnedpasswords.com/range/' . $hashPrefix,
+        CURLOPT_RETURNTRANSFER         => true,
+        CURLOPT_HEADER                 => true,
+        CURLOPT_VERBOSE                => true,
+
     ];
         curl_setopt_array($ch, $optionsArray);
 
         // execute request and get response.
         $query = curl_exec($ch);
+
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($status != 200) {
+        }
+
         $hashArray = preg_split("/[\n,]+/", $query);
 
         return $hashArray;
