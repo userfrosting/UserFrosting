@@ -91,7 +91,7 @@ class LocaleMissingKeysCommand extends BaseCommand
     /**
      * Flattens a nested array into dot syntax.
      *
-     * @param array  $array The array to flatten.
+     * @param array  $array  The array to flatten.
      * @param string $prefix (Default '')
      *
      * @return array Keys with missing values.
@@ -208,10 +208,10 @@ class LocaleMissingKeysCommand extends BaseCommand
     }
 
     /**
-     * @param  string      $baseLocale     The "base" locale to compare to
-     * @param  string|null $localesToCheck Comma delimited list of locales to check
+     * @param string      $baseLocale     The "base" locale to compare to
+     * @param string|null $localesToCheck Comma delimited list of locales to check
      *
-     * @return array       Locales to check.
+     * @return array Locales to check.
      */
     protected function getLocales(string $baseLocale, ?string $localesToCheck): array
     {
