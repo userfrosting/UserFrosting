@@ -14,11 +14,11 @@ use Illuminate\Database\Schema\Blueprint;
 use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
- * Groups table migration
+ * Users table migration
  * Changes `group_id` column properties to allow user to be created without a group.
  * Version 4.3.0.
  *
- * See https://laravel.com/docs/5.4/migrations#tables
+ * See https://laravel.com/docs/5.8/migrations#tables
  *
  * @author Amos Folz
  */

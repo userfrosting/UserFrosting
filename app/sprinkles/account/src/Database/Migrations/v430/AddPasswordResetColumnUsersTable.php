@@ -18,19 +18,17 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
  * Adds a `flag_password_reset_required` column to the users table.
  * Version 4.3.0.
  *
- * See https://laravel.com/docs/5.4/migrations#tables
+ * See https://laravel.com/docs/5.8/migrations#tables
  *
  * @author Amos Folz
  */
-class AddPasswordRestColumnUsersTable extends Migration
+class AddPasswordResetColumnUsersTable extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public static $dependencies = [
-        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\GroupsTable',
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable',
-        '\UserFrosting\Sprinkle\Account\Database\Migrations\v420\AddingForeignKeys',
     ];
 
     /**
@@ -40,7 +38,9 @@ class AddPasswordRestColumnUsersTable extends Migration
     {
         if ($this->schema->hasTable('users')) {
             $this->schema->table('users', function (Blueprint $table) {
-                $table->boolean('flag_password_reset_required')->default(0)->comment('Set to 1 to force user to reset their password, 0 otherwise.')->after('flag_enabled');
+                $table->boolean('flag_password_reset_required')
+                ->default(0)->comment('Set to 1 to force user to reset their password, 0 otherwise.')
+                ->after('flag_enabled');
             });
         }
     }
