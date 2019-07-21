@@ -10,8 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,9 +26,9 @@ use UserFrosting\Support\Repository\Loader\ArrayFileLoader;
 class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
 {
     /**
-     * @var string
+     * @var MessageTranslator
      */
-    protected $localesToCheck;
+    protected $translator;
 
     /**
      * {@inheritdoc}
@@ -38,14 +36,13 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
     protected function configure()
     {
         $this->setName('locale:missing-values')
-        ->setHelp("This command provides a summary of missing values for locale translation files. Missing keys are found by searching for empty and/or duplicate values. Either option can be turned off - see options for this command. E.g. running 'locale:missing-values -b en_US -c es_ES' will compare all es_ES and en_US locale files and find any values that are identical between the two locales, as well as searching all es_ES locale files for empty ('') values.")
-        ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale used for comparison and translation preview.', 'en_US')
-        ->addOption('check', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null)
-        ->addOption('length', 'l', InputOption::VALUE_REQUIRED, 'Set the length for preview column text.', 50)
-        ->addOption('empty', 'e', InputOption::VALUE_NONE, 'Setting this will skip check for empty strings.')
-        ->addOption('duplicates', 'd', InputOption::VALUE_NONE, 'Setting this will skip comparison check.');
-
-        $this->setDescription('Generate a table of keys with missing values.');
+             ->setHelp("This command provides a summary of missing values for locale translation files. Missing keys are found by searching for empty and/or duplicate values. Either option can be turned off - see options for this command. E.g. running 'locale:missing-values -b en_US -c es_ES' will compare all es_ES and en_US locale files and find any values that are identical between the two locales, as well as searching all es_ES locale files for empty ('') values. This can be helpful to list all values in a specific languages that are present, but might need translation. For example, listing all English strings found in the French locale.")
+             ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale used for comparison and translation preview.', 'en_US')
+             ->addOption('check', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null)
+             ->addOption('length', 'l', InputOption::VALUE_REQUIRED, 'Set the length for preview column text.', 50)
+             ->addOption('empty', 'e', InputOption::VALUE_NONE, 'Setting this will skip check for empty strings.')
+             ->addOption('duplicates', 'd', InputOption::VALUE_NONE, 'Setting this will skip comparison check.')
+             ->setDescription('Generate a table of keys with missing values.');
     }
 
     /**
@@ -56,34 +53,36 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         $this->io->title('Missing Locale Values');
 
         // Option -c. The locales to be checked.
-        $this->localesToCheck = $input->getOption('check');
+        $localesToCheck = $input->getOption('check');
 
         // The locale for the 'preview' column. Defaults to en_US if not set.
         $baseLocale = $input->getOption('base');
+        $baseLocaleFileNames = $this->getFilenames($baseLocale);
 
-        $this->length = $input->getOption('length');
+        // Get `length` option
+        $length = $input->getOption('length');
 
+        // Set translator to base locale
         $this->setTranslation($baseLocale);
 
-        $locales = $this->getLocales($baseLocale);
-
+        // Get locales and files for said locales
+        $locales = $this->getLocales($baseLocale, $localesToCheck);
         $files = $this->getFilePaths($locales);
-
-        $baseLocaleFileNames = $this->getFilenames($baseLocale);
 
         $this->io->writeln(['Locales to check: |' . implode('|', $locales) . '|']);
 
-        if ($input->getOption('empty') != true) {
+        // Proccess empty
+        if ($input->getOption('empty') === false) {
             $this->io->section('Searching for empty values.');
 
             $missing[] = $this->searchFilesForNull($files);
 
             if (!empty($missing[0])) {
-                $this->newTable($output);
+                $this->newTable($output, $length);
 
                 $this->table->setHeaders([
-                ['File path', 'Key', 'Translation preview'],
-              ]);
+                    ['File path', 'Key', 'Translation preview'],
+                ]);
 
                 // Build the table.
                 $this->buildTable($missing);
@@ -95,24 +94,24 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
             }
         }
 
-        if ($input->getOption('duplicates') != true) {
+        if ($input->getOption('duplicates') === false) {
             $this->io->section('Searching for duplicate values.');
 
-            foreach ($locales as $key => $altLocale) {
-                $duplicates[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
+            foreach ($locales as $locale) {
+                $duplicates[] = $this->compareFiles($baseLocale, $locale, $baseLocaleFileNames);
             }
 
             if (!empty($duplicates[0])) {
-                $this->newTable($output);
+                $this->newTable($output, $length);
 
                 $this->table->setHeaders([
-                ['File path', 'Key', 'Translation preview'],
-              ]);
+                    ['File path', 'Key', 'Translation preview'],
+                ]);
 
-                $this->newTable($output);
+                $this->newTable($output, $length);
                 $this->table->setHeaders([
-                ['File path', 'Key', 'Duplicate value'],
-              ]);
+                    ['File path', 'Key', 'Duplicate value'],
+                ]);
                 $this->buildTable($duplicates);
                 $this->table->render();
             } else {
@@ -129,12 +128,8 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      *
      * @return array Matching keys and values that are found in both arrays.
      */
-    protected function arrayIntersect($primary_array, $secondary_array)
+    protected function arrayIntersect(array $primary_array, array $secondary_array): array
     {
-        if (!is_array($primary_array) || !is_array($secondary_array)) {
-            return false;
-        }
-
         if (!empty($primary_array)) {
             foreach ($primary_array as $key => $value) {
                 if (!isset($secondary_array[$key])) {
@@ -160,7 +155,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      * @param array $array File paths and missing keys.
      * @param int   $level Nested array depth.
      */
-    protected function buildTable(array $array, $level = 1)
+    protected function buildTable(array $array, int $level = 1): void
     {
         foreach ($array as $key => $value) {
             //Level 2 has the filepath.
@@ -178,20 +173,14 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
     }
 
     /**
-     * Iterate over sprinkle locale files and find duplicates.
-     *
-     * @param string $baseLocale Locale being compared against.
-     * @param string $altLocale  Locale to find missing values for.
-     * @param array  $filenames  Sprinkle locale files that will be compared.
-     *
-     * @return array Intersect of keys with identical values.
+     * {@inheritdoc}
      */
-    protected function compareFiles($baseLocale, $altLocale, $filenames)
+    protected function compareFiles(string $baseLocale, string $altLocale, array $filenames): array
     {
         foreach ($filenames as $sprinklePath => $files) {
             foreach ($files as $key => $file) {
-                $base = $this->arrayFlatten($this->parseFile("$sprinklePath/locale/{$baseLocale}/{$file}"));
-                $alt = $this->arrayFlatten($this->parseFile("$sprinklePath/locale/{$altLocale}/{$file}"));
+                $base = $this->arrayFlatten($this->parseFile("$sprinklePath/locale/$baseLocale/$file"));
+                $alt = $this->arrayFlatten($this->parseFile("$sprinklePath/locale/$altLocale/$file"));
 
                 $missing[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->arrayIntersect($base, $alt);
             }
@@ -207,14 +196,15 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      *
      * @see https://www.php.net/manual/en/function.empty.php#refsect1-function.empty-returnvalues
      *
-     * @param array $array Locale translation file.
+     * @param array  $array  Locale translation file.
+     * @param string $prefix
      *
      * @return array Keys with missing values.
      */
-    protected function findMissing($array, $prefix = '')
+    protected function findMissing(array $array, string $prefix = ''): array
     {
         $result = [];
-        foreach ($array as $key=>$value) {
+        foreach ($array as $key => $value) {
             if (is_array($value)) {
                 $result = $result + $this->findMissing($value, $prefix . $key . '.');
             } else {
@@ -225,8 +215,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
         // We only want empty values.
         return array_filter($result, function ($val, $key) {
             return empty($val) && strpos($key, '@') === false;
-        },
-      ARRAY_FILTER_USE_BOTH);
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
     /**
@@ -236,7 +225,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      *
      * @return array
      */
-    protected function getFilePaths($locale)
+    protected function getFilePaths(array $locale): array
     {
         // Set up a locator class
         $locator = $this->ci->locator;
@@ -248,21 +237,12 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
     }
 
     /**
-     * Set up new table with Bakery formatting.
-     *
-     * @param OutputInterface $output
+     * {@inheritdoc}
      */
-    protected function newTable($output)
+    protected function newTable(OutputInterface $output, int $length): void
     {
-        $tableStyle = new TableStyle();
-        $tableStyle
-        ->setVerticalBorderChars(' ')
-        ->setDefaultCrossingChar(' ')
-        ->setCellHeaderFormat('<info>%s</info>');
-
-        $this->table = new Table($output);
-        $this->table->setStyle($tableStyle);
-        $this->table->setColumnMaxWidth(2, $this->length);
+        parent::newTable($output);
+        $this->table->setColumnMaxWidth(2, $length);
     }
 
     /**
@@ -272,9 +252,9 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      *
      * @return array
      */
-    protected function searchFilesForNull($files)
+    protected function searchFilesForNull(array $files): array
     {
-        foreach ($files as $key => $file) {
+        foreach ($files as $file) {
             $missing[$file] = $this->findMissing($this->parseFile($file));
 
             if (empty($missing[$file])) {
@@ -290,7 +270,7 @@ class LocaleMissingValuesCommand extends LocaleMissingKeysCommand
      *
      * @param string $locale Locale to be used for translation.
      */
-    protected function setTranslation(string $locale)
+    protected function setTranslation(string $locale): void
     {
         // Setup the translator. Set with -b or defaults to en_US
         $locator = $this->ci->locator;

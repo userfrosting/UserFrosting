@@ -28,17 +28,12 @@ class LocaleMissingKeysCommand extends BaseCommand
     /**
      * @var string
      */
-    protected $localesToCheck;
-
-    /**
-     * @var string
-     */
-    protected static $path;
+    protected $path;
 
     /**
      * @var array
      */
-    protected static $table = [];
+    protected $table = [];
 
     /**
      * {@inheritdoc}
@@ -46,11 +41,10 @@ class LocaleMissingKeysCommand extends BaseCommand
     protected function configure()
     {
         $this->setName('locale:missing-keys')
-        ->setHelp("This command provides a summary of missing keys for locale translation files. E.g. running 'locale:missing-keys -b en_US -c es_ES' will compare all es_ES and en_US locale files and generate a table listing the filepath and missing keys found from the `-c` locale.")
-        ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale to compare against.', 'en_US')
-        ->addOption('check', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null);
-
-        $this->setDescription('Generate a table of missing locale keys.');
+             ->setHelp("This command provides a summary of missing keys for locale translation files. E.g. running 'locale:missing-keys -b en_US -c es_ES' will compare all es_ES and en_US locale files and generate a table listing the filepath and missing keys found from the `-c` locale.")
+             ->addOption('base', 'b', InputOption::VALUE_REQUIRED, 'The base locale to compare against.', 'en_US')
+             ->addOption('check', 'c', InputOption::VALUE_REQUIRED, 'One or more specific locales to check. E.g. "fr_FR,es_ES"', null)
+             ->setDescription('Generate a table of missing locale keys.');
     }
 
     /**
@@ -62,30 +56,32 @@ class LocaleMissingKeysCommand extends BaseCommand
 
         // The "base" locale to compare other locales against. Defaults to en_US if not set.
         $baseLocale = $input->getOption('base');
-
-        // Option -c. Set to compare one or more specific locales.
-        $this->localesToCheck = $input->getOption('check');
-
         $baseLocaleFileNames = $this->getFilenames($baseLocale);
 
-        $locales = $this->getLocales($baseLocale);
+        // Option -c. Set to compare one or more specific locales.
+        $localesToCheck = $input->getOption('check');
+
+        // Get locales to check
+        $locales = $this->getLocales($baseLocale, $localesToCheck);
 
         $this->io->writeln('Locales to check: |' . implode('|', $locales) . '|');
-
         $this->io->section("Searching for missing keys using $baseLocale for comparison.");
 
-        foreach ($locales as $key => $altLocale) {
-            $difference[] = $this->compareFiles($baseLocale, $altLocale, $baseLocaleFileNames);
+        foreach ($locales as $locale) {
+
+            // Make sure locale exist
+            if (!in_array($locale, array_keys($this->ci->config['site']['locales']['available']))) {
+                $this->io->warning("Locale '$locale' is not available in config.");
+            } else {
+                $difference[] = $this->compareFiles($baseLocale, $locale, $baseLocaleFileNames);
+            }
         }
 
         // Build the table.
         if (!empty($difference[0])) {
             $this->newTable($output);
-
             $this->table->setHeaders(['File path', 'Missing key']);
-
             $this->buildTable($difference);
-
             $this->table->render();
         } else {
             $this->io->writeln('No missing keys found!');
@@ -95,14 +91,15 @@ class LocaleMissingKeysCommand extends BaseCommand
     /**
      * Flattens a nested array into dot syntax.
      *
-     * @param array $array The array to flatten.
+     * @param array  $array The array to flatten.
+     * @param string $prefix (Default '')
      *
      * @return array Keys with missing values.
      */
-    protected function arrayFlatten($array, $prefix = '')
+    protected function arrayFlatten(array $array, string $prefix = ''): array
     {
         $result = [];
-        foreach ($array as $key=>$value) {
+        foreach ($array as $key => $value) {
             if (is_array($value)) {
                 $result = $result + $this->arrayFlatten($value, $prefix . $key . '.');
             } else {
@@ -119,7 +116,7 @@ class LocaleMissingKeysCommand extends BaseCommand
      * @param array $array File paths and missing keys.
      * @param int   $level Nested array depth.
      */
-    protected function buildTable(array $array, $level = 1)
+    protected function buildTable(array $array, int $level = 1): void
     {
         foreach ($array as $key => $value) {
             //Level 2 has the filepath.
@@ -146,13 +143,14 @@ class LocaleMissingKeysCommand extends BaseCommand
      *
      * @return array The keys in $baseLocale that do not exist in $altLocale.
      */
-    protected function compareFiles($baseLocale, $altLocale, $filenames)
+    protected function compareFiles(string $baseLocale, string $altLocale, array $filenames): array
     {
         foreach ($filenames as $sprinklePath => $files) {
             foreach ($files as $key => $file) {
                 $base = $this->parseFile("$sprinklePath/locale/{$baseLocale}/{$file}");
                 $alt = $this->parseFile("$sprinklePath/locale/{$altLocale}/{$file}");
-                $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->arrayFlatten($this->getDifference($base, $alt));
+                $diff = $this->getDifference($base, $alt);
+                $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->arrayFlatten($diff);
             }
         }
 
@@ -167,16 +165,21 @@ class LocaleMissingKeysCommand extends BaseCommand
      *
      * @return array
      */
-    protected function getDifference($array1, $array2)
+    protected function getDifference(array $array1, array $array2): array
     {
+        $difference = [];
+
         foreach ($array1 as $key => $value) {
             if (is_array($value)) {
                 if (!isset($array2[$key])) {
                     $difference[$key] = $value;
                 } else {
-                    $new_diff = $this->getDifference($value, $array2[$key]);
-                    if ($new_diff != false) {
-                        $difference[$key] = $new_diff;
+                    if (is_array($array2[$key])) {
+                        $difference[$key] = $this->getDifference($value, $array2[$key]);
+                    } else {
+                        // If the second array returns a string for a key while
+                        // the first is an array, the whole first array is considered missing
+                        $difference[$key] = $value;
                     }
                 }
             } elseif (!isset($array2[$key])) {
@@ -184,7 +187,7 @@ class LocaleMissingKeysCommand extends BaseCommand
             }
         }
 
-        return !isset($difference) ? 0 : $difference;
+        return $difference;
     }
 
     /**
@@ -194,9 +197,9 @@ class LocaleMissingKeysCommand extends BaseCommand
      *
      * @return array Locale files and locations for the locale being compared against.
      */
-    public function getFilenames($locale)
+    public function getFilenames(string $locale): array
     {
-        $file = ($this->ci->locator->listResources("locale://{$locale}", true));
+        $file = ($this->ci->locator->listResources("locale://$locale", true));
         foreach ($file as $filename => $path) {
             $files[$path->getLocation()->getPath()][] = $path->getBaseName();
         }
@@ -205,13 +208,16 @@ class LocaleMissingKeysCommand extends BaseCommand
     }
 
     /**
-     * @return array Locales to check.
+     * @param  string      $baseLocale     The "base" locale to compare to
+     * @param  string|null $localesToCheck Comma delimited list of locales to check
+     *
+     * @return array       Locales to check.
      */
-    protected function getLocales($baseLocale)
+    protected function getLocales(string $baseLocale, ?string $localesToCheck): array
     {
         // If set, use the locale from the -c option.
-        if ($this->localesToCheck) {
-            return explode(',', $this->localesToCheck);
+        if ($localesToCheck) {
+            return explode(',', $localesToCheck);
         } else {
             //Need to filter the base locale to prevent false positive.
             return array_diff(array_keys($this->ci->config['site']['locales']['available']), [$baseLocale]);
@@ -223,13 +229,12 @@ class LocaleMissingKeysCommand extends BaseCommand
      *
      * @param OutputInterface $output
      */
-    protected function newTable($output)
+    protected function newTable(OutputInterface $output): void
     {
         $tableStyle = new TableStyle();
-        $tableStyle
-        ->setVerticalBorderChars(' ')
-        ->setDefaultCrossingChar(' ')
-        ->setCellHeaderFormat('<info>%s</info>');
+        $tableStyle->setVerticalBorderChars(' ')
+                   ->setDefaultCrossingChar(' ')
+                   ->setCellHeaderFormat('<info>%s</info>');
 
         $this->table = new Table($output);
         $this->table->setStyle($tableStyle);
@@ -239,9 +244,18 @@ class LocaleMissingKeysCommand extends BaseCommand
      * Access file contents through inclusion.
      *
      * @param string $path The path of file to be included.
+     *
+     * @return array The array returned in the included locale file
      */
-    protected function parseFile($path)
+    protected function parseFile(string $path): array
     {
-        return include "$path";
+        $content = include "$path";
+
+        // Consider not found file returns an empty array
+        if ($content === false) {
+            return [];
+        }
+
+        return $content;
     }
 }
