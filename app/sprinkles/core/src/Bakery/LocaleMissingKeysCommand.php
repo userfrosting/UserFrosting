@@ -249,10 +249,15 @@ class LocaleMissingKeysCommand extends BaseCommand
      */
     protected function parseFile(string $path): array
     {
+        // Return empty array if file not found
+        if (!file_exists($path)) {
+            return [];
+        }
+
         $content = include "$path";
 
         // Consider not found file returns an empty array
-        if ($content === false) {
+        if ($content === false || !is_array($content)) {
             return [];
         }
 
