@@ -10,6 +10,8 @@
 
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Cache\Repository as Cache;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
@@ -169,16 +171,24 @@ class PasswordSecurity
      */
     private function getHashArrayFromAPI($hashPrefix)
     {
-        $ch = curl_init();
-        $optionsArray = [
-        CURLOPT_URL            => 'https://api.pwnedpasswords.com/range/' . $hashPrefix,
-        CURLOPT_RETURNTRANSFER => true,
-    ];
-        curl_setopt_array($ch, $optionsArray);
+        $client = new Client([
+          'base_uri' => 'https://api.pwnedpasswords.com/range/',
+          'timeout'  => 2.0,
+          'headers'  => [
+            'User-Agent' => 'UserFrosting Application',
+          ],
 
-        // execute request and get response.
-        $query = curl_exec($ch);
-        $hashArray = preg_split("/[\n,]+/", $query);
+        ]);
+
+        try {
+            $response = $client->request('GET', $hashPrefix);
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            $responseBodyAsString = $response->getBody()->getContents();
+        }
+
+        $body = $response->getBody()->getContents();
+        $hashArray = preg_split("/[\n,]+/", $body);
 
         return $hashArray;
     }
