@@ -15,22 +15,20 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
  * Users table migration
- * Changes `group_id` column properties to allow user to be created without a group.
+ * Adds a `flag_password_reset_required` column to the users table.
  * Version 4.3.0.
  *
  * See https://laravel.com/docs/5.8/migrations#tables
  *
  * @author Amos Folz
  */
-class UpdateUsersTable extends Migration
+class AddPasswordResetColumnUsersTable extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public static $dependencies = [
-        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\GroupsTable',
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable',
-        '\UserFrosting\Sprinkle\Account\Database\Migrations\v420\AddingForeignKeys',
     ];
 
     /**
@@ -40,7 +38,9 @@ class UpdateUsersTable extends Migration
     {
         if ($this->schema->hasTable('users')) {
             $this->schema->table('users', function (Blueprint $table) {
-                $table->unsignedInteger('group_id')->default(null)->comment('The id of the user group.')->nullable()->change();
+                $table->boolean('flag_password_reset_required')
+                ->default(0)->comment('Set to 1 to force user to reset their password, 0 otherwise.')
+                ->after('flag_enabled');
             });
         }
     }
@@ -51,7 +51,7 @@ class UpdateUsersTable extends Migration
     public function down()
     {
         $this->schema->table('users', function (Blueprint $table) {
-            $table->unsignedInteger('group_id')->default(1)->comment('The id of the user group.')->change();
+            $table->dropColumn('flag_password_reset_required');
         });
     }
 }

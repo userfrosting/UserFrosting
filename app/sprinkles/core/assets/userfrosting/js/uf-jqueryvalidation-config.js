@@ -44,6 +44,6 @@ jQuery.validator.setDefaults({
         // Hide any non-feedback icons
         formGroup.find('.form-control-icon').hide();
         // Add a new check mark
-        jQuery(element).after('<i class="fa fa-check form-control-feedback" aria-hidden="true"></i>');
+        jQuery(element).after('<i class="fas fa-check form-control-feedback" aria-hidden="true"></i>');
     }
 });

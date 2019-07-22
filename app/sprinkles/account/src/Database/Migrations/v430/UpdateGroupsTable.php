@@ -14,23 +14,21 @@ use Illuminate\Database\Schema\Blueprint;
 use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
- * Users table migration
- * Adds a `flag_password_reset_required` column to the users table.
+ * Groups table migration
+ * Changes the `icon` column property of `default` to NULL to align with new Font Awesome 5 tag convention.
  * Version 4.3.0.
  *
  * See https://laravel.com/docs/5.4/migrations#tables
  *
- * @author Amos Folz
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AddPasswordRestColumnUsersTable extends Migration
+class UpdateGroupsTable extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public static $dependencies = [
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\GroupsTable',
-        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable',
-        '\UserFrosting\Sprinkle\Account\Database\Migrations\v420\AddingForeignKeys',
     ];
 
     /**
@@ -38,9 +36,9 @@ class AddPasswordRestColumnUsersTable extends Migration
      */
     public function up()
     {
-        if ($this->schema->hasTable('users')) {
-            $this->schema->table('users', function (Blueprint $table) {
-                $table->boolean('flag_password_reset_required')->default(0)->comment('Set to 1 to force user to reset their password, 0 otherwise.')->after('flag_enabled');
+        if ($this->schema->hasTable('groups')) {
+            $this->schema->table('groups', function (Blueprint $table) {
+                $table->string('icon', 100)->nullable()->change();
             });
         }
     }
@@ -50,8 +48,8 @@ class AddPasswordRestColumnUsersTable extends Migration
      */
     public function down()
     {
-        $this->schema->table('users', function (Blueprint $table) {
-            $table->dropColumn('flag_password_reset_required');
+        $this->schema->table('groups', function (Blueprint $table) {
+            $table->string('icon', 100)->default('fa fa-user')->nullable(false)->change();
         });
     }
 }
