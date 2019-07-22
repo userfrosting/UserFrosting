@@ -28,6 +28,7 @@
     "require": {
         "doctrine/dbal": "^2.5",
         "filp/whoops": "^2.3.1",
+        "guzzlehttp/guzzle": "^6.3",
         "illuminate/cache": "5.8.*",
         "illuminate/database": "5.8.*",
         "illuminate/events": "5.8.*",
