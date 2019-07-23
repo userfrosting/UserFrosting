@@ -11,12 +11,14 @@
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Psr7;
 use Illuminate\Cache\Repository as Cache;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Support\Repository\Repository as Config;
+use UserFrosting\Sprinkle\Core\Facades\Debug;
 
 /**
  * Handles advanced password security methods for integration with Have I Been Pwned.
@@ -70,7 +72,7 @@ class PasswordSecurity
      *
      * @return int The number of times a password has been exposed in data breaches.
      */
-    public function checkPassword($password)
+    public function checkPassword(string $password)
     {
         // Get the SHA1 hash of our password.
         // The first 5 characters (hash prefix) are sent to Have I Been Pwned.
@@ -143,7 +145,7 @@ class PasswordSecurity
      *
      * @return int The number of times a password has been exposed in data breaches.
      */
-    private function checkHash($hash, $array)
+    private function checkHash(string $hash, array $array)
     {
         foreach ($array as $index => $pwHash) {
             $breachedItemParts = explode(':', $pwHash);
@@ -169,12 +171,12 @@ class PasswordSecurity
      *
      * @return array Array of password hashes in the format c2d18a7d49b0d4260769eb03d027066d29a:181 - or <hash>:<number of breaches.
      */
-    private function getHashArrayFromAPI($hashPrefix)
+    private function getHashArrayFromAPI(string $hashPrefix)
     {
         $client = new Client([
-          'base_uri' => 'https://api.pwnedpasswords.com/range/',
-          'timeout'  => 2.0,
-          'headers'  => [
+          'base_uri'    => 'https://api.pwnedpasswords.com/range/',
+          'timeout'     => 2.0,
+          'headers'     => [
             'User-Agent' => 'UserFrosting Application',
           ],
 
@@ -182,9 +184,15 @@ class PasswordSecurity
 
         try {
             $response = $client->request('GET', $hashPrefix);
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            $responseBodyAsString = $response->getBody()->getContents();
+        } catch (TransferException $e) {
+            if ($this->config['site.password.security.log_errors']) {
+                Debug::debug(Psr7\str($e->getRequest()));
+                if ($e->hasResponse()) {
+                    Debug::debug(Psr7\str($e->getResponse()));
+                }
+            }
+
+            return;
         }
 
         $body = $response->getBody()->getContents();
