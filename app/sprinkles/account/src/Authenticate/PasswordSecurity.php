@@ -57,7 +57,7 @@ class PasswordSecurity
      *
      * @return int
      */
-    public function breachThreshold()
+    public function breachThreshold(): int
     {
         return $this->config['site.password_security.enforce_no_compromised.breaches'];
     }
@@ -72,7 +72,7 @@ class PasswordSecurity
      *
      * @return int The number of times a password has been exposed in data breaches.
      */
-    public function checkPassword(string $password)
+    public function checkPassword(string $password): int
     {
         // Get the SHA1 hash of our password.
         // The first 5 characters (hash prefix) are sent to Have I Been Pwned.
@@ -96,7 +96,7 @@ class PasswordSecurity
      *
      * @return bool True if a password reset is required, false otherwise.
      */
-    public function checkPasswordResetRequired(UserInterface $currentUser)
+    public function checkPasswordResetRequired(UserInterface $currentUser): bool
     {
         if ($currentUser->flag_password_reset_required) {
             return true;
@@ -110,7 +110,7 @@ class PasswordSecurity
      *
      * @return bool True if the feature is enabled.
      */
-    public function resetCompromisedEnabled()
+    public function resetCompromisedEnabled(): bool
     {
         return $this->config['site.login.enforce_reset_compromised'];
     }
@@ -145,7 +145,7 @@ class PasswordSecurity
      *
      * @return int The number of times a password has been exposed in data breaches.
      */
-    private function checkHash(string $hash, array $array)
+    private function checkHash(string $hash, array $array): int
     {
         foreach ($array as $index => $pwHash) {
             $breachedItemParts = explode(':', $pwHash);
@@ -171,7 +171,7 @@ class PasswordSecurity
      *
      * @return array Array of password hashes in the format c2d18a7d49b0d4260769eb03d027066d29a:181 - or <hash>:<number of breaches.
      */
-    private function getHashArrayFromAPI(string $hashPrefix)
+    private function getHashArrayFromAPI(string $hashPrefix): array
     {
         $client = new Client([
           'base_uri'    => 'https://api.pwnedpasswords.com/range/',
