@@ -16,9 +16,9 @@ use GuzzleHttp\Psr7;
 use Illuminate\Cache\Repository as Cache;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
+use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Support\Repository\Repository as Config;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 
 /**
  * Handles advanced password security methods for integration with Have I Been Pwned.
