@@ -56,7 +56,6 @@ class LocaleMissingKeysCommand extends BaseCommand
 
         // The "base" locale to compare other locales against. Defaults to en_US if not set.
         $baseLocale = $input->getOption('base');
-        $baseLocaleFileNames = $this->getFilenames($baseLocale);
 
         // Option -c. Set to compare one or more specific locales.
         $localesToCheck = $input->getOption('check');
@@ -67,22 +66,26 @@ class LocaleMissingKeysCommand extends BaseCommand
         $this->io->writeln('Locales to check: |' . implode('|', $locales) . '|');
         $this->io->section("Searching for missing keys using $baseLocale for comparison.");
 
+        $difference = [];
+
         foreach ($locales as $locale) {
 
             // Make sure locale exist
             if (!in_array($locale, array_keys($this->ci->config['site']['locales']['available']))) {
                 $this->io->warning("Locale '$locale' is not available in config.");
             } else {
-                $difference[] = $this->compareFiles($baseLocale, $locale, $baseLocaleFileNames);
+                $difference = array_merge($difference, $this->compareFiles($baseLocale, $locale));
             }
         }
 
         // Build the table.
-        if (!empty($difference[0])) {
+        if (!empty($difference)) {
             $this->newTable($output);
             $this->table->setHeaders(['File path', 'Missing key']);
             $this->buildTable($difference);
             $this->table->render();
+
+            $this->io->writeln('Missing keys found successfully');
         } else {
             $this->io->writeln('No missing keys found!');
         }
@@ -114,22 +117,12 @@ class LocaleMissingKeysCommand extends BaseCommand
      * Populate table with file paths and missing keys.
      *
      * @param array $array File paths and missing keys.
-     * @param int   $level Nested array depth.
      */
-    protected function buildTable(array $array, int $level = 1): void
+    protected function buildTable(array $array): void
     {
-        foreach ($array as $key => $value) {
-            //Level 2 has the filepath.
-            if ($level == 2) {
-                // Make path easier to read by removing anything before 'sprinkles'
-                $this->path = strstr($key, 'sprinkles');
-            }
-            if (is_array($value)) {
-                //We need to loop through it.
-                $this->buildTable($value, ($level + 1));
-            } elseif ($value != '0') {
-                //It is not an array and not '0', so add the row.
-                $this->table->addRow([$this->path, $key]);
+        foreach ($array as $file => $missing) {
+            foreach ($missing as $key => $value) {
+                $this->table->addRow([$file, $key]);
             }
         }
     }
@@ -139,19 +132,29 @@ class LocaleMissingKeysCommand extends BaseCommand
      *
      * @param string $baseLocale Locale being compared against.
      * @param string $altLocale  Locale to find missing keys for.
-     * @param array  $filenames  Sprinkle locale files that will be compared.
      *
      * @return array The keys in $baseLocale that do not exist in $altLocale.
      */
-    protected function compareFiles(string $baseLocale, string $altLocale, array $filenames): array
+    protected function compareFiles(string $baseLocale, string $altLocale): array
     {
-        foreach ($filenames as $sprinklePath => $files) {
-            foreach ($files as $key => $file) {
-                $base = $this->parseFile("$sprinklePath/locale/{$baseLocale}/{$file}");
-                $alt = $this->parseFile("$sprinklePath/locale/{$altLocale}/{$file}");
-                $diff = $this->getDifference($base, $alt);
-                $difference[$sprinklePath . '/locale' . '/' . $altLocale . '/' . $file] = $this->arrayFlatten($diff);
-            }
+        // Get all file for base locale
+        $files = $this->ci->locator->listResources("locale://$baseLocale", true);
+
+        // Return value
+        $difference = [];
+
+        foreach ($files as $basefile) {
+
+            // Get alt locale path
+            // Stream Path is used as security, in case a sprinkle would be called the same as a locale
+            $streamPath = $basefile->getStream()->getPath();
+            $altPath = str_replace("$streamPath/$baseLocale/", "$streamPath/$altLocale/", $basefile->getPath());
+
+            $base = $this->parseFile($basefile);
+            $alt = $this->parseFile($altPath);
+            $diff = $this->getDifference($base, $alt);
+
+            $difference[$altPath] = $this->arrayFlatten($diff);
         }
 
         return array_filter($difference);
@@ -188,23 +191,6 @@ class LocaleMissingKeysCommand extends BaseCommand
         }
 
         return $difference;
-    }
-
-    /**
-     * Gets all locale files for a specific locale.
-     *
-     * @param string $locale The locale being compared against.
-     *
-     * @return array Locale files and locations for the locale being compared against.
-     */
-    public function getFilenames(string $locale): array
-    {
-        $file = ($this->ci->locator->listResources("locale://$locale", true));
-        foreach ($file as $filename => $path) {
-            $files[$path->getLocation()->getPath()][] = $path->getBaseName();
-        }
-
-        return $files;
     }
 
     /**
