@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed Frontend Dependencies
 - Updated handlebar from 3.0.x to 4.1.2
-- Updated AdminLTE theme to 2.4.15 ([#994; #1014; #1015])
+- Updated AdminLTE theme to 2.4.15 ([#994]; [#1014]; [#1015])
 - Updated Font Awesome to 5.9 ([#957]; [#870])
 
 ### Added
