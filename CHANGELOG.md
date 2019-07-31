@@ -23,12 +23,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed Frontend Dependencies
 - Updated handlebar from 3.0.x to 4.1.2
-- Updated AdminLTE theme to 2.4.15 ([#994; #1014; #1015])
+- Updated AdminLTE theme to 2.4.15 ([#994]; [#1014]; [#1015])
 - Updated Font Awesome to 5.9 ([#957]; [#870])
 
 ### Added
 - Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
 - Allow null group assignment for users ([#867]; [#964])
+- Password can now be set manually when creating new user ([#1017]; [#763])
 
 ### Fix
 - `bake` command return error if account sprinkle is not included ([#944])
@@ -785,6 +786,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 
 [#653]: https://github.com/userfrosting/UserFrosting/issues/653
 [#718]: https://github.com/userfrosting/UserFrosting/issues/718
+[#763]: https://github.com/userfrosting/UserFrosting/issues/763
 [#793]: https://github.com/userfrosting/UserFrosting/issues/793
 [#795]: https://github.com/userfrosting/UserFrosting/issues/795
 [#808]: https://github.com/userfrosting/UserFrosting/issues/808
@@ -829,6 +831,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1014]: https://github.com/userfrosting/UserFrosting/issues/1014
 [#1015]: https://github.com/userfrosting/UserFrosting/issues/1015
 [#1016]: https://github.com/userfrosting/UserFrosting/issues/1016
+[#1017]: https://github.com/userfrosting/UserFrosting/issues/1017
 [#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
