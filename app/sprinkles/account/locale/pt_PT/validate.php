@@ -14,8 +14,8 @@
  * @author Bruno Silva (brunomnsilva@gmail.com)
  */
 return [
-  'VALIDATE' => [
-    'PASSWORD_MISMATCH' => 'A password e respetiva confirmação têm de coincidir.',
-    'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
-  ],
+    'VALIDATE' => [
+        'PASSWORD_MISMATCH' => 'A password e respetiva confirmação têm de coincidir.',
+        'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
+    ],
 ];

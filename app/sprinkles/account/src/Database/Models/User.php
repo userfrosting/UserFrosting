@@ -134,10 +134,10 @@ class User extends Model implements UserInterface
     public function __isset($name)
     {
         if (in_array($name, [
-                'group',
-                'last_sign_in_time',
-                'avatar',
-            ])) {
+            'group',
+            'last_sign_in_time',
+            'avatar',
+        ])) {
             return true;
         } else {
             return parent::__isset($name);

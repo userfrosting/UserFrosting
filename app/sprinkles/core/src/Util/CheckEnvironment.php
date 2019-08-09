@@ -282,16 +282,16 @@ class CheckEnvironment
             if ($path == null) {
                 $problemsFound = true;
                 $this->resultsFailed['directory-' . $directory] = [
-                'title'   => "<i class='fa fa-file-o fa-fw'></i> A required directory was not found.",
-                'message' => "Please check that <code>userfrosting/app/$directory</code> exists.",
-                'success' => false,
-            ];
+                    'title'   => "<i class='fa fa-file-o fa-fw'></i> A required directory was not found.",
+                    'message' => "Please check that <code>userfrosting/app/$directory</code> exists.",
+                    'success' => false,
+                ];
             } else {
                 $this->resultsSuccess['directory-' . $directory] = [
-                  'title'   => "<i class='fa fa-file-o fa-fw'></i> File/directory check passed!",
-                  'message' => "<code>userfrosting/app/$directory</code> exists.",
-                  'success' => true,
-              ];
+                    'title'   => "<i class='fa fa-file-o fa-fw'></i> File/directory check passed!",
+                    'message' => "<code>userfrosting/app/$directory</code> exists.",
+                    'success' => true,
+                ];
             }
         }
 
@@ -325,24 +325,24 @@ class CheckEnvironment
             if ($assertWriteable !== $writeable) {
                 $problemsFound = true;
                 $this->resultsFailed['file-' . $file] = [
-                        'title'   => "<i class='fas fa-file-o fa-fw'></i> Incorrect permissions for file or directory.",
-                        'message' => "<code>$file</code> is "
-                            . ($writeable ? 'writeable' : 'not writeable')
-                            . ', but it should '
-                            . ($assertWriteable ? 'be writeable' : 'not be writeable')
-                            . '.  Please modify the OS user or group permissions so that user <b>'
-                            . exec('whoami') . '</b> '
-                            . ($assertWriteable ? 'has' : 'does not have') . ' write permissions for this directory.',
-                        'success' => false,
-                    ];
+                    'title'   => "<i class='fas fa-file-o fa-fw'></i> Incorrect permissions for file or directory.",
+                    'message' => "<code>$file</code> is "
+                        . ($writeable ? 'writeable' : 'not writeable')
+                        . ', but it should '
+                        . ($assertWriteable ? 'be writeable' : 'not be writeable')
+                        . '.  Please modify the OS user or group permissions so that user <b>'
+                        . exec('whoami') . '</b> '
+                        . ($assertWriteable ? 'has' : 'does not have') . ' write permissions for this directory.',
+                    'success' => false,
+                ];
             } else {
                 $this->resultsSuccess['file-' . $file] = [
-                        'title'   => "<i class='fas fa-file-o fa-fw'></i> File/directory check passed!",
-                        'message' => "<code>$file</code> exists and is correctly set as <b>"
-                            . ($writeable ? 'writeable' : 'not writeable')
-                            . '</b>.',
-                        'success' => true,
-                    ];
+                    'title'   => "<i class='fas fa-file-o fa-fw'></i> File/directory check passed!",
+                    'message' => "<code>$file</code> exists and is correctly set as <b>"
+                        . ($writeable ? 'writeable' : 'not writeable')
+                        . '</b>.',
+                    'success' => true,
+                ];
             }
         }
 
