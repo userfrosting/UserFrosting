@@ -6,131 +6,127 @@ version: '{branch} - Build #{build}'
 
 ## Disable unneeded features
 build: false
+deploy: false
 platform:
   - x64
 clone_folder: C:\projects\userfrosting
-branches:
-  except:
-    - gh-pages
-clone_depth: 2
 
+## Test against various PHP versions
+environment:
+  fast_finish: true
+  matrix:
+    - php_version: "7.1"
+    - php_version: "7.2"
+    - php_version: "7.3"
+
+## Cache composer, chocolatey and php.
 cache:
+  # Composer
+  - '%LOCALAPPDATA%\Composer\files -> composer.lock'
+  - composer.phar
+  # Cache chocolatey packages
   - C:\ProgramData\chocolatey\bin -> .appveyor.yml
   - C:\ProgramData\chocolatey\lib -> .appveyor.yml
-  - C:\tools\php -> .appveyor.yml
-  #- C:\tools\composer -> .appveyor.yml
-  - '%LOCALAPPDATA%\Composer\files -> composer.json'
+  # Cache php install
+  - c:\tools\php -> .appveyor.yml
 
-## Build matrix for lowest and highest possible targets
-environment:
-  DLLVersion: "5.6.1"
-  PHPBuild: "x64"
-  VC: "vc15"
-  matrix:
-  - php_ver_target: 7.1
-    DLLVersion: "5.3.0"
-    VC: "vc14"
-  - php_ver_target: 7.2
-    DLLVersion: "5.3.0"
-  - php_ver_target: 7.3
-
+## Set up environment variables
 init:
-  - SET PATH=C:\Program Files\OpenSSL;c:\tools\php;%PATH%
+  - SET PATH=C:\Program Files\OpenSSL;c:\tools\php;C:\tools\composer;%PATH%
   - SET COMPOSER_NO_INTERACTION=1
-  - SET PHP=1 # this var relates to caching the php  install
   - SET ANSICON=121x90 (121x90)
 services:
   - mssql2014
-  - mysql
-  - postgresql94
-  - iis
 
 ## Install PHP and composer, and run the appropriate composer command
 install:
-    - IF EXIST c:\tools\php (SET PHP=0)
-    - ps: >-
-        If ($env:php_ver_target -eq "5.6") {
-          appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y --forcex86 php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php_ver_target | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
-        } Else {
-          appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php_ver_target | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
-        }
-    - appveyor-retry cinst -y sqlite
-    - cd c:\tools\php
-    # Get the MSSQL DLL's
-    - ps: >-
-        If ($env:PHP -eq "1") {
-          If ($env:php_ver_target -eq "5.6") {
-            $source = "https://cdn.joomla.org/ci/php-sqlsrv.zip"
-            $destination = "c:\tools\php\php-sqlsrv.zip"
+    - ps: Install-Product node 10
+    - ps: |
+        # Check if installation is cached
+        if (!(Test-Path c:\tools\php)) {
+
+          # Install PHP
+          appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php_version | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
+
+          # install sqlite
+          appveyor-retry cinst -y sqlite
+          Get-ChildItem -Path c:\tools\php
+          cd c:\tools\php
+
+          # Set PHP environment items that are always needed
+          copy php.ini-production php.ini
+          Add-Content php.ini "`n date.timezone=UTC"
+          Add-Content php.ini "`n extension_dir=ext"
+          Add-Content php.ini "`n memory_limit=1G"
+          Add-Content php.ini "`n extension=php_openssl.dll"
+          Add-Content php.ini "`n extension=php_mbstring.dll"
+          Add-Content php.ini "`n extension=php_fileinfo.dll"
+          Add-Content php.ini "`n extension=php_pdo_sqlite.dll"
+          Add-Content php.ini "`n extension=php_sqlite3.dll"
+          Add-Content php.ini "`n extension=php_curl.dll"
+          Add-Content php.ini "`n extension=php_gd2.dll"
+
+          # Get and install the MSSQL DLL's for each PHP version
+          $DLLVersion = "5.2.0"
+          cd c:\tools\php\ext
+          If ($env:php_version -eq "7.3") {
+            $source = "https://windows.php.net/downloads/pecl/releases/sqlsrv/5.5.0preview/php_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip"
+            $destination = "c:\tools\php\ext\php_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip"
             Invoke-WebRequest $source -OutFile $destination
-            #appveyor-retry appveyor DownloadFile https://cdn.joomla.org/ci/php-sqlsrv.zip
-            7z x php-sqlsrv.zip > $null
-            copy SQLSRV\php_sqlsrv_56_nts.dll ext\php_sqlsrv_nts.dll
-            copy SQLSRV\php_pdo_sqlsrv_56_nts.dll ext\php_pdo_sqlsrv_nts.dll
-            Remove-Item c:\tools\php\* -include .zip
-            } Else {
-            cd c:\tools\php\ext
-            $source = "https://windows.php.net/downloads/pecl/releases/sqlsrv/$($env:DLLVersion)/php_sqlsrv-$($env:DLLVersion)-$($env:php_ver_target)-nts-$($env:VC)-$($env:PHPBuild).zip"
-            $destination = "c:\tools\php\ext\php_sqlsrv-$($env:DLLVersion)-$($env:php_ver_target)-nts-$($env:VC)-$($env:PHPBuild).zip"
+            7z x -y php_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip > $null
+            $source = "https://windows.php.net/downloads/pecl/releases/pdo_sqlsrv/5.5.0preview/php_pdo_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip"
+            $destination = "c:\tools\php\ext\php_pdo_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip"
             Invoke-WebRequest $source -OutFile $destination
-            #appveyor-retry appveyor DownloadFile http://windows.php.net/downloads/pecl/releases/sqlsrv/$($env:DLLVersion)/php_sqlsrv-$($env:DLLVersion)-$($env:php_ver_target)-nts-$($env:VC)-$($env:PHPBuild).zip
-            7z x -y php_sqlsrv-$($env:DLLVersion)-$($env:php_ver_target)-nts-$($env:VC)-$($env:PHPBuild).zip > $null
-            $source = "http://windows.php.net/downloads/pecl/releases/pdo_sqlsrv/$($env:DLLVersion)/php_pdo_sqlsrv-$($env:DLLVersion)-$($env:php_ver_target)-nts-$($env:VC)-$($env:PHPBuild).zip"
-            $destination = "c:\tools\php\ext\php_pdo_sqlsrv-$($env:DLLVersion)-$($env:php_ver_target)-nts-$($env:VC)-$($env:PHPBuild).zip"
+            7z x -y php_pdo_sqlsrv-5.5.0preview-$($env:php_version)-nts-vc15-x64.zip > $null
+          } ElseIf ($env:php_version -eq "7.2") {
+            $source = "https://windows.php.net/downloads/pecl/releases/sqlsrv/$($DLLVersion)/php_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip"
+            $destination = "c:\tools\php\ext\php_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip"
             Invoke-WebRequest $source -OutFile $destination
-            #appveyor-retry appveyor DownloadFile http://windows.php.net/downloads/pecl/releases/pdo_sqlsrv/$($env:DLLVersion)/php_pdo_sqlsrv-$($env:DLLVersion)-$($env:php_ver_target)-nts-$($env:VC)-$($env:PHPBuild).zip
-            7z x -y php_pdo_sqlsrv-$($env:DLLVersion)-$($env:php_ver_target)-nts-$($env:VC)-$($env:PHPBuild).zip > $null
-            Remove-Item c:\tools\php\ext* -include .zip
-            cd c:\tools\php}}
-    - IF %PHP%==1 copy php.ini-production php.ini /Y
-    - IF %PHP%==1 echo date.timezone="UTC" >> php.ini
-    - IF %PHP%==1 echo extension_dir=ext >> php.ini
-    - IF %PHP%==1 echo extension=php_openssl.dll >> php.ini
-    - IF %PHP%==1 echo extension=php_mbstring.dll >> php.ini
-    - IF %PHP%==1 echo extension=php_fileinfo.dll >> php.ini
-    - ps: >-
-        If ($env:php_ver_target -eq "5.6") {
-          Add-Content php.ini "`nextension=php_sqlsrv_nts.dll"
-          Add-Content php.ini "`nextension=php_pdo_sqlsrv_nts.dll"
-          Add-Content php.ini "`n"
-        } Else {
+            7z x -y php_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip > $null
+            $source = "https://windows.php.net/downloads/pecl/releases/pdo_sqlsrv/$($DLLVersion)/php_pdo_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip"
+            $destination = "c:\tools\php\ext\php_pdo_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip"
+            Invoke-WebRequest $source -OutFile $destination
+            7z x -y php_pdo_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc15-x64.zip > $null
+          } Else {
+            $source = "https://windows.php.net/downloads/pecl/releases/sqlsrv/$($DLLVersion)/php_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc14-x64.zip"
+            $destination = "c:\tools\php\ext\php_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc14-x64.zip"
+            Invoke-WebRequest $source -OutFile $destination
+            7z x -y php_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc14-x64.zip > $null
+            $source = "https://windows.php.net/downloads/pecl/releases/pdo_sqlsrv/$($DLLVersion)/php_pdo_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc14-x64.zip"
+            $destination = "c:\tools\php\ext\php_pdo_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc14-x64.zip"
+            Invoke-WebRequest $source -OutFile $destination
+            7z x -y php_pdo_sqlsrv-$($DLLVersion)-$($env:php_version)-nts-vc14-x64.zip > $null
+          }
+          Remove-Item c:\tools\php\* -include .zip
+
+          cd c:\tools\php
           Add-Content php.ini "`nextension=php_sqlsrv.dll"
           Add-Content php.ini "`nextension=php_pdo_sqlsrv.dll"
           Add-Content php.ini "`n"
+
+          # download Composer
+          if (!(Test-Path C:\tools\composer)) {
+            New-Item -path c:\tools -name composer -itemtype directory
+          }
+          if (!(Test-Path c:\tools\composer\composer.phar)) {
+            appveyor-retry appveyor DownloadFile https://getcomposer.org/composer.phar -Filename C:\tools\composer\composer.phar
+            Set-Content -path 'C:\tools\composer\composer.bat' -Value ('@php C:\tools\composer\composer.phar %*')
+          }
         }
-    - IF %PHP%==1 echo extension=php_pgsql.dll >> php.ini
-    - IF %PHP%==1 echo extension=php_pdo_pgsql.dll >> php.ini
-    - IF %PHP%==1 echo extension=php_pdo_sqlite.dll >> php.ini
-    - IF %PHP%==1 echo extension=php_sqlite3.dll >> php.ini
-    - IF %PHP%==1 echo extension=php_pdo_mysql.dll >> php.ini
-    - IF %PHP%==1 echo extension=php_mysqli.dll >> php.ini
-    - IF %PHP%==1 echo @php %%~dp0composer.phar %%* > composer.bat
-    - appveyor-retry appveyor DownloadFile https://getcomposer.org/composer.phar
-    - cd c:\projects\database
-    - appveyor-retry composer install --no-progress --profile
+    # install composer dependencies
+    - cd C:\projects\userfrosting
+    - appveyor-retry composer self-update
 
 before_test:
-#  Database setup for mysql via PowerShell tools
-  - >
-    "C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql" -u root -p"Password12!" -e "CREATE DATABASE IF NOT EXISTS userfrosting;"
-  - >
-    "C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql" -u root -p"Password12!" userfrosting < Tests\Stubs\mysql.sql
-#  Database setup for postgreSQL
-  - SET PGUSER=postgres
-  - SET PGPASSWORD=Password12!
-  - PATH=C:\Program Files\PostgreSQL\9.4\bin\;%PATH%
-  - createdb userfrosting
-  - psql -d userfrosting -a -f Tests\Stubs\postgresql.sql
-# Database setup for MSSQL
-  - ps: $sqlInstance = "(local)\SQL2014"
-  - ps: sqlcmd -b -E -S "$sqlInstance" -Q "CREATE DATABASE userfrosting"
-  - ps: sqlcmd -S "$sqlInstance" -U "sa" -P "Password12!" -i $env:APPVEYOR_BUILD_FOLDER\Tests\Stubs\sqlsrv.sql
+  # Database setup for MSSQL
+  # https://github.com/joomla-framework/database
+  # http://www.drupalonwindows.com/en/blog/continuous-integration-and-testing-drupal-appveyor
+  - ps: sqlcmd -b -E -S "(local)\SQL2014" -Q "CREATE DATABASE userfrosting"
 
-# Copy sprinkle file
-  - cd C:\projects\userfrosting
+  # Copy sprinkle file
   - echo F | xcopy app\sprinkles.example.json app\sprinkles.json /y
 
-# Setup .env
+  # Setup .env
   - echo UF_MODE="debug" > app/.env
   - echo DB_DRIVER="sqlsrv" >> app/.env
   - echo DB_HOST=(local)\SQL2014 >> app/.env
@@ -140,12 +136,14 @@ before_test:
   - echo DB_PASSWORD="Password12!" >> app/.env
   - echo TEST_DB="default" >> app/.env
 
-# Setup UserFrosting
+  # Install Composer dependencies
+  - appveyor-retry composer update --no-progress --no-interaction
+
+  # Setup UserFrosting
   - php bakery debug
   - php bakery build-assets
   - php bakery migrate
 
 ## Run the actual test
 test_script:
-  - cd C:\projects\userfrosting
   - app\vendor\bin\phpunit
