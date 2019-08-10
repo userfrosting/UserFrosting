@@ -13,7 +13,6 @@ clone_folder: C:\projects\userfrosting
 cache:
   - C:\ProgramData\chocolatey\bin -> .appveyor.yml
   - C:\ProgramData\chocolatey\lib -> .appveyor.yml
-  - C:\tools\php -> .appveyor.yml
   - C:\tools\cacert -> .appveyor.yml
   - C:\tools\composer -> .appveyor.yml
   - '%LOCALAPPDATA%\Composer\files -> composer.json'
@@ -41,8 +40,8 @@ init:
 
 ## Install PHP and composer, and run the appropriate composer command
 install:
-    - PS: appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
     - ps: |
+        appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
         # Check if installation is cached
         if (!(Test-Path c:\tools\php)) {
           # appveyor-retry cinst --params '""/InstallDir:C:\tools\php""' --ignore-checksums -y php --version ((choco search php --exact --all-versions -r | select-string -pattern $env:php | sort { [version]($_ -split '\|' | select -last 1) } -Descending | Select-Object -first 1) -replace '[php|]','')
