@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
 - Allow null group assignment for users ([#867]; [#964])
 - Password can now be set manually when creating new user ([#1017]; [#763])
+- Icon picker for user and group form ([#713]; [#1019])
 
 ### Fix
 - `bake` command return error if account sprinkle is not included ([#944])
@@ -785,6 +786,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
 
 [#653]: https://github.com/userfrosting/UserFrosting/issues/653
+[#713]: https://github.com/userfrosting/UserFrosting/issues/713
 [#718]: https://github.com/userfrosting/UserFrosting/issues/718
 [#763]: https://github.com/userfrosting/UserFrosting/issues/763
 [#793]: https://github.com/userfrosting/UserFrosting/issues/793
@@ -833,8 +835,10 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1016]: https://github.com/userfrosting/UserFrosting/issues/1016
 [#1017]: https://github.com/userfrosting/UserFrosting/issues/1017
 [#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
+[#1019]: https://github.com/userfrosting/UserFrosting/issues/1019
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
 [v4.2.2]: https://github.com/userfrosting/UserFrosting/compare/v.4.2.1...v4.2.2
 [v4.2.3]: https://github.com/userfrosting/UserFrosting/compare/v4.2.2...v4.2.3
+[v4.3.0]: https://github.com/userfrosting/UserFrosting/compare/v4.2.3...v4.3.0

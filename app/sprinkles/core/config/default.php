@@ -125,7 +125,7 @@ return [
         'db' => [
             'default' => [
                 'driver'    => getenv('DB_DRIVER') ?: 'mysql',
-                'host'      => getenv('DB_HOST') ?: null,
+                'host'      => getenv('DB_HOST') ?: 'localhost',
                 'port'      => getenv('DB_PORT') ?: null,
                 'database'  => getenv('DB_NAME') ?: null,
                 'username'  => getenv('DB_USER') ?: null,

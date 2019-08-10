@@ -77,7 +77,7 @@ class SetupDbCommand extends BaseCommand
 
         // Get keys
         $keys = [
-            'DB_HOST'     => ($dotenvEditor->keyExists('DB_HOST')) ? $dotenvEditor->getValue('DB_HOST') : '',
+            'DB_HOST'     => ($dotenvEditor->keyExists('DB_HOST')) ? $dotenvEditor->getValue('DB_HOST') : 'localhost',
             'DB_NAME'     => ($dotenvEditor->keyExists('DB_NAME')) ? $dotenvEditor->getValue('DB_NAME') : '',
             'DB_USER'     => ($dotenvEditor->keyExists('DB_USER')) ? $dotenvEditor->getValue('DB_USER') : '',
             'DB_PASSWORD' => ($dotenvEditor->keyExists('DB_PASSWORD')) ? $dotenvEditor->getValue('DB_PASSWORD') : '',
