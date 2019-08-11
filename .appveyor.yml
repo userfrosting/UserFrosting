@@ -53,9 +53,9 @@ install:
   - appveyor-retry appveyor DownloadFile https://getcomposer.org/composer.phar
 
     # install composer dependencies
-    - cd C:\projects\userfrosting
-    - appveyor-retry composer self-update
-    - appveyor-retry composer install --no-progress --prefer-dist
+  - cd c:\projects\userfrosting
+  - appveyor-retry composer self-update
+  - appveyor-retry composer install --no-progress --prefer-dist
 
 before_test:
   # - ps: $instanceName = $env:db_version.ToUpper()
