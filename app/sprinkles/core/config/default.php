@@ -89,6 +89,7 @@ return [
         'twig' => false,
     ],
 
+
     /*
     * ----------------------------------------------------------------------
     * CSRF middleware settings
@@ -109,6 +110,29 @@ return [
             // Regular expressions will be delimited with ~ in preg_match, so if you
             // have routes with ~ in them, you must escape this character in your regex.
             // Also, remember to use ^ when you only want to match the beginning of a URL path!
+
+        /*
+        * ----------------------------------------------------------------------
+        * Database Config
+        * ----------------------------------------------------------------------
+        * Settings for the default database connections. Actual config values
+        * should be store in environment variables
+        *
+        * Multiple connections can also be used.
+        * See Laravel docs : https://laravel.com/docs/5.8/database
+        */
+        'db' => [
+            'default' => [
+                'driver'    => getenv('DB_DRIVER') ?: 'mysql',
+                'host'      => getenv('DB_HOST') ?: 'localhost',
+                'port'      => getenv('DB_PORT') ?: null,
+                'database'  => getenv('DB_NAME') ?: null,
+                'username'  => getenv('DB_USER') ?: null,
+                'password'  => getenv('DB_PASSWORD') ?: null,
+                'charset'   => 'utf8',
+                'collation' => 'utf8_unicode_ci',
+                'prefix'    => '',
+            ],
         ],
     ],
 
