@@ -404,5 +404,6 @@ return [
         'log_errors'      => 'false',
         // Let PHP itself render errors natively.  Useful if a fatal error is raised in our custom shutdown handler.
         'display_errors_native' => 'false',
+        ],
     ],
 ];
