@@ -30,7 +30,7 @@ return [
         'CSV'          => 'Descargar CSV',
     ],
     'EMAIL' => [
-        '@TRANSLATION' => 'Email',
+        // '@TRANSLATION' => 'Email',
         'YOUR'         => 'Tu correo electrónico',
     ],
     'HOME'  => 'Inicio',
