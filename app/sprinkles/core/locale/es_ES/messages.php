@@ -36,14 +36,14 @@ return [
     'HOME'  => 'Inicio',
     'LEGAL' => [
         '@TRANSLATION' => 'Política Legal',
-        'DESCRIPTION'  => 'Our legal policy applies to your usage of this website and our services.',
+        // 'DESCRIPTION'  => 'Our legal policy applies to your usage of this website and our services.',
     ],
     'LOCALE' => [
         '@TRANSLATION' => 'Traducción',
     ],
     'NAME'       => 'Nombre',
     'NAVIGATION' => 'Navegación',
-    'NO_RESULTS' => 'Sorry, we\'ve got nothing here.',
+    // 'NO_RESULTS' => 'Sorry, we\'ve got nothing here.',
     'PAGINATION' => [
         'GOTO'     => 'Ir a la página',
         'SHOW'     => 'Mostrar',
@@ -55,7 +55,7 @@ return [
     ],
     'PRIVACY' => [
         '@TRANSLATION' => 'Política de privacidad',
-        'DESCRIPTION'  => 'Our privacy policy outlines what kind of information we collect from you and how we will use it.',
+        // 'DESCRIPTION'  => 'Our privacy policy outlines what kind of information we collect from you and how we will use it.',
     ],
     'SLUG'                     => 'Slug',
     'SLUG_CONDITION'           => 'Slug/Condiciones',

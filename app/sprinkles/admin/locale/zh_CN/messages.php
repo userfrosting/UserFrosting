@@ -28,7 +28,7 @@ return [
         'CLEARED'           => '缓存成功清除 !',
     ],
     'DASHBOARD'           => '仪表盘',
-    'NO_FEATURES_YET'     => 'It doesn\'t look like any features have been set up for this account...yet.  Maybe they haven\'t been implemented yet, or maybe someone forgot to give you access.  Either way, we\'re glad to have you aboard!',
+    // 'NO_FEATURES_YET'     => 'It doesn\'t look like any features have been set up for this account...yet.  Maybe they haven\'t been implemented yet, or maybe someone forgot to give you access.  Either way, we\'re glad to have you aboard!',
     'DELETE_MASTER'       => '你不能删除超级账户!',
     'DELETION_SUCCESSFUL' => '用户 <strong>{{user_name}}</strong> 删除成功.',
     'DETAILS_UPDATED'     => '用户 <strong>{{user_name}}</strong> 更新成功',

@@ -128,7 +128,7 @@ return [
         'DELETE'           => 'Elimina utente',
         'DELETE_CONFIRM'   => 'Sei sicuro di voler eliminare l\'utente <strong>{{name}}</strong>?',
         'DELETE_YES'       => 'Sì, elimina l\'utente',
-        'DELETED'          => 'User deleted',
+        // 'DELETED'          => 'User deleted',
         'DISABLE'          => 'Disabilita l\'utente',
         'EDIT'             => 'Modifica utente',
         'ENABLE'           => 'Abilita utente',

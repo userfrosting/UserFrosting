@@ -50,15 +50,15 @@ return [
     'EMAIL' => [
         'INVALID'               => 'لا يوجد حساب ل <strong>{{email}}</strong>',
         'IN_USE'                => 'البريد الإلكتروني <strong>{{email}}</strong> قيد الاستخدام',
-        'VERIFICATION_REQUIRED' => 'Email (verification required - use a real address!)',
+        // 'VERIFICATION_REQUIRED' => 'Email (verification required - use a real address!)',
     ],
-    'EMAIL_OR_USERNAME'   => 'Username or email address',
+    // 'EMAIL_OR_USERNAME'   => 'Username or email address',
     'FIRST_NAME'          => 'الاسم الاول',
     'HEADER_MESSAGE_ROOT' => 'تسجيل الدخول باسم المستخدم ROOT',
     'LAST_NAME'           => 'اسم العائلة',
     'LOCALE'              => [
         'ACCOUNT' => 'اللغة التي تستخدم لحسابك',
-        'INVALID' => '<strong>{{locale}}</strong> is not a valid locale.',
+        // 'INVALID' => '<strong>{{locale}}</strong> is not a valid locale.',
     ],
     'LOGIN' => [
         '@TRANSLATION'     => 'تسجيل الدخول',
@@ -68,7 +68,7 @@ return [
     ],
     'LOGOUT'         => 'تسجيل الخروج',
     'NAME'           => 'اسم',
-    'NAME_AND_EMAIL' => 'Name and email',
+    // 'NAME_AND_EMAIL' => 'Name and email',
     'PAGE'           => [
         'LOGIN' => [
             'DESCRIPTION' => 'سجل الدخول إلى حسابك في {{site_name}} أو سجيل للحصول على حساب جديد',
@@ -115,8 +115,8 @@ return [
         'UPDATED' => 'جدد كلمة مرور',
     ],
     'PROFILE' => [
-        'SETTINGS' => 'Profile settings',
-        'UPDATED'  => 'Profile settings updated',
+        // 'SETTINGS' => 'Profile settings',
+        // 'UPDATED'  => 'Profile settings updated',
     ],
     'RATE_LIMIT_EXCEEDED' => 'تم تجاوز الحد عددا لهذا الإجراء يجب الانتظار {{delay}} ثواني قبل القيام بمحاولة أخرى',
     'REGISTER'            => 'تسجيل',
@@ -143,7 +143,7 @@ return [
         'CHOOSE'        => 'اختيار اسم مستخدم فريد',
         'INVALID'       => 'اسم المستخدم غير صالح',
         'IN_USE'        => 'اسم المستخدم <strong>{{user_name}}</strong> قيد الاستخدام',
-        'NOT_AVAILABLE' => 'Username <strong>{{user_name}}</strong> is not available. Choose a different name, or click \'suggest\'.',
+        // 'NOT_AVAILABLE' => 'Username <strong>{{user_name}}</strong> is not available. Choose a different name, or click \'suggest\'.',
     ],
     'USER_ID_INVALID'       => 'عدم وجود هوية المستخدم المطلوب',
     'USER_OR_EMAIL_INVALID' => 'اسم المستخدم أو عنوان البريد الإلكتروني غير صالح',

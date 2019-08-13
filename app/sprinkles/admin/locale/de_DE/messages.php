@@ -128,7 +128,7 @@ return [
         'DELETE'           => 'Benutzer löschen',
         'DELETE_CONFIRM'   => 'Sind Sie sicher, dass Sie den Benutzer <strong>{{name}}</strong> löschen möchten?',
         'DELETE_YES'       => 'Ja, Benutzer löschen',
-        'DELETED'          => 'User deleted',
+        // 'DELETED'          => 'User deleted',
         'DISABLE'          => 'Benutzer deaktivieren',
         'EDIT'             => 'Benutzer bearbeiten',
         'ENABLE'           => 'Benutzer aktivieren',

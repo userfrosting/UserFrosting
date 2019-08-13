@@ -25,7 +25,7 @@ return [
         'SESSION_COMPROMISED' => [
             '@TRANSLATION' => '你的会话已泄露.  你应该在所有的设备上注销, 然后再登陆确保你的数据没被修改.',
             'TITLE'        => '你的账户可能被盗用',
-            'TEXT'         => 'Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{url}}">log in</a> and check your account for suspicious activity.  You may also wish to change your password.',
+            // 'TEXT'         => 'Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{url}}">log in</a> and check your account for suspicious activity.  You may also wish to change your password.',
         ],
         'SESSION_EXPIRED' => '会话已过期.  请重新登陆.',
         'SETTINGS'        => [
@@ -83,9 +83,9 @@ return [
         'CONFIRM_NEW_EXPLAIN' => '重新输入新密码',
         'CONFIRM_NEW_HELP'    => '选择了新密码时才需要',
         'CREATE'              => [
-            '@TRANSLATION' => 'Create Password',
-            'PAGE'         => 'Choose a password for your new account.',
-            'SET'          => 'Set Password and Sign In',
+            // '@TRANSLATION' => 'Create Password',
+            // 'PAGE'         => 'Choose a password for your new account.',
+            // 'SET'          => 'Set Password and Sign In',
         ],
         'CURRENT'         => '密码正确',
         'CURRENT_EXPLAIN' => '你必须要确认密码再进行修改',
@@ -129,7 +129,7 @@ return [
     ],
     'REMEMBER_ME'             => '记住我!',
     'REMEMBER_ME_ON_COMPUTER' => '在此电脑上记住我 (不推荐在公共电脑上)',
-    'SIGN_IN_HERE'            => 'Already have an account? <a href="{{url}}">Sign in here.</a>',
+    // 'SIGN_IN_HERE'            => 'Already have an account? <a href="{{url}}">Sign in here.</a>',
     'SIGNIN'                  => '登陆',
     'SIGNIN_OR_REGISTER'      => '登陆或注册',
     'SIGNUP'                  => '注销',

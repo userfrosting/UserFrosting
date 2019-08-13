@@ -36,7 +36,7 @@ return [
         'DESCRIPTION' => '我们发现一股强力干扰.',
         'DETAIL'      => '下面是我们得到的信息:',
         'ENCOUNTERED' => '嗯...发生了一些情况.  然而我们并不知道这是什么.',
-        'MAIL'        => 'Fatal error attempting mail, contact your server administrator.  If you are the admin, please check the UserFrosting log.',
+        // 'MAIL'        => 'Fatal error attempting mail, contact your server administrator.  If you are the admin, please check the UserFrosting log.',
         'RETURN'      => '<a href="{{url}}">点击</a>返回上一页.',
         'SERVER'      => '哦, 看起来我们的服务器出错了. 如果你是管理员, 请检查PHP及UF的logs.',
         'TITLE'       => '强力干扰',

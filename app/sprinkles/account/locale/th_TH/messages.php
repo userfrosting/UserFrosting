@@ -25,7 +25,7 @@ return [
         'SESSION_COMPROMISED' => [
             '@TRANSLATION' => 'เซสชันของคุณถูกลักลอบใช้ คุณควรจะออกจากระบบบนอุปกรณ์ทั้งหมดแล้วกลับเข้าสู่ระบบและตรวจสอบให้แน่ใจว่าไม่มีการแก้ไขข้อมูลของคุณ',
             'TITLE'        => 'บัญชีของคุณอาจถูกบุกรุก',
-            'TEXT'         => 'Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{url}}">log in</a> and check your account for suspicious activity.  You may also wish to change your password.',
+            // 'TEXT'         => 'Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{url}}">log in</a> and check your account for suspicious activity.  You may also wish to change your password.',
         ],
         'SESSION_EXPIRED' => 'เซสชันของคุณหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง',
         'SETTINGS'        => [
@@ -48,15 +48,15 @@ return [
     'EMAIL' => [
         'INVALID'               => 'อีเมล <strong>{{email}}</strong> ไม่มีอยู่จริง',
         'IN_USE'                => 'อีเมล <strong>{{email}}</strong> ได้ถูกใช้งานแล้ว',
-        'VERIFICATION_REQUIRED' => 'Email (verification required - use a real address!)',
+        // 'VERIFICATION_REQUIRED' => 'Email (verification required - use a real address!)',
     ],
-    'EMAIL_OR_USERNAME'   => 'Username or email address',
+    // 'EMAIL_OR_USERNAME'   => 'Username or email address',
     'FIRST_NAME'          => 'ชื่อจริง',
     'HEADER_MESSAGE_ROOT' => 'คุณได้เข้าสู่ระบบเป็นผู้ดูแลสูงสุด',
     'LAST_NAME'           => 'นามสกุล',
     'LOCALE'              => [
         'ACCOUNT' => 'ภาษาและสถานที่ที่จะใช้สำหรับบัญชีของคุณ',
-        'INVALID' => '<strong>{{locale}}</strong> is not a valid locale.',
+        // 'INVALID' => '<strong>{{locale}}</strong> is not a valid locale.',
     ],
     'LOGIN' => [
         '@TRANSLATION'     => 'เข้าสู่ะระบบ',
@@ -66,7 +66,7 @@ return [
     ],
     'LOGOUT'         => 'ออกจากระบบ',
     'NAME'           => 'ชื่อ',
-    'NAME_AND_EMAIL' => 'Name and email',
+    // 'NAME_AND_EMAIL' => 'Name and email',
     'PAGE'           => [
         'LOGIN' => [
             'DESCRIPTION' => 'เข้าสู่ระบบไปยังบัญชี {{site_name}} หรือสมัครสมาชิกสำหรับบัญชีใหม่',
@@ -83,9 +83,9 @@ return [
         'CONFIRM_NEW_EXPLAIN' => 'กรอกรหัสผ่านใหม่ของคุณอีกครั้ง',
         'CONFIRM_NEW_HELP'    => 'กรอกเฉพาะเมื่อคุณต้องการตั้งรหัสผ่านใหม่',
         'CREATE'              => [
-            '@TRANSLATION' => 'Create Password',
-            'PAGE'         => 'Choose a password for your new account.',
-            'SET'          => 'Set Password and Sign In',
+            // '@TRANSLATION' => 'Create Password',
+            // 'PAGE'         => 'Choose a password for your new account.',
+            // 'SET'          => 'Set Password and Sign In',
         ],
         'CURRENT'         => 'รหัสผ่านปัจจุบัน',
         'CURRENT_EXPLAIN' => 'คุณจะต้องยืนยันรหัสผ่านปัจจุบันเพื่อแก้ไขข้อมูล',
@@ -113,8 +113,8 @@ return [
         'UPDATED' => 'ปรังปรุงรหัสผ่านของบัญชีแล้ว',
     ],
     'PROFILE' => [
-        'SETTINGS' => 'Profile settings',
-        'UPDATED'  => 'Profile settings updated',
+        // 'SETTINGS' => 'Profile settings',
+        // 'UPDATED'  => 'Profile settings updated',
     ],
     'RATE_LIMIT_EXCEEDED' => 'ถึงขีดจำกัดสำหรับการกระทำนี้แล้ว คุณจะต้องรออีก {{delay}} วินาที ก่อนที่คุณจะได้รับอนุญาตให้ลองใหม่อีกครั้ง',
     'REGISTER'            => 'สมัครสมาชิก',
@@ -129,7 +129,7 @@ return [
     ],
     'REMEMBER_ME'             => 'จำฉันไว้ในระบบ!',
     'REMEMBER_ME_ON_COMPUTER' => 'จำฉันไว้ในระบบบนคอมพิวเตอร์นี้ (ไม่แนะนำสำหรับคอมพิวเตอร์สาธารณะ)',
-    'SIGN_IN_HERE'            => 'Already have an account? <a href="{{url}}">Sign in here.</a>',
+    // 'SIGN_IN_HERE'            => 'Already have an account? <a href="{{url}}">Sign in here.</a>',
     'SIGNIN'                  => 'เข้าสู่ะระบบ',
     'SIGNIN_OR_REGISTER'      => 'เข้าสู่ระบบหรือสมัครสมาชิก',
     'SIGNUP'                  => 'สมัครสมาชิก',
@@ -141,7 +141,7 @@ return [
         'CHOOSE'        => 'เลือกชื่อผู้ใช้ที่เป็นเป็นเอกลักษณ์',
         'INVALID'       => 'ชื่อผู้ใช้ไม่ถูกต้อง',
         'IN_USE'        => 'ชื่อผู้ใช้ <strong>{{user_name}}</strong> ถูกใช้งานแล้ว',
-        'NOT_AVAILABLE' => 'Username <strong>{{user_name}}</strong> is not available. Choose a different name, or click \'suggest\'.',
+        // 'NOT_AVAILABLE' => 'Username <strong>{{user_name}}</strong> is not available. Choose a different name, or click \'suggest\'.',
     ],
     'USER_ID_INVALID'       => 'ไม่พบหมายเลขผู้ใช้ที่ร้องขอมา',
     'USER_OR_EMAIL_INVALID' => 'ชื่อผู้ใช้หรือที่อยู่อีเมลไม่ถูกต้อง',

@@ -9,6 +9,7 @@
  */
 
 return [
+    /*
     'ERROR' => [
         '@TRANSLATION' => 'Error',
         400            => [
@@ -36,4 +37,5 @@ return [
         'SERVER'      => 'Oops, looks like our server might have goofed. If you\'re an admin, please check the PHP or UserFrosting logs.',
         'TITLE'       => 'Disturbance in the Force',
     ],
+    */
 ];

@@ -9,6 +9,7 @@
  */
 
 return [
+    /*
     'VALIDATE' => [
         'ARRAY'         => 'The values for <strong>{{label}}</strong> must be in an array.',
         'BOOLEAN'       => 'The value for <strong>{{label}}</strong> must be either \'0\' or \'1\'.',
@@ -27,4 +28,5 @@ return [
             'BAD_SORT'   => '<strong>{{name}}</strong> is not a valid sort field for this Sprunje.',
         ],
     ],
+    */
 ];

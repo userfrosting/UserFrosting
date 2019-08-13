@@ -25,7 +25,7 @@ return [
         'SESSION_COMPROMISED' => [
             '@TRANSLATION' => 'A sua sessão foi comprometida.  Deverá fechar todas as sessões, voltar a iniciar sessão e verificar que os seus dados não foram alterados por alheios.',
             'TITLE'        => 'A sua sessão pode ter sido comprometida',
-            'TEXT'         => 'Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{url}}">log in</a> and check your account for suspicious activity.  You may also wish to change your password.',
+            // 'TEXT'         => 'Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{url}}">log in</a> and check your account for suspicious activity.  You may also wish to change your password.',
         ],
         'SESSION_EXPIRED' => 'A sua sessão expirou. Por favor inicie nova sessão.',
         'SETTINGS'        => [
@@ -48,9 +48,9 @@ return [
     'EMAIL' => [
         'INVALID'               => 'Não existe nenhuma conta para <strong>{{email}}</strong>.',
         'IN_USE'                => 'O email <strong>{{email}}</strong> já se encontra em uso.',
-        'VERIFICATION_REQUIRED' => 'Email (verification required - use a real address!)',
+        // 'VERIFICATION_REQUIRED' => 'Email (verification required - use a real address!)',
     ],
-    'EMAIL_OR_USERNAME'   => 'Username or email address',
+    // 'EMAIL_OR_USERNAME'   => 'Username or email address',
     'FIRST_NAME'          => 'Primeiro nome',
     'HEADER_MESSAGE_ROOT' => 'INICIOU SESSÃO COM A CONTA ROOT',
     'LAST_NAME'           => 'Último nome',
@@ -66,7 +66,7 @@ return [
     ],
     'LOGOUT'         => 'Sair',
     'NAME'           => 'Nome',
-    'NAME_AND_EMAIL' => 'Name and email',
+    // 'NAME_AND_EMAIL' => 'Name and email',
     'PAGE'           => [
         'LOGIN' => [
             'DESCRIPTION' => 'Inicie sessão na sua conta {{site_name}}, ou registre-se para uma nova conta.',
@@ -83,9 +83,9 @@ return [
         'CONFIRM_NEW_EXPLAIN' => 'Re-introduza a sua nova password',
         'CONFIRM_NEW_HELP'    => 'Apenas necessário se escolher uma nova password',
         'CREATE'              => [
-            '@TRANSLATION' => 'Create Password',
-            'PAGE'         => 'Choose a password for your new account.',
-            'SET'          => 'Set Password and Sign In',
+            // '@TRANSLATION' => 'Create Password',
+            // 'PAGE'         => 'Choose a password for your new account.',
+            // 'SET'          => 'Set Password and Sign In',
         ],
         'CURRENT'         => 'Password Atual',
         'CURRENT_EXPLAIN' => 'Tem de confirmar a sua password atual para efetuar alterações',
@@ -95,7 +95,7 @@ return [
             'COULD_NOT_UPDATE' => 'Não foi possível atualizar a password.',
             'EMAIL'            => 'Por favor introduza o endereço de email que utilizou no registro. Enviaremos um email com instruções para efetuar o reset à sua password.',
             'EMAIL_SEND'       => 'Enviar email com link de reset da password',
-            'INVALID'          => 'This password reset request could not be found, or has expired.  Please try <a href="{{url}}">resubmitting your request<a>.',
+            // 'INVALID'          => 'This password reset request could not be found, or has expired.  Please try <a href="{{url}}">resubmitting your request<a>.',
             'PAGE'             => 'Obtenha um link para fazer reset à sua password.',
             'REQUEST_CANNED'   => 'Pedido de password esquecida foi cancelado.',
             'REQUEST_SENT'     => 'Se o email <strong>{{email}}</strong> corresponder a uma conta em nosso sistema, um link de redefinição de senha será enviado para <strong>{{email}}</strong>.',
@@ -113,8 +113,8 @@ return [
         'UPDATED' => 'Password da conta foi atualizada',
     ],
     'PROFILE' => [
-        'SETTINGS' => 'Profile settings',
-        'UPDATED'  => 'Profile settings updated',
+        // 'SETTINGS' => 'Profile settings',
+        // 'UPDATED'  => 'Profile settings updated',
     ],
     'RATE_LIMIT_EXCEEDED' => 'Excedeu o número de tentativas para esta ação.  Tem de aguardar {{delay}} segundos até lhe ser permitida nova tentativa.',
     'REGISTER'            => 'Registrar',
@@ -141,7 +141,7 @@ return [
         'CHOOSE'        => 'Escolha um nome de utilizador único',
         'INVALID'       => 'Nome de utilizador inválido',
         'IN_USE'        => 'O nome de utilizador <strong>{{user_name}}</strong> já se encontra em uso.',
-        'NOT_AVAILABLE' => 'Username <strong>{{user_name}}</strong> is not available. Choose a different name, or click \'suggest\'.',
+        // 'NOT_AVAILABLE' => 'Username <strong>{{user_name}}</strong> is not available. Choose a different name, or click \'suggest\'.',
     ],
     'USER_ID_INVALID'       => 'O id de utilizador solicitado não existe.',
     'USER_OR_EMAIL_INVALID' => 'Nome de utilizador ou endereço de email inválidos.',
