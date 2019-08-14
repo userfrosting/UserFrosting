@@ -23,7 +23,7 @@ return [
     * Admin is the one sending email from the system. You can set the sender
     * email adress and name using this config.
     */
-   'address_book' => [
+    'address_book' => [
         'admin' => [
             'email' => getenv('SMTP_USER') ?: null,
             'name'  => 'Site Administrator',
@@ -109,8 +109,10 @@ return [
             // Regular expressions will be delimited with ~ in preg_match, so if you
             // have routes with ~ in them, you must escape this character in your regex.
             // Also, remember to use ^ when you only want to match the beginning of a URL path!
+        ],
+    ],
 
-        /*
+    /*
         * ----------------------------------------------------------------------
         * Database Config
         * ----------------------------------------------------------------------
@@ -120,35 +122,10 @@ return [
         * Multiple connections can also be used.
         * See Laravel docs : https://laravel.com/docs/5.8/database
         */
-        'db' => [
-            'default' => [
-                'driver'    => getenv('DB_DRIVER') ?: 'mysql',
-                'host'      => getenv('DB_HOST') ?: 'localhost',
-                'port'      => getenv('DB_PORT') ?: null,
-                'database'  => getenv('DB_NAME') ?: null,
-                'username'  => getenv('DB_USER') ?: null,
-                'password'  => getenv('DB_PASSWORD') ?: null,
-                'charset'   => 'utf8',
-                'collation' => 'utf8_unicode_ci',
-                'prefix'    => '',
-            ],
-        ],
-    ],
-
-    /*
-    * ----------------------------------------------------------------------
-    * Database Config
-    * ----------------------------------------------------------------------
-    * Settings for the default database connections. Actual config values
-    * should be store in environment variables
-    *
-    * Multiple connections can also be used.
-    * See Laravel docs : https://laravel.com/docs/5.8/database
-    */
     'db' => [
         'default' => [
             'driver'    => getenv('DB_DRIVER') ?: 'mysql',
-            'host'      => getenv('DB_HOST') ?: null,
+            'host'      => getenv('DB_HOST') ?: 'localhost',
             'port'      => getenv('DB_PORT') ?: null,
             'database'  => getenv('DB_NAME') ?: null,
             'username'  => getenv('DB_USER') ?: null,
@@ -235,15 +212,15 @@ return [
              * Include thephpleague/flysystem-rackspace in a custom Sprinkle to use.
              */
             'rackspace' => [
-              'driver'    => 'rackspace',
-              'username'  => getenv('RACKSPACE_USERNAME') ?: '',
-              'key'       => getenv('RACKSPACE_KEY') ?: '',
-              'container' => getenv('RACKSPACE_CONTAINER') ?: '',
-              'endpoint'  => getenv('RACKSPACE_ENDPOINT') ?: '',
-              'region'    => getenv('RACKSPACE_REGION') ?: '',
-              'url_type'  => getenv('RACKSPACE_URL_TYPE') ?: '',
+                'driver'    => 'rackspace',
+                'username'  => getenv('RACKSPACE_USERNAME') ?: '',
+                'key'       => getenv('RACKSPACE_KEY') ?: '',
+                'container' => getenv('RACKSPACE_CONTAINER') ?: '',
+                'endpoint'  => getenv('RACKSPACE_ENDPOINT') ?: '',
+                'region'    => getenv('RACKSPACE_REGION') ?: '',
+                'url_type'  => getenv('RACKSPACE_URL_TYPE') ?: '',
             ],
-       ],
+        ],
     ],
 
     /*
@@ -403,6 +380,5 @@ return [
         'log_errors'      => 'false',
         // Let PHP itself render errors natively.  Useful if a fatal error is raised in our custom shutdown handler.
         'display_errors_native' => 'false',
-        ],
     ],
 ];
