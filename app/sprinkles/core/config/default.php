@@ -113,15 +113,15 @@ return [
     ],
 
     /*
-        * ----------------------------------------------------------------------
-        * Database Config
-        * ----------------------------------------------------------------------
-        * Settings for the default database connections. Actual config values
-        * should be store in environment variables
-        *
-        * Multiple connections can also be used.
-        * See Laravel docs : https://laravel.com/docs/5.8/database
-        */
+    * ----------------------------------------------------------------------
+    * Database Config
+    * ----------------------------------------------------------------------
+    * Settings for the default database connections. Actual config values
+    * should be store in environment variables
+    *
+    * Multiple connections can also be used.
+    * See Laravel docs : https://laravel.com/docs/5.8/database
+    */
     'db' => [
         'default' => [
             'driver'    => getenv('DB_DRIVER') ?: 'mysql',
