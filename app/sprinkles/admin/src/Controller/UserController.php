@@ -982,8 +982,8 @@ class UserController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_user', [
-                'user' => $user,
-            ])) {
+            'user' => $user,
+        ])) {
             throw new ForbiddenException();
         }
 

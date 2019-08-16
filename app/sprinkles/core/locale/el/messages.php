@@ -40,11 +40,8 @@ return [
     'NAVIGATION' => 'Πλοήγηση',
     'NO_RESULTS' => 'Λυπούμαστε, δεν έχουμε τίποτα εδώ',
     'PAGINATION' => [
-        'GOTO' => 'Μετάβαση στη σελίδα',
-        'SHOW' => 'Εμφάνιση', 'OUTPUT' => '{startRow} έως {endRow} από {filteredRows} ({totalRows})',
-        // Paginator
-        // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
-        // also {page:input} & {startRow:input} will add a modifiable input in place of the value
+        'GOTO'     => 'Μετάβαση στη σελίδα',
+        'SHOW'     => 'Εμφάνιση',
         'OUTPUT'   => '{startRow} έως {endRow} από {filteredRows} ({totalRows})',
         'NEXT'     => 'Επόμενη σελίδα',
         'PREVIOUS' => 'Προηγούμενη σελίδα',
@@ -53,15 +50,14 @@ return [
     ],
     'PRIVACY' => [
         '@TRANSLATION' => 'Πολιτική απορρήτου',
-        'DESCRIPTION'  => 'Η πολιτική απορρήτου μας περιγράφει τι είδους πληροφορίες συλλέγουμε από εσάς και πώς θα το χρησιμοποιήσουμε' .
-            , ],
-    'SLUG'           => 'Slug',
-    'SLUG_CONDITION' => 'Slug/ Προϋποθέσεις',
-    'SLUG_IN_USE'    => 'Υπάρχει ήδη ένα slug <strong> {{slug}} </ strong>',
-    'STATUS'         => 'Κατάσταση',
-    'SUGGEST'        => 'Προτείνετε',
-    'UNKNOWN'        => 'Άγνωστο',
-// Actions words
+        'DESCRIPTION'  => 'Η πολιτική απορρήτου μας περιγράφει τι είδους πληροφορίες συλλέγουμε από εσάς και πώς θα το χρησιμοποιήσουμε    ',
+    ],
+    'SLUG'                     => 'Slug',
+    'SLUG_CONDITION'           => 'Slug/ Προϋποθέσεις',
+    'SLUG_IN_USE'              => 'Υπάρχει ήδη ένα slug <strong> {{slug}} </ strong>',
+    'STATUS'                   => 'Κατάσταση',
+    'SUGGEST'                  => 'Προτείνετε',
+    'UNKNOWN'                  => 'Άγνωστο',
     'ACTIONS'                  => 'Ενέργειες',
     'ACTIVATE'                 => 'Ενεργοποίηση',
     'ACTIVE'                   => 'Ενεργό',
@@ -85,7 +81,7 @@ return [
     'OVERRIDE'                 => 'Παράκαμψη',
     'RESET'                    => 'Επαναφορά',
     'SAVE'                     => 'Αποθήκευση',
-    'ΑΝΑΖΗΤΗΣΗ'                => 'Αναζήτηση',
+    'SEARCH'                   => 'Αναζήτηση',
     'SORT'                     => 'Ταξινόμηση',
     'SUBMIT'                   => 'Υποβολή',
     'PRINT'                    => 'Εκτύπωση',
@@ -95,8 +91,7 @@ return [
     'YES'                      => 'Ναι',
     'NO'                       => 'Όχι',
     'OPTIONAL'                 => 'Προαιρετικό',
-// Misc.
-    'BUILT_WITH_UF'     => 'Κατασκευάστηκε με το <a href="http://www.userfrosting.com">UserFrosting </a>',
-    'ADMINLTE_THEME_BY' => "Θέμα από <strong> <a href=\"http://almsaeedstudio.com\>> Almsaeed Studio </a>. </ Strong> Όλα τα δικαιώματα διατηρούνται",
-    'WELCOME_TO'        => 'Καλώς ορίσατε στο {{title}}!',
+    'BUILT_WITH_UF'            => 'Κατασκευάστηκε με το <a href="http://www.userfrosting.com">UserFrosting </a>',
+    'ADMINLTE_THEME_BY'        => 'Θέμα από <strong> <a href="http://almsaeedstudio.com\\>> Almsaeed Studio </a>. </ Strong> Όλα τα δικαιώματα διατηρούνται',
+    'WELCOME_TO'               => 'Καλώς ορίσατε στο {{title}}!',
 ];

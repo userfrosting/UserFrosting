@@ -15,55 +15,54 @@
  */
 return [
     '@PLURAL_RULE' => 1,
-
-    'ABOUT' => 'เกี่ยวกับ',
-
-    'CAPTCHA' => [
+    'ABOUT'        => 'เกี่ยวกับ',
+    'CAPTCHA'      => [
         '@TRANSLATION' => 'รหัสยืนยัน',
         'FAIL'         => 'คุณยังกรอกรหัสยืนยันไม่ถูกต้อง',
         'SPECIFY'      => 'กรอกรหัสยืนยัน',
         'VERIFY'       => 'ตรวจสอบรหัสยืนยัน',
     ],
-
     'CSRF_MISSING' => 'ไม่พบโทเคน CSRF กรุณารีเฟรชแล้วส่งข้อมูลใหม่',
-
-    'DB_INVALID'    => 'ไม่สามารถเชื่อมต่อกับฐานข้อมูลได้ หากคุณเป็นผู้ดูแลระบบ กรุณาตรวจสอบบันทึกข้อผิดพลาด',
-    'DESCRIPTION'   => 'รายละเอียด',
-    'DOWNLOAD'      => [
+    'DB_INVALID'   => 'ไม่สามารถเชื่อมต่อกับฐานข้อมูลได้ หากคุณเป็นผู้ดูแลระบบ กรุณาตรวจสอบบันทึกข้อผิดพลาด',
+    'DESCRIPTION'  => 'รายละเอียด',
+    'DOWNLOAD'     => [
         '@TRANSLATION' => 'ดาวน์โหลด',
         'CSV'          => 'ดาวน์โหลด CSV',
     ],
-
     'EMAIL' => [
         '@TRANSLATION' => 'อีเมล',
         'YOUR'         => 'ที่อยู่อีเมลของคุณ',
     ],
-
     'HOME'  => 'หน้าแรก',
-
-    'LEGAL' => 'นโยบายทางกฎหมาย',
-
+    'LEGAL' => [
+        '@TRANSLATION' => 'นโยบายทางกฎหมาย',
+        // 'DESCRIPTION'  => 'Our legal policy applies to your usage of this website and our services.',
+    ],
     'LOCALE' => [
         '@TRANSLATION' => 'ภาษา',
     ],
-
     'NAME'       => 'ชื่อ',
     'NAVIGATION' => 'เมนูนำทาง',
-
+    // 'NO_RESULTS' => 'Sorry, we\'ve got nothing here.',
     'PAGINATION' => [
-        'GOTO'   => 'ข้ามไปยังหน้า',
-        'SHOW'   => 'แสดง',
-        'OUTPUT' => '{startRow} to {endRow} of {filteredRows} ({totalRows})',
+        'GOTO'     => 'ข้ามไปยังหน้า',
+        'SHOW'     => 'แสดง',
+        // 'OUTPUT'   => '{startRow} to {endRow} of {filteredRows} ({totalRows})',
+        // 'NEXT'     => 'Next page',
+        // 'PREVIOUS' => 'Previous page',
+        // 'FIRST'    => 'First page',
+        // 'LAST'     => 'Last page',
     ],
-    'PRIVACY' => 'นโยบายความเป็นส่วนตัว',
-
-    'SLUG'           => 'ข้อกำหนด',
-    'SLUG_CONDITION' => 'ข้อกำหนด/เงื่อนไข',
-    'STATUS'         => 'สถานะ',
-
-    'UNKNOWN' => 'ไม่ทราบ',
-
-    // Actions words
+    'PRIVACY' => [
+        '@TRANSLATION' => 'นโยบายความเป็นส่วนตัว',
+        // 'DESCRIPTION'  => 'Our privacy policy outlines what kind of information we collect from you and how we will use it.',
+    ],
+    'SLUG'                     => 'ข้อกำหนด',
+    'SLUG_CONDITION'           => 'ข้อกำหนด/เงื่อนไข',
+    // 'SLUG_IN_USE'              => 'A <strong>{{slug}}</strong> slug already exists',
+    'STATUS'                   => 'สถานะ',
+    // 'SUGGEST'                  => 'Suggest',
+    'UNKNOWN'                  => 'ไม่ทราบ',
     'ACTIONS'                  => 'การดำเนินการ',
     'ACTIVATE'                 => 'เปิดใช้งาน',
     'ACTIVE'                   => 'เปิดใช้งานอยู่',
@@ -97,8 +96,7 @@ return [
     'YES'                      => 'ใช่',
     'NO'                       => 'ไม่',
     'OPTIONAL'                 => 'ตัวเลือกเพิ่มเติม',
-
-    // Misc.
-    'BUILT_WITH_UF'     => 'สร้างด้วย <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY' => 'ธีมโดย <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a></strong> สงวนลิขสิทธิ์',
+    'BUILT_WITH_UF'            => 'สร้างด้วย <a href="http://www.userfrosting.com">UserFrosting</a>',
+    'ADMINLTE_THEME_BY'        => 'ธีมโดย <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a></strong> สงวนลิขสิทธิ์',
+    // 'WELCOME_TO'               => 'Welcome to {{title}}!',
 ];

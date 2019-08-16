@@ -576,8 +576,8 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_group', [
-                'group' => $group,
-            ])) {
+            'group' => $group,
+        ])) {
             throw new ForbiddenException();
         }
 

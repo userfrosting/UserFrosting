@@ -18,9 +18,9 @@ return [
         1 => 'Etkinlik',
         2 => 'Etkinlikler',
 
-       'LAST' => 'Son Etkinlik',
-       'PAGE' => 'Kullanıcı etkinliklerinin listesi',
-       'TIME' => 'Aktivite zamanı',
+        'LAST' => 'Son Etkinlik',
+        'PAGE' => 'Kullanıcı etkinliklerinin listesi',
+        'TIME' => 'Aktivite zamanı',
     ],
 
     'CACHE' => [

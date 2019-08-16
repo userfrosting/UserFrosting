@@ -71,7 +71,7 @@ class SprinkleManagerTest extends TestCase
 
     /**
      * @depends testConstructor
-     * @param SprinkleManager $sprinkleManager
+     * @param  SprinkleManager $sprinkleManager
      * @return SprinkleManager
      */
     public function testGetSprinkles(SprinkleManager $sprinkleManager)

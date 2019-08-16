@@ -18,9 +18,9 @@ return [
         1 => 'Activity',
         2 => 'Activities',
 
-       'LAST' => 'Last Activity',
-       'PAGE' => 'A listing of user activities',
-       'TIME' => 'Activity Time',
+        'LAST' => 'Last Activity',
+        'PAGE' => 'A listing of user activities',
+        'TIME' => 'Activity Time',
     ],
 
     'CACHE' => [
