@@ -266,7 +266,6 @@ function bindUserButtons(el, options) {
 
             // On submission, submit either the PUT request, or POST for a password reset, depending on the toggle state
             modal.find("input[name='change_password_mode']").click(function(e) {
-                e.preventDefault();
 
                 var changePasswordMode = $(this).val();
                 toggleChangePasswordMode(modal, userName, changePasswordMode);
