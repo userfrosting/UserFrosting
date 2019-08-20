@@ -65,8 +65,10 @@ class MigrationDependencyAnalyser
 
     /**
      * Analyse the dependencies.
+     *
+     * @return void
      */
-    public function analyse()
+    public function analyse(): void
     {
         // Reset fulfillable/unfulfillable lists
         $this->analysed = false;
@@ -94,7 +96,7 @@ class MigrationDependencyAnalyser
      *
      * @return bool True/False if the migration is fulfillable
      */
-    protected function validateClassDependencies($migrationName)
+    protected function validateClassDependencies(string $migrationName): bool
     {
         // If it's already marked as fulfillable, it's fulfillable
         // Return true directly (it's already marked)
@@ -141,7 +143,7 @@ class MigrationDependencyAnalyser
      *
      * @return array
      */
-    public function getFulfillable()
+    public function getFulfillable(): array
     {
         if (!$this->analysed) {
             $this->analyse();
@@ -155,7 +157,7 @@ class MigrationDependencyAnalyser
      *
      * @return array
      */
-    public function getUnfulfillable()
+    public function getUnfulfillable(): array
     {
         if (!$this->analysed) {
             $this->analyse();
@@ -171,7 +173,7 @@ class MigrationDependencyAnalyser
      *
      * @return bool True, it's fulfillable
      */
-    protected function markAsFulfillable($migration)
+    protected function markAsFulfillable(string $migration): bool
     {
         $this->fulfillable->push($migration);
 
@@ -186,7 +188,7 @@ class MigrationDependencyAnalyser
      *
      * @return bool False, it's not fullfillable
      */
-    protected function markAsUnfulfillable($migration, $dependency)
+    protected function markAsUnfulfillable(string $migration, $dependency): bool
     {
         if (is_array($dependency)) {
             $dependency = implode(', ', $dependency);
@@ -205,9 +207,8 @@ class MigrationDependencyAnalyser
      *
      * @return array The dependency list
      */
-    protected function getMigrationDependencies($migration)
+    protected function getMigrationDependencies(string $migration): array
     {
-
         // Make sure class exists
         if (!class_exists($migration)) {
             throw new BadClassNameException("Unable to find the migration class '$migration'. Run 'php bakery migrate:clean' to remove stale migrations.");

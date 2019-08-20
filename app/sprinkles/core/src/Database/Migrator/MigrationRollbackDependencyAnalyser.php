@@ -43,7 +43,7 @@ class MigrationRollbackDependencyAnalyser extends MigrationDependencyAnalyser
      *
      * @return bool True/False if the migration is fulfillable
      */
-    protected function validateClassDependencies($migrationName)
+    protected function validateClassDependencies(string $migrationName): bool
     {
         // If it's already marked as fulfillable, it's fulfillable
         // Return true directly (it's already marked)
