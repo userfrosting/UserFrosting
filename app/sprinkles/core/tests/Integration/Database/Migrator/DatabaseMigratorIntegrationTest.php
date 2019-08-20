@@ -310,7 +310,7 @@ class MigrationLocatorStub extends MigrationLocator
     public function getMigrations()
     {
         return [
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            'UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ];
     }

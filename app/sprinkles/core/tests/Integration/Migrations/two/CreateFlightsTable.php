@@ -20,7 +20,7 @@ class CreateFlightsTable extends Migration
      */
     public static $dependencies = [
         '\UserFrosting\Tests\Integration\Migrations\one\CreateUsersTable',
-        '\UserFrosting\Tests\Integration\Migrations\one\CreatePasswordResetsTable',
+        'UserFrosting\Tests\Integration\Migrations\one\CreatePasswordResetsTable',
     ];
 
     /**

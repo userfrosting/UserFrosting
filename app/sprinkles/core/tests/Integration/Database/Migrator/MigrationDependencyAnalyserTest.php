@@ -24,7 +24,7 @@ class MigrationDependencyAnalyserTest extends TestCase
     public function testAnalyser()
     {
         $migrations = [
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            'UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ];
 
@@ -50,13 +50,13 @@ class MigrationDependencyAnalyserTest extends TestCase
     {
         $analyser = new MigrationDependencyAnalyser([
             '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            'UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ], []);
 
         $this->assertEquals([], $analyser->getUnfulfillable());
         $this->assertEquals([
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            'UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
         ], $analyser->getFulfillable());
@@ -65,7 +65,7 @@ class MigrationDependencyAnalyserTest extends TestCase
     public function testAnalyserWithUnfulfillable()
     {
         $migrations = [
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            'UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\UnfulfillableTable',
         ];
@@ -73,7 +73,7 @@ class MigrationDependencyAnalyserTest extends TestCase
         $analyser = new MigrationDependencyAnalyser($migrations, []);
 
         $this->assertEquals([
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            'UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ], $analyser->getFulfillable());
 
