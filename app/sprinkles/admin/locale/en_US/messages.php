@@ -18,9 +18,9 @@ return [
         1 => 'Activity',
         2 => 'Activities',
 
-       'LAST' => 'Last Activity',
-       'PAGE' => 'A listing of user activities',
-       'TIME' => 'Activity Time',
+        'LAST' => 'Last Activity',
+        'PAGE' => 'A listing of user activities',
+        'TIME' => 'Activity Time',
     ],
 
     'CACHE' => [
@@ -59,6 +59,7 @@ return [
         'MANAGE'              => 'Manage group',
         'NAME'                => 'Group name',
         'NAME_EXPLAIN'        => 'Please enter a name for the group',
+        'NONE'                => 'No group',
         'NOT_EMPTY'           => "You can't do that because there are still users associated with the group <strong>{{name}}</strong>.",
         'PAGE_DESCRIPTION'    => 'A listing of the groups for your site.  Provides management tools for editing and deleting groups.',
         'SUMMARY'             => 'Group Summary',

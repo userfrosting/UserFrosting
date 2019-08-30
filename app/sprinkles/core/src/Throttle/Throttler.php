@@ -81,12 +81,12 @@ class Throttler
 
         // Fetch all throttle events of the specified type, that match the specified rule
         if ($throttleRule->getMethod() == 'ip') {
-            $events = $this->classMapper->staticMethod('throttle', 'where', 'type', $type)
+            $events = $this->classMapper->getClassMapping('throttle')::where('type', $type)
                 ->where('created_at', '>', $startTime)
                 ->where('ip', $_SERVER['REMOTE_ADDR'])
                 ->get();
         } else {
-            $events = $this->classMapper->staticMethod('throttle', 'where', 'type', $type)
+            $events = $this->classMapper->getClassMapping('throttle')::where('type', $type)
                 ->where('created_at', '>', $startTime)
                 ->get();
 

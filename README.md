@@ -1,4 +1,4 @@
-# UserFrosting 4.2
+# UserFrosting 4.3
 
 [![Latest Version](https://img.shields.io/github/release/userfrosting/UserFrosting.svg)](https://github.com/userfrosting/UserFrosting/releases)
 ![PHP Version](https://img.shields.io/packagist/php-v/userfrosting/userfrosting.svg?color=brightgreen)
@@ -11,8 +11,8 @@
 | Branch | Version | Build | Coverage | Style |
 | ------ |:-------:|:-----:|:--------:|:-----:|
 | [master] | ![](https://img.shields.io/github/release/userfrosting/userfrosting.svg?color=success&label=Version) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)][UF-Codecov] | [![][style-master]][style] |
-| [hotfix] | ![](https://img.shields.io/badge/Version-v4.2.x-yellow.svg) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=hotfix)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
-| [develop] | ![](https://img.shields.io/badge/Version-v4.3.x-orange.svg) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=develop)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
+| [hotfix] | ![](https://img.shields.io/badge/Version-v4.3.x-yellow.svg) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=hotfix)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
+| [develop] | ![](https://img.shields.io/badge/Version-v4.4.x-orange.svg) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=develop)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
 
 <!-- Links -->
 [master]: https://github.com/userfrosting/UserFrosting
@@ -33,7 +33,7 @@ If you simply want to show that you like this project, or want to remember it fo
 
 Copyright (c) 2019, free to use in personal and commercial software as per the [license](LICENSE.md).
 
-UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.4/eloquent#introduction) ORM.
+UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.8/eloquent#introduction) ORM.
 
 ## Features
 

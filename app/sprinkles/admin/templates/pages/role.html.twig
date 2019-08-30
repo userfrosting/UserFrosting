@@ -20,26 +20,26 @@
                         <div class="box-tools pull-right">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fa fa-gear"></i> <span class="caret"></span>
+                                  <i class="fas fa-cog"></i> <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu box-tool-menu">
                                     {% block tools %}
                                         <li>
                                             <a href="#" class="js-role-edit" data-slug="{{role.slug}}">
-                                                <i class="fa fa-edit fa-fw"></i> {{translate('EDIT')}}
+                                                <i class="fas fa-edit fa-fw"></i> {{translate('EDIT')}}
                                             </a>
                                         </li>
                                         {% if 'permissions' not in tools.hidden %}
                                         <li>
                                             <a href="#" class="js-role-permissions" data-slug="{{role.slug}}">
-                                            <i class="fa fa-key"></i> {{translate("PERMISSION.MANAGE")}}
+                                            <i class="fas fa-key"></i> {{translate("PERMISSION.MANAGE")}}
                                             </a>
                                         </li>
                                         {% endif %}
                                         {% if 'delete' not in tools.hidden %}
                                             <li>
                                                 <a href="#" class="js-role-delete" data-slug="{{role.slug}}">
-                                                    <i class="fa fa-trash-o fa-fw"></i> {{translate('DELETE')}}
+                                                    <i class="fas fa-trash-alt fa-fw"></i> {{translate('DELETE')}}
                                                 </a>
                                             </li>
                                         {% endif %}
@@ -51,7 +51,7 @@
                 </div>
                 <div class="box-body box-profile">
                     <div class="text-center">
-                        <i class="fa fa-drivers-license fa-5x"></i>
+                        <i class="fas fa-id-card fa-5x"></i>
                     </div>
 
                     <h3 class="profile-username text-center">{{role.name}}</h3>
@@ -63,7 +63,7 @@
                     {% endif %}
                     {% if 'users' not in fields.hidden %}
                         <hr>
-                        <strong><i class="fa fa-users margin-r-5"></i> {{ translate('USER', 2)}}</strong>
+                        <strong><i class="fas fa-users margin-r-5"></i> {{ translate('USER', 2)}}</strong>
                         <p class="badge bg-blue box-profile-property">
                             {{role.users.count}}
                         </p>
@@ -74,7 +74,7 @@
         <div class="col-lg-8">
             <div id="widget-role-permissions" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-fw fa-key"></i> {{translate('PERMISSION', 2)}}</h3>
+                    <h3 class="box-title"><i class="fas fa-fw fa-key"></i> {{translate('PERMISSION', 2)}}</h3>
                     {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
@@ -90,7 +90,7 @@
         <div class="col-lg-12">
             <div id="widget-role-users" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-fw fa-key"></i> {{translate('USER', 2)}}</h3>
+                    <h3 class="box-title"><i class="fas fa-fw fa-key"></i> {{translate('USER', 2)}}</h3>
                     {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">

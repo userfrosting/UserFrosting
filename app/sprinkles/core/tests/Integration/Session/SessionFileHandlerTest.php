@@ -44,17 +44,17 @@ class SessionFileHandlerTest extends TestCase
         $handler = new FileSessionHandler($fs, $session_dir, 120);
 
         // Write session
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/FileSessionHandler.php#L83
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/FileSessionHandler.php#L83
         // write() ==> $this->files->put($this->path.'/'.$sessionId, $data, true);
         $this->assertTrue($handler->write($session_id, 'foo'));
 
         // Closing the handler does nothing anyway
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/FileSessionHandler.php#L61
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/FileSessionHandler.php#L61
         // close() ==> return true;
         $this->assertTrue($handler->close());
 
         // Read session
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/FileSessionHandler.php#L71
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/FileSessionHandler.php#L71
         // read() ==> return $this->files->get($path, true);
         $this->assertSame('foo', $handler->read($session_id));
 
@@ -63,7 +63,7 @@ class SessionFileHandlerTest extends TestCase
         $this->assertSame('foo', $fs->get($session_file));
 
         // Destroy session
-        // https://github.com/laravel/framework/blob/5.4/src/Illuminate/Session/FileSessionHandler.php#L93
+        // https://github.com/laravel/framework/blob/5.8/src/Illuminate/Session/FileSessionHandler.php#L93
         // destroy() ==> $this->files->delete($this->path.'/'.$sessionId);
         $this->assertTrue($handler->destroy($session_id));
 

@@ -50,7 +50,7 @@ class AdminController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Probably a better way to do this
-        $users = $classMapper->staticMethod('user', 'orderBy', 'created_at', 'desc')
+        $users = $classMapper->getClassMapping('user')::orderBy('created_at', 'desc')
                  ->take(8)
                  ->get();
 
@@ -72,9 +72,9 @@ class AdminController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/dashboard.html.twig', [
             'counter' => [
-                'users'  => $classMapper->staticMethod('user', 'count'),
-                'roles'  => $classMapper->staticMethod('role', 'count'),
-                'groups' => $classMapper->staticMethod('group', 'count'),
+                'users'  => $classMapper->getClassMapping('user')::count(),
+                'roles'  => $classMapper->getClassMapping('role')::count(),
+                'groups' => $classMapper->getClassMapping('group')::count(),
             ],
             'info' => [
                 'version' => [

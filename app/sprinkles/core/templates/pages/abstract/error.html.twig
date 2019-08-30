@@ -10,10 +10,10 @@
         <!-- Main content -->
         <section class="content">
           <div class="error-page">
-            {% block headline %}<h2 class="headline text-red"><i class="fa fa-terminal" aria-hidden="true"></i></h2>{% endblock %}
+            {% block headline %}<h2 class="headline text-red"><i class="fas fa-terminal" aria-hidden="true"></i></h2>{% endblock %}
 
             <div class="error-content">
-              <br /><h3>{% block heading %}<i class="fa fa-warning text-red"></i> {{ translate('ERROR.ENCOUNTERED') }}{% endblock %}</h3>
+              <br /><h3>{% block heading %}<i class="fas fa-warning text-red"></i> {{ translate('ERROR.ENCOUNTERED') }}{% endblock %}</h3>
 
               {% block content %}
                   {% if messages %}<p>{{ translate('ERROR.DETAIL') }}</p>{% endif %}

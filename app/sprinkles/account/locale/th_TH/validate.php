@@ -16,5 +16,6 @@
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => 'รหัสผ่านและรหัสผ่านยืนยันของคุณจะต้องตรงกัน',
+        // 'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
     ],
 ];

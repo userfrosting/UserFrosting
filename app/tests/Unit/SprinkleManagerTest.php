@@ -61,42 +61,34 @@ class SprinkleManagerTest extends TestCase
 
     /**
      * @depends testConstructor
-     * @param  SprinkleManager $sprinkleManager
-     * @return SprinkleManager
-     */
-    public function testInitFromSchema(SprinkleManager $sprinkleManager)
-    {
-        $sprinkleManager->initFromSchema(__DIR__ . '/data/sprinkles.json');
-
-        return $sprinkleManager;
-    }
-
-    /**
-     * @depends testConstructor
-     * @expectedException \UserFrosting\Support\Exception\FileNotFoundException
      */
     public function testLoadSprinkleWithNonExistingFile()
     {
         $sprinkleManager = new SprinkleManager($this->fakeCi);
+        $this->expectException(\UserFrosting\Support\Exception\FileNotFoundException::class);
         $sprinkleManager->initFromSchema('foo.json');
     }
 
     /**
-     * @depends testInitFromSchema
-     * @param SprinkleManager $sprinkleManager
+     * @depends testConstructor
+     * @param  SprinkleManager $sprinkleManager
+     * @return SprinkleManager
      */
     public function testGetSprinkles(SprinkleManager $sprinkleManager)
     {
+        $sprinkleManager->initFromSchema(__DIR__ . '/data/sprinkles.json');
         $sprinkles = $sprinkleManager->getSprinkles();
         $this->assertEquals([
             'foo'  => null,
             'bar'  => null,
             'test' => new \UserFrosting\Sprinkle\Test\Test(),
         ], $sprinkles);
+
+        return $sprinkleManager;
     }
 
     /**
-     * @depends testInitFromSchema
+     * @depends testGetSprinkles
      * @param SprinkleManager $sprinkleManager
      */
     public function testGetSprinkleNames(SprinkleManager $sprinkleManager)
@@ -106,7 +98,7 @@ class SprinkleManagerTest extends TestCase
     }
 
     /**
-     * @depends testInitFromSchema
+     * @depends testGetSprinkles
      * @depends testGetSprinkleNames
      * @param string          $sprinkleName
      * @param bool            $isAvailable
@@ -133,7 +125,7 @@ class SprinkleManagerTest extends TestCase
     }
 
     /**
-     * @depends testInitFromSchema
+     * @depends testGetSprinkles
      * @param string          $sprinkleName
      * @param SprinkleManager $sprinkleManager
      * @testWith        ["foo"]
@@ -148,31 +140,32 @@ class SprinkleManagerTest extends TestCase
     }
 
     /**
-     * @depends testInitFromSchema
+     * @depends testGetSprinkles
      * @depends testGetSprinklePath
-     * @expectedException \UserFrosting\Support\Exception\FileNotFoundException
      * @param SprinkleManager $sprinkleManager
      */
     public function testGetSprinklePathWherePathDoesntExist(SprinkleManager $sprinkleManager)
     {
         $basePath = 'app/tests/Unit/foo/';
         $sprinkleManager->setSprinklesPath($basePath);
+
+        $this->expectException(\UserFrosting\Support\Exception\FileNotFoundException::class);
         $sprinkleManager->getSprinklePath('foo');
     }
 
     /**
-     * @depends testInitFromSchema
+     * @depends testGetSprinkles
      * @depends testGetSprinklePath
-     * @expectedException \UserFrosting\Support\Exception\FileNotFoundException
      * @param SprinkleManager $sprinkleManager
      */
     public function testGetSprinklePathWhereSprinkleDoesntExist(SprinkleManager $sprinkleManager)
     {
+        $this->expectException(\UserFrosting\Support\Exception\FileNotFoundException::class);
         $sprinkleManager->getSprinklePath('blah');
     }
 
     /**
-     * @depends testInitFromSchema
+     * @depends testGetSprinkles
      * @param SprinkleManager $sprinkleManager
      */
     public function testRegisterAllServices(SprinkleManager $sprinkleManager)
@@ -185,11 +178,11 @@ class SprinkleManagerTest extends TestCase
         ->getMock();
         class_alias('foo', 'UserFrosting\Sprinkle\Test\ServicesProvider\ServicesProvider');
 
-        $sprinkleManager->registerAllServices();
+        $this->assertNull($sprinkleManager->registerAllServices());
     }
 
     /**
-     * @depends testInitFromSchema
+     * @depends testGetSprinkles
      * @depends testGetSprinklePath
      * @param SprinkleManager $sprinkleManager
      */
@@ -197,7 +190,8 @@ class SprinkleManagerTest extends TestCase
     {
         $basePath = 'app/tests/Unit/data/';
         $sprinkleManager->setSprinklesPath($basePath);
-        $sprinkleManager->addResources();
+
+        $this->assertNull($sprinkleManager->addResources());
     }
 
     /**
@@ -215,11 +209,11 @@ class SprinkleManagerTest extends TestCase
 
     /**
      * @depends testConstructor
-     * @expectedException \UserFrosting\Support\Exception\JsonException
      */
     public function testLoadSprinkleWithBadJson()
     {
         $sprinkleManager = new SprinkleManager($this->fakeCi);
+        $this->expectException(\UserFrosting\Support\Exception\JsonException::class);
         $sprinkleManager->initFromSchema(__DIR__ . '/data/sprinkles-bad.json');
     }
 

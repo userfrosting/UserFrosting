@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.3.0]
+
+### Changed Requirements
+- Changed minimum PHP Version to 7.1
+
+### Changed Composer Dependencies
+- Updated Laravel Illuminate packages to 5.8
+- Updated Twig to 2.11
+- Updated PHPUnit to 7.5
+- Updated Mockery to 1.2
+- Updated nikic/php-parser to 4.2.2
+- Updated PHPMailer/PHPMailer to 6.0.7
+- Updated league/csv to 9.2.1
+- Updated symfony/console to 4.3
+- Updated vlucas/phpdotenv to 3.4.0
+
+### Changed Frontend Dependencies
+- Updated handlebar from 3.0.x to 4.1.2
+- Updated AdminLTE theme to 2.4.15 ([#994]; [#1014]; [#1015])
+- Updated Font Awesome to 5.9 ([#957]; [#870])
+
+### Added
+- Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
+- Allow null group assignment for users ([#867]; [#964])
+- Password can now be set manually when creating new user ([#1017]; [#763])
+- Icon picker for user and group form ([#713]; [#1019])
+
+### Fix
+- `bake` command return error if account sprinkle is not included ([#944])
+- Email is case-sensitive ([#881]; [#1012])
+- Update vulnerable handlebars@^3.0.3 to ^4.0.12 ([#921])
+- Moved `handlebars-helpers.js` from `core` to `admin` sprinkle ([#897])
+- Remove `Package guzzle/guzzle is abandoned, you should avoid using it. Use guzzlehttp/guzzle instead` message ([#1016])
+
+### Changed
+- Account sprinkle now extend the Core `BakeCommand` class to add the `create-admin` to the general bake command. Any sprinkle already extending the Core `BakeCommand` might need adjustments.
+- Updated custom Eloquent relations (`belongsToManyThrough`, `morphToManyUnique`, `belongsToManyUnique`, `morphToManyUnique`, etc.) to support Laravel 5.8. See [The `belongsToMany` Method](https://laravel.com/docs/5.5/upgrade#upgrade-5.5.0).
+
+### Removed
+- Removed `belongsToManyConstrained` (deprecated in 4.1.6)
+- Remove `league/flysystem-aws-s3-v3` and `league/flysystem-rackspace` as core dependencies ([#1018])
+
 ## [v4.2.3]
 
 ### Added
@@ -747,7 +789,9 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
 
 [#653]: https://github.com/userfrosting/UserFrosting/issues/653
+[#713]: https://github.com/userfrosting/UserFrosting/issues/713
 [#718]: https://github.com/userfrosting/UserFrosting/issues/718
+[#763]: https://github.com/userfrosting/UserFrosting/issues/763
 [#793]: https://github.com/userfrosting/UserFrosting/issues/793
 [#795]: https://github.com/userfrosting/UserFrosting/issues/795
 [#808]: https://github.com/userfrosting/UserFrosting/issues/808
@@ -757,18 +801,25 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#838]: https://github.com/userfrosting/UserFrosting/issues/838
 [#853]: https://github.com/userfrosting/UserFrosting/issues/853
 [#854]: https://github.com/userfrosting/UserFrosting/issues/854
+[#867]: https://github.com/userfrosting/UserFrosting/issues/867
 [#869]: https://github.com/userfrosting/UserFrosting/issues/869
+[#870]: https://github.com/userfrosting/UserFrosting/issues/870
 [#872]: https://github.com/userfrosting/UserFrosting/issues/872
+[#881]: https://github.com/userfrosting/UserFrosting/issues/881
 [#888]: https://github.com/userfrosting/UserFrosting/issues/888
 [#893]: https://github.com/userfrosting/UserFrosting/issues/893
+[#897]: https://github.com/userfrosting/UserFrosting/issues/897
 [#919]: https://github.com/userfrosting/UserFrosting/issues/919
+[#921]: https://github.com/userfrosting/UserFrosting/issues/921
 [#940]: https://github.com/userfrosting/UserFrosting/issues/940
 [#950]: https://github.com/userfrosting/UserFrosting/issues/950
 [#951]: https://github.com/userfrosting/UserFrosting/issues/951
 [#952]: https://github.com/userfrosting/UserFrosting/issues/952
 [#953]: https://github.com/userfrosting/UserFrosting/issues/953
+[#957]: https://github.com/userfrosting/UserFrosting/issues/957
 [#958]: https://github.com/userfrosting/UserFrosting/issues/958
 [#963]: https://github.com/userfrosting/UserFrosting/issues/963
+[#964]: https://github.com/userfrosting/UserFrosting/issues/964
 [#965]: https://github.com/userfrosting/UserFrosting/issues/965
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
 [#976]: https://github.com/userfrosting/UserFrosting/issues/976
@@ -779,12 +830,21 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#990]: https://github.com/userfrosting/UserFrosting/issues/990
 [#991]: https://github.com/userfrosting/UserFrosting/issues/991
 [#993]: https://github.com/userfrosting/UserFrosting/issues/993
+[#994]: https://github.com/userfrosting/UserFrosting/issues/994
 [#998]: https://github.com/userfrosting/UserFrosting/issues/998
 [#1007]: https://github.com/userfrosting/UserFrosting/issues/1007
 [#1008]: https://github.com/userfrosting/UserFrosting/issues/1008
 [#1010]: https://github.com/userfrosting/UserFrosting/issues/1010
+[#1012]: https://github.com/userfrosting/UserFrosting/issues/1012
+[#1014]: https://github.com/userfrosting/UserFrosting/issues/1014
+[#1015]: https://github.com/userfrosting/UserFrosting/issues/1015
+[#1016]: https://github.com/userfrosting/UserFrosting/issues/1016
+[#1017]: https://github.com/userfrosting/UserFrosting/issues/1017
+[#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
+[#1019]: https://github.com/userfrosting/UserFrosting/issues/1019
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
 [v4.2.2]: https://github.com/userfrosting/UserFrosting/compare/v.4.2.1...v4.2.2
 [v4.2.3]: https://github.com/userfrosting/UserFrosting/compare/v4.2.2...v4.2.3
+[v4.3.0]: https://github.com/userfrosting/UserFrosting/compare/v4.2.3...v4.3.0

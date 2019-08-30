@@ -165,8 +165,6 @@ return [
     'SIGNIN'             => 'Iniciar sesión',
     'SIGNIN_OR_REGISTER' => 'Ingresa o Registro',
     'SIGNUP'             => 'Regístrate',
-    'SUGGEST'            => 'Sugerencia',
-    'HAVE_ACCOUNT'       => '¿Ya tienes una cuenta?',
     'SIGN_IN_HERE'       => '¿Ya tienes una cuenta? <a href="{{url}}"> Acceda aquí. </a>',
 
     'TOS'           => 'Términos y Condiciones',

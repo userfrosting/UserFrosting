@@ -109,7 +109,6 @@ return [
     'SEARCH'                   => 'Cerca',
     'SORT'                     => 'Ordina',
     'SUBMIT'                   => 'Invia',
-    'SUCCESS'                  => 'Successo',
     'PRINT'                    => 'Stampa',
     'REMOVE'                   => 'Rimuovi',
     'UNACTIVATED'              => 'Disattivato',

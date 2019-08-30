@@ -15,58 +15,54 @@
  */
 return [
     '@PLURAL_RULE' => 2,
-
-    'ABOUT' => 'À propos',
-
-    'CAPTCHA' => [
-        '@TRANSLATE' => 'Captcha',
-        'VERIFY'     => 'Vérification du captcha',
-        'SPECIFY'    => 'Entrer la valeur du captcha',
-        'FAIL'       => "La valeur du captcha n'a pas été entrée correctement.",
+    'ABOUT'        => 'À propos',
+    'CAPTCHA'      => [
+        '@TRANSLATION' => 'Captcha',
+        'FAIL'         => 'La valeur du captcha n\'a pas été entrée correctement.',
+        'SPECIFY'      => 'Entrer la valeur du captcha',
+        'VERIFY'       => 'Vérification du captcha',
     ],
-
     'CSRF_MISSING' => 'Jeton CSRF manquant. Essayez de rafraîchir la page et de soumettre de nouveau?',
-
-    'DB_INVALID'    => "Impossible de se connecter à la base de données. Si vous êtes un administrateur, vérifiez votre journal d'erreurs.",
-    'DESCRIPTION'   => 'Description',
-    'DOWNLOAD'      => [
+    'DB_INVALID'   => 'Impossible de se connecter à la base de données. Si vous êtes un administrateur, vérifiez votre journal d\'erreurs.',
+    'DESCRIPTION'  => 'Description',
+    'DOWNLOAD'     => [
         '@TRANSLATION' => 'Télécharger',
         'CSV'          => 'Télécharger CSV',
     ],
-
     'EMAIL' => [
         '@TRANSLATION' => 'Email',
         'YOUR'         => 'Votre adresse email',
     ],
-
     'HOME'  => 'Accueil',
-
-    'LEGAL' => 'Politique légale',
-
+    'LEGAL' => [
+        '@TRANSLATION' => 'Politique légale',
+        // 'DESCRIPTION'  => 'Our legal policy applies to your usage of this website and our services.',
+    ],
     'LOCALE' => [
         '@TRANSLATION' => 'Langue',
     ],
-
     'NAME'       => 'Nom',
     'NAVIGATION' => 'Menu principal',
     'NO_RESULTS' => 'Aucun résultat trouvé.',
-
     'PAGINATION' => [
-        'GOTO'   => 'Aller à la page',
-        'SHOW'   => 'Afficher',
-        'OUTPUT' => '{startRow} à {endRow} de {filteredRows} ({totalRows})',
+        'GOTO'     => 'Aller à la page',
+        'SHOW'     => 'Afficher',
+        'OUTPUT'   => '{startRow} à {endRow} de {filteredRows} ({totalRows})',
+        // 'NEXT'     => 'Next page',
+        // 'PREVIOUS' => 'Previous page',
+        // 'FIRST'    => 'First page',
+        // 'LAST'     => 'Last page',
     ],
-    'PRIVACY' => 'Politique de confidentialité',
-
-    'SLUG'           => 'Jeton',
-    'SLUG_CONDITION' => 'Jeton/Conditions',
-    'SLUG_IN_USE'    => 'Un jeton <strong>{{slug}}</strong> existe déjà',
-    'STATUS'         => 'Statut',
-    'SUGGEST'        => 'Suggérer',
-
-    'UNKNOWN' => 'Inconnu',
-
-    // Actions words
+    'PRIVACY' => [
+        '@TRANSLATION' => 'Politique de confidentialité',
+        // 'DESCRIPTION'  => 'Our privacy policy outlines what kind of information we collect from you and how we will use it.',
+    ],
+    'SLUG'                     => 'Jeton',
+    'SLUG_CONDITION'           => 'Jeton/Conditions',
+    'SLUG_IN_USE'              => 'Un jeton <strong>{{slug}}</strong> existe déjà',
+    'STATUS'                   => 'Statut',
+    'SUGGEST'                  => 'Suggérer',
+    'UNKNOWN'                  => 'Inconnu',
     'ACTIONS'                  => 'Actions',
     'ACTIVATE'                 => 'Autoriser',
     'ACTIVE'                   => 'Activé',
@@ -79,7 +75,7 @@ return [
     'DELETE_CONFIRM_YES'       => 'Oui, supprimer',
     'DELETE_CONFIRM_NAMED'     => 'Êtes-vous sûr de vouloir supprimer {{name}}?',
     'DELETE_CONFIRM_YES_NAMED' => 'Oui, supprimer {{name}}',
-    'DELETE_CANNOT_UNDONE'     => 'Cette action ne peut être annulée.', //This action cannot be undone
+    'DELETE_CANNOT_UNDONE'     => 'Cette action ne peut être annulée.',
     'DELETE_NAMED'             => 'Supprimer {{name}}',
     'DENY'                     => 'Refuser',
     'DISABLE'                  => 'Désactiver',
@@ -100,8 +96,7 @@ return [
     'YES'                      => 'Oui',
     'NO'                       => 'Non',
     'OPTIONAL'                 => 'Facultatif',
-
-    // Misc.
-    'BUILT_WITH_UF'     => 'Créé avec <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY' => 'Thème par <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> Tous droits réservés',
+    'BUILT_WITH_UF'            => 'Créé avec <a href="http://www.userfrosting.com">UserFrosting</a>',
+    'ADMINLTE_THEME_BY'        => 'Thème par <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> Tous droits réservés',
+    // 'WELCOME_TO'               => 'Welcome to {{title}}!',
 ];

@@ -15,61 +15,57 @@
  */
 return [
     '@PLURAL_RULE' => 0,
-
-    'ABOUT' => '关于',
-
-    'CAPTCHA' => [
+    'ABOUT'        => '关于',
+    'CAPTCHA'      => [
         '@TRANSLATION' => '验证码',
         'FAIL'         => 'Y验证码输入错误.',
         'SPECIFY'      => '输入验证码',
         'VERIFY'       => '验证',
     ],
-
     'CSRF_MISSING' => ' CSRF 标记丢失.  请尝试重新加载页面?',
-
-    'DB_INVALID'    => '无法连接到数据库.  如果你是管理员, 请检查错误日志文件.',
-    'DESCRIPTION'   => '描述',
-    'DOWNLOAD'      => [
+    'DB_INVALID'   => '无法连接到数据库.  如果你是管理员, 请检查错误日志文件.',
+    'DESCRIPTION'  => '描述',
+    'DOWNLOAD'     => [
         '@TRANSLATION' => '下载',
         'CSV'          => '下载 CSV 文件',
     ],
-
     'EMAIL' => [
         '@TRANSLATION' => '邮件',
         'YOUR'         => '你的邮件地址',
     ],
-
     'HOME'  => '首页',
-
-    'LEGAL' => '法律政策',
-
+    'LEGAL' => [
+        '@TRANSLATION' => '法律政策',
+        // 'DESCRIPTION'  => 'Our legal policy applies to your usage of this website and our services.',
+    ],
     'LOCALE' => [
         '@TRANSLATION' => '本地',
     ],
-
-    'MAIL_ERROR' => '尝试发送邮件发送致命错误, 联系网站管理员.  如果你是管理员，请检查UF邮件错误日志.',
-
     'NAME'       => '名字',
     'NAVIGATION' => '导航',
-
+    // 'NO_RESULTS' => 'Sorry, we\'ve got nothing here.',
     'PAGINATION' => [
-        'GOTO' => '跳到页',
-        'SHOW' => '显示',
+        'GOTO'     => '跳到页',
+        'SHOW'     => '显示',
+        // 'OUTPUT'   => '{startRow} to {endRow} of {filteredRows} ({totalRows})',
+        // 'NEXT'     => 'Next page',
+        // 'PREVIOUS' => 'Previous page',
+        // 'FIRST'    => 'First page',
+        // 'LAST'     => 'Last page',
     ],
-    'PRIVACY' => '隐私政策',
-
-    'SLUG'           => 'Slug',
-    'SLUG_CONDITION' => 'Slug/Conditions',
-    'SLUG_IN_USE'    => 'A <strong>{{slug}}</strong> slug already exists',
-    'STATUS'         => '状态',
-    'SUGGEST'        => '建议',
-
-    'UNKNOWN' => '未知',
-
-    // Actions words
+    'PRIVACY' => [
+        '@TRANSLATION' => '隐私政策',
+        // 'DESCRIPTION'  => 'Our privacy policy outlines what kind of information we collect from you and how we will use it.',
+    ],
+    // 'SLUG'                     => 'Slug',
+    // 'SLUG_CONDITION'           => 'Slug/Conditions',
+    // 'SLUG_IN_USE'              => 'A <strong>{{slug}}</strong> slug already exists',
+    'STATUS'                   => '状态',
+    'SUGGEST'                  => '建议',
+    'UNKNOWN'                  => '未知',
     'ACTIONS'                  => '动作',
     'ACTIVATE'                 => '激活',
-    'ACTIVE'                   => 'Active',
+    // 'ACTIVE'                   => 'Active',
     'ADD'                      => '添加',
     'CANCEL'                   => '取消',
     'CONFIRM'                  => '确认',
@@ -100,8 +96,7 @@ return [
     'YES'                      => '是',
     'NO'                       => '不是',
     'OPTIONAL'                 => '可选择的',
-
-    // Misc.
-    'BUILT_WITH_UF'     => '使用 <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY' => '主题作者 <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong>保留所有权',
+    'BUILT_WITH_UF'            => '使用 <a href="http://www.userfrosting.com">UserFrosting</a>',
+    'ADMINLTE_THEME_BY'        => '主题作者 <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong>保留所有权',
+    // 'WELCOME_TO'               => 'Welcome to {{title}}!',
 ];
