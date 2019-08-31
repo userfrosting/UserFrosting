@@ -17,6 +17,6 @@
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => 'يجب أن تكون كلمة المرور وكلمة المرور التأكيدية نفس',
-        // 'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
+        'USERNAME'          => '\'.\', \'-\', و \'_\'. قد يتكون اسم المستخدم فقط من أحرف صغيرة وأرقام',
     ],
 ];
