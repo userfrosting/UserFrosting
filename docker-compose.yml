@@ -1,0 +1,58 @@
+version: "3.2"
+services:
+  php:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: ./docker/php
+    environment:
+      - DB_DRIVER=mysql
+      - DB_HOST=ufmysql
+      - DB_PORT=3306
+      - DB_NAME=userfrosting
+      - DB_USER=docker
+      - DB_PASSWORD=secret
+    volumes:
+      - .:/app
+      - ./docker/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - backend
+
+  nginx:
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8591:80"
+      - "8592:443"
+    build:
+      context: ./docker/nginx
+    volumes:
+      - .:/app
+    depends_on:
+      - php
+      - ufmysql
+    networks:
+      - frontend
+      - backend
+
+  ufmysql:
+    image: mysql:5.7
+    networks:
+      - backend
+    environment:
+      - MYSQL_DATABASE=userfrosting
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_USER=docker
+      - MYSQL_PASSWORD=secret
+    ports:
+      - 8593:3306
+    volumes:
+      - userfrosting-db:/var/lib/mysql
+
+volumes:
+  userfrosting-db:
+    driver: local
+
+networks:
+  frontend:
+  backend:

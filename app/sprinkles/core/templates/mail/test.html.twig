@@ -1,0 +1,13 @@
+{% block subject %}
+    {{site.title}} - Test email
+{% endblock %}
+
+{% block body %}
+<p>
+A test email has been submitted from {{site.title}} ({{site.uri.public}}) on {{request_date | date('m/d/Y g:i A')}}.
+</p>
+<p>
+With regards,<br>
+The {{site.title}} Team
+</p>
+{% endblock %}

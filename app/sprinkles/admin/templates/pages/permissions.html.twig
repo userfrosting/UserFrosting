@@ -1,4 +1,4 @@
-{% extends "layouts/dashboard.html.twig" %}
+{% extends "pages/abstract/dashboard.html.twig" %}
 
 {% block stylesheets_page %}
     <!-- Page-specific CSS asset bundle -->
@@ -15,13 +15,11 @@
         <div class="col-md-12">
             <div id="widget-permissions" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title pull-left"><i class="fa fa-key fa-fw"></i> {{translate('PERMISSION', 2)}}</h3>
-                    <div class="pull-right">
-                        <button class="btn btn-sm btn-default js-download-table">{{ translate("DOWNLOAD.CSV") }}</button>
-                    </div>
+                    <h3 class="box-title pull-left"><i class="fas fa-key fa-fw"></i> {{translate('PERMISSION', 2)}}</h3>
+                    {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
-                    {% include "components/tables/permissions.html.twig" with {
+                    {% include "tables/permissions.html.twig" with {
                             "table" : {
                                 "id" : "table-permissions"
                             }
@@ -35,7 +33,7 @@
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-    {% include "components/page.js.twig" %}
+    {% include "pages/partials/page.js.twig" %}
     </script>
 
     <!-- Include form widgets JS -->

@@ -1,4 +1,4 @@
-{% extends forcedLayout ? forcedLayout  : "layouts/default.html.twig" %}
+{% extends forcedLayout ? forcedLayout  : "pages/abstract/default.html.twig" %}
 
 {% set page_active = "account-settings" %}
 
@@ -15,84 +15,26 @@
 {% block body_matter %}
 
     <div class="row">
-        <div class="col-lg-12">
-            <div class="box box-primary">
-                <form class="form-horizontal" id="account-settings" role="form" action="{{site.uri.public}}/account/settings" method="post">
-                    <div class="box-header">
-                        <h3 class="box-title"><i class="fa fa-gear"></i> {{translate("ACCOUNT.SETTINGS")}}</h3>
-                    </div>
-                    <div class="box-body">
-                        {% include "components/csrf.html.twig" %}
-                        <!-- Prevent browsers from trying to autofill the password field.  See http://stackoverflow.com/a/23234498/2970321 -->
-                        <input type="text" style="display:none">
-                        <input type="password" style="display:none">
-
-                        <div class="form-group">
-                            <label for="input-email" class="col-sm-4 control-label">{{translate("EMAIL")}}</label>
-                            <div class="col-sm-8">
-                                <input type="text" id="input-email" class="form-control" name="email" value="{{current_user.email}}" autocomplete="off" placeholder="{{translate("EMAIL")}}" {{page.visibility}}>
-                                <p class="help-block">{{translate("EMAIL.YOUR")}}.</p>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="input-first-name" class="col-sm-4 control-label">{{translate("NAME")}}</label>
-                            <div class="col-sm-4">
-                                <input type="text" id="input-first-name" class="form-control" name="first_name" value="{{current_user.first_name}}" placeholder="{{translate("FIRST_NAME")}}" {{page.visibility}}>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="text" id="input-last-name" class="form-control" name="last_name" value="{{current_user.last_name}}" placeholder="{{translate("LAST_NAME")}}" {{page.visibility}}>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="input-locale" class="col-sm-4 control-label">{{translate("LOCALE")}}</label>
-                            <div class="col-sm-8">
-                                <select id="input-locale" class="form-control select2" name="locale" {{page.visibility}}>
-                                    {% for option, label in locales %}
-                                    <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{label}}</option>
-                                    {% endfor %}
-                                </select>
-                                <p class="help-block">{{translate("LOCALE.ACCOUNT")}}.</p>
-                            </div>
-                        </div>
-
-                        {% if page.visibility != "disabled" %}
-                            <div class="form-group">
-                                <label for="input-password" class="col-sm-4 control-label">{{translate("PASSWORD.NEW")}}</label>
-                                <div class="col-sm-8">
-                                    <input type="password" id="input-password" class="form-control" name="password" placeholder="{{translate("PASSWORD.BETWEEN", {min: 12, max: 100})}}">
-                                    <p class="help-block">{{translate("OPTIONAL")}}.</p>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="input-passwordc" class="col-sm-4 control-label">{{translate("PASSWORD.CONFIRM_NEW")}}</label>
-                                <div class="col-sm-8">
-                                    <input type="password" id="input-passwordc" class="form-control" name="passwordc" placeholder="{{translate("PASSWORD.CONFIRM_NEW_EXPLAIN")}}">
-                                    <p class="help-block">{{translate("PASSWORD.CONFIRM_NEW_HELP")}}.</p>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="input-passwordcheck" class="col-sm-4 control-label">{{translate("PASSWORD.CURRENT")}}</label>
-                                <div class="col-sm-8">
-                                    <input type="password" id="input-passwordcheck" class="form-control" name="passwordcheck" placeholder="{{translate("PASSWORD.CURRENT_EXPLAIN")}}">
-                                </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="box-footer text-center">
-                        <button type="reset" class="btn btn-default">{{translate('RESET')}}</button>
-                        <button type="submit" class="btn btn-primary js-submit">{{translate('SAVE')}}</button>
-                    </div>
-                </form>
-            </div>
+        <div class="col-lg-6">
+            {% block settings_profile_box %}
+                <div class="box box-primary">
+                    {% include "forms/settings-profile.html.twig" %}
+                </div>
+            {% endblock %}
+        </div>
+        <div class="col-lg-6">
+            {% block settings_account_box %}
+                <div class="box box-primary">
+                    {% include "forms/settings-account.html.twig" %}
+                </div>
+            {% endblock %}
         </div>
     </div>
 {% endblock %}
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-    {% include "components/page.js.twig" %}
+    {% include "pages/partials/page.js.twig" %}
     </script>
 
     <!-- Include form widgets JS -->

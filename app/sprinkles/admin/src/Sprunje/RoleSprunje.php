@@ -1,19 +1,20 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * RoleSprunje
+ * RoleSprunje.
  *
  * Implements Sprunje for the roles API.
  *
@@ -23,30 +24,48 @@ class RoleSprunje extends Sprunje
 {
     protected $name = 'roles';
 
-    protected $sortable = [];
+    protected $sortable = [
+        'name',
+        'description',
+    ];
 
-    protected $filterable = [];
+    protected $filterable = [
+        'name',
+        'description',
+        'info',
+    ];
+
+    protected $excludeForAll = [
+        'info',
+    ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function baseQuery()
     {
-        $query = $this->classMapper->createInstance('role');
-
-        return $query;
+        return $this->classMapper->createInstance('role')->newQuery();
     }
 
     /**
      * Filter LIKE name OR description.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterInfo($query, $value)
     {
-        return $query->like('name', $value)
-                     ->orLike('description', $value);
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                $query->orLike('name', $value)
+                        ->orLike('description', $value);
+            }
+        });
+
+        return $this;
     }
 }

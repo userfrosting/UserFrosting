@@ -1,4 +1,4 @@
-{% extends "layouts/dashboard.html.twig" %}
+{% extends "pages/abstract/dashboard.html.twig" %}
 
 {% block stylesheets_page %}
     <!-- Page-specific CSS asset bundle -->
@@ -15,13 +15,11 @@
         <div class="col-md-12">
             <div id="widget-roles" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-fw fa-drivers-license"></i> {{translate('ROLE', 2)}}</h3>
-                    <div class="pull-right">
-                        <button class="btn btn-sm btn-default js-download-table">{{ translate("DOWNLOAD.CSV") }}</button>
-                    </div>
+                    <h3 class="box-title"><i class="fas fa-fw fa-id-card"></i> {{translate('ROLE', 2)}}</h3>
+                    {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="panel-body">
-                    {% include "components/tables/roles.html.twig" with {
+                    {% include "tables/roles.html.twig" with {
                             "table" : {
                                 "id" : "table-roles"
                             }
@@ -30,7 +28,7 @@
                 </div>
                 <div class="box-footer">
                     <button type="button" class="btn btn-success js-role-create">
-                        <i class="fa fa-plus-square"></i>  {{translate("ROLE.CREATE")}}
+                        <i class="fas fa-plus-square"></i>  {{translate("ROLE.CREATE")}}
                     </button>
                 </div>
             </div>
@@ -40,7 +38,7 @@
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-    {% include "components/page.js.twig" %}
+    {% include "pages/partials/page.js.twig" %}
     </script>
 
     <!-- Include form widgets JS -->

@@ -1,0 +1,33 @@
+{% block userCard %}
+<li class="dropdown user user-menu">
+    {% block userCard_nav %}
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      <img src="{{ current_user.avatar }}" class="user-image" alt="User Image">
+      <span class="hidden-xs">{{current_user.first_name}} {{current_user.last_name}}</span>
+      <i class="fas fa-chevron-down"></i>
+    </a>
+    {% endblock %}
+    <ul class="dropdown-menu">
+      {% block userCard_userInfo %}
+      <!-- User image -->
+      <li class="user-header">
+        <img src="{{ current_user.avatar }}" class="img-circle" alt="User Image">
+        <p>
+          {{current_user.first_name}} {{current_user.last_name}}
+          <small>({{current_user.user_name}})</small>
+        </p>
+      </li>
+      {% endblock %}
+
+      <!-- Menu Footer-->
+      <li class="user-footer">
+          {% block userCard_menu %}
+              {% if checkAccess('uri_account_settings') %}
+                <a href="{{site.uri.public}}/account/settings" class="btn btn-default btn-flat btn-block">{{translate("ACCOUNT.MY")}}</a>
+              {% endif %}
+              <a href="{{site.uri.public}}/account/logout" class="btn btn-default btn-flat btn-block">{{translate("LOGOUT")}}</a>
+          {% endblock %}
+      </li>
+    </ul>
+</li>
+{% endblock %}

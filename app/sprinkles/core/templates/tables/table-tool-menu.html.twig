@@ -1,0 +1,25 @@
+{# Tool menu for table panels #}
+
+<div class="box-tools pull-right">
+    <div class="btn-group">
+        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-bars"></i> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu box-tool-menu">
+            <li>
+                <a href="#" class="js-uf-table-download">
+                    <i class="fas fa-table fa-fw"></i> {{ translate("DOWNLOAD.CSV") }}
+                </a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li>
+                <div class="uf-table-cs-title">
+                    {{translate('TOGGLE_COLUMNS')}}:
+                </div>
+                <div class="uf-table-cs-options js-uf-table-cs-options">
+                
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

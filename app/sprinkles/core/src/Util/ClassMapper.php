@@ -1,10 +1,11 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
 namespace UserFrosting\Sprinkle\Core\Util;
@@ -21,7 +22,7 @@ namespace UserFrosting\Sprinkle\Core\Util;
 class ClassMapper
 {
     /**
-     * Mapping of generic class identifiers to specific class names.
+     * @var array Mapping of generic class identifiers to specific class names.
      */
     protected $classMappings = [];
 
@@ -29,7 +30,7 @@ class ClassMapper
      * Creates an instance for a requested class identifier.
      *
      * @param string $identifier The identifier for the class, e.g. 'user'
-     * @param mixed ...$arg Whatever needs to be passed to the constructor.
+     * @param mixed  ...$arg     Whatever needs to be passed to the constructor.
      */
     public function createInstance($identifier)
     {
@@ -37,16 +38,14 @@ class ClassMapper
 
         $params = array_slice(func_get_args(), 1);
 
-        // We must use reflection in PHP < 5.6.  See http://stackoverflow.com/questions/8734522/dynamically-call-class-with-variable-number-of-parameters-in-the-constructor
-        $reflection = new \ReflectionClass($className);
-
-        return $reflection->newInstanceArgs($params);
+        return new $className(...$params);
     }
 
     /**
      * Gets the fully qualified class name for a specified class identifier.
      *
      * @param string $identifier
+     *
      * @return string
      */
     public function getClassMapping($identifier)
@@ -63,13 +62,14 @@ class ClassMapper
      *
      * @param string $identifier
      * @param string $className
+     *
      * @return ClassMapper
      */
     public function setClassMapping($identifier, $className)
     {
         // Check that class exists
         if (!class_exists($className)) {
-            throw new BadClassNameException("Unable to find the class '$className'." );
+            throw new BadClassNameException("Unable to find the class '$className'.");
         }
 
         $this->classMappings[$identifier] = $className;
@@ -82,7 +82,7 @@ class ClassMapper
      *
      * @param string $identifier The identifier for the class, e.g. 'user'
      * @param string $methodName The method to be invoked.
-     * @param mixed ...$arg Whatever needs to be passed to the method.
+     * @param mixed  ...$arg     Whatever needs to be passed to the method.
      */
     public function staticMethod($identifier, $methodName)
     {
@@ -90,6 +90,6 @@ class ClassMapper
 
         $params = array_slice(func_get_args(), 2);
 
-        return call_user_func_array("$className::$methodName", $params);
+        return $className::$methodName(...$params);
     }
 }

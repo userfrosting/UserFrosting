@@ -1,19 +1,21 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
+use UserFrosting\Sprinkle\Core\Facades\Translator;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * UserSprunje
+ * UserSprunje.
  *
  * Implements Sprunje for the users API.
  *
@@ -23,12 +25,28 @@ class UserSprunje extends Sprunje
 {
     protected $name = 'users';
 
-    protected $sortable = [];
+    protected $listable = [
+        'status',
+    ];
 
-    protected $filterable = [];
+    protected $sortable = [
+        'name',
+        'last_activity',
+        'status',
+    ];
+
+    protected $filterable = [
+        'name',
+        'last_activity',
+        'status',
+    ];
+
+    protected $excludeForAll = [
+        'last_activity',
+    ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function baseQuery()
     {
@@ -39,66 +57,143 @@ class UserSprunje extends Sprunje
     }
 
     /**
-     * {@inheritDoc}
-     */
-    protected function applyTransformations($collection)
-    {
-        // Exclude password field from results
-        $collection->transform(function ($item, $key) {
-            unset($item['password']);
-            return $item;
-        });
-
-        return $collection;
-    }
-
-    /**
      * Filter LIKE the last activity description.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterLastActivity($query, $value)
     {
-        return $query->like('activities.description', $value);
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                $query->orLike('activities.description', $value);
+            }
+        });
+
+        return $this;
     }
 
     /**
      * Filter LIKE the first name, last name, or email.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterName($query, $value)
     {
-        return $query->like('first_name', $value)
-                     ->orLike('last_name', $value)
-                     ->orLike('email', $value);
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                $query->orLike('first_name', $value)
+                        ->orLike('last_name', $value)
+                        ->orLike('email', $value);
+            }
+        });
+
+        return $this;
+    }
+
+    /**
+     * Filter by status (active, disabled, unactivated).
+     *
+     * @param Builder $query
+     * @param mixed   $value
+     *
+     * @return self
+     */
+    protected function filterStatus($query, $value)
+    {
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                if ($value == 'disabled') {
+                    $query->orWhere('flag_enabled', 0);
+                } elseif ($value == 'unactivated') {
+                    $query->orWhere('flag_verified', 0);
+                } elseif ($value == 'active') {
+                    $query->orWhere(function ($query) {
+                        $query->where('flag_enabled', 1)->where('flag_verified', 1);
+                    });
+                }
+            }
+        });
+
+        return $this;
+    }
+
+    /**
+     * Return a list of possible user statuses.
+     *
+     * @return array
+     */
+    protected function listStatus()
+    {
+        return [
+            [
+                'value' => 'active',
+                'text'  => Translator::translate('ACTIVE'),
+            ],
+            [
+                'value' => 'unactivated',
+                'text'  => Translator::translate('UNACTIVATED'),
+            ],
+            [
+                'value' => 'disabled',
+                'text'  => Translator::translate('DISABLED'),
+            ],
+        ];
     }
 
     /**
      * Sort based on last activity time.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return Builder
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortLastActivity($query, $direction)
     {
-        return $query->orderBy('activities.occurred_at', $direction);
+        $query->orderBy('activities.occurred_at', $direction);
+
+        return $this;
     }
 
     /**
      * Sort based on last name.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return Builder
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortName($query, $direction)
     {
-        return $query->orderBy('last_name', $direction);
+        $query->orderBy('last_name', $direction);
+
+        return $this;
+    }
+
+    /**
+     * Sort active, unactivated, disabled.
+     *
+     * @param Builder $query
+     * @param string  $direction
+     *
+     * @return self
+     */
+    protected function sortStatus($query, $direction)
+    {
+        $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
+
+        return $this;
     }
 }

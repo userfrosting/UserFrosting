@@ -1,0 +1,8 @@
+{% extends "@account/navigation/user-card.html.twig" %}
+
+{% block userCard_menu %}
+    {% if checkAccess('uri_dashboard') %}
+        <a href="{{site.uri.public}}/dashboard" class="btn btn-default btn-flat btn-block">{{translate("DASHBOARD")}}</a>
+    {% endif %}
+    {{ parent() }}
+{% endblock %}

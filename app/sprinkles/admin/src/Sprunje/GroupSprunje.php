@@ -1,19 +1,19 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * GroupSprunje
+ * GroupSprunje.
  *
  * Implements Sprunje for the groups API.
  *
@@ -23,17 +23,21 @@ class GroupSprunje extends Sprunje
 {
     protected $name = 'groups';
 
-    protected $sortable = [];
+    protected $sortable = [
+        'name',
+        'description',
+    ];
 
-    protected $filterable = [];
+    protected $filterable = [
+        'name',
+        'description',
+    ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function baseQuery()
     {
-        $query = $this->classMapper->createInstance('group');
-
-        return $query;
+        return $this->classMapper->createInstance('group')->newQuery();
     }
 }

@@ -1,19 +1,20 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * ActivitySprunje
+ * ActivitySprunje.
  *
  * Implements Sprunje for the activities API.
  *
@@ -21,12 +22,19 @@ use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
  */
 class ActivitySprunje extends Sprunje
 {
-    protected $name = 'activities';
+    protected $sortable = [
+        'occurred_at',
+        'user',
+        'description',
+    ];
 
-    /**
-     * @var bool Keep track of whether the users table has already been joined on the query.
-     */
-    protected $joinedUsers = false;
+    protected $filterable = [
+        'occurred_at',
+        'user',
+        'description',
+    ];
+
+    protected $name = 'activities';
 
     /**
      * Set the initial query used by your Sprunje.
@@ -35,60 +43,44 @@ class ActivitySprunje extends Sprunje
     {
         $query = $this->classMapper->createInstance('activity');
 
-        return $query;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function applyTransformations($collection)
-    {
-        // Exclude password field from results
-        $collection->transform(function ($item, $key) {
-            if (isset($item->user)) {
-                unset($item->user->password);
-            }
-            return $item;
-        });
-
-        return $collection;
+        return $query->joinUser();
     }
 
     /**
      * Filter LIKE the user info.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterUser($query, $value)
     {
-        if (!$this->joinedUsers) {
-            $query = $query->joinUser();
-        }
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                $query->orLike('users.first_name', $value)
+                    ->orLike('users.last_name', $value)
+                    ->orLike('users.email', $value);
+            }
+        });
 
-        $this->joinedUsers = true;
-
-        return $query->like('users.first_name', $value)
-                     ->orLike('users.last_name', $value)
-                     ->orLike('users.email', $value);
+        return $this;
     }
 
     /**
      * Sort based on user last name.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return Builder
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortUser($query, $direction)
     {
-        if (!$this->joinedUsers) {
-            $query = $query->joinUser();
-        }
+        $query->orderBy('users.last_name', $direction);
 
-        $this->joinedUsers = true;
-
-        return $query->orderBy('users.last_name', $direction);
+        return $this;
     }
 }

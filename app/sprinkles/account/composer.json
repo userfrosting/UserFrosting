@@ -1,6 +1,6 @@
 {
     "name": "userfrosting/sprinkle-account",
-    "type": "sprinkle",
+    "type": "userfrosting-sprinkle",
     "description": "Authentication and account management module for UserFrosting.",
     "keywords": ["php user management", "usercake", "bootstrap"],
     "homepage": "https://github.com/userfrosting/UserFrosting",
@@ -11,15 +11,18 @@
             "homepage": "https://alexanderweissman.com"
         }
     ],
-    "version": "4.0.0",
     "require": {
-        "birke/rememberme" : "1.0.4",
-        "nikic/php-parser" : "^1",
-        "php": ">=5.5.9"
+        "birke/rememberme" : "^2.0",
+        "nikic/php-parser" : "^4.2.2"
     },
     "autoload": {
         "psr-4": {
             "UserFrosting\\Sprinkle\\Account\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "UserFrosting\\Sprinkle\\Account\\Tests\\": "tests/"
         }
     }
 }

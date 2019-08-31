@@ -1,0 +1,11 @@
+{
+    "require": {
+
+    },
+    "base": [
+        "foo",
+        "FOO",
+        "bar",
+        "bar"
+    ]
+}

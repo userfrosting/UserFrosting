@@ -1,0 +1,66 @@
+{# This partial template renders a table of permissions, to be populated with rows via an AJAX request.
+ # This extends a generic template for paginated tables.
+ #
+ # Note that this template contains a "skeleton" table with an empty table body, and then a block of Handlebars templates which are used
+ # to render the table cells with the data from the AJAX request.
+#}
+
+{% extends "tables/table-paginated.html.twig" %}
+
+{% block table %}
+    <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="{{table.sortlist}}">
+        <thead>
+            <tr>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#permission-table-column-name" data-priority="1">{{translate('PERMISSION')}} <i class="fas fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="properties" data-column-template="#permission-table-column-properties" data-priority="1">{{translate('SLUG_CONDITION')}} <i class="fas fa-sort"></i></th>
+                {% if 'via_roles' in table.columns %}
+                    <th data-column-template="#permission-table-column-via-roles" data-sorter="false" data-filter="false" data-priority="2">{{translate('PERMISSION.VIA_ROLES')}}</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block table_cell_templates %}
+    {# This contains a series of <script> blocks, each of which is a client-side Handlebars template.
+     # Note that these are NOT Twig templates, although the syntax is similar.  We wrap them in the `verbatim` tag,
+     # so that Twig will output them directly into the DOM instead of trying to treat them like Twig templates.
+     #
+     # These templates require handlebars-helpers.js, moment.js
+    #}
+    {% verbatim %}
+    <script id="permission-table-column-name" type="text/x-handlebars-template">
+        <td data-text="{{row.name}}">
+            <div>
+                <strong>
+                <a href="{{site.uri.public}}/permissions/p/{{row.id}}">{{row.name}}</a>
+                </strong>
+            </div>
+        </td>
+    </script>
+
+    <script id="permission-table-column-properties" type="text/x-handlebars-template">
+        <td>
+            <div>
+                <code>{{row.slug}}</code>
+            </div>
+            <div>
+                ↳ <code>{{row.conditions}}</code>
+            </div>
+            <div>
+                <i>{{row.description}}</i>
+            </div>
+        </td>
+    </script>
+
+    <script id="permission-table-column-via-roles" type="text/x-handlebars-template">
+        <td>
+            {{#each row.roles_via }}
+                <a href="{% endverbatim %}{# Handlebars can't access variables in the global scope, so we have to use Twig to insert the base url #}{{site.uri.public}}{% verbatim %}/roles/r/{{this.slug}}" class="label label-primary" title="{{this.description}}">{{this.name}}</a>
+            {{/each}}
+        </td>
+    </script>
+    {% endverbatim %}
+{% endblock %}

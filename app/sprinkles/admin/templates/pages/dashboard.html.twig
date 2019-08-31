@@ -1,4 +1,4 @@
-{% extends "layouts/dashboard.html.twig" %}
+{% extends "pages/abstract/dashboard.html.twig" %}
 
 {# Overrides blocks in head of base template #}
 {% block page_title %}{{ translate("DASHBOARD") }}{% endblock %}
@@ -9,41 +9,47 @@
     {% if checkAccess('uri_users') %}
     <div class="row">
         <div class="col-md-4 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="fa fa-user fa-fw"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">{{ translate("USER", 2) }}</span>
-              <span class="info-box-number">{{counter.users}}</span>
+          <a href="{{site.uri.public}}/users">
+            <div class="info-box">
+              <span class="info-box-icon bg-aqua"><i class="fas fa-user fa-fw"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">{{ translate("USER", 2) }}</span>
+                <span class="info-box-number">{{counter.users}}</span>
+              </div>
+              <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
+            <!-- /.info-box -->
+          </a>
         </div>
         <!-- /.col -->
 
         <div class="col-md-4 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-red"><i class="fa fa-drivers-license"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">{{ translate("ROLE", 2) }}</span>
-              <span class="info-box-number">{{counter.roles}}</span>
+          <a href="{{site.uri.public}}/roles">
+            <div class="info-box">
+              <span class="info-box-icon bg-red"><i class="fas fa-id-card"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">{{ translate("ROLE", 2) }}</span>
+                <span class="info-box-number">{{counter.roles}}</span>
+              </div>
+              <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
+            <!-- /.info-box -->
+          </a>
         </div>
         <!-- /.col -->
 
         <div class="col-md-4 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">{{ translate("GROUP", 2) }}</span>
-              <span class="info-box-number">{{counter.groups}}</span>
+          <a href="{{site.uri.public}}/groups">
+            <div class="info-box">
+              <span class="info-box-icon bg-green"><i class="fas fa-users"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">{{ translate("GROUP", 2) }}</span>
+                <span class="info-box-number">{{counter.groups}}</span>
+              </div>
+              <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
+            <!-- /.info-box -->
+          </a>
         </div>
         <!-- /.col -->
     </div>
@@ -66,7 +72,7 @@
         <!-- /.col -->
         <div class="col-sm-6 col-xs-12">
           <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="fa fa-user fa-fw"></i></span>
+            <span class="info-box-icon bg-aqua"><i class="fas fa-user fa-fw"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{ translate("USER", 2) }}</span>
               <span class="info-box-number">{{current_user.group.users.count}}</span>
@@ -80,8 +86,9 @@
     <!-- /.row -->
     {% endif %}
 
-    <!-- Info boxes -->
+    <!-- Main panels -->
     <div class="row">
+        {% if checkAccess('uri_users') or checkAccess('view_system_info') %}
         <div class="col-md-6 col-sm-12 col-xs-12">
             {% if checkAccess('uri_users') %}
             <div class="row">
@@ -97,7 +104,7 @@
                         {% for user in users %}
                         <li>
                           <img src="{{ user.avatar }}" alt="User Image">
-                          <a class="users-list-name" href="{{site.uri.public}}/admin/users/u/{{user.user_name}}">{{user.first_name}} {{user.last_name}}</a>
+                          <a class="users-list-name" href="{{site.uri.public}}/users/u/{{user.user_name}}">{{user.first_name}} {{user.last_name}}</a>
                           <span class="users-list-date">{{ user.registered }}</span>
                         </li>
                         {% endfor %}
@@ -106,7 +113,7 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer text-center">
-                      <a href="{{site.uri.public}}/admin/users" class="uppercase">{{translate("USER.VIEW_ALL")}}</a>
+                      <a href="{{site.uri.public}}/users" class="uppercase">{{translate("USER.VIEW_ALL")}}</a>
                     </div>
                     <!-- /.box-footer -->
                   </div>
@@ -153,13 +160,7 @@
                                 <ul class="list-unstyled">
                                 {% for sprinkle in sprinkles %}
                                 <li>
-                                    {{sprinkle.name}}
-                                    {% if sprinkle.migration %}
-                                        &nbsp;
-                                        <span class="label label-warning">
-                                            <i class="fa fa-exclamation-triangle"></i> {{translate("MIGRATION.REQUIRED")}}
-                                        </span>
-                                    {% endif %}
+                                    {{sprinkle}}
                                 </li>
                                 {% endfor %}
                                 </ul>
@@ -180,18 +181,17 @@
             {% endif %}
         </div>
         <!-- /.col -->
+        {% endif %}
 
         {% if checkAccess('uri_activities') %}
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div id="widget-activities" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-tasks fa-fw"></i> {{translate('ACTIVITY', 2)}}</h3>
-                    <div class="pull-right">
-                        <button class="btn btn-sm btn-default js-download-table">{{translate("DOWNLOAD.CSV")}}</button>
-                    </div>
+                    <h3 class="box-title"><i class="fas fa-tasks fa-fw"></i> {{translate('ACTIVITY', 2)}}</h3>
+                    {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
-                    {% include "components/tables/activities.html.twig" with {
+                    {% include "tables/activities.html.twig" with {
                             "table" : {
                                 "id" : "table-activities",
                                 "columns" : ["user"]
@@ -208,13 +208,11 @@
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div id="widget-group-users" class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
-                    <div class="pull-right">
-                        <button class="btn btn-sm btn-default js-download-table">{{translate("DOWNLOAD.CSV")}}</button>
-                    </div>
+                    <h3 class="box-title"><i class="fas fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
+                    {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
-                    {% include "components/tables/users.html.twig" with {
+                    {% include "tables/users.html.twig" with {
                             "table" : {
                                 "id" : "table-group-users"
                             }
@@ -223,7 +221,7 @@
                 </div>
                 <div class="box-footer">
                     <button type="button" class="btn btn-success js-user-create">
-                        <i class="fa fa-plus-square"></i>  {{translate("USER.CREATE")}}
+                        <i class="fas fa-plus-square"></i>  {{translate("USER.CREATE")}}
                     </button>
                 </div>
             </div>
@@ -240,12 +238,16 @@
                   </h3>
                 </div>
                 <div class="widget-user-image">
-                  <img class="img-circle" src="{{assets.url('assets://local/core/images/cupcake.png')}}" alt="User Avatar">
+                  <img class="img-circle" src="{{assets.url('assets://userfrosting/images/cupcake.png')}}" alt="User Avatar">
                 </div>
                 <div class="box-footer">
-                    <h4>Welcome to {{site.title}}!</h4>
+                    <h4>
+                        {{translate("WELCOME_TO", {
+                            'title': site.title
+                        })}}
+                    </h4>
                     <p>
-                        It doesn't look like any features have been set up for this account...yet.  Maybe they haven't been implemented yet, or maybe someone forgot to give you access.  Either way, we're glad to have you aboard!
+                        {{translate("NO_FEATURES_YET")}}
                     </p>
                 </div>
             </div>
@@ -262,7 +264,7 @@
 {% block scripts_page %}
     <!-- Include page variables -->
     <script>
-    {% include "components/page.js.twig" %}
+    {% include "pages/partials/page.js.twig" %}
 
     // Add user name
     page = $.extend(

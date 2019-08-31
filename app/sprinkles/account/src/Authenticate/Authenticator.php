@@ -1,17 +1,19 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 use Birke\Rememberme\Authenticator as RememberMe;
-use Birke\Rememberme\Storage\PDO as RememberMePDO;
+use Birke\Rememberme\Triplet as RememberMeTriplet;
+use Illuminate\Cache\Repository as Cache;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Interop\Container\ContainerInterface;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountDisabledException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountInvalidException;
@@ -19,15 +21,16 @@ use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountNotVerifiedExcep
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException;
-use UserFrosting\Sprinkle\Account\Model\User;
-use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
+use UserFrosting\Sprinkle\Account\Facades\Password;
+use UserFrosting\Sprinkle\Account\Rememberme\PDOStorage as RememberMePDO;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
+use UserFrosting\Support\Repository\Repository as Config;
 
 /**
  * Handles authentication tasks.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
- * @see http://www.userfrosting.com/components/#authentication
  * Partially inspired by Laravel's Authentication component: https://github.com/laravel/framework/blob/5.3/src/Illuminate/Auth/SessionGuard.php
  */
 class Authenticator
@@ -48,6 +51,16 @@ class Authenticator
     protected $config;
 
     /**
+     * @var Cache
+     */
+    protected $cache;
+
+    /**
+     * @var Capsule
+     */
+    protected $db;
+
+    /**
      * @var bool
      */
     protected $loggedOut = false;
@@ -63,7 +76,7 @@ class Authenticator
     protected $rememberMe;
 
     /**
-     * @var User
+     * @var UserInterface
      */
     protected $user;
 
@@ -78,48 +91,43 @@ class Authenticator
      * Create a new Authenticator object.
      *
      * @param ClassMapper $classMapper Maps generic class identifiers to specific class names.
-     * @param Session $session The session wrapper object that will store the user's id.
-     * @param Config $config Config object that contains authentication settings.
+     * @param Session     $session     The session wrapper object that will store the user's id.
+     * @param Config      $config      Config object that contains authentication settings.
+     * @param Cache       $cache       Cache service instance
+     * @param Capsule     $db          Database service instance
      */
-    public function __construct(ClassMapper $classMapper, Session $session, $config)
+    public function __construct(ClassMapper $classMapper, Session $session, Config $config, Cache $cache, Capsule $db)
     {
         $this->classMapper = $classMapper;
         $this->session = $session;
         $this->config = $config;
+        $this->cache = $cache;
+        $this->db = $db;
 
         // Initialize RememberMe storage
-        $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
-
-        $dbParams = $this->config['db.default'];
-
-        // Test database connection directly using PDO
-        $dsn = "{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}";
-        if (isset($dbParams['port'])) {
-            $dsn .= ";port={$dbParams['port']}";
-        }
-        $dbh = new \PDO($dsn, $dbParams['username'], $dbParams['password']);
-    
-        // Now get actual PDO instance for Eloquent
-        $pdo = Capsule::connection()->getPdo();
-
-        $this->rememberMeStorage->setConnection($pdo);
+        $this->rememberMeStorage = new RememberMePDO($this->db);
 
         // Set up RememberMe
         $this->rememberMe = new RememberMe($this->rememberMeStorage);
+
         // Set cookie name
         $cookieName = $this->config['session.name'] . '-' . $this->config['remember_me.cookie.name'];
-        $this->rememberMe->setCookieName($cookieName);
+        $this->rememberMe->getCookie()->setName($cookieName);
 
         // Change cookie path
         $this->rememberMe->getCookie()->setPath($this->config['remember_me.session.path']);
 
         // Set expire time, if specified
-        if ($this->config->has('remember_me.expire_time') && ($this->config->has('remember_me.expire_time') != null)) {
-            $this->rememberMe->setExpireTime($this->config['remember_me.expire_time']);
+        if ($this->config->has('remember_me.expire_time') && $this->config->has('remember_me.expire_time') != null) {
+            $this->rememberMe->getCookie()->setExpireTime($this->config['remember_me.expire_time']);
+        }
+
+        // Set domain, if specified
+        if ($this->config->has('remember_me.domain') && $this->config->has('remember_me.domain') != null) {
+            $this->rememberMe->getCookie()->setDomain($this->config['remember_me.domain']);
         }
 
         $this->user = null;
-
         $this->viaRemember = false;
     }
 
@@ -127,11 +135,22 @@ class Authenticator
      * Attempts to authenticate a user based on a supplied identity and password.
      *
      * If successful, the user's id is stored in session.
+     *
+     * @param string $identityColumn
+     * @param string $identityValue
+     * @param string $password
+     * @param bool   $rememberMe
+     *
+     * @throws InvalidCredentialsException
+     * @throws AccountDisabledException
+     * @throws AccountNotVerifiedException
+     *
+     * @return UserInterface
      */
     public function attempt($identityColumn, $identityValue, $password, $rememberMe = false)
     {
         // Try to load the user, using the specified conditions
-        $user = $this->classMapper->staticMethod('user', 'where', $identityColumn, $identityValue)->first();
+        $user = $this->classMapper->getClassMapping('user')::where($identityColumn, $identityValue)->first();
 
         if (!$user) {
             throw new InvalidCredentialsException();
@@ -147,14 +166,15 @@ class Authenticator
             throw new AccountDisabledException();
         }
 
-        // Check that the user's account is activated
-        if ($user->flag_verified == 0) {
+        // Check that the user's account is verified (if verification is required)
+        if ($this->config['site.registration.require_email_verification'] && $user->flag_verified == 0) {
             throw new AccountNotVerifiedException();
         }
 
         // Here is my password.  May I please assume the identify of this user now?
         if (Password::verify($password, $user->password)) {
             $this->login($user, $rememberMe);
+
             return $user;
         } else {
             // We know the password is at fault here (as opposed to the identity), but lets not give away the combination in case of someone bruteforcing
@@ -186,14 +206,20 @@ class Authenticator
      * Process an account login request.
      *
      * This method logs in the specified user, allowing the client to assume the user's identity for the duration of the session.
-     * @param User $user The user to log in.
-     * @param bool $rememberMe Set to true to make this a "persistent session", i.e. one that will re-login even after the session expires.
+     *
+     * @param UserInterface $user       The user to log in.
+     * @param bool          $rememberMe Set to true to make this a "persistent session", i.e. one that will re-login even after the session expires.
+     *
      * @todo Figure out a way to update the currentUser service to reflect the logged-in user *immediately* in the service provider.
      * As it stands, the currentUser service will still reflect a "guest user" for the remainder of the request.
      */
-    public function login($user, $rememberMe = false)
+    public function login(UserInterface $user, $rememberMe = false)
     {
+        $oldId = session_id();
         $this->session->regenerateId(true);
+
+        // Since regenerateId deletes the old session, we'll do the same in cache
+        $this->flushSessionCache($oldId);
 
         // If the user wants to be remembered, create Rememberme cookie
         if ($rememberMe) {
@@ -228,7 +254,7 @@ class Authenticator
 
         // This removes all of the user's persistent logins from the database
         if ($complete) {
-            $this->storage->cleanAllTriplets($currentUserId);
+            $this->rememberMeStorage->cleanAllTriplets($currentUserId);
         }
 
         // Clear the rememberMe cookie
@@ -236,17 +262,25 @@ class Authenticator
 
         // User logout actions
         if ($currentUserId) {
-            $currentUser = $this->classMapper->staticMethod('user', 'find', $currentUserId);
+            $currentUser = $this->classMapper->getClassMapping('user')::find($currentUserId);
             if ($currentUser) {
                 $currentUser->onLogout();
             }
+
+            // Delete user object cache
+            $this->cache->forget($this->config['cache.user.key'] . $currentUserId);
         }
 
         $this->user = null;
         $this->loggedOut = true;
 
+        $oldId = session_id();
+
         // Completely destroy the session
         $this->session->destroy();
+
+        // Since regenerateId deletes the old session, we'll do the same in cache
+        $this->flushSessionCache($oldId);
 
         // Restart the session service
         $this->session->start();
@@ -256,11 +290,13 @@ class Authenticator
      * Try to get the currently authenticated user, returning a guest user if none was found.
      *
      * Tries to re-establish a session for "remember-me" users who have been logged out due to an expired session.
-     * @return User|null
+     *
      * @throws AuthExpiredException
      * @throws AuthCompromisedException
      * @throws AccountInvalidException
      * @throws AccountDisabledException
+     *
+     * @return UserInterface|null
      */
     public function user()
     {
@@ -296,6 +332,7 @@ class Authenticator
      * Determine whether the current user was authenticated using a remember me cookie.
      *
      * This function is useful when users are performing sensitive operations, and you may want to force them to re-authenticate.
+     *
      * @return bool
      */
     public function viaRemember()
@@ -306,35 +343,37 @@ class Authenticator
     /**
      * Attempt to log in the client from their rememberMe token (in their cookie).
      *
-     * @return User|bool If successful, the User object of the remembered user.  Otherwise, return false.
      * @throws AuthCompromisedException The client attempted to log in with an invalid rememberMe token.
+     *
+     * @return UserInterface|bool If successful, the User object of the remembered user.  Otherwise, return false.
      */
     protected function loginRememberedUser()
     {
-        // Get the user id. If we can present the correct tokens from the cookie, remake the session and automatically log the user in
-        $userId = $this->rememberMe->login();
+        /** @var \Birke\Rememberme\LoginResult $loginResult */
+        $loginResult = $this->rememberMe->login();
 
-        if ($userId) {
+        if ($loginResult->isSuccess()) {
             // Update in session
-            $this->session[$this->config['session.keys.current_user_id']] = $userId;
+            $this->session[$this->config['session.keys.current_user_id']] = $loginResult->getCredential();
             // There is a chance that an attacker has stolen the login token,
             // so we store the fact that the user was logged in via RememberMe (instead of login form)
             $this->viaRemember = true;
         } else {
-            // If $rememberMe->login() returned false, check if the token was invalid as well.  This means the cookie was stolen.
-            if ($this->rememberMe->loginTokenWasInvalid()) {
+            // If $rememberMe->login() was not successfull, check if the token was invalid as well.  This means the cookie was stolen.
+            if ($loginResult->hasPossibleManipulation()) {
                 throw new AuthCompromisedException();
             }
         }
 
-        return $this->validateUserAccount($userId);
+        return $this->validateUserAccount($loginResult->getCredential());
     }
 
     /**
      * Attempt to log in the client from the session.
      *
-     * @return User|null If successful, the User object of the user in session.  Otherwise, return null.
      * @throws AuthExpiredException The client attempted to use an expired rememberMe token.
+     *
+     * @return UserInterface|null If successful, the User object of the user in session.  Otherwise, return null.
      */
     protected function loginSessionUser()
     {
@@ -345,6 +384,7 @@ class Authenticator
         if ($userId) {
             if (!$this->validateRememberMeCookie()) {
                 $this->logout();
+
                 throw new AuthExpiredException();
             }
         }
@@ -359,11 +399,15 @@ class Authenticator
      */
     protected function validateRememberMeCookie()
     {
-        // Check, if the Rememberme cookie exists and is still valid.
-        // If not, we log out the current session and throw an exception.
-        if (!empty($_COOKIE[$this->rememberMe->getCookieName()]) && !$this->rememberMe->cookieIsValid()) {
+        $cookieValue = $this->rememberMe->getCookie()->getValue();
+        if (!$cookieValue) {
+            return true;
+        }
+        $triplet = RememberMeTriplet::fromString($cookieValue);
+        if (!$triplet->isValid()) {
             return false;
         }
+
         return true;
     }
 
@@ -371,15 +415,23 @@ class Authenticator
      * Tries to load the specified user by id from the database.
      *
      * Checks that the account is valid and enabled, throwing an exception if not.
+     *
      * @param int $userId
-     * @return User|null
+     *
      * @throws AccountInvalidException
      * @throws AccountDisabledException
+     *
+     * @return UserInterface|null
      */
     protected function validateUserAccount($userId)
     {
         if ($userId) {
-            $user = $this->classMapper->staticMethod('user', 'find', $userId);
+
+            // Load user from db, cache the result
+            $key = $this->config['cache.user.key'] . $userId;
+            $user = $this->cache->remember($key, $this->config['cache.user.delay'], function () use ($userId) {
+                return $this->classMapper->getClassMapping('user')::find((int) $userId);
+            });
 
             // If the user doesn't exist any more, throw an exception.
             if (!$user) {
@@ -393,7 +445,19 @@ class Authenticator
 
             return $user;
         } else {
-            return null;
+            return;
         }
+    }
+
+    /**
+     * Flush the cache associated with a session id.
+     *
+     * @param string $id The session id
+     *
+     * @return bool
+     */
+    public function flushSessionCache($id)
+    {
+        return $this->cache->tags('_s' . $id)->flush();
     }
 }

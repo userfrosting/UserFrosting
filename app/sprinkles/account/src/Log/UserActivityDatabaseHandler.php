@@ -1,11 +1,13 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Log;
 
 use UserFrosting\Sprinkle\Core\Log\DatabaseHandler;
@@ -18,7 +20,7 @@ use UserFrosting\Sprinkle\Core\Log\DatabaseHandler;
 class UserActivityDatabaseHandler extends DatabaseHandler
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function write(array $record)
     {
@@ -26,8 +28,8 @@ class UserActivityDatabaseHandler extends DatabaseHandler
         $log->save();
 
         if (isset($record['extra']['user_id'])) {
-            $user = $this->classMapper->staticMethod('user', 'find', $record['extra']['user_id']);
-            $user->last_activity_id = $log->id;
+            $user = $this->classMapper->getClassMapping('user')::find($record['extra']['user_id']);
+            $user->lastActivity()->associate($log);
             $user->save();
         }
     }

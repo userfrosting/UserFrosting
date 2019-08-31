@@ -1,0 +1,8 @@
+# Forces Git to handle line endings, preventing any changes (like from editors or tools) being commited.
+# Also improves reliability of tools like Git Lens.
+* text=auto
+
+# NPM always rewrites package.json and package-lock.json to lf.
+# This stops the annoying tendancy for false positive changes to appear under Windows.
+package.json text=lf
+package-lock.json text=lf

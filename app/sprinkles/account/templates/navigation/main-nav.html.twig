@@ -1,0 +1,13 @@
+{# This extend the same file from core to add a sign-up/sign-in or "my account" link to the "home page" nav menu. #}
+{% extends "@core/navigation/main-nav.html.twig" %}
+
+{% block secondary_nav %}
+    {{parent()}}
+    {% if not checkAuthenticated() %}
+        <li>
+            <a href="{{site.uri.public}}/account/sign-in" class="nav-highlight">{{translate("SIGNIN")}}</a>
+        </li>
+    {% else %}
+        {% include "navigation/user-card.html.twig" %}
+    {% endif %}
+{% endblock %}

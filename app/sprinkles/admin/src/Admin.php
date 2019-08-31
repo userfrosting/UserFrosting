@@ -1,15 +1,16 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin;
 
-use UserFrosting\Sprinkle\Admin\ServicesProvider\AdminServicesProvider;
-use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
+use UserFrosting\System\Sprinkle\Sprinkle;
 
 /**
  * Bootstrapper class for the 'admin' sprinkle.
@@ -18,12 +19,4 @@ use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
  */
 class Admin extends Sprinkle
 {
-    /**
-     * Register Admin services.
-     */
-    public function init()
-    {
-        $serviceProvider = new AdminServicesProvider();
-        $serviceProvider->register($this->ci);
-    }
 }

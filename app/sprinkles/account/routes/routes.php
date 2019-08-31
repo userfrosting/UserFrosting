@@ -1,14 +1,19 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
+use UserFrosting\Sprinkle\Core\Util\NoCache;
 
 $app->group('/account', function () {
     $this->get('/captcha', 'UserFrosting\Sprinkle\Account\Controller\AccountController:imageCaptcha');
+
+    $this->get('/check-username', 'UserFrosting\Sprinkle\Account\Controller\AccountController:checkUsername');
 
     $this->get('/forgot-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageForgotPassword')
         ->setName('forgot-password');
@@ -22,12 +27,18 @@ $app->group('/account', function () {
 
     $this->get('/set-password/deny', 'UserFrosting\Sprinkle\Account\Controller\AccountController:denyResetPassword');
 
+    $this->get('/register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageRegister')
+        ->add('checkEnvironment')
+        ->setName('register');
+
     $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings')
         ->add('authGuard');
 
-    $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')
+    $this->get('/sign-in', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignIn')
         ->add('checkEnvironment')
         ->setName('login');
+
+    $this->get('/suggest-username', 'UserFrosting\Sprinkle\Account\Controller\AccountController:suggestUsername');
 
     $this->get('/verify', 'UserFrosting\Sprinkle\Account\Controller\AccountController:verify');
 
@@ -44,6 +55,9 @@ $app->group('/account', function () {
     $this->post('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:settings')
         ->add('authGuard')
         ->setName('settings');
-});
+
+    $this->post('/settings/profile', 'UserFrosting\Sprinkle\Account\Controller\AccountController:profile')
+        ->add('authGuard');
+})->add(new NoCache());
 
 $app->get('/modals/account/tos', 'UserFrosting\Sprinkle\Account\Controller\AccountController:getModalAccountTos');

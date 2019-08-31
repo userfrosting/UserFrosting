@@ -1,0 +1,81 @@
+---
+user_name:
+  validators:
+    length:
+      label: "&USERNAME"
+      min: 1
+      max: 50
+      message: VALIDATE.LENGTH_RANGE
+    no_leading_whitespace:
+      label: "&USERNAME"
+      message: VALIDATE.NO_LEAD_WS
+    no_trailing_whitespace:
+      label: "&USERNAME"
+      message: VALIDATE.NO_TRAIL_WS
+    required:
+      label: "&USERNAME"
+      message: VALIDATE.REQUIRED
+    username:
+      label: "&USERNAME"
+      message: VALIDATE.USERNAME
+first_name:
+  validators:
+    length:
+      label: "&FIRST_NAME"
+      min: 1
+      max: 20
+      message: VALIDATE.LENGTH_RANGE
+    required:
+      label: "&FIRST_NAME"
+      message: VALIDATE.REQUIRED
+last_name:
+  validators:
+    length:
+      label: "&LAST_NAME"
+      min: 1
+      max: 30
+      message: VALIDATE.LENGTH_RANGE
+email:
+  validators:
+    required:
+      label: "&EMAIL"
+      message: VALIDATE.REQUIRED
+    length:
+      label: "&EMAIL"
+      min: 1
+      max: 150
+      message: VALIDATE.LENGTH_RANGE
+    email:
+      message: VALIDATE.INVALID_EMAIL
+password:
+  validators:
+    required:
+      label: "&PASSWORD"
+      message: VALIDATE.REQUIRED
+    length:
+      label: "&PASSWORD"
+      min: 12
+      max: 100
+      message: VALIDATE.LENGTH_RANGE
+passwordc:
+  validators:
+    required:
+      label: "&PASSWORD.CONFIRM"
+      message: VALIDATE.REQUIRED
+    matches:
+      field: password
+      label: "&PASSWORD.CONFIRM"
+      message: VALIDATE.PASSWORD_MISMATCH
+    length:
+      label: "&PASSWORD.CONFIRM"
+      min: 12
+      max: 100
+      message: VALIDATE.LENGTH_RANGE
+locale:
+  validators:
+    required:
+      label: "&LOCALE"
+      domain: server
+      message: VALIDATE.REQUIRED
+captcha:
+  validators:

@@ -1,28 +1,38 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Twig;
 
 use Interop\Container\ContainerInterface;
-use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
-use Slim\Http\Uri;
+use UserFrosting\Support\Repository\Repository as Config;
 
 /**
  * Extends Twig functionality for the Account sprinkle.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AccountExtension extends \Twig_Extension
+class AccountExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
-
+    /**
+     * @var ContainerInterface
+     */
     protected $services;
+
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @param ContainerInterface $services
+     */
     public function __construct(ContainerInterface $services)
     {
         $this->services = $services;
@@ -36,7 +46,7 @@ class AccountExtension extends \Twig_Extension
 
     public function getFunctions()
     {
-        return array(
+        return [
             // Add Twig function for checking permissions during dynamic menu rendering
             new \Twig_SimpleFunction('checkAccess', function ($slug, $params = []) {
                 $authorizer = $this->services->authorizer;
@@ -46,9 +56,10 @@ class AccountExtension extends \Twig_Extension
             }),
             new \Twig_SimpleFunction('checkAuthenticated', function () {
                 $authenticator = $this->services->authenticator;
+
                 return $authenticator->check();
-            })
-        );
+            }),
+        ];
     }
 
     public function getGlobals()
@@ -60,7 +71,7 @@ class AccountExtension extends \Twig_Extension
         }
 
         return [
-            'current_user'   => $currentUser
+            'current_user'   => $currentUser,
         ];
     }
 }

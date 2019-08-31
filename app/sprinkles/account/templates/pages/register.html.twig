@@ -1,0 +1,118 @@
+{% extends "pages/abstract/base.html.twig" %}
+
+{# Overrides blocks in head of base template #}
+{% block page_title %}{{translate('REGISTER')}}{% endblock %}
+
+{% block page_description %}{{translate('PAGE.LOGIN.DESCRIPTION', {'site_name': site.title })}}{% endblock %}
+
+{% block body_attributes %}
+    class="hold-transition login-page"
+{% endblock %}
+
+{% block content %}
+<div class="login-box">
+    <div class="login-logo">
+        <a href="{{site.uri.public}}">{{site.title}}</a>
+    </div>
+    <!-- /.login-logo -->
+
+    <div class="login-box-body register-form">
+        <p class="login-box-msg"><strong>{{translate('REGISTER')}}</strong></p>
+        <div class="form-alerts" id="alerts-page"></div>
+
+        <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
+            {% include "forms/csrf.html.twig" %}
+            <label for="r-form-first-name">{{translate('NAME_AND_EMAIL')}}</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="sr-only" for="r-form-first-name">{{translate('FIRST_NAME')}}</label>
+                        <input type="text" name="first_name" placeholder="{{translate('FIRST_NAME')}}" class="form-control" id="r-form-first-name" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="sr-only" for="r-form-last-name">{{translate('LAST_NAME')}}</label>
+                        <input type="text" name="last_name" placeholder="{{translate('LAST_NAME')}}" class="form-control" id="r-form-last-name" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" name="email" placeholder="{% if site.registration.require_email_verification %}{{translate('EMAIL.VERIFICATION_REQUIRED')}}{% else %}{{translate('EMAIL.YOUR')}}{% endif %}" class="form-control" id="r-form-email">
+            </div>
+            <div class="form-group">
+                <label for="r-form-username">{{translate('USERNAME')}}</label>
+                <span class="pull-right"><a href="#" id="form-register-username-suggest">[{{translate('SUGGEST')}}]</a></span>
+                <input type="text" name="user_name" placeholder="{{translate('USERNAME.CHOOSE')}}" class="form-control" id="r-form-username" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="r-form-password">{{translate('PASSWORD')}}</label>
+                <input type="password" name="password" placeholder="{{translate('PASSWORD.BETWEEN', {min: site.password.length.min, max: site.password.length.max})}}" class="form-control" id="r-form-password">
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="r-form-passwordc">{{translate('PASSWORD.CONFIRM')}}</label>
+                <input type="password" name="passwordc" placeholder="{{translate('PASSWORD.CONFIRM')}}" class="form-control" id="r-form-passwordc">
+            </div>
+            {% if 'locale' not in fields.hidden %}
+            <div class="form-group">
+                <label for="r-form-locale" class="control-label">{{translate("LOCALE")}}</label>
+                <select id="r-form-locale" class="form-control js-select2" name="locale">
+                    {% for option, label in locales.available %}
+                        {% if label is not empty %}
+                            <option value="{{option}}" {% if (option == locales.current) %}selected{% endif %}>{{label}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <p class="help-block">{{translate("LOCALE.ACCOUNT")}}.</p>
+            </div>
+            {% endif %}
+            {% if site.registration.captcha %}
+                <div class="form-group">
+                    <label class="sr-only" for="r-form-passwordc">{{translate('CAPTCHA.VERIFY')}}</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" name="captcha" placeholder="{{translate('CAPTCHA.SPECIFY')}}" class="form-control" id="r-form-captcha">
+                        </div>
+                        <div class="col-md-6 form-col-captcha">
+                                <img src="{{site.uri.public}}/account/captcha" id="captcha" data-target="#r-form-captcha">
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="collapse">
+                <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
+                <input name="spiderbro" id="spiderbro" value="http://"/>
+            </div>
+            <div class="text-left">
+                <p>
+                    {{translate('TOS_AGREEMENT', {
+                        'site_title' : site.title,
+                        'link_attributes' : 'class="js-show-tos" href="#" data-toggle="modal"'
+                    }) | raw}}
+                </p>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-block btn-primary">{{translate('REGISTER_ME')}}</button>
+            </div>
+            <div style="padding-top: 10px;">
+                {{translate('SIGN_IN_HERE', {
+                    'url' : site.uri.public ~'/account/sign-in'
+                }) | raw}}
+            </div>
+        </form>
+    </div>
+    <!-- /.login-box-body -->
+
+</div>
+<!-- /.login-box -->
+{% endblock %}
+
+{% block scripts_page %}
+    <!-- Include validation rules -->
+    <script>
+        {% include "pages/partials/page.js.twig" %}
+    </script>
+
+    <!-- Include page-specific JS -->
+    {{ assets.js('js/pages/register') | raw }}
+{% endblock %}

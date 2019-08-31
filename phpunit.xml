@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="app/vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stderr="true"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="Unit Tests">
+            <directory suffix="Test.php">app/tests/Unit</directory>
+            <directory suffix="Test.php">app/sprinkles/*/tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration Tests">
+            <directory suffix=".php">app/sprinkles/*/tests/Integration</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="UF_MODE" value="testing"/>
+    </php>
+    <filter>
+      <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="false">
+          <directory suffix=".php">app/sprinkles/*/src/</directory>
+          <directory suffix=".php">app/system/</directory>
+      </whitelist>
+    </filter>
+</phpunit>

@@ -1,0 +1,61 @@
+/* REQUIRED CSS: change your reflow breakpoint here (35em below) */
+@media ( max-width: 35em ) {
+
+  /* uncomment out the line below if you don't want the sortable headers to show */
+  table.ui-table-reflow thead { display: none; }
+
+  .uf-table-search {
+    display: inherit;
+  }
+  
+  /* css for reflow & reflow2 widgets */
+  .ui-table-reflow td,
+  .ui-table-reflow th {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: right;
+    /* if not using the stickyHeaders widget (not the css3 version)
+     * the "!important" flag, and "height: auto" can be removed */
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .tablesorter-bootstrap > thead > tr > th,
+  .tablesorter-bootstrap > thead > tr > td,
+  .tablesorter-bootstrap > tfoot > tr > th,
+  .tablesorter-bootstrap > tfoot > tr > td {
+    padding: 4px;
+    margin: 0;
+  }
+
+  /* reflow widget only */
+  .ui-table-reflow tbody td[data-title]:not(:first-child):before {
+    color: #469;
+    font-size: 1.5em;
+    content: attr(data-title);
+    width: 100%;
+    white-space: pre;
+    display: block;
+  }
+  
+  /* reflow2 widget only */
+  table.ui-table-reflow .ui-table-cell-label {
+    display: none;
+  }  
+  
+  table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
+    display: block;
+    padding: .4em 0;
+    margin: .4em 0;
+    text-transform: uppercase;
+    font-size: 1.5em;
+    font-weight: 400;
+  }
+
+} /* end media query */
+
+/* reflow2 widget */
+.ui-table-reflow .ui-table-cell-label {
+  display: none;
+}

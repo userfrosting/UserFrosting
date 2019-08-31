@@ -1,17 +1,22 @@
 <?php
 
-/**
- * ar
+/*
+ * UserFrosting (http://www.userfrosting.com)
  *
- * Modern Standard Arabic validation message translations for the account sprinkle.
- *
- * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n
- * @author Alexander Weissman Abdullah Seba
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
+/**
+ * Modern Standard Arabic message token translations for the 'account' sprinkle.
+ *
+ * @author Alexander Weissman
+ * @author Abdullah Seba
+ */
 return [
-	"VALIDATE" => [
-        "PASSWORD_MISMATCH" => "يجب أن تكون كلمة المرور وكلمة المرور التأكيدية نفس"
-    ]
+    'VALIDATE' => [
+        'PASSWORD_MISMATCH' => 'يجب أن تكون كلمة المرور وكلمة المرور التأكيدية نفس',
+        // 'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
+    ],
 ];

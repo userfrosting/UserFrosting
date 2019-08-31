@@ -1,36 +1,34 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Monolog\Logger;
-use PhpParser\Lexer\Emulative as EmulativeLexer;
-use PhpParser\Node;
-use PhpParser\NodeTraverser;
-use PhpParser\Parser as Parser;
-use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\Error as PhpParserException;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use UserFrosting\Sprinkle\Account\Model\User;
+use PhpParser\NodeTraverser;
+use PhpParser\ParserFactory as Parser;
+use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
 /**
- * AccessConditionExpression class
+ * AccessConditionExpression class.
  *
  * This class models the evaluation of an authorization condition expression, as associated with permissions.
  * A condition is built as a boolean expression composed of AccessCondition method calls.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
- * @see http://www.userfrosting.com/components/#authorization
  */
 class AccessConditionExpression
 {
     /**
-     * @var User A user object, which for convenience can be referenced as 'self' in access conditions.
+     * @var UserInterface A user object, which for convenience can be referenced as 'self' in access conditions.
      */
     protected $user;
 
@@ -67,19 +65,20 @@ class AccessConditionExpression
     /**
      * Create a new AccessConditionExpression object.
      *
-     * @param User $user A user object, which for convenience can be referenced as 'self' in access conditions.
-     * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
-     * @param bool $debug Set to true if you want debugging information printed to the auth log.
+     * @param ParserNodeFunctionEvaluator $nodeVisitor
+     * @param UserInterface               $user        A user object, which for convenience can be referenced as 'self' in access conditions.
+     * @param Logger                      $logger      A Monolog logger, used to dump debugging info for authorization evaluations.
+     * @param bool                        $debug       Set to true if you want debugging information printed to the auth log.
      */
-    public function __construct($nodeVisitor, $user, $logger, $debug = false)
+    public function __construct(ParserNodeFunctionEvaluator $nodeVisitor, UserInterface $user, Logger $logger, $debug = false)
     {
-        $this->nodeVisitor   = $nodeVisitor;
-        $this->user          = $user;
-        $this->parser        = new Parser(new EmulativeLexer);
-        $this->traverser     = new NodeTraverser;
+        $this->nodeVisitor = $nodeVisitor;
+        $this->user = $user;
+        $this->parser = (new Parser())->create(Parser::ONLY_PHP7);
+        $this->traverser = new NodeTraverser();
         $this->traverser->addVisitor($nodeVisitor);
-        $this->prettyPrinter = new StandardPrettyPrinter;
-        $this->logger        = $logger;
+        $this->prettyPrinter = new StandardPrettyPrinter();
+        $this->logger = $logger;
         $this->debug = $debug;
     }
 
@@ -88,8 +87,10 @@ class AccessConditionExpression
      *
      * The special parameter `self` is an array of the current user's data.
      * This get included automatically, and so does not need to be passed in.
-     * @param string $condition a boolean expression composed of calls to AccessCondition functions.
-     * @param array[mixed] $params the parameters to be used when evaluating the expression.
+     *
+     * @param string       $condition a boolean expression composed of calls to AccessCondition functions.
+     * @param array[mixed] $params    the parameters to be used when evaluating the expression.
+     *
      * @return bool true if the condition is passed for the given parameters, otherwise returns false.
      */
     public function evaluateCondition($condition, $params)
@@ -117,12 +118,12 @@ class AccessConditionExpression
             $stmts = $this->traverser->traverse($stmts);
 
             // Evaluate boolean statement.  It is safe to use eval() here, because our expression has been reduced entirely to a boolean expression.
-            $expr = $this->prettyPrinter->prettyPrintExpr($stmts[0]);
-            $expr_eval = "return " . $expr . ";\n";
+            $expr = $this->prettyPrinter->prettyPrintExpr($stmts[0]->expr);
+            $expr_eval = 'return ' . $expr . ";\n";
             $result = eval($expr_eval);
 
             if ($this->debug) {
-                $this->logger->debug("Expression '$expr' evaluates to " . ($result == true ? "true" : "false"));
+                $this->logger->debug("Expression '$expr' evaluates to " . ($result == true ? 'true' : 'false'));
             }
 
             return $result;
@@ -130,11 +131,13 @@ class AccessConditionExpression
             if ($this->debug) {
                 $this->logger->debug("Error parsing access condition '$condition':" . $e->getMessage());
             }
+
             return false;   // Access fails if the access condition can't be parsed.
         } catch (AuthorizationException $e) {
             if ($this->debug) {
                 $this->logger->debug("Error parsing access condition '$condition':" . $e->getMessage());
             }
+
             return false;
         }
     }
