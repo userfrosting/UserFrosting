@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Update Arabic Locales ([#1028])
 
+### Fixed
+- Fix typos in user creation with initial password ([#1030])
+
 ## [v4.3.0]
 
 ### Changed Requirements
@@ -848,9 +851,11 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
 [#1019]: https://github.com/userfrosting/UserFrosting/issues/1019
 [#1028]: https://github.com/userfrosting/UserFrosting/issues/1028
+[#1030]: https://github.com/userfrosting/UserFrosting/issues/1030
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
 [v4.2.2]: https://github.com/userfrosting/UserFrosting/compare/v.4.2.1...v4.2.2
 [v4.2.3]: https://github.com/userfrosting/UserFrosting/compare/v4.2.2...v4.2.3
 [v4.3.0]: https://github.com/userfrosting/UserFrosting/compare/v4.2.3...v4.3.0
+[v4.3.1]: https://github.com/userfrosting/UserFrosting/compare/v4.3.0...v4.3.1
