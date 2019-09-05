@@ -167,7 +167,7 @@ class UserController extends SimpleController
             $passwordRequest = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.create']);
 
             // If the password_mode is manual, do not send an email to set it. Else, send the email.
-            if (!isset($data['value'])) {
+            if ($data['password'] === '') {
                 // Create and send welcome email with password set link
                 $message = new TwigMailMessage($this->ci->view, 'mail/password-create.html.twig');
 
@@ -786,8 +786,8 @@ class UserController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/user/edit-password.yaml');
-        $schema->set('value.validators.length.min', $config['site.password.length.min']);
-        $schema->set('value.validators.length.max', $config['site.password.length.max']);
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
         $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
         $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
