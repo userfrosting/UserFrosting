@@ -33,7 +33,7 @@
                 </div>
             </div>
             {% endif %}
-            {% if 'icon' not in fields.hidden %}
+            {% if 'icon' not in form.fields.hidden %}
             <div class="col-sm-12">
                 <div class="form-group iconpicker-container">
                     <label>{{translate("GROUP.ICON")}}</label>
@@ -44,7 +44,7 @@
                 </div>
             </div>
             {% endif %}
-            {% if 'description' not in fields.hidden %}
+            {% if 'description' not in form.fields.hidden %}
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="input_description">{{translate("DESCRIPTION")}}</label>
