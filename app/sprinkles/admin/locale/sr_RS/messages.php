@@ -11,7 +11,7 @@
 /**
  * Serbian message token translations for the 'admin' sprinkle.
  *
- * @author
+ * @author zbigcheese https://github.com/zbigcheese
  */
 return [
     'ACTIVITY' => [
@@ -31,7 +31,7 @@ return [
     ],
 
     'DASHBOARD'             => 'Kontrolna tabla',
-    'NO_FEATURES_YET'       => "Izgleda da ne postoje mogućnosti koje su omogućene za ovaj nalog... još. Moguće da nisu još implementirane ili je neko zaboravio da Vam omogući pristup. U svakom slučaju, drago nam je da ste se pridružili!",
+    'NO_FEATURES_YET'       => 'Izgleda da ne postoje mogućnosti koje su omogućene za ovaj nalog... još. Moguće da nisu još implementirane ili je neko zaboravio da Vam omogući pristup. U svakom slučaju, drago nam je da ste se pridružili!',
     'DELETE_MASTER'         => 'Ne možete obrisati glavni nalog!',
     'DELETION_SUCCESSFUL'   => 'Korisnik <strong>{{user_name}}</strong> je uspešno obrisan.',
     'DETAILS_UPDATED'       => 'Detalji naloga <strong>{{user_name}}</strong> su uspešno izmenjeni',
@@ -49,7 +49,7 @@ return [
         'CREATION_SUCCESSFUL' => 'Uspešno ste napravili grupu <strong>{{name}}</strong>',
         'DELETE'              => 'Obriši grupu',
         'DELETE_CONFIRM'      => 'Da li ste sigurni da želite da obrišete grupu <strong>{{name}}</strong>?',
-        'DELETE_DEFAULT'      => "Ne možete obrisati grupu <strong>{{name}}</strong> pošto je to podrazumevana grupa za nove korisnike.",
+        'DELETE_DEFAULT'      => 'Ne možete obrisati grupu <strong>{{name}}</strong> pošto je to podrazumevana grupa za nove korisnike.',
         'DELETE_YES'          => 'Da, obriši grupu',
         'DELETION_SUCCESSFUL' => 'Uspešno ste obrisali grupu <strong>{{name}}</strong>',
         'EDIT'                => 'Izmeni grupu',
@@ -60,13 +60,13 @@ return [
         'NAME'                => 'Ime grupe',
         'NAME_EXPLAIN'        => 'Molimo unesite naziv grupe',
         'NONE'                => 'Bez grupe',
-        'NOT_EMPTY'           => "Akcija nije moguća pošto i dalje postoje korisnici koji pripadaju grupi <strong>{{name}}</strong>.",
+        'NOT_EMPTY'           => 'Akcija nije moguća pošto i dalje postoje korisnici koji pripadaju grupi <strong>{{name}}</strong>.',
         'PAGE_DESCRIPTION'    => 'Listing grupa za ovaj sajt. Stranica pruža alate potrebne za upravljanje, kreiranje i brisanje grupa.',
         'SUMMARY'             => 'Kratki opis grupe',
         'UPDATE'              => 'Detalji izmenjeni za grupu <strong>{{name}}</strong>',
     ],
 
-    'MANUALLY_ACTIVATED'    => "{{user_name}}-ov nalog je manualno aktiviran",
+    'MANUALLY_ACTIVATED'    => '{{user_name}}-ov nalog je manualno aktiviran',
     'MASTER_ACCOUNT_EXISTS' => 'Glavni nalog već postoji!',
     'MIGRATION'             => [
         'REQUIRED'          => 'Potreban je update baze podataka',
@@ -97,11 +97,11 @@ return [
         'CREATION_SUCCESSFUL' => 'Uspešno ste kreirali ulogu <strong>{{name}}</strong>',
         'DELETE'              => 'Obriši ulogu',
         'DELETE_CONFIRM'      => 'Da li ste sigurni da želite da obrišete ulogu <strong>{{name}}</strong>?',
-        'DELETE_DEFAULT'      => "Nije moguće pbrisati ulogu <strong>{{name}}</strong> zbog toga što je to podrazumevana uloga za nove korisnike.",
+        'DELETE_DEFAULT'      => 'Nije moguće pbrisati ulogu <strong>{{name}}</strong> zbog toga što je to podrazumevana uloga za nove korisnike.',
         'DELETE_YES'          => 'Da, obriši ulogu',
         'DELETION_SUCCESSFUL' => 'Uspešno ste obrisali ulogu <strong>{{name}}</strong>',
         'EDIT'                => 'Izmeni ulogu',
-        'HAS_USERS'           => "Akcija nije moguća zbog toga što i dalje postoje korisnici sa ulogom <strong>{{name}}</strong>.",
+        'HAS_USERS'           => 'Akcija nije moguća zbog toga što i dalje postoje korisnici sa ulogom <strong>{{name}}</strong>.',
         'INFO_PAGE'           => 'Stranica informacija za ulogu {{name}}',
         'MANAGE'              => 'Upravljaj ulogama',
         'NAME'                => 'Naziv',
@@ -135,7 +135,7 @@ return [
         'ADMIN' => [
             'CHANGE_PASSWORD'    => 'Promeni korisničku lozinku',
             'SEND_PASSWORD_LINK' => 'Pošalji korisniku link koji će mu omogućiti da odabere lozinku',
-            'SET_PASSWORD'       => "Postavi korisničku lozinku kao",
+            'SET_PASSWORD'       => 'Postavi korisničku lozinku kao',
         ],
 
         'ACTIVATE'          => 'Aktiviraj korisnika',

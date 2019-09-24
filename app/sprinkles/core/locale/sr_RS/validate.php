@@ -11,7 +11,7 @@
 /**
  * Serbian message token translations for the 'core' sprinkle.
  *
- * @author
+ * @author zbigcheese https://github.com/zbigcheese
  */
 return [
     'VALIDATE' => [

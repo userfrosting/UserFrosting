@@ -11,7 +11,7 @@
 /**
  * Serbian message token translations for the 'core' sprinkle.
  *
- * @author
+ * @author zbigcheese https://github.com/zbigcheese
  */
 return [
     '@PLURAL_RULE' => 1,
@@ -52,7 +52,7 @@ return [
 
     'NAME'       => 'Naziv',
     'NAVIGATION' => 'Navigacija',
-    'NO_RESULTS' => "Žap nam je, ništa nije pronađeno.",
+    'NO_RESULTS' => 'Žap nam je, ništa nije pronađeno.',
 
     'PAGINATION' => [
         'GOTO' => 'Idi na stranicu',
