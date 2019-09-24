@@ -16,39 +16,39 @@
 
 return [
     'ERROR' => [
-        '@TRANSLATION' => 'Error',
+        '@TRANSLATION' => 'Greška',
 
         '400' => [
-            'TITLE'       => 'Error 400: Bad Request',
-            'DESCRIPTION' => "It's probably not your fault.",
+            'TITLE'       => 'Kod greške 400: Neispravan zahtev',
+            'DESCRIPTION' => "Ovo verovatno nije Vaša krivica.",
         ],
 
         '404' => [
-            'TITLE'       => 'Error 404: Not Found',
-            'DESCRIPTION' => "We can't seem to find what you're looking for.",
-            'DETAIL'      => 'We tried to find your page...',
-            'EXPLAIN'     => 'We could not find the page you were looking for.',
-            'RETURN'      => 'Either way, click <a href="{{url}}">here</a> to return to the front page.',
+            'TITLE'       => 'Kod greške 404: Nije pronađeno',
+            'DESCRIPTION' => "Ne možemo da pronađemo stranicu koju tražite.",
+            'DETAIL'      => 'Probali smo da pronađemo stranicu koju ste tražili...',
+            'EXPLAIN'     => 'Nismo mogli da pronađemo stranicu koju tražite.',
+            'RETURN'      => 'U svakom slučaju, kliknite <a href="{{url}}">ovde</a> da se vratite na početnu stranicu.',
         ],
 
         'CONFIG' => [
-            'TITLE'       => 'UserFrosting Configuration Issue!',
-            'DESCRIPTION' => 'Some UserFrosting configuration requirements have not been met.',
-            'DETAIL'      => "Something's not right here.",
-            'RETURN'      => 'Please fix the following errors, then <a href="{{url}}">reload</a>.',
+            'TITLE'       => 'Problem u podešavanju UserFrosting-a!',
+            'DESCRIPTION' => 'Neki od zahteva u konfiguraciji UserFrosting-a nisu ispunjeni.',
+            'DETAIL'      => "Nešto nije u redu.",
+            'RETURN'      => 'Molimo ispravite sledeće greške, i onda <a href="{{url}}">učitajte stranicu ponovo</a>.',
         ],
 
-        'DESCRIPTION' => "We've sensed a great disturbance in the Force.",
-        'DETAIL'      => "Here's what we got:",
+        'DESCRIPTION' => "Osetili smo veliki poremećaj u sili.",
+        'DETAIL'      => "Evo šta znamo:",
 
-        'ENCOUNTERED' => "Uhhh...something happened.  We don't know what.",
+        'ENCOUNTERED' => "Uhhh...nešto se desilo.  Ne znamo šta.",
 
-        'MAIL' => 'Fatal error attempting mail, contact your server administrator.  If you are the admin, please check the UserFrosting log.',
+        'MAIL' => 'Fatalna greška pri pokušavanju slanja mail-a, kontaktirajte administratora. Ukoliko ste Vi administrator, molimo pogledajte UserFrosting log.',
 
-        'RETURN' => 'Click <a href="{{url}}">here</a> to return to the front page.',
+        'RETURN' => 'Kliknite <a href="{{url}}">ovde</a> da se vratite na početnu stranicu.',
 
-        'SERVER' => "Oops, looks like our server might have goofed. If you're an admin, please check the PHP or UserFrosting logs.",
+        'SERVER' => "Oops, došlo je do greške na serveru. Ukoliko ste Vi administrator, molimo pogledajte PHP ili UserFrosting logs.",
 
-        'TITLE' => 'Disturbance in the Force',
+        'TITLE' => 'Poremećaj u sili',
     ],
 ];

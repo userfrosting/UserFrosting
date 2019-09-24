@@ -15,7 +15,7 @@
  */
 return [
     'VALIDATE' => [
-        'PASSWORD_MISMATCH' => 'Your password and confirmation password must match.',
-        'USERNAME'          => "Username may consist only of lowercase letters, numbers, '.', '-', and '_'.",
+        'PASSWORD_MISMATCH' => 'Vaša lozinka se mora slagati sa ponovljenom lozinkom.',
+        'USERNAME'          => "Korisničko ime može sadržati samo mala slova, brojeve, '.', '-', i '_'.",
     ],
 ];
