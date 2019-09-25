@@ -331,6 +331,7 @@ return [
                 'zh_CN' => '中文',
                 'es_ES' => 'Español',
                 'ar'    => 'العربية',
+                'pt_Br' => 'Português Brasileiro',
                 'pt_PT' => 'Português',
                 'ru_RU' => 'русский',
                 'de_DE' => 'Deutsch',
