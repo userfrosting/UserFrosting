@@ -10,11 +10,12 @@
 
 /**
  * Brazilian Portuguese message token translations for the 'account' sprinkle.
+ *
  * @author Maxwell Kenned (kenned123@gmail.com)
  */
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => 'Confirmação de senha inválida.',
-        'USERNAME' => 'O nome de usuário pode consistir apenas em letras minúsculas, numeros, \'.\', \'-\', e \'_\'.',
+        'USERNAME'          => 'O nome de usuário pode consistir apenas em letras minúsculas, numeros, \'.\', \'-\', e \'_\'.',
     ],
 ];
