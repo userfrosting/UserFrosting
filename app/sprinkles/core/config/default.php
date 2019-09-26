@@ -341,7 +341,7 @@ return [
                 'th_TH' => 'ภาษาไทย',
                 'fa'    => 'فارسی',
                 'el'    => 'Greek',
-
+                'sr_RS' => 'српски',
             ],
             // This can be a comma-separated list, to load multiple fallback locales.
             // Supported browser requested languages always have first preference.
