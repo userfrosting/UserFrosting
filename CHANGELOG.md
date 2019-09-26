@@ -7,12 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [v4.3.1]
 
+### Added
+- Add translation for Brazilian Portuguese (locale pt_BR) ([#1036])
+
+### Fixed
+- Fix issue with hidden fields in group modal ([#1033])
+
+## [v4.3.1]
+
 ### Changed
 - Update Arabic Locales ([#1028])
 
 ### Fixed
 - Fix typos in user creation with initial password ([#1030])
-- Fix issue with hidden fields in group modal ([#1033])
 
 ## [v4.3.0]
 
@@ -854,6 +861,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1028]: https://github.com/userfrosting/UserFrosting/issues/1028
 [#1030]: https://github.com/userfrosting/UserFrosting/issues/1030
 [#1033]: https://github.com/userfrosting/UserFrosting/issues/1033
+[#1036]: https://github.com/userfrosting/UserFrosting/issues/1036
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
