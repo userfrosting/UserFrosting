@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Add translation for Brazilian Portuguese (locale pt_BR) - Thanks @maxwellkenned ! ([#1036])
-- Add translation for Serbian (locale sr_RS) - Thanks @zbigcheese ! ([#1035])
+- Add translation for Serbian (sr_RS) - Thanks @zbigcheese ! ([#1035])
 
 ### Changed
 - Update French Locales
+- Update Thai Locales
+- Update German Locales
 
 ### Fixed
 - Fix issue with hidden fields in group modal ([#1033])
