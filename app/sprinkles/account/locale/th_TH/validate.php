@@ -12,10 +12,11 @@
  * Thai message token translations for the 'account' sprinkle.
  *
  * @author Karuhut Komol
+ * @author Atthaphon Urairat
  */
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => 'รหัสผ่านและรหัสผ่านยืนยันของคุณจะต้องตรงกัน',
-        // 'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
+        'USERNAME'          => 'ชื่อผู้ใช้จะต้องประกอบด้วยตัวอักษรตัวเล็ก ตัวเลข \'.\', \'-\' และ \'_\' เพียงเท่านั้น',
     ],
 ];
