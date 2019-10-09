@@ -117,7 +117,7 @@ return [
         'SERVER'      => 'Λογισμικό διακομιστή Web',
         'SPRINKLES'   => 'Φορτωμένα sprinkles',
         'UF_VERSION'  => 'Έκδοση UserFrosting',
-        'URL'         => 'Site root url',
+        'URL'         => 'Ριζικό URL ιστότοπου',
     ],
 
     'TOGGLE_COLUMNS' => 'Εναλλαγή στηλών',
@@ -150,7 +150,7 @@ return [
         'WITH_PERMISSION'   => 'Χρήστες με αυτό το δικαιώμα',
     ],
     'X_USER' => [
-        0 => 'No χρήστες',
+        0 => 'Κανένας χρήστης',
         1 => '{{plural}} χρήστης',
         2 => '{{plural}} χρήστες',
     ],
