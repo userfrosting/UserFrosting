@@ -17,7 +17,7 @@ return [
     'ACCOUNT' => [
         '@TRANSLATION' => 'Rekening',
 
-        'ACCESS_DENIED' => "Hmm, dit lyk of jy nie toestemming het om dit te doen nie.",
+        'ACCESS_DENIED' => 'Hmm, dit lyk of jy nie toestemming het om dit te doen nie.',
 
         'DISABLED' => 'Hierdie rekening is gedeaktiveer. Kontak ons gerus vir meer inligting.',
 
@@ -89,7 +89,7 @@ return [
         'LOGIN' => [
             'DESCRIPTION'   => 'Meld aan by jou {{site_name}} rekening, of registreer vir \'n nuwe rekening.',
             'SUBTITLE'      => 'Registreer gratis, of meld aan met \'n bestaande rekening.',
-            'TITLE'         => "Laat ons begin!",
+            'TITLE'         => 'Laat ons begin!',
         ],
     ],
 
@@ -115,7 +115,7 @@ return [
         'FORGET'    => [
             '@TRANSLATION' => 'ek het my wagwoord vergeet',
 
-            'COULD_NOT_UPDATE'  => "Kon nie wagwoord opdateer nie.",
+            'COULD_NOT_UPDATE'  => 'Kon nie wagwoord opdateer nie.',
             'EMAIL'             => 'Voer die e-posadres in wat u gebruik het om aan te meld. U sal \'n skakel met instruksies om u wagwoord terug te stel, per e-pos aan u stuur.',
             'EMAIL_SEND'        => 'E-pos wagwoord herstel skakel',
             'INVALID'           => 'Hierdie wagwoordterugstellingversoek kon nie gevind word nie, of het verval. Probeer asseblief <a href="{{url}}"> dien u versoek weer in<a>.',
@@ -125,7 +125,7 @@ return [
         ],
 
         'HASH_FAILED'       => 'Wagwoord het misluk. Kontak \'n webwerfadministrateur.',
-        'INVALID'           => "Huidige wagwoord stem nie ooreen met die een wat ons op rekord het nie",
+        'INVALID'           => 'Huidige wagwoord stem nie ooreen met die een wat ons op rekord het nie',
         'NEW'               => 'Nuwe Wagwoord',
         'NOTHING_TO_UPDATE' => 'U kan nie met dieselfde wagwoord opdateer nie',
 
@@ -152,7 +152,7 @@ return [
         'BROKEN'            => "Jammer, daar is 'n probleem met ons registrasieproses. Kontak ons direk vir hulp.",
         'COMPLETE_TYPE1'    => 'U het suksesvol geregistreer. U kan nou aanmeld.',
         'COMPLETE_TYPE2'    => 'U het suksesvol geregistreer. \'N Skakel om u rekening te aktiveer, is gestuur <strong>{{email}}</strong>. U sal nie eers kan aanmeld voordat u hierdie stap voltooi het nie.',
-        'DISABLED'          => "Jammer, rekeningregistrasie is gedeaktiveer.",
+        'DISABLED'          => 'Jammer, rekeningregistrasie is gedeaktiveer.',
         'LOGOUT'            => "Jammer, u kan nie vir 'n rekening registreer terwyl u aangemeld is nie. Meld eers aan.",
         'WELCOME'           => 'Registrasie is vinnig en eenvoudig.',
     ],
