@@ -12,9 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add translation for Serbian (sr_RS) - Thanks @zbigcheese ! ([#1035])
 
 ### Changed
-- Update French Locales
-- Update Thai Locales
-- Update German Locales
+- Updates to the French Locales ([#1027])
+- Updates to the German Locales ([#1039])
+- Updates to the Thai Locales ([#1041])
+- Updates to the Greek Locales ([#1042])
 
 ### Fixed
 - Fix issue with hidden fields in group modal ([#1033])
@@ -864,11 +865,15 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1017]: https://github.com/userfrosting/UserFrosting/issues/1017
 [#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
 [#1019]: https://github.com/userfrosting/UserFrosting/issues/1019
+[#1027]: https://github.com/userfrosting/UserFrosting/issues/1027
 [#1028]: https://github.com/userfrosting/UserFrosting/issues/1028
 [#1030]: https://github.com/userfrosting/UserFrosting/issues/1030
 [#1033]: https://github.com/userfrosting/UserFrosting/issues/1033
 [#1035]: https://github.com/userfrosting/UserFrosting/issues/1035
 [#1036]: https://github.com/userfrosting/UserFrosting/issues/1036
+[#1039]: https://github.com/userfrosting/UserFrosting/issues/1039
+[#1041]: https://github.com/userfrosting/UserFrosting/issues/1041
+[#1042]: https://github.com/userfrosting/UserFrosting/issues/1042
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
