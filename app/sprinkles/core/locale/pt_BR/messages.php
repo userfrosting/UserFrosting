@@ -52,7 +52,7 @@ return [
 
     'NAME'       => 'Nome',
     'NAVIGATION' => 'Navegação',
-    'NO_RESULTS' => "Desculpe, não temos nada aqui.",
+    'NO_RESULTS' => 'Desculpe, não temos nada aqui.',
 
     'PAGINATION' => [
         'GOTO' => 'Pular para página',
