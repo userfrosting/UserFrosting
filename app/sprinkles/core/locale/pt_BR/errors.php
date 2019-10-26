@@ -20,7 +20,7 @@ return [
 
         '400' => [
             'TITLE'       => 'Erro 400: Problema na requisição',
-            'DESCRIPTION' => "Provavelmente não é sua falta.",
+            'DESCRIPTION' => 'Provavelmente não é sua falta.',
         ],
 
         '404' => [
