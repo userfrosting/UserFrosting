@@ -1,0 +1,4 @@
+parameters:
+  autoload_files:
+    - app/vendor/autoload.php
+  level: max
