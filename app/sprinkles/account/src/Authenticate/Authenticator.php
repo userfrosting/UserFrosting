@@ -429,7 +429,7 @@ class Authenticator
 
             // Load user from db, cache the result
             $key = $this->config['cache.user.key'] . $userId;
-            $user = $this->cache->remember($key, $this->config['cache.user.delay'], function () use ($userId) {
+            $user = $this->cache->remember($key, $this->config['cache.user.delay'] * 60, function () use ($userId) {
                 return $this->classMapper->getClassMapping('user')::find((int) $userId);
             });
 

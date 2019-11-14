@@ -101,7 +101,7 @@ class User extends Model implements UserInterface
      *
      * @var array
      */
-    protected $events = [
+    protected $dispatchesEvents = [
         'saved'   => Events\DeleteUserCacheEvent::class,
         'deleted' => Events\DeleteUserCacheEvent::class,
     ];
