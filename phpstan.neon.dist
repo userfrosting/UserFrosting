@@ -2,3 +2,5 @@ parameters:
   autoload_files:
     - app/vendor/autoload.php
   level: max
+  ignoreErrors:
+    - '#Access to an undefined property Interop\\Container\\ContainerInterface::\$[a-zA-Z0-9\\_]+.#'
