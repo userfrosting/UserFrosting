@@ -106,10 +106,9 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
  * Update user field(s)
  */
 function updateUser(userName, fieldName, fieldValue) {
-    var data = {
-        'value': fieldValue
-    };
 
+    var data = {};
+    data[fieldName] = fieldValue;
     data[site.csrf.keys.name] = site.csrf.name;
     data[site.csrf.keys.value] = site.csrf.value;
 

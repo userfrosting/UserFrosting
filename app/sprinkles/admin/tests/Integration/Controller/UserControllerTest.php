@@ -796,7 +796,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => 'bar',
+            'first_name' => 'bar',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -853,7 +853,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => 'barbar',
+            'first_name' => 'barbar',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -889,7 +889,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => $value,
+            'first_name' => $value,
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -907,7 +907,7 @@ class UserControllerTest extends TestCase
     {
         // Set post data
         $data = [
-            'value' => '1',
+            'flag_enabled' => '1',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -937,7 +937,7 @@ class UserControllerTest extends TestCase
     {
         // Set post data
         $data = [
-            'value' => '0',
+            'flag_enabled' => '0',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -967,7 +967,7 @@ class UserControllerTest extends TestCase
     {
         // Set post data
         $data = [
-            'value' => '1',
+            'flag_verified' => '1',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -1000,7 +1000,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => '0',
+            'flag_enabled' => '0',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -1018,7 +1018,7 @@ class UserControllerTest extends TestCase
     {
         // Set post data
         $data = [
-            'value' => '1234567890abc',
+            'password' => '1234567890abc',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -1056,7 +1056,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => [['role_id' => $role->id]],
+            'roles' => [['role_id' => $role->id]],
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
