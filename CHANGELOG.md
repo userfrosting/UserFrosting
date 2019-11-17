@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fix issue with hidden fields in group modal ([#1033])
 - User cache not flushed on model save ([#1050])
+- Fix "the passwords don't match" error when editing a user password ([#1034], [#1038])
 
 ## [v4.3.1]
 
@@ -871,8 +872,10 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1028]: https://github.com/userfrosting/UserFrosting/issues/1028
 [#1030]: https://github.com/userfrosting/UserFrosting/issues/1030
 [#1033]: https://github.com/userfrosting/UserFrosting/issues/1033
+[#1034]: https://github.com/userfrosting/UserFrosting/issues/1034
 [#1035]: https://github.com/userfrosting/UserFrosting/issues/1035
 [#1036]: https://github.com/userfrosting/UserFrosting/issues/1036
+[#1038]: https://github.com/userfrosting/UserFrosting/issues/1038
 [#1039]: https://github.com/userfrosting/UserFrosting/issues/1039
 [#1041]: https://github.com/userfrosting/UserFrosting/issues/1041
 [#1042]: https://github.com/userfrosting/UserFrosting/issues/1042
