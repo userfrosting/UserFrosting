@@ -12,6 +12,7 @@
  * Thai message token translations for the 'core' sprinkle.
  *
  * @author Karuhut Komol
+ * @author Atthaphon Urairat
  */
 return [
     'VALIDATE' => [
@@ -20,16 +21,16 @@ return [
         'INTEGER'       => 'ค่าของ <strong>{{label}}</strong> จะต้องเป็นตัวเลข',
         'INVALID_EMAIL' => 'ที่อยู่อีเมลไม่ถูกต้อง',
         'LENGTH_RANGE'  => 'ความยาวของ {{label}} จะต้องอยู่ระหว่าง {{min}} ถึง {{max}} ตัวอักษร',
-        // 'MAX_LENGTH'    => '{{label}} must be maximum {{max}} characters in length.',
-        // 'MIN_LENGTH'    => '{{label}} must be minimum {{min}} characters in length.',
+        'MAX_LENGTH'    => '{{label}} ความยาวสูงสุดจะต้องไม่เกิน {{max}} ตัวอักษร',
+        'MIN_LENGTH'    => '{{label}} ความยาวต่ำสุดจะต้องมีอย่างน้อย {{min}} ตัวอักษร',
         'NO_LEAD_WS'    => 'ค่าของ <strong>{{label}}</strong> ไม่สามารถเริ่มต้นด้วยช่องว่าง หรือ แท็บ',
         'NO_TRAIL_WS'   => 'ค่าของ  <strong>{{label}}</strong> ไม่สามารถลงท้ายด้วยช่องว่าง หรือ แท็บ',
-        // 'RANGE'         => 'The value for <strong>{{label}}</strong> must be between {{min}} and {{max}}.',
+        'RANGE'         => 'ค่าของ <strong>{{label}}</strong> ต้องอยู่ระหว่าง {{min}} ถึง {{max}}',
         'REQUIRED'      => 'กรุณากำหนดค่าของ <strong>{{label}}</strong>',
         'SPRUNJE'       => [
-            // 'BAD_FILTER' => '<strong>{{name}}</strong> is not a valid filter for this Sprunje.',
-            // 'BAD_LIST'   => '<strong>{{name}}</strong> is not a valid list for this Sprunje.',
-            // 'BAD_SORT'   => '<strong>{{name}}</strong> is not a valid sort field for this Sprunje.',
+            'BAD_FILTER' => '<strong>{{name}}</strong> ไม่ใช่ตัวกรองที่ถูกต้องสำหรับ Sprunje',
+            'BAD_LIST'   => '<strong>{{name}}</strong> ไม่ใช่รายการที่ถูกต้องสำหรับ Sprunje',
+            'BAD_SORT'   => '<strong>{{name}}</strong> ไม่ใช่ฟิลด์การเรียงลำดับที่ถูกต้องสำหรับ Sprunje',
         ],
     ],
 ];

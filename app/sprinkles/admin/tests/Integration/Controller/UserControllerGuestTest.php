@@ -659,7 +659,7 @@ class UserControllerGuestTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => 'bar',
+            'first_name' => 'bar',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -710,7 +710,7 @@ class UserControllerGuestTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => 'bar',
+            'first_name' => 'bar',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -736,7 +736,7 @@ class UserControllerGuestTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => '0',
+            'flag_enabled' => '0',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 

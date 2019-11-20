@@ -62,7 +62,7 @@ return [
 
     'FIRST_NAME' => 'Όνομα',
 
-    // 'HEADER_MESSAGE_ROOT' => 'YOU ARE SIGNED IN AS THE ROOT USER',
+    'HEADER_MESSAGE_ROOT' => 'ΕΙΣΤΕ ΣΥΝΔΕΔΕΜΕΝΟΙ ΜΕ ΤΟΝ ΡΙΖΙΚΟ ΧΡΗΣΤΗ',
 
     'LAST_NAME' => 'Επώνυμο',
     'LOCALE'    => [

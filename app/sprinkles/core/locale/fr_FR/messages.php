@@ -36,7 +36,7 @@ return [
     'HOME'  => 'Accueil',
     'LEGAL' => [
         '@TRANSLATION' => 'Politique légale',
-        // 'DESCRIPTION'  => 'Our legal policy applies to your usage of this website and our services.',
+        'DESCRIPTION'  => 'Notre politique légale s\'applique à votre utilisation de ce site et de nos services.',
     ],
     'LOCALE' => [
         '@TRANSLATION' => 'Langue',
@@ -48,14 +48,14 @@ return [
         'GOTO'     => 'Aller à la page',
         'SHOW'     => 'Afficher',
         'OUTPUT'   => '{startRow} à {endRow} de {filteredRows} ({totalRows})',
-        // 'NEXT'     => 'Next page',
-        // 'PREVIOUS' => 'Previous page',
-        // 'FIRST'    => 'First page',
-        // 'LAST'     => 'Last page',
+        'NEXT'     => 'Prochaine page',
+        'PREVIOUS' => 'Page précédente',
+        'FIRST'    => 'Première page',
+        'LAST'     => 'Dernière page',
     ],
     'PRIVACY' => [
         '@TRANSLATION' => 'Politique de confidentialité',
-        // 'DESCRIPTION'  => 'Our privacy policy outlines what kind of information we collect from you and how we will use it.',
+        'DESCRIPTION'  => 'Notre politique de confidentialité décrit le type d\'informations que nous recueillons de votre part et comment nous les utiliserons.',
     ],
     'SLUG'                     => 'Jeton',
     'SLUG_CONDITION'           => 'Jeton/Conditions',
@@ -98,5 +98,5 @@ return [
     'OPTIONAL'                 => 'Facultatif',
     'BUILT_WITH_UF'            => 'Créé avec <a href="http://www.userfrosting.com">UserFrosting</a>',
     'ADMINLTE_THEME_BY'        => 'Thème par <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> Tous droits réservés',
-    // 'WELCOME_TO'               => 'Welcome to {{title}}!',
+    'WELCOME_TO'               => 'Bienvenue à {{title}}!',
 ];

@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.3.2]
+
+### Added
+- Add translation for Brazilian Portuguese (locale pt_BR) - Thanks @maxwellkenned ! ([#1036])
+- Add translation for Serbian (sr_RS) - Thanks @zbigcheese ! ([#1035])
+
+### Changed
+- Updates to the French Locales ([#1027])
+- Updates to the German Locales ([#1039])
+- Updates to the Thai Locales ([#1041])
+- Updates to the Greek Locales ([#1042])
+- Updates to the Persian Locales ([#1045])
+
+### Fixed
+- Fix issue with hidden fields in group modal ([#1033])
+- User cache not flushed on model save ([#1050])
+- Fix "the passwords don't match" error when editing a user password ([#1034], [#1038])
+
+### Deprecated
+`UserController:updateField` now expect the new value as `$_PUT[$fieldName]` (where `$fieldName` is the name of the field you want to update, eg. `$_PUT['password']` for editing `password`) instead of `$_PUT['value']`. This will only affect your code if you're **not** using the [user widjet](https://github.com/userfrosting/UserFrosting/blob/master/app/sprinkles/admin/assets/userfrosting/js/widgets/users.js).
+
 ## [v4.3.1]
 
 ### Changed
@@ -850,8 +871,19 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1017]: https://github.com/userfrosting/UserFrosting/issues/1017
 [#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
 [#1019]: https://github.com/userfrosting/UserFrosting/issues/1019
+[#1027]: https://github.com/userfrosting/UserFrosting/issues/1027
 [#1028]: https://github.com/userfrosting/UserFrosting/issues/1028
 [#1030]: https://github.com/userfrosting/UserFrosting/issues/1030
+[#1033]: https://github.com/userfrosting/UserFrosting/issues/1033
+[#1034]: https://github.com/userfrosting/UserFrosting/issues/1034
+[#1035]: https://github.com/userfrosting/UserFrosting/issues/1035
+[#1036]: https://github.com/userfrosting/UserFrosting/issues/1036
+[#1038]: https://github.com/userfrosting/UserFrosting/issues/1038
+[#1039]: https://github.com/userfrosting/UserFrosting/issues/1039
+[#1041]: https://github.com/userfrosting/UserFrosting/issues/1041
+[#1042]: https://github.com/userfrosting/UserFrosting/issues/1042
+[#1045]: https://github.com/userfrosting/UserFrosting/issues/1045
+[#1050]: https://github.com/userfrosting/UserFrosting/issues/1050
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
@@ -859,3 +891,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.2.3]: https://github.com/userfrosting/UserFrosting/compare/v4.2.2...v4.2.3
 [v4.3.0]: https://github.com/userfrosting/UserFrosting/compare/v4.2.3...v4.3.0
 [v4.3.1]: https://github.com/userfrosting/UserFrosting/compare/v4.3.0...v4.3.1
+[v4.3.2]: https://github.com/userfrosting/UserFrosting/compare/v4.3.1...v4.3.2

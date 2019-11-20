@@ -331,6 +331,7 @@ return [
                 'zh_CN' => '中文',
                 'es_ES' => 'Español',
                 'ar'    => 'العربية',
+                'pt_Br' => 'Português Brasileiro',
                 'pt_PT' => 'Português',
                 'ru_RU' => 'русский',
                 'de_DE' => 'Deutsch',
@@ -340,7 +341,7 @@ return [
                 'th_TH' => 'ภาษาไทย',
                 'fa'    => 'فارسی',
                 'el'    => 'Greek',
-
+                'sr_RS' => 'српски',
             ],
             // This can be a comma-separated list, to load multiple fallback locales.
             // Supported browser requested languages always have first preference.

@@ -14,6 +14,7 @@
  * @author X-Anonymous-Y
  * @author kevinrombach
  * @author splitt3r
+ * @author Le-Morri
  */
 return [
     'VALIDATE' => [
@@ -22,11 +23,11 @@ return [
         'INTEGER'       => 'Der Wert für <strong>{{label}}</strong> muss eine ganze Zahl sein.',
         'INVALID_EMAIL' => 'Ungültige E-Mail-Adresse.',
         'LENGTH_RANGE'  => '{{label}} muss zwischen {{min}} und {{max}} Zeichen lang sein.',
-        // 'MAX_LENGTH'    => '{{label}} must be maximum {{max}} characters in length.',
-        // 'MIN_LENGTH'    => '{{label}} must be minimum {{min}} characters in length.',
+        'MAX_LENGTH'    => '{{label}} darf maximal {{max}} Zeichen lang sein.',
+        'MIN_LENGTH'    => '{{label}} muss mindestens {{min}} Zeichen lang sein.',
         'NO_LEAD_WS'    => 'Der Wert für <strong>{{label}}</strong> kann nicht mit Leerzeichen, Tabulatoren oder anderen Leerzeichen beginnen.',
         'NO_TRAIL_WS'   => 'Der Wert für <strong>{{label}}</strong> kann nicht mit Leerzeichen, Tabulatoren oder anderen Leerzeichen enden.',
-        // 'RANGE'         => 'The value for <strong>{{label}}</strong> must be between {{min}} and {{max}}.',
+        'RANGE'         => 'Der Wert für <strong>{{label}}</strong> muss zwischen {{min}} und {{max}} sein.',
         'REQUIRED'      => 'Bitte geben Sie einen Wert für <strong>{{label}}</strong> an.',
         'SPRUNJE'       => [
             'BAD_FILTER' => '<strong>{{name}}</strong> ist kein gültiger Filter für dieses Sprunje.',

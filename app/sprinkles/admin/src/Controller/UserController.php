@@ -49,11 +49,11 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function create(Request $request, Response $response, $args)
+    public function create(Request $request, Response $response, array $args)
     {
         // Get POST parameters: user_name, first_name, last_name, email, locale, (group)
         $params = $request->getParsedBody();
@@ -77,6 +77,10 @@ class UserController extends SimpleController
 
         // Load the request schema
         $schema = new RequestSchema('schema://requests/user/create.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -202,12 +206,12 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function createPasswordReset(Request $request, Response $response, $args)
+    public function createPasswordReset(Request $request, Response $response, array $args)
     {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
@@ -276,13 +280,13 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException   If user is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
      */
-    public function delete(Request $request, Response $response, $args)
+    public function delete(Request $request, Response $response, array $args)
     {
         $user = $this->getUserFromParams($args);
 
@@ -348,12 +352,12 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getActivities(Request $request, Response $response, $args)
+    public function getActivities(Request $request, Response $response, array $args)
     {
         $user = $this->getUserFromParams($args);
 
@@ -401,12 +405,12 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getInfo(Request $request, Response $response, $args)
+    public function getInfo(Request $request, Response $response, array $args)
     {
         $user = $this->getUserFromParams($args);
 
@@ -454,11 +458,11 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getList(Request $request, Response $response, $args)
+    public function getList(Request $request, Response $response, array $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -493,13 +497,13 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException   If user is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
      */
-    public function getModalConfirmDelete(Request $request, Response $response, $args)
+    public function getModalConfirmDelete(Request $request, Response $response, array $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -556,11 +560,11 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getModalCreate(Request $request, Response $response, $args)
+    public function getModalCreate(Request $request, Response $response, array $args)
     {
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
@@ -621,6 +625,10 @@ class UserController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://requests/user/create.yaml');
+        $schema->set('password.validators.length.min', $config['site.password.length.min']);
+        $schema->set('password.validators.length.max', $config['site.password.length.max']);
+        $schema->set('passwordc.validators.length.min', $config['site.password.length.min']);
+        $schema->set('passwordc.validators.length.max', $config['site.password.length.max']);
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'modals/user.html.twig', [
@@ -649,12 +657,12 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getModalEdit(Request $request, Response $response, $args)
+    public function getModalEdit(Request $request, Response $response, array $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -750,12 +758,12 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getModalEditPassword(Request $request, Response $response, $args)
+    public function getModalEditPassword(Request $request, Response $response, array $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -810,12 +818,12 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getModalEditRoles(Request $request, Response $response, $args)
+    public function getModalEditRoles(Request $request, Response $response, array $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -855,12 +863,12 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getPermissions(Request $request, Response $response, $args)
+    public function getPermissions(Request $request, Response $response, array $args)
     {
         $user = $this->getUserFromParams($args);
 
@@ -905,12 +913,12 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function getRoles(Request $request, Response $response, $args)
+    public function getRoles(Request $request, Response $response, array $args)
     {
         $user = $this->getUserFromParams($args);
 
@@ -961,11 +969,11 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function pageInfo(Request $request, Response $response, $args)
+    public function pageInfo(Request $request, Response $response, array $args)
     {
         $user = $this->getUserFromParams($args);
 
@@ -1103,11 +1111,11 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function pageList(Request $request, Response $response, $args)
+    public function pageList(Request $request, Response $response, array $args)
     {
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
@@ -1136,12 +1144,12 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
      * @throws ForbiddenException If user is not authozied to access page
      */
-    public function updateInfo(Request $request, Response $response, $args)
+    public function updateInfo(Request $request, Response $response, array $args)
     {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
@@ -1269,13 +1277,13 @@ class UserController extends SimpleController
      *
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
+     * @param string[] $args
      *
      * @throws NotFoundException   If user is not found
      * @throws ForbiddenException  If user is not authozied to access page
      * @throws BadRequestException
      */
-    public function updateField(Request $request, Response $response, $args)
+    public function updateField(Request $request, Response $response, array $args)
     {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
@@ -1315,13 +1323,19 @@ class UserController extends SimpleController
         // Get PUT parameters: value
         $put = $request->getParsedBody();
 
-        if (!isset($put['value'])) {
+        // Make sure data is part of $_PUT data
+        if (isset($put[$fieldName])) {
+            $fieldData = $put[$fieldName];
+        } elseif (isset($put['value'])) {
+            /** @deprecated - Fieldname should be used instead of `value` */
+            $fieldData = $put['value'];
+        } else {
             throw new BadRequestException();
         }
 
         // Create and validate key -> value pair
         $params = [
-            $fieldName => $put['value'],
+            $fieldName => $fieldData,
         ];
 
         // Load the request schema
@@ -1421,13 +1435,13 @@ class UserController extends SimpleController
     /**
      * Get User instance from params.
      *
-     * @param array $params
+     * @param string[] $params
      *
      * @throws BadRequestException
      *
-     * @return User
+     * @return User|null
      */
-    protected function getUserFromParams($params)
+    protected function getUserFromParams(array $params): ?User
     {
         // Load the request schema
         $schema = new RequestSchema('schema://requests/user/get-by-username.yaml');
