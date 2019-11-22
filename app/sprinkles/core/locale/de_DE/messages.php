@@ -16,8 +16,6 @@
  * @author splitt3r
  */
 return [
-    '@PLURAL_RULE' => 1,
-
     'ABOUT'                             => 'Über',
 
     'CAPTCHA' => [

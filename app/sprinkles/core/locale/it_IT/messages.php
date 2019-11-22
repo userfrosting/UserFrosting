@@ -16,8 +16,6 @@
  * @author Pietro Marangon (@Pe46dro)
  */
 return [
-    '@PLURAL_RULE' => 1,
-
     'ABOUT' => 'Su di noi',
 
     'CAPTCHA' => [

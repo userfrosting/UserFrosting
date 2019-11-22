@@ -9,7 +9,6 @@
  */
 
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'Σχετικά',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'Captcha',

@@ -14,7 +14,6 @@
  * @author Maxwell Kenned (kenned123@gmail.com)
  */
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'Sobre',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'Captcha',

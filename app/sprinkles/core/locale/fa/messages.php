@@ -14,7 +14,6 @@
  * @author aminakbari
  */
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'درباره',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'کد امنیتی',
