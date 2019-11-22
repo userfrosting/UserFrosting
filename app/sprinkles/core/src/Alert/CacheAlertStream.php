@@ -11,12 +11,12 @@
 namespace UserFrosting\Sprinkle\Core\Alert;
 
 use Illuminate\Cache\Repository as Cache;
-use UserFrosting\I18n\MessageTranslator;
+use UserFrosting\I18n\Translator;
 
 /**
  * CacheAlertStream Class
  * Implements a message stream for use between HTTP requests, with i18n
- * support via the MessageTranslator class using the cache system to store
+ * support via the Translator class using the cache system to store
  * the alerts. Note that the tags are added each time instead of the
  * constructor since the session_id can change when the user logs in or out.
  *
@@ -37,12 +37,12 @@ class CacheAlertStream extends AlertStream
     /**
      * Create a new message stream.
      *
-     * @param string                 $messagesKey Store the messages under this key
-     * @param MessageTranslator|null $translator
-     * @param Cache                  $cache
-     * @param string                 $sessionId
+     * @param string          $messagesKey Store the messages under this key
+     * @param Translator|null $translator
+     * @param Cache           $cache
+     * @param string          $sessionId
      */
-    public function __construct($messagesKey, MessageTranslator $translator = null, Cache $cache, $sessionId)
+    public function __construct($messagesKey, Translator $translator = null, Cache $cache, $sessionId)
     {
         $this->cache = $cache;
         $this->session_id = $sessionId;

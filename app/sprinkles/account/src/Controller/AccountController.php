@@ -58,9 +58,6 @@ class AccountController extends SimpleController
      */
     public function checkUsername(Request $request, Response $response, $args)
     {
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
-        $ms = $this->ci->alerts;
-
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -97,7 +94,7 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\Translator $translator */
         $translator = $this->ci->translator;
 
         // Log throttleable event
@@ -501,7 +498,7 @@ class AccountController extends SimpleController
         $config = $this->ci->config;
 
         /** @var \UserFrosting\I18n\LocalePathBuilder */
-        $localePathBuilder = $this->ci->localePathBuilder;
+        //$localePathBuilder = $this->ci->localePathBuilder;
 
         if (!$config['site.registration.enabled']) {
             throw new NotFoundException();
@@ -526,7 +523,8 @@ class AccountController extends SimpleController
         $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         // Get locale information
-        $currentLocales = $localePathBuilder->getLocales();
+        // TODO : Use the config to build the list
+        $currentLocales = []; //$localePathBuilder->getLocales();
 
         // Hide the locale field if there is only 1 locale available
         $fields = [

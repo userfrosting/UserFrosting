@@ -33,8 +33,9 @@ use UserFrosting\Cache\MemcachedStore;
 use UserFrosting\Cache\RedisStore;
 use UserFrosting\Cache\TaggableFileStore;
 use UserFrosting\Config\ConfigPathBuilder;
-use UserFrosting\I18n\LocalePathBuilder;
-use UserFrosting\I18n\MessageTranslator;
+use UserFrosting\I18n\Dictionary;
+use UserFrosting\I18n\Locale;
+use UserFrosting\I18n\Translator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Alert\CacheAlertStream;
 use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
@@ -423,65 +424,6 @@ class ServicesProvider
         };
 
         /*
-         * Builds search paths for locales in all Sprinkles.
-         *
-         * @throws \UnexpectedValueException
-         * @return \UserFrosting\I18n\LocalePathBuilder
-         */
-        $container['localePathBuilder'] = function ($c) {
-            $config = $c->config;
-            $request = $c->request;
-
-            // Make sure the locale config is a valid string
-            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == '') {
-                throw new \UnexpectedValueException('The locale config is not a valid string.');
-            }
-
-            // Get default locales as specified in configurations.
-            $locales = explode(',', $config['site.locales.default']);
-
-            // Get available locales (removing null values)
-            $availableLocales = array_filter($config['site.locales.available']);
-
-            // Add supported browser preferred locales.
-            if ($request->hasHeader('Accept-Language')) {
-                $allowedLocales = [];
-                foreach (explode(',', $request->getHeaderLine('Accept-Language')) as $index => $browserLocale) {
-                    // Split to access q
-                    $parts = explode(';', $browserLocale) ?: [];
-
-                    // Ensure locale valid
-                    if (array_key_exists(0, $parts)) {
-                        // Format for UF's i18n
-                        $parts[0] = str_replace('-', '_', $parts[0]);
-                        // Ensure locale available
-                        if (array_key_exists($parts[0], $availableLocales)) {
-                            // Determine preference level, and add to $allowedLocales
-                            if (array_key_exists(1, $parts)) {
-                                $parts[1] = str_replace('q=', '', $parts[1]);
-                                // Sanitize with int cast (bad values go to 0)
-                                $parts[1] = (int) $parts[1];
-                            } else {
-                                $parts[1] = 1;
-                            }
-                            // Add to list, and format for UF's i18n.
-                            $allowedLocales[$parts[0]] = $parts[1];
-                        }
-                    }
-                }
-
-                // Sort, extract keys, and merge with $locales
-                asort($allowedLocales, SORT_NUMERIC);
-                $locales = array_merge($locales, array_keys($allowedLocales));
-
-                // Remove duplicates, while maintaining fallback order
-                $locales = array_reverse(array_unique(array_reverse($locales), SORT_STRING));
-            }
-
-            return new LocalePathBuilder($c->locator, 'locale://', $locales);
-        };
-
-        /*
          * Mail service.
          *
          * @return \UserFrosting\Sprinkle\Core\Mail\Mailer
@@ -671,15 +613,59 @@ class ServicesProvider
         /*
          * Translation service, for translating message tokens.
          *
-         * @return \UserFrosting\I18n\MessageTranslator
+         * @return \UserFrosting\I18n\Translator
          */
         $container['translator'] = function ($c) {
-            // Load the translations
-            $paths = $c->localePathBuilder->buildPaths();
-            $loader = new ArrayFileLoader($paths);
+            $config = $c->config;
+            $request = $c->request;
+
+            // Make sure the locale config is a valid string
+            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == '') {
+                throw new \UnexpectedValueException('The locale config is not a valid string.');
+            }
+
+            // Get default locales as specified in configurations.
+            $locale = $config['site.locales.default'];
+
+            // Get available locales (removing null values)
+            /*$availableLocales = $config['site.locales.available'];
+
+            // Add supported browser preferred locales.
+            if ($request->hasHeader('Accept-Language')) {
+                $allowedLocales = [];
+                foreach (explode(',', $request->getHeaderLine('Accept-Language')) as $index => $browserLocale) {
+                    // Split to access q
+                    $parts = explode(';', $browserLocale) ?: [];
+
+                    // Ensure locale valid
+                    if (array_key_exists(0, $parts)) {
+                        // Format for UF's i18n
+                        $parts[0] = str_replace('-', '_', $parts[0]);
+                        // Ensure locale available
+                        if (array_key_exists($parts[0], $availableLocales)) {
+                            // Determine preference level, and add to $allowedLocales
+                            if (array_key_exists(1, $parts)) {
+                                $parts[1] = str_replace('q=', '', $parts[1]);
+                                // Sanitize with int cast (bad values go to 0)
+                                $parts[1] = (int) $parts[1];
+                            } else {
+                                $parts[1] = 1;
+                            }
+                            // Add to list, and format for UF's i18n.
+                            $allowedLocales[$parts[0]] = $parts[1];
+                        }
+                    }
+                }
+
+                // Sort, extract keys, and merge with $locales
+                asort($allowedLocales, SORT_NUMERIC);
+                $locale = $allowedLocales[0];
+            }*/
 
             // Create the $translator object
-            $translator = new MessageTranslator($loader->load());
+            $locale = new Locale($locale);
+            $dictionary = new Dictionary($locale, $c->locator);
+            $translator = new Translator($dictionary);
 
             return $translator;
         };
