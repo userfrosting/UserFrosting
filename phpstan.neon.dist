@@ -3,4 +3,6 @@ parameters:
     - app/vendor/autoload.php
   level: max
   ignoreErrors:
-    - '#Access to an undefined property Interop\\Container\\ContainerInterface::\$[a-zA-Z0-9\\_]+.#'
+    # Ignore false positive PHPStan can't understand, until we can fix it
+    - '#Access to an undefined property Interop\\Container\\ContainerInterface::\$[a-zA-Z0-9\\_]+.#' # Ignore our CI container
+    - '#Call to an undefined static method UserFrosting\\Sprinkle\\[a-zA-Z0-9\\_]+\\Facades\\[a-zA-Z0-9\\_\(\):]+.#' # Ignore Facades
