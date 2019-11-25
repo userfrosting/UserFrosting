@@ -23,6 +23,7 @@ use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Util\Util as AccountUtil;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
+use UserFrosting\Sprinkle\Core\Locale\LocaleService;
 use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
@@ -523,15 +524,17 @@ class AccountController extends SimpleController
         $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         // Get locale information
-        // TODO : Use the config to build the list
-        $currentLocales = []; //$localePathBuilder->getLocales();
+        $currentLocale = $this->ci->translator->getLocale()->getIdentifier();
+
+        // Get a list of all locales
+        $locales = $this->ci->locale->getAvailableOptions();
 
         // Hide the locale field if there is only 1 locale available
         $fields = [
             'hidden'   => [],
             'disabled' => [],
         ];
-        if (count($config->getDefined('site.locales.available')) <= 1) {
+        if (count($locales) <= 1) {
             $fields['hidden'][] = 'locale';
         }
 
@@ -543,8 +546,8 @@ class AccountController extends SimpleController
             ],
             'fields'  => $fields,
             'locales' => [
-                'available' => $config['site.locales.available'],
-                'current'   => end($currentLocales),
+                'available' => $locales,
+                'current'   => $currentLocale,
             ],
         ]);
     }
@@ -706,14 +709,14 @@ class AccountController extends SimpleController
         $validatorProfileSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         // Get a list of all locales
-        $locales = $config->getDefined('site.locales.available');
+        $locales = $this->ci->locale->getAvailableOptions();
 
         // Hide the locale field if there is only 1 locale available
         $fields = [
             'hidden'   => [],
             'disabled' => [],
         ];
-        if (count($config->getDefined('site.locales.available')) <= 1) {
+        if (count($locales) <= 1) {
             $fields['hidden'][] = 'locale';
         }
 
@@ -828,8 +831,11 @@ class AccountController extends SimpleController
 
         $error = false;
 
+        // Get locales
+        $locales = $this->ci->locale->getAvailableIdentifiers();
+
         // Ensure that in the case of using a single locale, that the locale is set
-        if (count($config->getDefined('site.locales.available')) <= 1) {
+        if (count($locales) <= 1) {
             $data['locale'] = $currentUser->locale;
         }
 
@@ -841,8 +847,7 @@ class AccountController extends SimpleController
         }
 
         // Check that locale is valid
-        $locales = $config->getDefined('site.locales.available');
-        if (isset($data['locale']) && !array_key_exists($data['locale'], $locales)) {
+        if (isset($data['locale']) && !in_array($data['locale'], $locales)) {
             $ms->addMessageTranslated('danger', 'LOCALE.INVALID', $data);
             $error = true;
         }
@@ -951,7 +956,8 @@ class AccountController extends SimpleController
         $error = false;
 
         // Ensure that in the case of using a single locale, that the locale is set
-        if (count($config->getDefined('site.locales.available')) <= 1) {
+        \UserFrosting\Sprinkle\Core\Facades\Debug::debug(print_r($this->ci->locale->getAvailableIdentifiers(), true));
+        if (count($this->ci->locale->getAvailableIdentifiers()) <= 1) {
             $data['locale'] = $config['site.registration.user_defaults.locale'];
         }
 
@@ -980,6 +986,7 @@ class AccountController extends SimpleController
             }
         }
 
+        //\UserFrosting\Sprinkle\Core\Facades\Debug::debug(print_r($ms->getAndClearMessages(), true));
         if ($error) {
             return $response->withJson([], 400);
         }
@@ -1250,7 +1257,7 @@ class AccountController extends SimpleController
         $error = false;
 
         // Ensure that in the case of using a single locale, that the locale is set
-        if (count($config->getDefined('site.locales.available')) <= 1) {
+        if (count($this->ci->locale->getAvailableIdentifiers()) <= 1) {
             $data['locale'] = $currentUser->locale;
         }
 

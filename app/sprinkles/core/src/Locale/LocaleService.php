@@ -10,27 +10,40 @@
 
 namespace UserFrosting\Sprinkle\Core\Locale;
 
+use Interop\Container\ContainerInterface;
 use UserFrosting\I18n\Locale;
-use UserFrosting\Sprinkle\Core\Facades\Config;
 
 /**
  * Helper methods for the locale system
  *
  * @author Louis Charette
  */
-class LocaleHelper
+class LocaleService
 {
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
+    protected $ci;
+
+    /**
+     * @param  ContainerInterface $ci
+     */
+    public function __construct(ContainerInterface $ci)
+    {
+        $this->ci = $ci;
+    }
+
     /**
      * Returns the list of available locale, as defined in the config.
      * Return the list as an array of \UserFrosting\I18n\Locale instances
      *
      * @return Locale[]
      */
-    public static function getAvailableLocales(): array
+    public function getAvailable(): array
     {
         $locales = [];
 
-        foreach (self::getAvailableLocalesIdentifiers() as $identifier) {
+        foreach ($this->getAvailableIdentifiers() as $identifier) {
             $locales[] = new Locale($identifier);
         }
 
@@ -44,11 +57,11 @@ class LocaleHelper
      *
      * @return string[]
      */
-    public static function getAvailableLocalesOptions(): array
+    public function getAvailableOptions(): array
     {
         $options = [];
 
-        foreach (self::getAvailableLocales() as $locale) {
+        foreach ($this->getAvailable() as $locale) {
             $options[$locale->getIdentifier()] = $locale->getName();
         }
 
@@ -60,8 +73,8 @@ class LocaleHelper
      *
      * @return string[] Array of locale identifiers
      */
-    public static function getAvailableLocalesIdentifiers(): array
+    public function getAvailableIdentifiers(): array
     {
-        return Config::get('site.locales.available');
+        return $this->ci->config['site.locales.available'];
     }
 }

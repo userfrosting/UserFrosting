@@ -11,14 +11,14 @@
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Locale;
 
 use UserFrosting\I18n\Locale;
-use UserFrosting\Sprinkle\Core\Locale\LocaleHelper;
+use UserFrosting\Sprinkle\Core\Locale\LocaleService;
 use UserFrosting\Tests\TestCase;
 
 /**
- * LocaleHelperTest class.
- * Tests LocaleHelper
+ * LocaleServiceTest class.
+ * Tests LocaleService
  */
-class LocaleHelperTest extends TestCase
+class LocaleServiceTest extends TestCase
 {
     protected $testLocale = [
         'fr_FR',
@@ -33,6 +33,11 @@ class LocaleHelperTest extends TestCase
         $this->ci->config['site.locales.available'] = $this->testLocale;
     }
 
+    public function testService(): void
+    {
+        $this->assertInstanceOf(LocaleService::class, $this->ci->locale);
+    }
+
     public function testFakeConfig(): void
     {
         $this->assertSame($this->testLocale, $this->ci->config['site.locales.available']);
@@ -41,17 +46,17 @@ class LocaleHelperTest extends TestCase
     /**
      * @depends testFakeConfig
      */
-    public function testGetAvailableLocalesIdentifiers(): void
+    public function testGetAvailableIdentifiers(): void
     {
-        $this->assertSame($this->ci->config['site.locales.available'], LocaleHelper::getAvailableLocalesIdentifiers());
+        $this->assertSame($this->ci->config['site.locales.available'], $this->ci->locale->getAvailableIdentifiers());
     }
 
     /**
-     * @depends testGetAvailableLocalesIdentifiers
+     * @depends testGetAvailableIdentifiers
      */
-    public function testgetAvailableLocales(): void
+    public function testgetAvailable(): void
     {
-        $locales = LocaleHelper::getAvailableLocales();
+        $locales = $this->ci->locale->getAvailable();
 
         $this->assertIsArray($locales);
         $this->assertCount(2, $locales);
@@ -59,9 +64,9 @@ class LocaleHelperTest extends TestCase
     }
 
     /**
-     * @depends testgetAvailableLocales
+     * @depends testgetAvailable
      */
-    public function testgetAvailableLocalesOptions(): void
+    public function testgetAvailableOptions(): void
     {
         // Implement fake locale file location
 
@@ -75,7 +80,7 @@ class LocaleHelperTest extends TestCase
             'en_US' => 'English',
         ];
 
-        $options = LocaleHelper::getAvailableLocalesOptions();
+        $options = $this->ci->locale->getAvailableOptions();
 
         $this->assertIsArray($options);
         $this->assertSame($expected, $options);
