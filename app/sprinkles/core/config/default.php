@@ -331,7 +331,7 @@ return [
                 'zh_CN',
                 'es_ES',
                 'ar',
-                'pt_Br',
+                'pt_BR',
                 'pt_PT',
                 'ru_RU',
                 'de_DE',
