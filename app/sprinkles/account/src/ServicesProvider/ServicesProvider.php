@@ -16,6 +16,9 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\I18n\Dictionary;
+use UserFrosting\I18n\Locale;
+use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
 use UserFrosting\Sprinkle\Account\Authenticate\Hasher;
@@ -91,6 +94,51 @@ class ServicesProvider
             $handler->registerHandler('\UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedException', '\UserFrosting\Sprinkle\Account\Error\Handler\AuthCompromisedExceptionHandler');
 
             return $handler;
+        });
+
+        /*
+         * Extends the 'translator' service, replacing the locale with the user defined one.
+         *
+         * @return \UserFrosting\I18n\Translator
+         */
+        $container->extend('translator', function (Translator $translator, $c) {
+
+            // Add locale for user, if a user is logged in
+            // We catch any authorization-related exceptions, so that error pages can be rendered.
+            try {
+                /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+                $authenticator = $c->authenticator;
+                $currentUser = $c->currentUser;
+            } catch (\Exception $e) {
+                return $translator;
+            }
+
+            // Add user locale
+            if ($authenticator->check()) {
+
+                // Get user locale identifier
+                $userlocale = $currentUser->locale;
+
+                // If same as current locale, don't do a thing
+                if ($translator->getLocale()->getIdentifier() == $userlocale) {
+                    return $translator;
+                }
+
+                // Make sure identifier exist
+                /*
+                TODO : Add new method, test, and use it in translator. Could merge the two in the same helper class too.
+                if (!$c->locale->isAvailable($userlocale)) {
+                    throw new ...
+                }
+                */
+
+                // Return new translator
+                $locale = new Locale($userlocale);
+                $dictionary = new Dictionary($locale, $c->locator);
+                return new Translator($dictionary);
+            }
+
+            return $translator;
         });
 
         /*
