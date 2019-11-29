@@ -497,9 +497,6 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
-        /** @var \UserFrosting\I18n\LocalePathBuilder */
-        //$localePathBuilder = $this->ci->localePathBuilder;
-
         if (!$config['site.registration.enabled']) {
             throw new NotFoundException();
         }
