@@ -23,7 +23,6 @@ use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Util\Util as AccountUtil;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
-use UserFrosting\Sprinkle\Core\Locale\LocaleService;
 use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Util\Captcha;

@@ -14,7 +14,7 @@ use Interop\Container\ContainerInterface;
 use UserFrosting\I18n\Locale;
 
 /**
- * Helper methods for the locale system
+ * Helper methods for the locale system.
  *
  * @author Louis Charette
  */
@@ -26,7 +26,7 @@ class LocaleService
     protected $ci;
 
     /**
-     * @param  ContainerInterface $ci
+     * @param ContainerInterface $ci
      */
     public function __construct(ContainerInterface $ci)
     {
@@ -35,7 +35,7 @@ class LocaleService
 
     /**
      * Returns the list of available locale, as defined in the config.
-     * Return the list as an array of \UserFrosting\I18n\Locale instances
+     * Return the list as an array of \UserFrosting\I18n\Locale instances.
      *
      * @return Locale[]
      */
@@ -53,7 +53,7 @@ class LocaleService
     /**
      * Returns the list of available locale, as defined in the config.
      * Formatted as an array that can be used to populate an HTML select element.
-     * Keys are identifier, and value is the locale name, eg. `fr_FR => French (Français)`
+     * Keys are identifier, and value is the locale name, eg. `fr_FR => French (Français)`.
      *
      * @return string[]
      */
@@ -69,7 +69,7 @@ class LocaleService
     }
 
     /**
-     * Returns the list of available locales identifiers (string), as defined in the config
+     * Returns the list of available locales identifiers (string), as defined in the config.
      *
      * @return string[] Array of locale identifiers
      */
