@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.4.0]
+
+### Changed Requirements
+
+### Changed Composer Dependencies
+
+### Added
+- PHP 7.4 Travis environment.
+- New `Locale` service. Provides a list of available locales.
+
+### Changed
+- New Translator. `\UserFrosting\I18n\MessageTranslator` is now `\UserFrosting\I18n\Translator`.
+
+### Fixed
+
+### Removed
+
+
 ## [v4.3.3]
 
 ### Fixed

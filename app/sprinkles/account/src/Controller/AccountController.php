@@ -952,7 +952,6 @@ class AccountController extends SimpleController
         $error = false;
 
         // Ensure that in the case of using a single locale, that the locale is set
-        \UserFrosting\Sprinkle\Core\Facades\Debug::debug(print_r($this->ci->locale->getAvailableIdentifiers(), true));
         if (count($this->ci->locale->getAvailableIdentifiers()) <= 1) {
             $data['locale'] = $config['site.registration.user_defaults.locale'];
         }
@@ -982,7 +981,6 @@ class AccountController extends SimpleController
             }
         }
 
-        //\UserFrosting\Sprinkle\Core\Facades\Debug::debug(print_r($ms->getAndClearMessages(), true));
         if ($error) {
             return $response->withJson([], 400);
         }
