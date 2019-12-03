@@ -51,9 +51,10 @@ class LocaleService
     }
 
     /**
-     * Check if a locale identifier is available in the config
+     * Check if a locale identifier is available in the config.
      *
-     * @param  string $identifier
+     * @param string $identifier
+     *
      * @return bool
      */
     public function isAvailable(string $identifier): bool
