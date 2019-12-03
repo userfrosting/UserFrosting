@@ -30,6 +30,7 @@ use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
 use UserFrosting\Sprinkle\Account\Repository\VerificationRepository;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Registers services for the account sprinkle, such as currentUser, etc.
@@ -125,16 +126,14 @@ class ServicesProvider
                 }
 
                 // Make sure identifier exist
-                /*
-                TODO : Add new method, test, and use it in translator. Could merge the two in the same helper class too.
                 if (!$c->locale->isAvailable($userlocale)) {
-                    throw new ...
+                    throw new NotFoundException("Locale $userlocale is not available.");
                 }
-                */
 
                 // Return new translator
                 $locale = new Locale($userlocale);
                 $dictionary = new Dictionary($locale, $c->locator);
+
                 return new Translator($dictionary);
             }
 

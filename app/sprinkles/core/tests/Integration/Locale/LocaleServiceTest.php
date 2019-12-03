@@ -74,15 +74,24 @@ class LocaleServiceTest extends TestCase
         $locator = $this->ci->locator;
         $locator->removeStream('locale')->registerStream('locale', '', __DIR__ . '/data', true);
 
-        // Set expectations
+        // Set expectations. Note the sort applied here
         $expected = [
-            'fr_FR' => 'Tomato', // Just to be sure the fake locale are loaded ;)
             'en_US' => 'English',
+            'fr_FR' => 'Tomato', // Just to be sure the fake locale are loaded ;)
         ];
 
         $options = $this->ci->locale->getAvailableOptions();
 
         $this->assertIsArray($options);
         $this->assertSame($expected, $options);
+    }
+
+    /**
+     * @depends testGetAvailableIdentifiers
+     */
+    public function testIsAvailable(): void
+    {
+        $this->assertFalse($this->ci->locale->isAvailable('ZZ_zz'));
+        $this->assertTrue($this->ci->locale->isAvailable('en_US'));
     }
 }

@@ -633,7 +633,7 @@ class ServicesProvider
             }
 
             // Get default locales as specified in configurations.
-            $locale = $config['site.locales.default'];
+            $localeIdentifier = $config['site.locales.default'];
 
             // Get available locales (removing null values)
             /*$availableLocales = $config['site.locales.available'];
@@ -670,8 +670,13 @@ class ServicesProvider
                 $locale = $allowedLocales[0];
             }*/
 
+            // Make sure identifier exist
+            if (!$c->locale->isAvailable($localeIdentifier)) {
+                throw new NotFoundException("Locale $localeIdentifier is not available.");
+            }
+
             // Create the $translator object
-            $locale = new Locale($locale);
+            $locale = new Locale($localeIdentifier);
             $dictionary = new Dictionary($locale, $c->locator);
             $translator = new Translator($dictionary);
 

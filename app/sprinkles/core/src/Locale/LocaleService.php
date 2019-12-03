@@ -51,6 +51,17 @@ class LocaleService
     }
 
     /**
+     * Check if a locale identifier is available in the config
+     *
+     * @param  string $identifier
+     * @return bool
+     */
+    public function isAvailable(string $identifier): bool
+    {
+        return in_array($identifier, $this->getAvailableIdentifiers());
+    }
+
+    /**
      * Returns the list of available locale, as defined in the config.
      * Formatted as an array that can be used to populate an HTML select element.
      * Keys are identifier, and value is the locale name, eg. `fr_FR => French (Français)`.
@@ -64,6 +75,9 @@ class LocaleService
         foreach ($this->getAvailable() as $locale) {
             $options[$locale->getIdentifier()] = $locale->getName();
         }
+
+        // Sort the options by name before returning it
+        asort($options);
 
         return $options;
     }
