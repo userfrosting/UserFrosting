@@ -429,7 +429,7 @@ class ServicesProvider
          *
          * @return \UserFrosting\Sprinkle\Core\Locale\LocaleService
          */
-        $container['locale'] = new LocaleService($container);
+        $container['locale'] = new LocaleService($container->config);
 
         /*
          * Mail service.

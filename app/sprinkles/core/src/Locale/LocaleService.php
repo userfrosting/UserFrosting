@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Locale;
 
-use Interop\Container\ContainerInterface;
+use UserFrosting\Support\Repository\Repository as Config;
 use UserFrosting\I18n\Locale;
 
 /**
@@ -21,16 +21,16 @@ use UserFrosting\I18n\Locale;
 class LocaleService
 {
     /**
-     * @var ContainerInterface The global container object, which holds all your services.
+     * @var Config The global container object, which holds all your services.
      */
-    protected $ci;
+    protected $config;
 
     /**
-     * @param ContainerInterface $ci
+     * @param Config $config
      */
-    public function __construct(ContainerInterface $ci)
+    public function __construct(Config $config)
     {
-        $this->ci = $ci;
+        $this->config = $config;
     }
 
     /**
@@ -90,6 +90,6 @@ class LocaleService
      */
     public function getAvailableIdentifiers(): array
     {
-        return $this->ci->config['site.locales.available'];
+        return $this->config['site.locales.available'];
     }
 }
