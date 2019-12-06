@@ -30,7 +30,6 @@ use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
 use UserFrosting\Sprinkle\Account\Repository\VerificationRepository;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
-use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * Registers services for the account sprinkle, such as currentUser, etc.

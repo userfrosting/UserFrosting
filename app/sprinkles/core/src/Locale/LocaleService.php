@@ -10,8 +10,8 @@
 
 namespace UserFrosting\Sprinkle\Core\Locale;
 
-use UserFrosting\Support\Repository\Repository as Config;
 use UserFrosting\I18n\Locale;
+use UserFrosting\Support\Repository\Repository as Config;
 
 /**
  * Helper methods for the locale system.
@@ -85,7 +85,7 @@ class LocaleService
 
     /**
      * Returns the list of available locales identifiers (string), as defined in the config.
-     * The default locale will always be added in the available list
+     * The default locale will always be added in the available list.
      *
      * @return string[] Array of locale identifiers
      */
