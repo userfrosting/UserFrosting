@@ -11,14 +11,14 @@
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Locale;
 
 use UserFrosting\I18n\Locale;
-use UserFrosting\Sprinkle\Core\Locale\LocaleService;
+use UserFrosting\Sprinkle\Core\Locale\LocaleHelper;
 use UserFrosting\Tests\TestCase;
 
 /**
- * LocaleServiceTest class.
- * Tests LocaleService
+ * LocaleHelperTest class.
+ * Tests LocaleHelper
  */
-class LocaleServiceTest extends TestCase
+class LocaleHelperTest extends TestCase
 {
     protected $testLocale = [
         'fr_FR',
@@ -35,7 +35,7 @@ class LocaleServiceTest extends TestCase
 
     public function testService(): void
     {
-        $this->assertInstanceOf(LocaleService::class, $this->ci->locale);
+        $this->assertInstanceOf(LocaleHelper::class, $this->ci->locale);
     }
 
     public function testFakeConfig(): void

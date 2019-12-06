@@ -47,7 +47,7 @@ use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager;
 use UserFrosting\Sprinkle\Core\Error\Handler\NotFoundExceptionHandler;
 use UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
-use UserFrosting\Sprinkle\Core\Locale\LocaleService;
+use UserFrosting\Sprinkle\Core\Locale\LocaleHelper;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Router;
@@ -427,9 +427,9 @@ class ServicesProvider
         /*
          * Locale service.
          *
-         * @return \UserFrosting\Sprinkle\Core\Locale\LocaleService
+         * @return \UserFrosting\Sprinkle\Core\Locale\LocaleHelper
          */
-        $container['locale'] = new LocaleService($container->config);
+        $container['locale'] = new LocaleHelper($container->config);
 
         /*
          * Mail service.
