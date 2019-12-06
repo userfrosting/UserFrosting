@@ -627,13 +627,13 @@ class ServicesProvider
             $config = $c->config;
             $request = $c->request;
 
-            // Make sure the locale config is a valid string
-            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == '') {
-                throw new \UnexpectedValueException('The locale config is not a valid string.');
-            }
-
             // Get default locales as specified in configurations.
             $localeIdentifier = $config['site.locales.default'];
+
+            // Make sure the locale config is a valid string. Otherwise, fallback to en_US
+            if (!is_string($localeIdentifier) || $localeIdentifier == '') {
+                $localeIdentifier = 'en_US';
+            }
 
             // Get available locales (removing null values)
             /*$availableLocales = $config['site.locales.available'];
@@ -669,11 +669,6 @@ class ServicesProvider
                 asort($allowedLocales, SORT_NUMERIC);
                 $locale = $allowedLocales[0];
             }*/
-
-            // Make sure identifier exist
-            if (!$c->locale->isAvailable($localeIdentifier)) {
-                throw new NotFoundException("Locale $localeIdentifier is not available.");
-            }
 
             // Create the $translator object
             $locale = new Locale($localeIdentifier);

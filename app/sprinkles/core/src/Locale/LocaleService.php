@@ -85,11 +85,12 @@ class LocaleService
 
     /**
      * Returns the list of available locales identifiers (string), as defined in the config.
+     * The default locale will always be added in the available list
      *
      * @return string[] Array of locale identifiers
      */
     public function getAvailableIdentifiers(): array
     {
-        return $this->config['site.locales.available'];
+        return array_unique(array_merge($this->config['site.locales.available'], [$this->config['site.locales.default']]));
     }
 }

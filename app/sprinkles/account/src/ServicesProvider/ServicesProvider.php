@@ -125,9 +125,9 @@ class ServicesProvider
                     return $translator;
                 }
 
-                // Make sure identifier exist
+                // Make sure identifier exist. If not, fallback to default locale/translator
                 if (!$c->locale->isAvailable($userlocale)) {
-                    throw new NotFoundException("Locale $userlocale is not available.");
+                    return $translator;
                 }
 
                 // Return new translator
