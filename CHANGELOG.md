@@ -13,10 +13,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - PHP 7.4 Travis environment.
-- New `Locale` service. Provides a list of available locales.
+- New `Locale` service. Provides a list of available locales in diffeent form.
+- New `BaseServicesProvider` abstract class added as base for all ServiceProvider class.
+- Sprinkle Services Provider can now be autoloaded using the `$servicesproviders` property in the sprinkle bootstrapper class.
 
 ### Changed
 - New Translator. `\UserFrosting\I18n\MessageTranslator` is now `\UserFrosting\I18n\Translator`.
+- Translator service moved to it's own `UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider` class.
 
 ### Fixed
 
