@@ -10,14 +10,14 @@
 
 namespace UserFrosting\Sprinkle\Account\I18n;
 
-use UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider as CoreTranslatorServicesProvider;
 use UserFrosting\I18n\Dictionary;
 use UserFrosting\I18n\Locale;
 use UserFrosting\I18n\Translator;
+use UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider as CoreTranslatorServicesProvider;
 
 /**
  * Translator services provider.
- * Extend the Core translator to use the user locale
+ * Extend the Core translator to use the user locale.
  *
  * Registers:
  *  - translator : \UserFrosting\I18n\Translator

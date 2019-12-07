@@ -10,10 +10,10 @@
 
 namespace UserFrosting\Sprinkle\Core\I18n;
 
-use UserFrosting\Sprinkle\Core\ServicesProvider\BaseServicesProvider;
 use UserFrosting\I18n\Dictionary;
 use UserFrosting\I18n\Locale;
 use UserFrosting\I18n\Translator;
+use UserFrosting\Sprinkle\Core\ServicesProvider\BaseServicesProvider;
 
 /**
  * Translator services provider.
@@ -34,7 +34,7 @@ class TranslatorServicesProvider extends BaseServicesProvider
     }
 
     /**
-     * Returns the locale intentifier (ie. en_US) to use
+     * Returns the locale intentifier (ie. en_US) to use.
      *
      * @return string Locale intentifier
      */
@@ -54,7 +54,7 @@ class TranslatorServicesProvider extends BaseServicesProvider
     }
 
     /**
-     * Creates the Translator instance
+     * Creates the Translator instance.
      *
      * @return Translator
      */

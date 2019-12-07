@@ -14,6 +14,7 @@ use Interop\Container\ContainerInterface;
 
 /**
  * UserFrosting services provider Interface.
+ *
  * @TODO : Rename this "ServiceProvider" and move the definition in the current "ServiceProvider" to separate classes (Target: UF 5.0)
  */
 abstract class BaseServicesProvider

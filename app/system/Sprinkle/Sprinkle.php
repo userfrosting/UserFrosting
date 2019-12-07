@@ -28,7 +28,7 @@ class Sprinkle implements EventSubscriberInterface
     protected $ci;
 
     /**
-     * @var string[] $servicesproviders List of services provider to register
+     * @var string[] List of services provider to register
      *
      * @TODO : Move all theses to their own class (Target UF 5.0) and list the one need registering in config
      */
@@ -68,8 +68,7 @@ class Sprinkle implements EventSubscriberInterface
      */
     public function registerServices(): void
     {
-        foreach ($this->servicesproviders as $provider)
-        {
+        foreach ($this->servicesproviders as $provider) {
             if (class_exists($provider)) {
                 $instance = new $provider($this->ci);
                 $instance->register();

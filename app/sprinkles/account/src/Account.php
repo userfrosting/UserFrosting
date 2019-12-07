@@ -21,7 +21,7 @@ use UserFrosting\System\Sprinkle\Sprinkle;
 class Account extends Sprinkle
 {
     /**
-     * @var string[] $servicesproviders List of services provider to register
+     * @var string[] List of services provider to register
      */
     protected $servicesproviders = [
         TranslatorServicesProvider::class,
