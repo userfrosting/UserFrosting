@@ -14,6 +14,7 @@ use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\Event;
 use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
+use UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider;
 use UserFrosting\Sprinkle\Core\Locale\LocaleServicesProvider;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
@@ -26,6 +27,14 @@ use UserFrosting\System\Sprinkle\Sprinkle;
  */
 class Core extends Sprinkle
 {
+    /**
+     * @var string[] $servicesproviders List of services provider to register
+     */
+    protected $servicesproviders = [
+        LocaleServicesProvider::class,
+        TranslatorServicesProvider::class,
+    ];
+
     /**
      * Create a new Sprinkle object.
      *
@@ -65,15 +74,10 @@ class Core extends Sprinkle
 
     /**
      * Register all sprinkles services providers.
-     *
-     * @TODO : Move all theses to their own class (Target UF 5.0) and list the one need registering in config
      */
     public function onSprinklesRegisterServices()
     {
         $this->setupShutdownHandlerService();
-
-        $localeProvider = new LocaleServicesProvider();
-        $localeProvider->register($this->ci);
     }
 
     /**

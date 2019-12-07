@@ -10,28 +10,21 @@
 
 namespace UserFrosting\Sprinkle\Core\Locale;
 
-use Interop\Container\ContainerInterface;
-use UserFrosting\I18n\Dictionary;
-use UserFrosting\I18n\Locale;
-use UserFrosting\I18n\Translator;
-use UserFrosting\Sprinkle\Core\Locale\LocaleHelper;
+use UserFrosting\Sprinkle\Core\ServicesProvider\BaseServicesProvider;
 
 /**
- * UserFrosting locale services provider.
+ * Locale service provider.
  *
- * Registers services for the locale parts
- *
- * @author Alex Weissman (https://alexanderweissman.com)
+ * Registers:
+ *  - locale : \UserFrosting\Sprinkle\Core\Locale\LocaleHelper
  */
-class LocaleServicesProvider
+class LocaleServicesProvider extends BaseServicesProvider
 {
     /**
-     * Register UserFrosting's core services.
-     *
-     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
+     * {@inheritdoc}
      */
-    public function register(ContainerInterface $container)
+    public function register(): void
     {
-        $container['locale'] = new LocaleHelper($container->config);
+        $this->ci['locale'] = new LocaleHelper($this->ci->config);
     }
 }

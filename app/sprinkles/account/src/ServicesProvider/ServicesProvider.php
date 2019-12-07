@@ -97,49 +97,6 @@ class ServicesProvider
         });
 
         /*
-         * Extends the 'translator' service, replacing the locale with the user defined one.
-         *
-         * @return \UserFrosting\I18n\Translator
-         */
-        $container->extend('translator', function (Translator $translator, $c) {
-
-            // Add locale for user, if a user is logged in
-            // We catch any authorization-related exceptions, so that error pages can be rendered.
-            try {
-                /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-                $authenticator = $c->authenticator;
-                $currentUser = $c->currentUser;
-            } catch (\Exception $e) {
-                return $translator;
-            }
-
-            // Add user locale
-            if ($authenticator->check()) {
-
-                // Get user locale identifier
-                $userlocale = $currentUser->locale;
-
-                // If same as current locale, don't do a thing
-                if ($translator->getLocale()->getIdentifier() == $userlocale) {
-                    return $translator;
-                }
-
-                // Make sure identifier exist. If not, fallback to default locale/translator
-                if (!$c->locale->isAvailable($userlocale)) {
-                    return $translator;
-                }
-
-                // Return new translator
-                $locale = new Locale($userlocale);
-                $dictionary = new Dictionary($locale, $c->locator);
-
-                return new Translator($dictionary);
-            }
-
-            return $translator;
-        });
-
-        /*
          * Extends the 'view' service with the AccountExtension for Twig.
          *
          * Adds account-specific functions, globals, filters, etc to Twig, and the path to templates for the user theme.

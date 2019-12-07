@@ -33,9 +33,6 @@ use UserFrosting\Cache\MemcachedStore;
 use UserFrosting\Cache\RedisStore;
 use UserFrosting\Cache\TaggableFileStore;
 use UserFrosting\Config\ConfigPathBuilder;
-use UserFrosting\I18n\Dictionary;
-use UserFrosting\I18n\Locale;
-use UserFrosting\I18n\Translator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Alert\CacheAlertStream;
 use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
@@ -47,7 +44,6 @@ use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager;
 use UserFrosting\Sprinkle\Core\Error\Handler\NotFoundExceptionHandler;
 use UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
-use UserFrosting\Sprinkle\Core\Locale\LocaleHelper;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Router;
@@ -609,66 +605,6 @@ class ServicesProvider
             }
 
             return $throttler;
-        };
-
-        /*
-         * Translation service, for translating message tokens.
-         *
-         * @return \UserFrosting\I18n\Translator
-         */
-        $container['translator'] = function ($c) {
-            $config = $c->config;
-            $request = $c->request;
-
-            // Get default locales as specified in configurations.
-            $localeIdentifier = $config['site.locales.default'];
-
-            // Make sure the locale config is a valid string. Otherwise, fallback to en_US
-            if (!is_string($localeIdentifier) || $localeIdentifier == '') {
-                $localeIdentifier = 'en_US';
-            }
-
-            // Get available locales (removing null values)
-            /*$availableLocales = $config['site.locales.available'];
-
-            // Add supported browser preferred locales.
-            if ($request->hasHeader('Accept-Language')) {
-                $allowedLocales = [];
-                foreach (explode(',', $request->getHeaderLine('Accept-Language')) as $index => $browserLocale) {
-                    // Split to access q
-                    $parts = explode(';', $browserLocale) ?: [];
-
-                    // Ensure locale valid
-                    if (array_key_exists(0, $parts)) {
-                        // Format for UF's i18n
-                        $parts[0] = str_replace('-', '_', $parts[0]);
-                        // Ensure locale available
-                        if (array_key_exists($parts[0], $availableLocales)) {
-                            // Determine preference level, and add to $allowedLocales
-                            if (array_key_exists(1, $parts)) {
-                                $parts[1] = str_replace('q=', '', $parts[1]);
-                                // Sanitize with int cast (bad values go to 0)
-                                $parts[1] = (int) $parts[1];
-                            } else {
-                                $parts[1] = 1;
-                            }
-                            // Add to list, and format for UF's i18n.
-                            $allowedLocales[$parts[0]] = $parts[1];
-                        }
-                    }
-                }
-
-                // Sort, extract keys, and merge with $locales
-                asort($allowedLocales, SORT_NUMERIC);
-                $locale = $allowedLocales[0];
-            }*/
-
-            // Create the $translator object
-            $locale = new Locale($localeIdentifier);
-            $dictionary = new Dictionary($locale, $c->locator);
-            $translator = new Translator($dictionary);
-
-            return $translator;
         };
 
         /*
