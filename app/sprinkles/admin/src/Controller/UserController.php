@@ -89,7 +89,7 @@ class UserController extends SimpleController
         $error = false;
 
         // Ensure that in the case of using a single locale, that the locale is set bu inheriting from current user
-        if (count($config->getDefined('site.locales.available')) <= 1) {
+        if (count($this->ci->locale->getAvailableIdentifiers()) <= 1) {
             $data['locale'] = $currentUser->locale;
         }
 
@@ -594,7 +594,7 @@ class UserController extends SimpleController
         ];
 
         // Get a list of all locales
-        $locales = $config->getDefined('site.locales.available');
+        $locales = $this->ci->locale->getAvailableOptions();
 
         // Determine if currentUser has permission to modify the group.  If so, show the 'group' dropdown.
         // Otherwise, set to the currentUser's group and disable the dropdown.
@@ -610,7 +610,7 @@ class UserController extends SimpleController
         }
 
         // Hide the locale field if there is only 1 locale available
-        if (count($config->getDefined('site.locales.available')) <= 1) {
+        if (count($locales) <= 1) {
             $fields['hidden'][] = 'locale';
         }
 
@@ -705,7 +705,7 @@ class UserController extends SimpleController
         $config = $this->ci->config;
 
         // Get a list of all locales
-        $locales = $config->getDefined('site.locales.available');
+        $locales = $this->ci->locale->getAvailableOptions();
 
         // Generate form
         $fields = [
@@ -722,7 +722,7 @@ class UserController extends SimpleController
         }
 
         // Hide the locale field if there is only 1 locale available
-        if (count($config->getDefined('site.locales.available')) <= 1) {
+        if (count($locales) <= 1) {
             $fields['hidden'][] = 'locale';
         }
 
@@ -999,7 +999,7 @@ class UserController extends SimpleController
         $config = $this->ci->config;
 
         // Get a list of all locales
-        $locales = $config->getDefined('site.locales.available');
+        $locales = $this->ci->locale->getAvailableOptions();
 
         // Determine fields that currentUser is authorized to view
         $fieldNames = ['user_name', 'name', 'email', 'locale', 'group', 'roles'];
@@ -1021,7 +1021,7 @@ class UserController extends SimpleController
         }
 
         // Hide the locale field if there is only 1 locale available
-        if (count($config->getDefined('site.locales.available')) <= 1) {
+        if (count($locales) <= 1) {
             $fields['hidden'][] = 'locale';
         }
 
