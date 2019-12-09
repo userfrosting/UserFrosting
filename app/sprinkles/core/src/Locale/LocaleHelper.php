@@ -91,6 +91,13 @@ class LocaleHelper
      */
     public function getAvailableIdentifiers(): array
     {
-        return array_unique(array_merge($this->config['site.locales.available'], [$this->config['site.locales.default']]));
+        // Get all keys where value is true
+        $available = array_filter($this->config['site.locales.available']);
+
+        // Add the default to the list. it will always be available
+        $default = $this->config['site.locales.default'];
+        $available = array_unique(array_merge(array_keys($available), [$default]));
+
+        return $available;
     }
 }

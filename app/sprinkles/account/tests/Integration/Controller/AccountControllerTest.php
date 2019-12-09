@@ -113,7 +113,7 @@ class AccountControllerTest extends TestCase
         // Force locale config
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
-            'en_US',
+            'en_US' => true,
         ];
 
         // Create fake mailer
@@ -154,7 +154,7 @@ class AccountControllerTest extends TestCase
         $this->ci->config['site.registration.require_email_verification'] = false;
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
-            'en_US'
+            'en_US' => true
         ];
 
         // Bypass security feature
@@ -875,8 +875,8 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US',
-            'fr_FR',
+            'en_US' => true,
+            'fr_FR' => true,
         ];
 
         // Recreate controller to use user
@@ -897,7 +897,7 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US',
+            'en_US' => true,
         ];
 
         // Recreate controller to use config & user
@@ -967,8 +967,8 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US',
-            'fr_FR',
+            'en_US' => true,
+            'fr_FR' => true,
         ];
 
         // Recreate controller to use user
@@ -1000,8 +1000,8 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US',
-            'fr_FR',
+            'en_US' => true,
+            'fr_FR' => true,
         ];
 
         // Recreate controller to use user
@@ -1427,7 +1427,7 @@ class AccountControllerTest extends TestCase
         // Force locale config
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
-            'en_US',
+            'en_US' => true,
         ];
 
         // Recreate controller to use fake user

@@ -21,8 +21,9 @@ use UserFrosting\Tests\TestCase;
 class LocaleHelperTest extends TestCase
 {
     protected $testLocale = [
-        'fr_FR',
-        'en_US',
+        'fr_FR' => true,
+        'en_US' => true,
+        'es_ES' => false,
     ];
 
     // Apply fake config
@@ -48,7 +49,10 @@ class LocaleHelperTest extends TestCase
      */
     public function testGetAvailableIdentifiers(): void
     {
-        $this->assertSame($this->ci->config['site.locales.available'], $this->ci->locale->getAvailableIdentifiers());
+        $this->assertSame([
+            'fr_FR',
+            'en_US',
+        ], $this->ci->locale->getAvailableIdentifiers());
     }
 
     /**
@@ -92,6 +96,7 @@ class LocaleHelperTest extends TestCase
     public function testIsAvailable(): void
     {
         $this->assertFalse($this->ci->locale->isAvailable('ZZ_zz'));
+        $this->assertFalse($this->ci->locale->isAvailable('es_ES'));
         $this->assertTrue($this->ci->locale->isAvailable('en_US'));
     }
 }
