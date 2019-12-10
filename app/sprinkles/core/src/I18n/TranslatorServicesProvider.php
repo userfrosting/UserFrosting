@@ -40,10 +40,16 @@ class TranslatorServicesProvider extends BaseServicesProvider
      */
     protected function getLocaleIndentifier(): string
     {
+        /** @var \UserFrosting\Support\Repository\Repository */
         $config = $this->ci->config;
 
         // Get default locales as specified in configurations.
-        $localeIdentifier = $config['site.locales.default'];
+        $browserLocale = $this->getBrowserLocale();
+        if (!is_null($browserLocale)) {
+            $localeIdentifier = $browserLocale;
+        } else {
+            $localeIdentifier = $config['site.locales.default'];
+        }
 
         // Make sure the locale config is a valid string. Otherwise, fallback to en_US
         if (!is_string($localeIdentifier) || $localeIdentifier == '') {
@@ -68,26 +74,39 @@ class TranslatorServicesProvider extends BaseServicesProvider
         return $translator;
     }
 
-    /*protected function getBrowserLocale(): string
+    /**
+     * Return the browser locale.
+     *
+     * @return string|null Returns null if no valid locale can be found
+     */
+    protected function getBrowserLocale(): ?string
     {
-        $request = $c->request;
+        /** @var \Psr\Http\Message\ServerRequestInterface */
+        $request = $this->ci->request;
+
+        /** @var \UserFrosting\Sprinkle\Core\Locale\LocaleHelper */
+        $locale = $this->ci->locale;
 
         // Get available locales (removing null values)
-        $availableLocales = $config['site.locales.available'];
+        $availableLocales = $locale->getAvailableIdentifiers();
 
         // Add supported browser preferred locales.
         if ($request->hasHeader('Accept-Language')) {
             $allowedLocales = [];
+
             foreach (explode(',', $request->getHeaderLine('Accept-Language')) as $index => $browserLocale) {
+
                 // Split to access q
                 $parts = explode(';', $browserLocale) ?: [];
 
                 // Ensure locale valid
                 if (array_key_exists(0, $parts)) {
+
                     // Format for UF's i18n
                     $parts[0] = str_replace('-', '_', $parts[0]);
+
                     // Ensure locale available
-                    if (array_key_exists($parts[0], $availableLocales)) {
+                    if (in_array(strtolower($parts[0]), array_map('strtolower', $availableLocales))) {
                         // Determine preference level, and add to $allowedLocales
                         if (array_key_exists(1, $parts)) {
                             $parts[1] = str_replace('q=', '', $parts[1]);
@@ -104,7 +123,10 @@ class TranslatorServicesProvider extends BaseServicesProvider
 
             // Sort, extract keys, and merge with $locales
             asort($allowedLocales, SORT_NUMERIC);
-            $locale = $allowedLocales[0];
+
+            return (string) array_keys($allowedLocales)[0];
         }
-    }*/
+
+        return null;
+    }
 }
