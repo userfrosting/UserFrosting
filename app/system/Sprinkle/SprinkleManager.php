@@ -260,7 +260,7 @@ class SprinkleManager
      */
     public function registerServices($sprinkleName)
     {
-        //Regsiter the default services
+        //Register the default services
         $fullClassName = $this->getSprinkleDefaultServiceProvider($sprinkleName);
 
         // Check that class exists, and register services
