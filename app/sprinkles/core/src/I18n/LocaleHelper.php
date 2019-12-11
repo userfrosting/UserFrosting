@@ -95,9 +95,26 @@ class LocaleHelper
         $available = array_filter($this->config['site.locales.available']);
 
         // Add the default to the list. it will always be available
-        $default = $this->config['site.locales.default'];
+        $default = $this->getDefaultLocale();
         $available = array_unique(array_merge(array_keys($available), [$default]));
 
         return $available;
+    }
+
+    /**
+     * Returns the default locale from the config
+     *
+     * @return string
+     */
+    public function getDefaultLocale(): string
+    {
+        $defaultIdentifier = $this->config['site.locales.default'];
+
+        // Make sure the locale config is a valid string. Otherwise, fallback to en_US
+        if (!is_string($defaultIdentifier) || $defaultIdentifier == '') {
+            return 'en_US';
+        }
+
+        return $defaultIdentifier;
     }
 }

@@ -43,17 +43,15 @@ class TranslatorServicesProvider extends BaseServicesProvider
         /** @var \UserFrosting\Support\Repository\Repository */
         $config = $this->ci->config;
 
+        /** @var \UserFrosting\Sprinkle\Core\I18n\LocaleHelper */
+        $locale = $this->ci->locale;
+
         // Get default locales as specified in configurations.
         $browserLocale = $this->getBrowserLocale();
         if (!is_null($browserLocale)) {
             $localeIdentifier = $browserLocale;
         } else {
-            $localeIdentifier = $config['site.locales.default'];
-        }
-
-        // Make sure the locale config is a valid string. Otherwise, fallback to en_US
-        if (!is_string($localeIdentifier) || $localeIdentifier == '') {
-            $localeIdentifier = 'en_US';
+            $localeIdentifier = $locale->getDefaultLocale();
         }
 
         return $localeIdentifier;
