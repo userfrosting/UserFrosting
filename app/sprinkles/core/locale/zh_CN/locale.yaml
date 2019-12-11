@@ -1,5 +1,5 @@
 name: Chinese
-localized_name: 中文
+regional: 中文
 authors:
   - BruceGui
 plural_rule: 0

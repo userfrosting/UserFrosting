@@ -1,5 +1,5 @@
 name: Greek
-localized_name: Ελληνικά
+regional: Ελληνικά
 authors:
   - nikolaos-spyratos
 plural_rule: 1

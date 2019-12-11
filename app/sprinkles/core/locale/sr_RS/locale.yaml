@@ -1,5 +1,5 @@
 name: Serbian
-localized_name: српски
+regional: српски
 authors:
   - zbigcheese
 plural_rule: 1

@@ -1,5 +1,5 @@
 name: Russian
-localized_name: русский
+regional: русский
 authors:
   - rendername
 plural_rule: 1

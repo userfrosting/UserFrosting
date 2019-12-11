@@ -1,5 +1,5 @@
 name: French
-localized_name: Français
+regional: Français
 authors:
   - Louis Charette
 plural_rule: 2
