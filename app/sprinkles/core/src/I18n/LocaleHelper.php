@@ -8,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Core\Locale;
+namespace UserFrosting\Sprinkle\Core\I18n;
 
 use UserFrosting\I18n\Locale;
 use UserFrosting\Support\Repository\Repository as Config;

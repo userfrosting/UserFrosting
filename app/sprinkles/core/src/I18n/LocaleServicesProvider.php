@@ -8,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Core\Locale;
+namespace UserFrosting\Sprinkle\Core\I18n;
 
 use UserFrosting\Sprinkle\Core\ServicesProvider\BaseServicesProvider;
 
@@ -16,7 +16,7 @@ use UserFrosting\Sprinkle\Core\ServicesProvider\BaseServicesProvider;
  * Locale service provider.
  *
  * Registers:
- *  - locale : \UserFrosting\Sprinkle\Core\Locale\LocaleHelper
+ *  - locale : \UserFrosting\Sprinkle\Core\I18n\LocaleHelper
  */
 class LocaleServicesProvider extends BaseServicesProvider
 {

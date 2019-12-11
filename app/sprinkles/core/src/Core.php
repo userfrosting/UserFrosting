@@ -15,7 +15,7 @@ use RocketTheme\Toolbox\Event\Event;
 use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider;
-use UserFrosting\Sprinkle\Core\Locale\LocaleServicesProvider;
+use UserFrosting\Sprinkle\Core\I18n\LocaleServicesProvider;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\System\Sprinkle\Sprinkle;

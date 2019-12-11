@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Locale;
 
 use UserFrosting\I18n\Locale;
-use UserFrosting\Sprinkle\Core\Locale\LocaleHelper;
+use UserFrosting\Sprinkle\Core\I18n\LocaleHelper;
 use UserFrosting\Tests\TestCase;
 
 /**

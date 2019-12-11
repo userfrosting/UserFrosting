@@ -84,7 +84,7 @@ class TranslatorServicesProvider extends BaseServicesProvider
         /** @var \Psr\Http\Message\ServerRequestInterface */
         $request = $this->ci->request;
 
-        /** @var \UserFrosting\Sprinkle\Core\Locale\LocaleHelper */
+        /** @var \UserFrosting\Sprinkle\Core\I18n\LocaleHelper */
         $locale = $this->ci->locale;
 
         // Get available locales (removing null values)
