@@ -31,18 +31,18 @@ class TranslatorServicesProvider extends CoreTranslatorServicesProvider
     {
         $this->ci->extend('translator', function (Translator $translator, $c) {
 
-            // We catch any authorization-related exceptions, so that error pages can be rendered.
-            // If any error is raised, keeps orignal translator
-            try {
-                /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-                $authenticator = $c->authenticator;
-                $currentUser = $c->currentUser;
-            } catch (\Exception $e) {
-                return $translator;
-            }
+            /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+            $authenticator = $c->authenticator;
+
+            /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface */
+            $currentUser = $c->currentUser;
 
             // If user is note loged in, get original translator
-            if (!$authenticator->check()) {
+            try {
+                if (!$authenticator->check()) {
+                    return $translator;
+                }
+            } catch (\Exception $e) {
                 return $translator;
             }
 
