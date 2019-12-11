@@ -8,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Core\Tests\Integration\Locale;
+namespace UserFrosting\Sprinkle\Core\Tests\Integration\I18n;
 
 use UserFrosting\I18n\Locale;
 use UserFrosting\Sprinkle\Core\I18n\LocaleHelper;
