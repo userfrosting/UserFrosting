@@ -134,6 +134,7 @@ class TranslatorServicesProvider extends BaseServicesProvider
 
             // Return first element
             reset($foundLocales);
+
             return (string) key($foundLocales);
         }
 

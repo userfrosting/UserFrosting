@@ -96,7 +96,9 @@ class LocaleHelper
 
         // Add the default to the list. it will always be available
         $default = $this->getDefaultLocale();
-        $available = array_unique(array_merge(array_keys($available), [$default]));
+        $available = array_keys($available); // Keep only keys
+        $available = array_merge($available, [$default]); // Add default to list
+        $available = array_unique($available); // Remove duplicates, as a result of adding the default
 
         return $available;
     }

@@ -154,7 +154,7 @@ class AccountControllerTest extends TestCase
         $this->ci->config['site.registration.require_email_verification'] = false;
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
-            'en_US' => true
+            'en_US' => true,
         ];
 
         // Bypass security feature
