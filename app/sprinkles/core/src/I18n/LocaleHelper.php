@@ -102,7 +102,7 @@ class LocaleHelper
     }
 
     /**
-     * Returns the default locale from the config
+     * Returns the default locale from the config.
      *
      * @return string
      */

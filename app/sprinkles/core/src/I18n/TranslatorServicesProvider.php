@@ -85,44 +85,56 @@ class TranslatorServicesProvider extends BaseServicesProvider
         /** @var \UserFrosting\Sprinkle\Core\I18n\LocaleHelper */
         $locale = $this->ci->locale;
 
-        // Get available locales (removing null values)
+        // Get available locales
         $availableLocales = $locale->getAvailableIdentifiers();
 
-        // Add supported browser preferred locales.
+        // Get browser language header
         if ($request->hasHeader('Accept-Language')) {
-            $allowedLocales = [];
+            $foundLocales = [];
 
-            foreach (explode(',', $request->getHeaderLine('Accept-Language')) as $index => $browserLocale) {
+            // Split all locales returned by the header
+            $acceptLanguage = explode(',', $request->getHeaderLine('Accept-Language'));
 
-                // Split to access q
+            foreach ($acceptLanguage as $index => $browserLocale) {
+
+                // Split to access locale & "q"
                 $parts = explode(';', $browserLocale) ?: [];
 
-                // Ensure locale valid
+                // Ensure we've got at least one sub parts
                 if (array_key_exists(0, $parts)) {
 
-                    // Format for UF's i18n
-                    $parts[0] = str_replace('-', '_', $parts[0]);
+                    // Format locale for UF's i18n
+                    $identifier = trim(str_replace('-', '_', $parts[0]));
 
                     // Ensure locale available
-                    if (in_array(strtolower($parts[0]), array_map('strtolower', $availableLocales))) {
-                        // Determine preference level, and add to $allowedLocales
+                    if (in_array(strtolower($identifier), array_map('strtolower', $availableLocales))) {
+
+                        // Determine preference level (q=0.x), and add to $foundLocales
+                        // If no preference level, set as 1
                         if (array_key_exists(1, $parts)) {
-                            $parts[1] = str_replace('q=', '', $parts[1]);
-                            // Sanitize with int cast (bad values go to 0)
-                            $parts[1] = (int) $parts[1];
+                            $preference = str_replace('q=', '', $parts[1]);
+                            $preference = (float) $preference; // Sanitize with int cast (bad values go to 0)
                         } else {
-                            $parts[1] = 1;
+                            $preference = 1;
                         }
+
                         // Add to list, and format for UF's i18n.
-                        $allowedLocales[$parts[0]] = $parts[1];
+                        $foundLocales[$identifier] = $preference;
                     }
                 }
             }
 
-            // Sort, extract keys, and merge with $locales
-            asort($allowedLocales, SORT_NUMERIC);
+            // if no $foundLocales, return null
+            if (empty($foundLocales)) {
+                return null;
+            }
 
-            return (string) array_keys($allowedLocales)[0];
+            // Sort by preference (value)
+            arsort($foundLocales, SORT_NUMERIC);
+
+            // Return first element
+            reset($foundLocales);
+            return (string) key($foundLocales);
         }
 
         return null;
