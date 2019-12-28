@@ -16,7 +16,7 @@ use UserFrosting\Sprinkle\Core\ServicesProvider\BaseServicesProvider;
  * Locale service provider.
  *
  * Registers:
- *  - locale : \UserFrosting\Sprinkle\Core\I18n\LocaleHelper
+ *  - locale : \UserFrosting\Sprinkle\Core\I18n\SiteLocale
  */
 class LocaleServicesProvider extends BaseServicesProvider
 {
@@ -25,6 +25,6 @@ class LocaleServicesProvider extends BaseServicesProvider
      */
     public function register(): void
     {
-        $this->ci['locale'] = new LocaleHelper($this->ci->config);
+        $this->ci['locale'] = new SiteLocale($this->ci->config);
     }
 }

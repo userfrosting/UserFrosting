@@ -43,7 +43,7 @@ class TranslatorServicesProvider extends BaseServicesProvider
         /** @var \UserFrosting\Support\Repository\Repository */
         $config = $this->ci->config;
 
-        /** @var \UserFrosting\Sprinkle\Core\I18n\LocaleHelper */
+        /** @var \UserFrosting\Sprinkle\Core\I18n\SiteLocale */
         $locale = $this->ci->locale;
 
         // Get default locales as specified in configurations.
@@ -82,7 +82,7 @@ class TranslatorServicesProvider extends BaseServicesProvider
         /** @var \Psr\Http\Message\ServerRequestInterface */
         $request = $this->ci->request;
 
-        /** @var \UserFrosting\Sprinkle\Core\I18n\LocaleHelper */
+        /** @var \UserFrosting\Sprinkle\Core\I18n\SiteLocale */
         $locale = $this->ci->locale;
 
         // Get available locales

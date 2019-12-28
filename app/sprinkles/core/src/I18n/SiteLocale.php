@@ -18,7 +18,7 @@ use UserFrosting\Support\Repository\Repository as Config;
  *
  * @author Louis Charette
  */
-class LocaleHelper
+class SiteLocale
 {
     /**
      * @var Config The global container object, which holds all your services.
