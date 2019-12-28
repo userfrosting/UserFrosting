@@ -21,7 +21,7 @@ use UserFrosting\Tests\TestCase;
 class LocaleHelperTest extends TestCase
 {
     protected $testLocale = [
-        'fr_FR' => true,
+        'fr_FR' => 'french', // Legacy setting
         'en_US' => true,
         'es_ES' => false,
     ];

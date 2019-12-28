@@ -26,7 +26,7 @@ class TranslatorServicesProviderTest extends TestCase
      * @var bool[] Available locale for test
      */
     protected $testLocale = [
-        'fr_FR' => true,
+        'fr_FR' => 'french',  // Legacy setting
         'en_US' => true,
         'es_ES' => false,
     ];
