@@ -10,8 +10,8 @@
 
 namespace UserFrosting\Sprinkle\Core\I18n;
 
+use Interop\Container\ContainerInterface;
 use UserFrosting\I18n\Locale;
-use UserFrosting\Support\Repository\Repository as Config;
 
 /**
  * Helper methods for the locale system.
@@ -21,16 +21,16 @@ use UserFrosting\Support\Repository\Repository as Config;
 class SiteLocale
 {
     /**
-     * @var Config The global container object, which holds all your services.
+     * @var ContainerInterface
      */
-    protected $config;
+    protected $ci;
 
     /**
-     * @param Config $config
+     * @param ContainerInterface $ci
      */
-    public function __construct(Config $config)
+    public function __construct(ContainerInterface $ci)
     {
-        $this->config = $config;
+        $this->ci = $ci;
     }
 
     /**
@@ -92,7 +92,7 @@ class SiteLocale
     public function getAvailableIdentifiers(): array
     {
         // Get all keys where value is true
-        $available = array_filter($this->config['site.locales.available']);
+        $available = array_filter($this->ci->config['site.locales.available']);
 
         // Add the default to the list. it will always be available
         $default = $this->getDefaultLocale();
@@ -110,7 +110,7 @@ class SiteLocale
      */
     public function getDefaultLocale(): string
     {
-        $defaultIdentifier = $this->config['site.locales.default'];
+        $defaultIdentifier = $this->ci->config['site.locales.default'];
 
         // Make sure the locale config is a valid string. Otherwise, fallback to en_US
         if (!is_string($defaultIdentifier) || $defaultIdentifier == '') {
@@ -118,5 +118,88 @@ class SiteLocale
         }
 
         return $defaultIdentifier;
+    }
+
+    /**
+     * Returns the locale intentifier (ie. en_US) to use.
+     *
+     * @return string Locale intentifier
+     */
+    public function getLocaleIndentifier(): string
+    {
+        // Get default locales as specified in configurations.
+        $browserLocale = $this->getBrowserLocale();
+        if (!is_null($browserLocale)) {
+            $localeIdentifier = $browserLocale;
+        } else {
+            $localeIdentifier = $this->getDefaultLocale();
+        }
+
+        return $localeIdentifier;
+    }
+
+    /**
+     * Return the browser locale.
+     *
+     * @return string|null Returns null if no valid locale can be found
+     */
+    protected function getBrowserLocale(): ?string
+    {
+        $request = $this->ci->request;
+
+        // Get available locales
+        $availableLocales = $this->getAvailableIdentifiers();
+
+        // Get browser language header
+        if ($request->hasHeader('Accept-Language')) {
+            $foundLocales = [];
+
+            // Split all locales returned by the header
+            $acceptLanguage = explode(',', $request->getHeaderLine('Accept-Language'));
+
+            foreach ($acceptLanguage as $index => $browserLocale) {
+
+                // Split to access locale & "q"
+                $parts = explode(';', $browserLocale) ?: [];
+
+                // Ensure we've got at least one sub parts
+                if (array_key_exists(0, $parts)) {
+
+                    // Format locale for UF's i18n
+                    $identifier = trim(str_replace('-', '_', $parts[0]));
+
+                    // Ensure locale available
+                    if (in_array(strtolower($identifier), array_map('strtolower', $availableLocales))) {
+
+                        // Determine preference level (q=0.x), and add to $foundLocales
+                        // If no preference level, set as 1
+                        if (array_key_exists(1, $parts)) {
+                            $preference = str_replace('q=', '', $parts[1]);
+                            $preference = (float) $preference; // Sanitize with int cast (bad values go to 0)
+                        } else {
+                            $preference = 1;
+                        }
+
+                        // Add to list, and format for UF's i18n.
+                        $foundLocales[$identifier] = $preference;
+                    }
+                }
+            }
+
+            // if no $foundLocales, return null
+            if (empty($foundLocales)) {
+                return null;
+            }
+
+            // Sort by preference (value)
+            arsort($foundLocales, SORT_NUMERIC);
+
+            // Return first element
+            reset($foundLocales);
+
+            return (string) key($foundLocales);
+        }
+
+        return null;
     }
 }

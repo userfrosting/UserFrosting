@@ -25,6 +25,6 @@ class LocaleServicesProvider extends BaseServicesProvider
      */
     public function register(): void
     {
-        $this->ci['locale'] = new SiteLocale($this->ci->config);
+        $this->ci['locale'] = new SiteLocale($this->ci);
     }
 }
