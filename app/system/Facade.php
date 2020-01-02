@@ -10,9 +10,9 @@
 
 namespace UserFrosting\System;
 
-use Psr\Container\ContainerInterface;
 use Mockery;
 use Mockery\MockInterface;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 /**

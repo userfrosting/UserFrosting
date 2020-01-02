@@ -24,7 +24,7 @@ class ServicesProvider
     /**
      * Register UserFrosting's admin services.
      *
-     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
+     * @param ContainerInterface $container A DI container implementing ArrayAccess and psr-container.
      */
     public function register(ContainerInterface $container)
     {
