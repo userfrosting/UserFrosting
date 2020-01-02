@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\ServicesProvider;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * UserFrosting services provider Interface.

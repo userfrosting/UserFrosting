@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Twig;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\Assets\AssetsTemplatePlugin;
 use UserFrosting\Sprinkle\Core\Util\Util;
 

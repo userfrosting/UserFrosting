@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Tests\Unit;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use UserFrosting\Tests\TestCase;
 use UserFrosting\System\Sprinkle\SprinkleManager;

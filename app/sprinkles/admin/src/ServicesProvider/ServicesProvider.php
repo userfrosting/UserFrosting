@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Admin\ServicesProvider;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

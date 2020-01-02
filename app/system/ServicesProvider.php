@@ -10,7 +10,7 @@
 
 namespace UserFrosting\System;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventDispatcher;
 use UserFrosting\System\Sprinkle\SprinkleManager;
 use UserFrosting\UniformResourceLocator\ResourceLocator;

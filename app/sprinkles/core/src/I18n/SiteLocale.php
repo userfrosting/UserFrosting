@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\I18n;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\I18n\Locale;
 
 /**

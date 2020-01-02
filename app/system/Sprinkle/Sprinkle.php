@@ -10,7 +10,7 @@
 
 namespace UserFrosting\System\Sprinkle;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventSubscriberInterface;
 
 /**

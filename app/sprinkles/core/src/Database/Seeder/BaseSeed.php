@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Database\Seeder;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Seeder Class

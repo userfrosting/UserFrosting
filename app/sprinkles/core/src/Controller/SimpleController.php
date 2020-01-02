@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Controller;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * SimpleController Class.

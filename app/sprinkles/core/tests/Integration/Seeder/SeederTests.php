@@ -12,7 +12,7 @@ namespace UserFrosting\Tests\Integration\Seeder;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;

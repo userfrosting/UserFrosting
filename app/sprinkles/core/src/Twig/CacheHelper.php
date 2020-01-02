@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Illuminate\Filesystem\Filesystem;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Provides helper function to delete the Twig cache directory.

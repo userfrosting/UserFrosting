@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Account\ServicesProvider;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface as Response;

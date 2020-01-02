@@ -18,7 +18,7 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\FileSessionHandler;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use League\FactoryMuffin\FactoryMuffin;
 use League\FactoryMuffin\Faker\Facade as Faker;
 use Monolog\Formatter\LineFormatter;

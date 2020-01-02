@@ -11,7 +11,7 @@
 namespace UserFrosting\System\Sprinkle;
 
 use Illuminate\Support\Str;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\Support\Exception\FileNotFoundException;
 use UserFrosting\Support\Exception\JsonException;
 
