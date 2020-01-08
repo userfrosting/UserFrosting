@@ -12,7 +12,7 @@ php:
   - 7.1
   - 7.2
   - 7.3
-  - 7.4snapshot
+  - 7.4
 
 env:
   matrix:
@@ -23,10 +23,6 @@ env:
 
 matrix:
   fast_finish: true
-
-  # Remove before UF 4.4.0 official release, and after 7.4 release !
-  allow_failures:
-    - php: 7.4snapshot
 
 cache:
   directories:
