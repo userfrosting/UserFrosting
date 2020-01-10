@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Reset Slim version to ^3.12
 
 ### Added
-- PHP 7.4 Travis environment.
+- PHP 7.4 Support & Travis environment.
 - New `Locale` service. Provides a list of available locales in diffeent form.
 - New `BaseServicesProvider` abstract class added as base for all ServiceProvider class.
 - Sprinkle Services Provider can now be autoloaded using the `$servicesproviders` property in the sprinkle bootstrapper class.
@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `Interop\Container\Container` has been replaced with `Slim\Container`.
 - New Translator. `\UserFrosting\I18n\MessageTranslator` is now `\UserFrosting\I18n\Translator`.
 - Translator service moved to it's own `UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider` class.
+- Travis now uses Xenial instead of Trusty.
 
 ### Fixed
 
