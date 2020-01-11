@@ -1,6 +1,7 @@
 # Ignores text editor metadata
 *.komodoproject
 .php_cs.cache
+.serenata
 
 # Ignores Mac metadata.  You can configure this globally if you use a Mac: http://islegend.com/development/setting-global-gitignore-mac-windows/
 .DS_Store

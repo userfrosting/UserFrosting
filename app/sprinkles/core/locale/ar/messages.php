@@ -14,48 +14,39 @@
  * @author Alexander Weissman and Abdullah Seba
  */
 return [
-    '@PLURAL_RULE' => 1,
-
-    'ABOUT' => 'عن',
-
-    'CAPTCHA' => [
+    'ABOUT'        => 'عن',
+    'CAPTCHA'      => [
         '@TRANSLATION' => 'كلمة التحقق',
         'FAIL'         => 'لم تقم بإدخال رمز كلمة التحقق بشكل صحيح',
         'SPECIFY'      => 'أدخل كلمة التحقق',
         'VERIFY'       => 'التحقق من كلمة التحقق',
     ],
-
     'CSRF_MISSING' => 'رمز CSRF غير موجود حاول تحديث الصفحة ومن ثم إرساله مرة أخرى',
-
-    'DB_INVALID'    => 'لا يمكن الاتصال بقاعدة البيانات إذا كنت مسؤولا، يرجى مراجعة سجل خطأ',
-    'DESCRIPTION'   => 'وصف',
-    'DOWNLOAD'      => [
+    'DB_INVALID'   => 'لا يمكن الاتصال بقاعدة البيانات إذا كنت مسؤولا، يرجى مراجعة سجل خطأ',
+    'DESCRIPTION'  => 'وصف',
+    'DOWNLOAD'     => [
         '@TRANSLATION' => 'تحميل',
         'CSV'          => 'تحميل CSV',
     ],
-
     'EMAIL' => [
         '@TRANSLATION' => 'البريد الإلكتروني',
         'YOUR'         => 'عنوان بريدك الإلكتروني',
     ],
-
     'HOME'  => 'الصفحة الرئيسية',
-
     'LEGAL' => [
         '@TRANSLATION' => 'السياسة القانونية',
         'DESCRIPTION'  => 'تسري سياستنا القانونية على استخدامك لهذا الموقع وخدماتنا',
     ],
-
     'LOCALE' => [
         '@TRANSLATION' => 'اللغه',
     ],
-
     'NAME'       => 'اسم',
     'NAVIGATION' => 'التنقل',
-
+    'NO_RESULTS' => 'آسف ، ليس لدينا شيء هنا.',
     'PAGINATION' => [
         'GOTO'     => 'انتقال إلى الصفحة',
         'SHOW'     => 'عرض',
+        'OUTPUT'   => '{startRow} إلى {endRow} من {filteredRows} ({totalRows})',
         'NEXT'     => 'الصفحة التالية',
         'PREVIOUS' => 'الصفحة السابقة',
         'FIRST'    => 'الصفحة الأولى',
@@ -65,14 +56,12 @@ return [
         '@TRANSLATION' => 'سياسة الخصوصية',
         'DESCRIPTION'  => 'تحدد سياسة الخصوصية لدينا نوع المعلومات التي نجمعها منك وكيفية استخدامها.',
     ],
-
-    'SLUG'           => 'Slug',
-    'SLUG_CONDITION' => 'Slug/الظروف',
-    'STATUS'         => 'الحالة',
-
-    'UNKNOWN' => 'غير معروف',
-
-    // Actions words
+    'SLUG'                     => '\'سبيكة\'',
+    'SLUG_CONDITION'           => 'سبيكة\'الظروف\'',
+    'SLUG_IN_USE'              => 'يوجد <strong> {{slug}} </strong> سبيكة',
+    'STATUS'                   => 'الحالة',
+    'SUGGEST'                  => 'اقترح',
+    'UNKNOWN'                  => 'غير معروف',
     'ACTIONS'                  => 'الأفعال',
     'ACTIVATE'                 => 'تفعيل',
     'ACTIVE'                   => 'نشيط',
@@ -106,9 +95,7 @@ return [
     'YES'                      => 'نعم',
     'NO'                       => 'لا',
     'OPTIONAL'                 => 'اختياري',
-
-    // Misc
-    'BUILT_WITH_UF'     => 'بنيت مع <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY' => 'فكرة رئيسية <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a></strong> كل الحقوق محفوظة',
-    'WELCOME_TO'        => 'مرحبا بك في {{title}}!',
+    'BUILT_WITH_UF'            => 'بنيت مع <a href="http://www.userfrosting.com">UserFrosting</a>',
+    'ADMINLTE_THEME_BY'        => 'فكرة رئيسية <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a></strong> كل الحقوق محفوظة',
+    'WELCOME_TO'               => 'مرحبا بك في {{title}}!',
 ];

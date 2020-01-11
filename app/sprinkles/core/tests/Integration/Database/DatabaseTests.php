@@ -1073,10 +1073,10 @@ class DatabaseTests extends TestCase
     {
         return [
             EloquentTestAssignment::create([
-            'task_id'         => 2,
-            'location_id'     => 1,
-            'assignable_id'   => 1,
-            'assignable_type' => EloquentTestUser::class,
+                'task_id'         => 2,
+                'location_id'     => 1,
+                'assignable_id'   => 1,
+                'assignable_type' => EloquentTestUser::class,
             ]),
             EloquentTestAssignment::create([
                 'task_id'         => 2,

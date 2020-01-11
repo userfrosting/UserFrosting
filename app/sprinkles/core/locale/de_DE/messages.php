@@ -16,8 +16,6 @@
  * @author splitt3r
  */
 return [
-    '@PLURAL_RULE' => 1,
-
     'ABOUT'                             => 'Über',
 
     'CAPTCHA' => [
@@ -60,9 +58,9 @@ return [
         'GOTO'                          => 'Gehe zu Seite',
         'SHOW'                          => 'Anzeigen',
 
-                                        // Paginator
-                                        // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
-                                        // also {page:input} & {startRow:input} will add a modifiable input in place of the value
+        // Paginator
+        // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+        // also {page:input} & {startRow:input} will add a modifiable input in place of the value
         'OUTPUT'                        => '{startRow} bis {endRow} von {filteredRows} ({totalRows})',
 
         'NEXT'                          => 'Nächste Seite',

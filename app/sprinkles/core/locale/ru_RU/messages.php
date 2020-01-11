@@ -14,8 +14,6 @@
  * @author @rendername
  */
 return [
-    '@PLURAL_RULE' => 1,
-
     'ABOUT' => 'О нас',
 
     'CAPTCHA' => [

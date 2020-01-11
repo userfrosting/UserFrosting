@@ -57,29 +57,6 @@ class FilesystemManager extends LaravelFilesystemManager
     }
 
     /**
-     * Create a cache store instance.
-     *
-     * @param mixed $config
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return \League\Flysystem\Cached\CacheInterface
-     */
-    // N.B.: Introduced after laravel 5.4
-    /*protected function createCacheStore($config)
-    {
-        if ($config === true) {
-            return new MemoryStore;
-        }
-
-        return new Cache(
-            $this->cache->store($config['store']),
-            $config['prefix'] ?? 'flysystem',
-            $config['expire'] ?? null
-        );
-    }*/
-
-    /**
      * Get the filesystem connection configuration.
      *
      * @param string $name

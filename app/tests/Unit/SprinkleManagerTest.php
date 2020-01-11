@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Tests\Unit;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use UserFrosting\Tests\TestCase;
 use UserFrosting\System\Sprinkle\SprinkleManager;
@@ -71,7 +71,7 @@ class SprinkleManagerTest extends TestCase
 
     /**
      * @depends testConstructor
-     * @param SprinkleManager $sprinkleManager
+     * @param  SprinkleManager $sprinkleManager
      * @return SprinkleManager
      */
     public function testGetSprinkles(SprinkleManager $sprinkleManager)

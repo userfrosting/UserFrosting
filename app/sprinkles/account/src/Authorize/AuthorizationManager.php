@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
 /**

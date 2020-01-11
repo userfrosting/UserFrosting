@@ -10,7 +10,7 @@
 
 namespace UserFrosting\System;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventDispatcher;
 use UserFrosting\System\Sprinkle\SprinkleManager;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
@@ -27,7 +27,7 @@ class ServicesProvider
     /**
      * Register UserFrosting's system services.
      *
-     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
+     * @param ContainerInterface $container A DI container implementing ArrayAccess and psr-container.
      */
     public function register(ContainerInterface $container)
     {

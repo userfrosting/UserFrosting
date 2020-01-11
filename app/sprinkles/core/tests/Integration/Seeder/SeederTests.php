@@ -12,7 +12,7 @@ namespace UserFrosting\Tests\Integration\Seeder;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
@@ -166,7 +166,7 @@ class SeederTests extends TestCase
 class ServicesProviderStub
 {
     /**
-     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
+     * @param ContainerInterface $container A DI container implementing ArrayAccess and psr-container.
      */
     public function register(ContainerInterface $container)
     {

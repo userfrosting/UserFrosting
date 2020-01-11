@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\ServicesProvider;
 
-use UserFrosting\I18n\MessageTranslator;
+use UserFrosting\I18n\Translator;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -21,6 +21,6 @@ class TranslatorServiceTest extends TestCase
 {
     public function testService()
     {
-        $this->assertInstanceOf(MessageTranslator::class, $this->ci->translator);
+        $this->assertInstanceOf(Translator::class, $this->ci->translator);
     }
 }

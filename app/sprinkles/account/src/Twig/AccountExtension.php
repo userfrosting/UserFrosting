@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Account\Twig;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\Support\Repository\Repository as Config;
 
 /**

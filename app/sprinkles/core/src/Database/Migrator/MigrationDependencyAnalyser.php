@@ -210,7 +210,7 @@ class MigrationDependencyAnalyser
 
         // Make sure class exists
         if (!class_exists($migration)) {
-            throw new BadClassNameException("Unable to find the migration class '$migration'.");
+            throw new BadClassNameException("Unable to find the migration class '$migration'. Run 'php bakery migrate:clean' to remove stale migrations.");
         }
 
         // If the `dependencies` property exist and is static, use this one.

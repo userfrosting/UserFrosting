@@ -6,7 +6,7 @@
  * Set up the form in a modal after being successfully attached to the body.
  */
 function attachGroupForm() {
-    $("body").on('renderSuccess.ufModal', function (data) {
+    $("body").on('renderSuccess.ufModal', function(data) {
         var modal = $(this).ufModal('getModal');
         var form = modal.find('.js-form');
 
@@ -36,10 +36,33 @@ function attachGroupForm() {
             }
         });
 
+        // Fontawesome-iconpicker
+        // Starcraft icons
+        var sc_icons = [{
+                title: "sc sc-terran",
+                searchTerms: ['starcraft', 'terran']
+            },
+            {
+                title: "sc sc-zerg",
+                searchTerms: ['starcraft', 'zerg']
+            }, {
+                title: "sc sc-protoss",
+                searchTerms: ['starcraft', 'protoss']
+            },
+        ]
+
+        $('.icp-auto').iconpicker({
+            // this is a hacky way to add in our custom icons to the default FA5 icons.
+            // See https://github.com/farbelous/fontawesome-iconpicker/issues/77
+            icons: typeof sc_icons != 'undefined' ? $.merge(sc_icons, $.iconpicker.defaultOptions.icons) : null,
+        });
+
         // Set icon when changed
         form.find('input[name=icon]').on('input change', function() {
             $(this).prev(".icon-preview").find("i").removeClass().addClass($(this).val());
         });
+
+        $('.icp-auto').iconpicker();
 
         // Set up the form for submission
         form.ufForm({
@@ -93,16 +116,16 @@ function bindGroupButtons(el, options) {
             msgTarget: $("#alerts-page")
         });
 
-        $("body").on('renderSuccess.ufModal', function () {
+        $("body").on('renderSuccess.ufModal', function() {
             var modal = $(this).ufModal('getModal');
             var form = modal.find('.js-form');
 
             form.ufForm()
-            .on("submitSuccess.ufForm", function() {
-                // Navigate or reload page on success
-                if (options.delete_redirect) window.location.href = options.delete_redirect;
-                else window.location.reload();
-            });
+                .on("submitSuccess.ufForm", function() {
+                    // Navigate or reload page on success
+                    if (options.delete_redirect) window.location.href = options.delete_redirect;
+                    else window.location.reload();
+                });
         });
     });
 }

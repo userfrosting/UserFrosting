@@ -5,6 +5,68 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.4.0]
+
+### Changed Requirements
+
+### Changed Composer Dependencies
+- Reset Slim version to ^3.12
+
+### Added
+- PHP 7.4 Support & Travis environment.
+- New `Locale` service. Provides a list of available locales in diffeent form.
+- New `BaseServicesProvider` abstract class added as base for all ServiceProvider class.
+- Sprinkle Services Provider can now be autoloaded using the `$servicesproviders` property in the sprinkle bootstrapper class.
+- Current locale code can now be accessed from Twig using the `currentLocale` global variable [(#1056)].
+- Locale now have config & metadata file ([#850])
+
+### Changed
+- `Interop\Container\Container` has been replaced with `Slim\Container`.
+- New Translator. `\UserFrosting\I18n\MessageTranslator` is now `\UserFrosting\I18n\Translator`.
+- Translator service moved to it's own `UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider` class.
+- Travis now uses Xenial instead of Trusty.
+
+### Fixed
+- When internationalizing, the lang attribute value of the Twig template is not set to follow changes ([#982])
+
+### Removed
+
+
+## [v4.3.3]
+
+### Fixed
+- Fixed wrong version number in define
+- Locked Slim version to 3.12.2 until UF 4.4 can fix `container-interop/container-interop` replacement with `psr/container`
+
+## [v4.3.2]
+
+### Added
+- Add translation for Brazilian Portuguese (locale pt_BR) - Thanks @maxwellkenned ! ([#1036])
+- Add translation for Serbian (sr_RS) - Thanks @zbigcheese ! ([#1035])
+
+### Changed
+- Updates to the French Locales ([#1027])
+- Updates to the German Locales ([#1039])
+- Updates to the Thai Locales ([#1041])
+- Updates to the Greek Locales ([#1042])
+- Updates to the Persian Locales ([#1045])
+
+### Fixed
+- Fix issue with hidden fields in group modal ([#1033])
+- User cache not flushed on model save ([#1050])
+- Fix "the passwords don't match" error when editing a user password ([#1034], [#1038])
+
+### Deprecated
+`UserController:updateField` now expect the new value as `$_PUT[$fieldName]` (where `$fieldName` is the name of the field you want to update, eg. `$_PUT['password']` for editing `password`) instead of `$_PUT['value']`. This will only affect your code if you're **not** using the [user widjet](https://github.com/userfrosting/UserFrosting/blob/master/app/sprinkles/admin/assets/userfrosting/js/widgets/users.js).
+
+## [v4.3.1]
+
+### Changed
+- Update Arabic Locales ([#1028])
+
+### Fixed
+- Fix typos in user creation with initial password ([#1030])
+
 ## [v4.3.0]
 
 ### Changed Requirements
@@ -23,12 +85,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed Frontend Dependencies
 - Updated handlebar from 3.0.x to 4.1.2
-- Updated AdminLTE theme to 2.4.15 ([#994; #1014; #1015])
+- Updated AdminLTE theme to 2.4.15 ([#994]; [#1014]; [#1015])
 - Updated Font Awesome to 5.9 ([#957]; [#870])
 
 ### Added
 - Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
 - Allow null group assignment for users ([#867]; [#964])
+- Password can now be set manually when creating new user ([#1017]; [#763])
+- Icon picker for user and group form ([#713]; [#1019])
 
 ### Fix
 - `bake` command return error if account sprinkle is not included ([#944])
@@ -50,11 +114,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Config to set Domain of RememberMe Cookie ([#990], [#991]; Thanks @xrobau !)
 - Config settings for password min/max length ([#993])
+- `migrate:clean` bakery command ([#1007])
 
 ### Fixed
 - [PHPMailer] Turn off opportunistic TLS when disabled ([#986], [#987])
 - Migrator now ignore files that don't end in `.php` ([#965], [#998])
 - Respects CSRF_ENABLED environment variable ([#976]; Thanks @Poldovico !)
+- Checkbox bug on password change form ([#1008])
+- On role page, users table action buttons not working ([#1010])
 
 ## [v4.2.2]
 
@@ -784,7 +851,9 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
 
 [#653]: https://github.com/userfrosting/UserFrosting/issues/653
+[#713]: https://github.com/userfrosting/UserFrosting/issues/713
 [#718]: https://github.com/userfrosting/UserFrosting/issues/718
+[#763]: https://github.com/userfrosting/UserFrosting/issues/763
 [#793]: https://github.com/userfrosting/UserFrosting/issues/793
 [#795]: https://github.com/userfrosting/UserFrosting/issues/795
 [#808]: https://github.com/userfrosting/UserFrosting/issues/808
@@ -792,6 +861,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#829]: https://github.com/userfrosting/UserFrosting/issues/829
 [#833]: https://github.com/userfrosting/UserFrosting/issues/833
 [#838]: https://github.com/userfrosting/UserFrosting/issues/838
+[#850]: https://github.com/userfrosting/UserFrosting/issues/850
 [#853]: https://github.com/userfrosting/UserFrosting/issues/853
 [#854]: https://github.com/userfrosting/UserFrosting/issues/854
 [#867]: https://github.com/userfrosting/UserFrosting/issues/867
@@ -817,6 +887,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
 [#976]: https://github.com/userfrosting/UserFrosting/issues/976
 [#981]: https://github.com/userfrosting/UserFrosting/issues/981
+[#982]: https://github.com/userfrosting/UserFrosting/issues/982
 [#983]: https://github.com/userfrosting/UserFrosting/issues/983
 [#986]: https://github.com/userfrosting/UserFrosting/issues/986
 [#987]: https://github.com/userfrosting/UserFrosting/issues/987
@@ -825,13 +896,36 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#993]: https://github.com/userfrosting/UserFrosting/issues/993
 [#994]: https://github.com/userfrosting/UserFrosting/issues/994
 [#998]: https://github.com/userfrosting/UserFrosting/issues/998
+[#1007]: https://github.com/userfrosting/UserFrosting/issues/1007
+[#1008]: https://github.com/userfrosting/UserFrosting/issues/1008
+[#1010]: https://github.com/userfrosting/UserFrosting/issues/1010
 [#1012]: https://github.com/userfrosting/UserFrosting/issues/1012
 [#1014]: https://github.com/userfrosting/UserFrosting/issues/1014
 [#1015]: https://github.com/userfrosting/UserFrosting/issues/1015
 [#1016]: https://github.com/userfrosting/UserFrosting/issues/1016
+[#1017]: https://github.com/userfrosting/UserFrosting/issues/1017
 [#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
+[#1019]: https://github.com/userfrosting/UserFrosting/issues/1019
+[#1027]: https://github.com/userfrosting/UserFrosting/issues/1027
+[#1028]: https://github.com/userfrosting/UserFrosting/issues/1028
+[#1030]: https://github.com/userfrosting/UserFrosting/issues/1030
+[#1033]: https://github.com/userfrosting/UserFrosting/issues/1033
+[#1034]: https://github.com/userfrosting/UserFrosting/issues/1034
+[#1035]: https://github.com/userfrosting/UserFrosting/issues/1035
+[#1036]: https://github.com/userfrosting/UserFrosting/issues/1036
+[#1038]: https://github.com/userfrosting/UserFrosting/issues/1038
+[#1039]: https://github.com/userfrosting/UserFrosting/issues/1039
+[#1041]: https://github.com/userfrosting/UserFrosting/issues/1041
+[#1042]: https://github.com/userfrosting/UserFrosting/issues/1042
+[#1045]: https://github.com/userfrosting/UserFrosting/issues/1045
+[#1050]: https://github.com/userfrosting/UserFrosting/issues/1050
+[#1056]: https://github.com/userfrosting/UserFrosting/issues/1056
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
 [v4.2.2]: https://github.com/userfrosting/UserFrosting/compare/v.4.2.1...v4.2.2
 [v4.2.3]: https://github.com/userfrosting/UserFrosting/compare/v4.2.2...v4.2.3
+[v4.3.0]: https://github.com/userfrosting/UserFrosting/compare/v4.2.3...v4.3.0
+[v4.3.1]: https://github.com/userfrosting/UserFrosting/compare/v4.3.0...v4.3.1
+[v4.3.2]: https://github.com/userfrosting/UserFrosting/compare/v4.3.1...v4.3.2
+[v4.3.3]: https://github.com/userfrosting/UserFrosting/compare/v4.3.2...v4.3.3

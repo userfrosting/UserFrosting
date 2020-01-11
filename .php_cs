@@ -8,6 +8,7 @@ $header = 'UserFrosting (http://www.userfrosting.com)
 
 $rules = [
     '@PSR2'                                       => true,
+    'array_indentation'                           => true,
     'array_syntax'                                => ['syntax' => 'short'],
     'binary_operator_spaces'                      => ['align_double_arrow' => true, 'align_equals' => false],
     'blank_line_after_namespace'                  => true,

@@ -382,7 +382,7 @@ class GroupController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\Translator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled page
@@ -458,7 +458,7 @@ class GroupController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\Translator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "slug", "icon", "description" for this group
@@ -576,8 +576,8 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_group', [
-                'group' => $group,
-            ])) {
+            'group' => $group,
+        ])) {
             throw new ForbiddenException();
         }
 

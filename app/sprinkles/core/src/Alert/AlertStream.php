@@ -11,12 +11,12 @@
 namespace UserFrosting\Sprinkle\Core\Alert;
 
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\I18n\MessageTranslator;
+use UserFrosting\I18n\Translator;
 
 /**
  * AlertStream Class.
  *
- * Implements an alert stream for use between HTTP requests, with i18n support via the MessageTranslator class
+ * Implements an alert stream for use between HTTP requests, with i18n support via the Translator class
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
@@ -30,17 +30,17 @@ abstract class AlertStream
     protected $messagesKey;
 
     /**
-     * @var MessageTranslator|null
+     * @var Translator|null
      */
-    protected $messageTranslator;
+    protected $translator;
 
     /**
      * Create a new message stream.
      *
-     * @param string                 $messagesKey
-     * @param MessageTranslator|null $translator
+     * @param string          $messagesKey
+     * @param Translator|null $translator
      */
-    public function __construct($messagesKey, MessageTranslator $translator = null)
+    public function __construct($messagesKey, Translator $translator = null)
     {
         $this->messagesKey = $messagesKey;
         $this->setTranslator($translator);
@@ -49,13 +49,13 @@ abstract class AlertStream
     /**
      * Set the translator to be used for all message streams.  Must be done before `addMessageTranslated` can be used.
      *
-     * @param MessageTranslator|null $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
+     * @param Translator|null $translator A Translator to be used to translate messages when added via `addMessageTranslated`.
      *
      * @return self
      */
-    public function setTranslator(MessageTranslator $translator = null)
+    public function setTranslator(Translator $translator = null)
     {
-        $this->messageTranslator = $translator;
+        $this->translator = $translator;
 
         return $this;
     }
@@ -93,11 +93,11 @@ abstract class AlertStream
      */
     public function addMessageTranslated($type, $messageId, array $placeholders = [])
     {
-        if (!$this->messageTranslator) {
+        if (!$this->translator) {
             throw new \RuntimeException('No translator has been set!  Please call MessageStream::setTranslator first.');
         }
 
-        $message = $this->messageTranslator->translate($messageId, $placeholders);
+        $message = $this->translator->translate($messageId, $placeholders);
 
         return $this->addMessage($type, $message);
     }
@@ -134,11 +134,11 @@ abstract class AlertStream
     /**
      * Return the translator for this message stream.
      *
-     * @return MessageTranslator The translator for this message stream.
+     * @return Translator The translator for this message stream.
      */
     public function translator()
     {
-        return $this->messageTranslator;
+        return $this->translator;
     }
 
     /**

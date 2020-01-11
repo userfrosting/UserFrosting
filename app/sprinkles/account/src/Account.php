@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Account;
 
+use UserFrosting\Sprinkle\Account\I18n\LocaleServicesProvider;
 use UserFrosting\System\Sprinkle\Sprinkle;
 
 /**
@@ -19,4 +20,10 @@ use UserFrosting\System\Sprinkle\Sprinkle;
  */
 class Account extends Sprinkle
 {
+    /**
+     * @var string[] List of services provider to register
+     */
+    protected $servicesproviders = [
+        LocaleServicesProvider::class,
+    ];
 }
