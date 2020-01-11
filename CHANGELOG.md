@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - New `Locale` service. Provides a list of available locales in diffeent form.
 - New `BaseServicesProvider` abstract class added as base for all ServiceProvider class.
 - Sprinkle Services Provider can now be autoloaded using the `$servicesproviders` property in the sprinkle bootstrapper class.
+- Current locale code can now be accessed from Twig using the `currentLocale` global variable [(#1056)].
+- Locale now have config & metadata file ([#850])
 
 ### Changed
 - `Interop\Container\Container` has been replaced with `Slim\Container`.
@@ -25,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Travis now uses Xenial instead of Trusty.
 
 ### Fixed
+- When internationalizing, the lang attribute value of the Twig template is not set to follow changes ([#982])
 
 ### Removed
 
@@ -858,6 +861,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#829]: https://github.com/userfrosting/UserFrosting/issues/829
 [#833]: https://github.com/userfrosting/UserFrosting/issues/833
 [#838]: https://github.com/userfrosting/UserFrosting/issues/838
+[#850]: https://github.com/userfrosting/UserFrosting/issues/850
 [#853]: https://github.com/userfrosting/UserFrosting/issues/853
 [#854]: https://github.com/userfrosting/UserFrosting/issues/854
 [#867]: https://github.com/userfrosting/UserFrosting/issues/867
@@ -883,6 +887,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
 [#976]: https://github.com/userfrosting/UserFrosting/issues/976
 [#981]: https://github.com/userfrosting/UserFrosting/issues/981
+[#982]: https://github.com/userfrosting/UserFrosting/issues/982
 [#983]: https://github.com/userfrosting/UserFrosting/issues/983
 [#986]: https://github.com/userfrosting/UserFrosting/issues/986
 [#987]: https://github.com/userfrosting/UserFrosting/issues/987
@@ -914,6 +919,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1042]: https://github.com/userfrosting/UserFrosting/issues/1042
 [#1045]: https://github.com/userfrosting/UserFrosting/issues/1045
 [#1050]: https://github.com/userfrosting/UserFrosting/issues/1050
+[#1056]: https://github.com/userfrosting/UserFrosting/issues/1056
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
