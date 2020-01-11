@@ -10,6 +10,7 @@ jobs:
         operating-system: [ubuntu-latest, windows-latest] #, macOS-latest
         php-versions: ['7.1', '7.2', '7.3', '7.4']
     env:
+      DB_DRIVER: sqlite
       DB_HOST: 127.0.0.1
       DB_NAME: userfrosting.db
       TEST_DB: default
