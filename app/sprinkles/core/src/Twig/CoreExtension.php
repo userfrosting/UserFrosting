@@ -120,8 +120,9 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
         $site = array_replace_recursive($this->services->config['site'], $csrf);
 
         return [
-            'site'   => $site,
-            'assets' => new AssetsTemplatePlugin($this->services->assets),
+            'site'          => $site,
+            'assets'        => new AssetsTemplatePlugin($this->services->assets),
+            'currentLocale' => $this->services->locale->getLocaleIndentifier(),
         ];
     }
 }
