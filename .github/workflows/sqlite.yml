@@ -1,37 +1,25 @@
-name: Windows Build
+name: Sqlite Build
 on: [push, pull_request]
 jobs:
   build:
-    name: PHP ${{ matrix.php-versions }}
-    runs-on: ubuntu-latest
+    name: PHP ${{ matrix.php-versions }} - ${{ matrix.operating-system }}
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ubuntu-latest, windows-latest] #, macOS-latest
+        php-versions: ['7.1', '7.2', '7.3', '7.4']
     env:
-      DB_HOST: localhost
-      DB_NAME: userfrosting
-      DB_USER: root
-      DB_PASSWORD: password
-      DB_PORT: 3306
+      DB_HOST: 127.0.0.1
+      DB_NAME: userfrosting.db
       TEST_DB: default
       UF_MODE: debug
     services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: false
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: userfrosting
-        ports:
-          - 3306/tcp
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
       redis:
         image: redis
         ports:
           - 6379/tcp
         options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    strategy:
-      fail-fast: false
-      matrix:
-        php-versions: ['7.1', '7.2', '7.3', '7.4']
-        db-driver: ['mysql', 'sqlite']
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -54,6 +42,8 @@ jobs:
         run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
       - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+      - name: Create Database
+        run: touch userfrosting.db
       - name: Run Bakery Debug
         run: php bakery debug
       - name: Build Assets
