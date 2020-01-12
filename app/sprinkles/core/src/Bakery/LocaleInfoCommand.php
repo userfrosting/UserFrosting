@@ -17,7 +17,7 @@ use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * locale:info command.
- * List all available locales
+ * List all available locales.
  *
  * @author Louis Charette
  */

@@ -25,6 +25,7 @@ abstract class BaseCommand extends Command
 {
     /**
      * @var \Symfony\Component\Console\Style\SymfonyStyle
+     *
      * @see http://symfony.com/doc/current/console/style.html
      */
     protected $io;
