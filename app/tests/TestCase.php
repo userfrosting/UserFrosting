@@ -24,7 +24,7 @@ class TestCase extends BaseTestCase
     /**
      * The global container object, which holds all your services.
      *
-     * @var \Interop\Container\ContainerInterface
+     * @var \Psr\Container\ContainerInterface
      */
     protected $ci;
 

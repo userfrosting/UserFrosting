@@ -31,7 +31,7 @@ class Bakery
     protected $app;
 
     /**
-     * @var \Interop\Container\ContainerInterface The global container object, which holds all your services.
+     * @var \Psr\Container\ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
 
