@@ -55,7 +55,7 @@ class DebugCommand extends BaseCommand
             ['Environment mode'     => getenv('UF_MODE')],
             ['PHP Version'          => $this->checkPhpVersion()],
             ['Node Version'         => $this->checkNodeVersion()],
-            ['NPM Version'          => $this->checkNpmVersion()],
+            ['NPM Version'          => $this->checkNpmVersion()]
         );
 
         // Now we list Sprinkles
@@ -162,7 +162,7 @@ class DebugCommand extends BaseCommand
             ['PORT'     => $config['db.default.port']],
             ['DATABASE' => $config['db.default.database']],
             ['USERNAME' => $config['db.default.username']],
-            ['PASSWORD' => ($config['db.default.password'] ? '*********' : '')],
+            ['PASSWORD' => ($config['db.default.password'] ? '*********' : '')]
         );
     }
 }
