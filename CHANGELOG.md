@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - New Translator. `\UserFrosting\I18n\MessageTranslator` is now `\UserFrosting\I18n\Translator`.
 - Translator service moved to it's own `UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider` class.
 - Travis now uses Xenial instead of Trusty.
+- Improved Bakery debug command output
 
 ### Fixed
 - When internationalizing, the lang attribute value of the Twig template is not set to follow changes ([#982])
