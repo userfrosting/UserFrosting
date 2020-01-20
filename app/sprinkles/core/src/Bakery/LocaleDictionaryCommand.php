@@ -20,14 +20,14 @@ use UserFrosting\System\Bakery\BaseCommand;
 
 /**
  * locale:dictionary command.
- * Print computed dictionary for the selected locale
+ * Print computed dictionary for the selected locale.
  *
  * @author Louis Charette
  */
 class LocaleDictionaryCommand extends BaseCommand
 {
     use LocaleOption;
-    
+
     /**
      * {@inheritdoc}
      */

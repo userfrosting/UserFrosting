@@ -14,15 +14,13 @@ use UserFrosting\I18n\Locale;
 
 /**
  * Locale Helper.
- * 
+ *
  * Provides:
  *  - askForLocale
  *  - getLocale
  */
 trait LocaleOption
 {
-    
-
     /**
      * Display locale selection question.
      *
@@ -34,7 +32,7 @@ trait LocaleOption
         $localeService = $this->ci->locale;
 
         $availableLocales = $localeService->getAvailableIdentifiers();
-       
+
         if ($default) {
             $defaultLocale = $localeService->getDefaultLocale();
         } else {
@@ -51,7 +49,7 @@ trait LocaleOption
         /** @var \UserFrosting\Sprinkle\Core\I18n\SiteLocale */
         $localeService = $this->ci->locale;
 
-        $identifier = ($option) ?: $this->askForLocale("locale");
+        $identifier = ($option) ?: $this->askForLocale('locale');
         if (!$localeService->isAvailable($identifier)) {
             $this->io->error("Locale `$identifier` is not available");
             exit(1);

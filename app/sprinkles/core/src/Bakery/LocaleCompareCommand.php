@@ -30,7 +30,7 @@ use UserFrosting\System\Bakery\BaseCommand;
 class LocaleCompareCommand extends BaseCommand
 {
     use LocaleOption;
-    
+
     /**
      * {@inheritdoc}
      */
@@ -80,7 +80,7 @@ class LocaleCompareCommand extends BaseCommand
     protected function compareDictionaries(DictionaryInterface $leftDictionary, DictionaryInterface $rightDictionary): void
     {
         $this->io->section("Comparaison between {$rightDictionary->getLocale()->getName()} and {$leftDictionary->getLocale()->getName()}");
-        
+
         $diff = Compare::dictionaries($leftDictionary, $rightDictionary);
 
         $table = new Table($this->io);
@@ -108,7 +108,7 @@ class LocaleCompareCommand extends BaseCommand
     protected function dictionariesKeys(DictionaryInterface $leftDictionary, DictionaryInterface $rightDictionary): void
     {
         $this->io->section("Missing keys from {$rightDictionary->getLocale()->getName()} found in {$leftDictionary->getLocale()->getName()}");
-        
+
         $diff = Compare::dictionariesKeys($leftDictionary, $rightDictionary);
 
         $table = new Table($this->io);
@@ -125,7 +125,7 @@ class LocaleCompareCommand extends BaseCommand
 
         $table->render();
     }
-    
+
     /**
      * Display dictionary values comparaison table.
      *
@@ -136,7 +136,7 @@ class LocaleCompareCommand extends BaseCommand
     {
         $this->io->section("Same values found in both {$leftDictionary->getLocale()->getName()} and {$rightDictionary->getLocale()->getName()} locale");
         //$this->io->writeln("Theses keys might required to be translated");
-        
+
         $diff = Compare::dictionariesValues($leftDictionary, $rightDictionary);
 
         $table = new Table($this->io);
@@ -168,13 +168,13 @@ class LocaleCompareCommand extends BaseCommand
 
         $table = new Table($this->io);
         $table->setHeaders(['Key']);
-        
+
         if (empty($diff)) {
             $table->addRow(['No empty values']);
         } else {
             $table->addRows($diff);
         }
-        
+
         $table->render();
     }
 }
