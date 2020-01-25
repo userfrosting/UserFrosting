@@ -27,7 +27,7 @@ class LocaleInfoCommandTest extends TestCase
     protected $commandToTest = LocaleInfoCommand::class;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setUp()
     {
@@ -41,7 +41,7 @@ class LocaleInfoCommandTest extends TestCase
         ]);
 
         // Use test locale data
-        $this->ci->locator = new ResourceLocator(__DIR__.'/data');
+        $this->ci->locator = new ResourceLocator(__DIR__ . '/data');
         $this->ci->locator->registerStream('locale', '', null, true);
     }
 

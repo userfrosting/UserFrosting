@@ -28,7 +28,7 @@ trait runCommand
     {
         // Create the app, create the command and add the command to the app
         $app = new Application();
-        $command = new $this->commandToTest;
+        $command = new $this->commandToTest();
         $command->setContainer($this->ci);
         $app->add($command);
 

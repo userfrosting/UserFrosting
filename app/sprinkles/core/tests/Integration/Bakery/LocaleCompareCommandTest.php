@@ -27,7 +27,7 @@ class LocaleCompareCommandTest extends TestCase
     protected $commandToTest = LocaleCompareCommand::class;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setUp()
     {
@@ -41,14 +41,14 @@ class LocaleCompareCommandTest extends TestCase
         ]);
 
         // Use test locale data
-        $this->ci->locator = new ResourceLocator(__DIR__.'/data');
+        $this->ci->locator = new ResourceLocator(__DIR__ . '/data');
         $this->ci->locator->registerStream('locale', '', null, true);
     }
 
     public function testCommandWithArguments(): void
     {
         $result = $this->runCommand([
-            '--left' => 'en_US',
+            '--left'  => 'en_US',
             '--right' => 'fr_FR',
         ]);
         $this->assertSame(0, $result->getStatusCode());
@@ -63,7 +63,7 @@ class LocaleCompareCommandTest extends TestCase
     public function testCommandWithNoDifferences(): void
     {
         $result = $this->runCommand([
-            '--left' => 'en_US',
+            '--left'  => 'en_US',
             '--right' => 'en_US',
         ]);
         $this->assertSame(0, $result->getStatusCode());
