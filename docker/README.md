@@ -34,6 +34,7 @@ docker-compose exec app sh -c "php bakery bake"
 ```
 
 **Start / stop containers**
+
 If you need to stop the UserFrosting docker containers, just change to your userfrosting directory and run:
 
 `docker-compose stop`
@@ -43,6 +44,7 @@ To start containers again, change to your userfrosting directory and run:
 `docker-compose up -d`
 
 **Purge docker containers to start over**
+
 If you need to purge your docker containers (this will not delete any source file or sprinkle, but will empty the database), run:
 
 ```
