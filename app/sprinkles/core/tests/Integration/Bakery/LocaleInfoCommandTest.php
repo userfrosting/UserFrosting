@@ -10,18 +10,41 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Bakery;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Tester\CommandTester;
 use UserFrosting\Sprinkle\Core\Bakery\LocaleInfoCommand;
 use UserFrosting\Tests\TestCase;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
- * LocaleMissingKeysCommand Test
- *
- * @author Louis Charette
+ * Test for LocaleInfoCommand (locale:info)
  */
 class LocaleInfoCommandTest extends TestCase
 {
+    use Helper\runCommand;
+
+    /**
+     * @var string Command to test
+     */
+    protected $commandToTest = LocaleInfoCommand::class;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        // Force config to only three locales
+        $this->ci->config->set('site.locales.available', [
+            'en_US' => true,
+            'es_ES' => false,
+            'fr_FR' => true,
+        ]);
+
+        // Use test locale data
+        $this->ci->locator = new ResourceLocator(__DIR__.'/data');
+        $this->ci->locator->registerStream('locale', '', null, true);
+    }
+
     /**
      * Test base command without any arguments
      */
@@ -31,37 +54,7 @@ class LocaleInfoCommandTest extends TestCase
         $this->assertSame(0, $result->getStatusCode());
 
         $output = $result->getDisplay();
-        $this->assertNotContains('Français', $output);
+        $this->assertNotContains('Spanish', $output);
         $this->assertContains('English', $output);
-    }
-
-    /**
-     * @param string[] $input
-     */
-    protected function runCommand(array $input = []): CommandTester
-    {
-        // Force config to only three locales
-        $this->ci->config->set('site.locales.available', [
-            'en_US' => true,
-            'es_ES' => true,
-            'fr_FR' => false,
-        ]);
-
-        // Create the app, create the command and add the command to the app
-        $app = new Application();
-        $command = new LocaleInfoCommand();
-        $command->setContainer($this->ci);
-        $app->add($command);
-
-        // Add the command to the input to create the execute argument
-        $execute = array_merge([
-            'command' => $command->getName(),
-        ], $input);
-
-        // Execute command tester
-        $commandTester = new CommandTester($command);
-        $commandTester->execute($execute);
-
-        return $commandTester;
     }
 }

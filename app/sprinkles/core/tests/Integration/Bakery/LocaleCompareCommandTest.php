@@ -10,21 +10,21 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Bakery;
 
-use UserFrosting\Sprinkle\Core\Bakery\LocaleDictionaryCommand;
+use UserFrosting\Sprinkle\Core\Bakery\LocaleCompareCommand;
 use UserFrosting\Tests\TestCase;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
- * Test for LocaleDictionaryCommand (locale:dictionary)
+ * Test for LocaleCompareCommand (locale:compare)
  */
-class LocaleDictionaryCommandTest extends TestCase
+class LocaleCompareCommandTest extends TestCase
 {
     use Helper\runCommand;
 
     /**
      * @var string Command to test
      */
-    protected $commandToTest = LocaleDictionaryCommand::class;
+    protected $commandToTest = LocaleCompareCommand::class;
 
     /**
      * {@inheritDoc}
@@ -48,24 +48,48 @@ class LocaleDictionaryCommandTest extends TestCase
     public function testCommandWithArguments(): void
     {
         $result = $this->runCommand([
-            '--locale' => 'fr_FR',
+            '--left' => 'en_US',
+            '--right' => 'fr_FR',
         ]);
         $this->assertSame(0, $result->getStatusCode());
 
         $output = $result->getDisplay();
-        $this->assertNotContains('Dictionary for English locale', $output);
-        $this->assertContains('Dictionary for French locale', $output);
+        $this->assertContains('Comparing `en_US` with `fr_FR`', $output);
     }
 
+    /**
+     * @depends testCommandWithArguments
+     */
+    public function testCommandWithNoDifferences(): void
+    {
+        $result = $this->runCommand([
+            '--left' => 'en_US',
+            '--right' => 'en_US',
+        ]);
+        $this->assertSame(0, $result->getStatusCode());
+
+        $output = $result->getDisplay();
+        $this->assertContains('Comparing `en_US` with `en_US`', $output);
+        $this->assertContains('No difference between the two locales.', $output);
+        $this->assertContains('No missing keys.', $output);
+        $this->assertContains('No empty values.', $output);
+    }
+
+    /**
+     * @depends testCommandWithArguments
+     */
     public function testCommand(): void
     {
         $result = $this->runCommand([], [
+            'en_US',
             'fr_FR',
         ]);
         $this->assertSame(0, $result->getStatusCode());
 
         $output = $result->getDisplay();
-        $this->assertNotContains('Dictionary for English locale', $output);
-        $this->assertContains('Dictionary for French locale', $output);
+        $this->assertContains('Comparing `en_US` with `fr_FR`', $output);
+        $this->assertNotContains('No difference between the two locales.', $output);
+        $this->assertNotContains('No missing keys.', $output);
+        $this->assertNotContains('No empty values.', $output);
     }
 }
