@@ -83,4 +83,20 @@ class ActivitySprunje extends Sprunje
 
         return $this;
     }
+    
+    /**
+     * Sort based on activity occurred_at.
+     *
+     * @param Builder $query
+     * @param string  $direction
+     *
+     * @return self
+     */
+    protected function sortOccurredAt($query, $direction)
+    {
+        $query->orderBy('activities.occurred_at', $direction)
+              ->orderby('activities.id', $direction);
+
+        return $this;
+    }
 }
