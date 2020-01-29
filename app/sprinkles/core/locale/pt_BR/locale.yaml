@@ -3,3 +3,5 @@ regional: Português Brasileiro
 authors:
   - Maxwell Kenned
 plural_rule: 1
+parents:
+  - en_US
