@@ -28,6 +28,7 @@ class SiteLocaleTest extends TestCase
         'fr_FR' => 'french', // Legacy setting
         'en_US' => true,
         'es_ES' => false,
+        'it_IT' => null, // Legacy setting
     ];
 
     // Apply fake config
