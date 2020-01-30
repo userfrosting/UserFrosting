@@ -68,7 +68,7 @@ class ActivitySprunje extends Sprunje
 
         return $this;
     }
-    
+
     /**
      * Sort based on user last name.
      *
@@ -83,7 +83,7 @@ class ActivitySprunje extends Sprunje
 
         return $this;
     }
-    
+
     /**
      * Sort based on activity occurred_at.
      *
