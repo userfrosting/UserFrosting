@@ -16,6 +16,7 @@ import { info } from "gulplog";
 import { resolve as resolvePath } from "path";
 import stripAnsi from "strip-ansi";
 import { promisify } from "util";
+import { src } from "@userfrosting/vinyl-fs-vpath";
 
 // Promisify exec
 const exec = promisify(_exec);
@@ -214,7 +215,7 @@ export async function assetsInstall() {
         await RunCommand("bower install -q --allow-root", {
             cwd: vendorAssetsDir
         });
-        
+
 
         // Prune any unnecessary dependencies
         Logger("Removing extraneous dependencies");
@@ -238,12 +239,17 @@ export async function assetsInstall() {
 export function bundle() {
     // Build sources list
     const sources = [];
+
+    // Inputs
     for (const sprinkle of sprinkles) {
         sources.push(sprinklesDir + sprinkle + "/assets/**");
     }
     sources.push(vendorAssetsDir + "node_modules/**");
     sources.push(vendorAssetsDir + "browser_modules/**");
     sources.push(vendorAssetsDir + "bower_components/**");
+
+    // Exclusions
+    sources.push("!**.php");
 
     // Create bundle stream factories object
     const bundleBuilder = {
@@ -296,90 +302,83 @@ export function bundle() {
     const rawConfig = MergeRawConfigs(rawConfigs);
 
     // Set up virtual path rules
-    rawConfig.VirtualPathRules = [
-        ["../app/assets/node_modules", "./assets/vendor"],
-        ["../app/assets/bower_components", "./assets/vendor"]];
+    /** @type {import("@userfrosting/vinyl-fs-vpath").IVirtualPathMapping[]} */
+    const virtPathMaps = [
+        { match: "../app/assets/node_modules", replace: "../public/assets/vendor" },
+        { match: "../app/assets/browser_modules", replace: "../public/assets/vendor" },
+        { match: "../app/assets/bower_components", replace: "../public/assets/vendor" },
+    ];
     for (const sprinkle of sprinkles) {
-        rawConfig.VirtualPathRules.push([
-            sprinklesDir + sprinkle + "/assets", "./assets"
-        ]);
+        virtPathMaps.push({
+            match: sprinklesDir + sprinkle + "/assets",
+            replace: "../public/assets"
+        });
     }
 
-    // Set base path for bundle resources to align with virtual paths
-    rawConfig.BundlesVirtualBasePath = "./assets/";
-
-    /**
-     * Bundle results callback.
-     * @param {Map<string, any[]} results 
-     */
-    function bundleResults(results) {
-        // Compute possible asset base paths (for matching later)
-        /** @type {string[]} */
-        const assetBasePaths = [];
-        assetBasePaths.push(resolvePath(vendorAssetsDir, "bower_components"));
-        assetBasePaths.push(resolvePath(vendorAssetsDir, "node_modules"));
-        for (const sprinkle of sprinkles) {
-            assetBasePaths.push(resolvePath(sprinklesDir, sprinkle, "assets"));
-        }
-
-
-        /**
-         * Resolves absolute path to gulp-uf-bundle-assets v2 style path
-         * @param {string} path Absolute path to resolve.
-         */
-        function resolveToAssetPath(path) {
-            for (const basePath of assetBasePaths) {
-                if (path.startsWith(basePath)) {
-                    return path.replace(basePath, "").replace(/\\/g, "/").replace("/", "");
-                }
-            }
-
-            throw new Error(`Unable to resolve path '${path}' to relative asset path.`);
-        }
-
+    /** @type {import("@userfrosting/gulp-bundle-assets").ResultsCallback} */
+    const resultsCallback = function (results) {
+        /** @type {{ [x: string]: { scripts?: string, styles?: string, } }} */
         const resultsObject = {};
-        for (const [name, files] of results) {
-            // Filter to compatible files (permits sourcemaps)
-            const filteredFiles = [];
-            for (const file of files) {
-                if (file.extname === ".js" || file.extname === ".css") {
-                    filteredFiles.push(file);
-                }
-            }
 
-            if (filteredFiles.length !== 1)
-                throw new Error(`The bundle ${name} has not generated exactly one file.`);
-            else {
-                if (!resultsObject[name]) {
-                    resultsObject[name] = {};
-                }
-                if (filteredFiles[0].extname === ".js")
-                    resultsObject[name].scripts = resolveToAssetPath(filteredFiles[0].path);
-                else
-                    resultsObject[name].styles = resolveToAssetPath(filteredFiles[0].path);
+        // Styles
+        for (const [name, files] of results.styles) {
+            if (!(name in resultsObject)) {
+                resultsObject[name] = {};
+            }
+            for (const file of files) {
+                resultsObject[name].styles = resolvePath(file.path);
             }
         }
+
+        // Scripts
+        for (const [name, files] of results.scripts) {
+            if (!(name in resultsObject)) {
+                resultsObject[name] = {};
+            }
+            for (const file of files) {
+                resultsObject[name].scripts = resolvePath(file.path);
+            }
+        }
+
         // Write file
         Logger("Writing results file...");
         writeFileSync("./bundle.result.json", JSON.stringify(resultsObject));
         Logger("Finished writing results file.")
     };
 
-    // Logger adapter
-    function LoggerAdapter(message, loglevel) {
-        // Normal level and above
-        if (loglevel > 0 || debug) {
-            Logger(message, "gulp-bundle-assets");
+    // Log adapter
+    /** @type {import("ts-log").Logger} */
+    const log = {
+        debug(msg, ...params) {
+            if (debug) {
+                Logger(`${msg} ${JSON.stringify(params)}`, "gulp-bundle-assets");
+            }
+        },
+        error(msg, ...params) {
+            Logger(`${msg} ${JSON.stringify(params)}`, "gulp-bundle-assets");
+        },
+        info(msg, ...params) {
+            Logger(`${msg} ${JSON.stringify(params)}`, "gulp-bundle-assets");
+        },
+        trace(msg, ...params) {
+            if (debug) {
+                Logger(`${msg} ${JSON.stringify(params)}`, "gulp-bundle-assets");
+            }
+        },
+        warn(msg, ...params) {
+            Logger(`${msg} ${JSON.stringify(params)}`, "gulp-bundle-assets");
         }
-    }
-    rawConfig.Logger = LoggerAdapter;
+    };
+
+    rawConfig.Logger = log;
+    rawConfig.cwd = "../public/assets"
 
     // Open stream
     Logger("Starting bundle process proper...");
-    return gulp.src(sources, { sourcemaps: true })
-        .pipe(new Bundler(rawConfig, bundleBuilder, bundleResults))
+    return src({ globs: sources, virtPathMaps, base: '../public/assets' })
+        .pipe(new Bundler(rawConfig, bundleBuilder, resultsCallback))
         .pipe(prune(publicAssetsDir))
-        .pipe(gulp.dest(publicAssetsDir, { sourcemaps: "." }));
+        .pipe(gulp.dest('../public/assets/'));
 };
 
 /**
