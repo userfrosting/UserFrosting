@@ -15,12 +15,6 @@ jobs:
       DB_NAME: userfrosting.db
       TEST_DB: default
       UF_MODE: debug
-    services:
-      redis:
-        image: redis
-        ports:
-          - 6379/tcp
-        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout
         uses: actions/checkout@v1
