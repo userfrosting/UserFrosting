@@ -13,7 +13,7 @@ jobs:
       DB_DRIVER: mysql
       DB_HOST: localhost
       DB_USER: root
-      DB_PASSWORD: root
+      DB_PASSWORD: password
       DB_NAME: userfrosting
       TEST_DB: default
       UF_MODE: debug
