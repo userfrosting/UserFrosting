@@ -15,6 +15,7 @@ jobs:
       DB_USER: root
       DB_PASSWORD: password
       DB_NAME: userfrosting
+      DB_PORT: 3306
       TEST_DB: default
       UF_MODE: debug
     services:
