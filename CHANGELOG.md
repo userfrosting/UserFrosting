@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved Docker support ([#1057])
 - Improved Bakery debug command output
 - Improve ordering by activity date ([#1061] & [#1062]; Thanks @ktecho!)
+- Updated Vagrant config and documentation
 
 ### Removed
 - `localePathBuilder` service removed. Task now handled by the `locale` and `translator` services.
