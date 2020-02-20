@@ -12,7 +12,7 @@ import concatCss from "gulp-concat-css";
 import prune from "gulp-prune";
 import rev from "gulp-rev";
 import minifyJs from "gulp-uglify-es";
-import { info } from "gulplog";
+import gulplog from "gulplog";
 import { resolve as resolvePath } from "path";
 import stripAnsi from "strip-ansi";
 import { promisify } from "util";
@@ -41,9 +41,6 @@ writeFileSync(logFile, "\n\n" + process.argv.join(" ") + "\n\n", {
     flag: 'a'
 });
 
-// Verbosity
-const debug = (process.env.UF_MODE === "debug");
-
 // Catch stdout and write to build log
 const write = process.stdout.write;
 const w = (...args) => {
@@ -59,40 +56,107 @@ const w = (...args) => {
 process.stdout.write = w;
 
 /**
- * Prints to stdout with newline when UF_MODE is dev.
- * @param {string} message Message to log. If source specified, must be string.
- * @param {string} source Message source.
+ * Log adapter for "ts-log" to "gulplog".
  */
-function Logger(message, source) {
-    const messageLines = message.split("\n");
-    messageLines.forEach(msg => {
-        if (source)
-            info(`${source}: ${msg}`);
-        else
-            info(msg);
-    });
+class Logger {
+    /**
+     * @param {string} source 
+     */
+    constructor(source) {
+        this.source = source;
+    }
+
+    /**
+     * Composes complete message to log.
+     * @private
+     * @param {(x: string) => void} logFunc Logging function.
+     * @param {string} message Message to log.
+     * @param {any[]} optionalParams Values to log, encoded with `JSON.stringify`.
+     */
+    compose(logFunc, message, optionalParams) {
+        const messageLines = message.split("\n");
+        
+        if (optionalParams.length > 0) {
+            if (messageLines.length > 1) {
+                messageLines.push(JSON.stringify(optionalParams));
+            } else {
+                messageLines[0] = `${messageLines[0]} ${JSON.stringify(optionalParams)}`;
+            }
+        }
+
+        for (const messageLine of messageLines) {
+            logFunc(`${this.source}: ${messageLine}`)
+        }
+    }
+
+    /**
+     * Debug log level.
+     * @param {string} message Message to log.
+     * @param  {...any} optionalParams Values to log, encoded with `JSON.stringify`.
+     */
+    debug(message, ...optionalParams) {
+        this.compose(gulplog.debug, message, optionalParams);
+    }
+
+    /**
+     * Trace log level.
+     * @param {string} message Message to log.
+     * @param  {...any} optionalParams Values to log, encoded with `JSON.stringify`.
+     */
+    trace(message, ...optionalParams) {
+        this.compose(gulplog.debug, message, optionalParams);
+    }
+
+    /**
+     * "Standard" log level.
+     * @param {string} message Message to log.
+     * @param  {...any} optionalParams Values to log, encoded with `JSON.stringify`.
+     */
+    info(message, ...optionalParams) {
+        this.compose(gulplog.info, message, optionalParams);
+    }
+
+    /**
+     * Warning log level.
+     * @param {string} message Message to log.
+     * @param  {...any} optionalParams Values to log, encoded with `JSON.stringify`.
+     */
+    warn(message, ...optionalParams) {
+        this.compose(gulplog.warn, message, optionalParams);
+    }
+
+    /**
+     * Error log level.
+     * @param {string} message Message to log.
+     * @param  {...any} optionalParams Values to log, encoded with `JSON.stringify`.
+     */
+    error(message, ...optionalParams) {
+        this.compose(gulplog.error, message, optionalParams);
+    }
 }
 
 /**
  * Runs the provided command and captures output.
+ * @param {string} source Used to annotate logs.
  * @param {string} cmd Command to execute.
  * @param {childProcess.ExecOptions} options Options to pass to `exec`.
  */
-async function RunCommand(cmd, options) {
-    Logger(`Running command "${cmd}"`, "CMD");
+async function runCommand(source, cmd, options) {
+    const log = new Logger(`${source}> ${cmd}`)
+    log.info("Running command");
 
     try {
         const result = await exec(cmd, options);
-        if (result.stdout) Logger(result.stdout, `CMD> ${cmd}`);
-        if (result.stderr) Logger(result.stderr, `CMD> ${cmd}`);
+        if (result.stdout) log.info(result.stdout);
+        if (result.stderr) log.error(result.stderr);
     } catch (e) {
-        if (e.stdout) Logger(e.stdout, `CMD> ${cmd}`);
-        if (e.stderr) Logger(e.stderr, `CMD> ${cmd}`);
-        Logger(`Command "${cmd}" has completed with an error`, "CMD");
+        if (e.stdout) log.info(e.stdout);
+        if (e.stderr) log.error(e.stderr);
+        log.error("Command has completed with an error");
         throw e;
     }
 
-    Logger(`Command "${cmd}" has completed successfully`, "CMD");
+    log.info("Command has completed successfully");
 }
 
 // Load sprinkles
@@ -101,7 +165,7 @@ try {
     sprinkles = JSON.parse(readFileSync(sprinklesSchemaPath)).base;
 }
 catch (error) {
-    Logger(sprinklesSchemaPath + " could not be loaded, does it exist?");
+    gulplog.info(sprinklesSchemaPath + " could not be loaded, does it exist?");
     throw error;
 }
 
@@ -109,9 +173,11 @@ catch (error) {
  * Installs vendor assets. Mapped to npm script "uf-assets-install".
  */
 export async function assetsInstall() {
+    const log = new Logger(assetsInstall.name);
+
     // Clean up any legacy assets
     if (deleteSync(legacyVendorAssetsGlob, { force: true }))
-        Logger("Legacy frontend vendor assets were deleted. Frontend vendor assets are now installed to 'app/assets'.");
+        log.info("Legacy frontend vendor assets were deleted. Frontend vendor assets are now installed to 'app/assets'.");
 
     // See if there are any npm packages
     // TODO Would be better to read in file here then hand it off since we can avoid redundant `existsSync` calls
@@ -123,7 +189,7 @@ export async function assetsInstall() {
 
     if (npmPaths.length > 0) {
         // Install npm dependencies
-        Logger("Installing vendor assets with NPM...")
+        log.info("Installing vendor assets with NPM...")
 
         // Remove package.json and package-lock.json (if it happens to exist)
         deleteSync(vendorAssetsDir + "package.json", { force: true });
@@ -134,37 +200,31 @@ export async function assetsInstall() {
             // Private makes sure it isn't published, and cuts out a lot of unnecessary fields.
             private: true
         };
-        Logger("Collating dependencies...");
+        log.info("Collating dependencies...");
         const pkg = mergeNpmDeps(npmTemplate, npmPaths, vendorAssetsDir, true);
-        Logger("Dependency collation complete.");
+        log.info("Dependency collation complete.");
 
-        Logger("Using npm from PATH variable");
+        log.info("Using npm from PATH variable");
 
         // Remove any existing unneeded dependencies
-        Logger("Removing extraneous dependencies");
-        await RunCommand("npm prune", {
-            cwd: vendorAssetsDir
-        });
+        log.info("Removing extraneous dependencies");
+        await runCommand(assetsInstall.name, "npm prune", { cwd: vendorAssetsDir });
 
         // Perform installation
-        Logger("Installing dependencies");
-        await RunCommand("npm install", {
-            cwd: vendorAssetsDir
-        });
+        log.info("Installing dependencies");
+        await runCommand(assetsInstall.name, "npm install", { cwd: vendorAssetsDir });
 
         // Conduct audit
-        Logger("Running audit");
+        log.info("Running audit");
         try {
-            await RunCommand("npm audit", {
-                cwd: vendorAssetsDir
-            });
+            await runCommand(assetsInstall.name, "npm audit", { cwd: vendorAssetsDir });
         }
         catch {
-            Logger("There appear to be some vulerabilities within your dependencies. Updating is recommended.");
+            log.warn("There appear to be some vulerabilities within your dependencies. Updating is recommended.");
         }
 
         // Browserify dependencies
-        Logger("Running browserify against npm dependencies with a compatible main entrypoint");
+        log.info("Running browserify against npm dependencies with a compatible main entrypoint");
         deleteSync(vendorAssetsDir + "browser_modules/", { force: true });
         await browserifyDependencies({
             dependencies: Object.keys(pkg.dependencies),
@@ -189,14 +249,14 @@ export async function assetsInstall() {
         const path = sprinklesDir + sprinkle + "/bower.json";
         if (existsSync(path)) {
             // TODO: We should really have a link to docs in the message
-            console.warn(`DEPRECATED: Detected bower.json in ${sprinkle} Sprinkle. Support for bower (bower.json) will be removed in the future, please use npm/yarn (package.json) instead.`);
+            log.warn(`DEPRECATED: Detected bower.json in ${sprinkle} Sprinkle. Support for bower (bower.json) will be removed in the future, please use npm/yarn (package.json) instead.`);
             bowerPaths.push(path);
         }
     }
 
     if (bowerPaths.length > 0) {
         // Install bower dependencies
-        Logger("Installing vendor assets with Bower...")
+        log.info("Installing vendor assets with Bower...")
 
         // TODO I think we might be able to get away with removing this
         deleteSync(vendorAssetsDir + "bower.json", { force: true });
@@ -205,24 +265,20 @@ export async function assetsInstall() {
         const bowerTemplate = {
             name: "uf-vendor-assets"
         };
-        Logger("Collating dependencies...");
+        log.info("Collating dependencies...");
         mergeBowerDeps(bowerTemplate, bowerPaths, vendorAssetsDir, true);
-        Logger("Dependency collation complete.");
+        log.info("Dependency collation complete.");
 
         // Perform installation
-        Logger("Installed dependencies");
+        log.info("Installed dependencies");
         // --allow-root stops bower from complaining about being in 'sudo' in various situations
-        await RunCommand("bower install -q --allow-root", {
-            cwd: vendorAssetsDir
-        });
+        await runCommand(assetsInstall.name, "bower install -q --allow-root", { cwd: vendorAssetsDir });
 
 
         // Prune any unnecessary dependencies
-        Logger("Removing extraneous dependencies");
+        log.info("Removing extraneous dependencies");
         // --allow-root stops bower from complaining about being in 'sudo' in various situations
-        await RunCommand("bower prune -q --allow-root", {
-            cwd: vendorAssetsDir
-        });
+        await runCommand(assetsInstall.name, "bower prune -q --allow-root", { cwd: vendorAssetsDir });
     }
     else {
         // Remove bower artefacts
@@ -237,6 +293,8 @@ export async function assetsInstall() {
  * Compiles frontend assets. Mapped to npm script "uf-bundle".
  */
 export function bundle() {
+    const log = new Logger(bundle.name);
+
     // Build sources list
     const sources = [];
 
@@ -270,16 +328,16 @@ export function bundle() {
     // Load up bundle configurations
     const rawConfigs = [];
     for (const sprinkle of sprinkles) {
-        Logger("Looking for asset bundles in sprinkle " + sprinkle);
+        log.info("Looking for asset bundles in sprinkle " + sprinkle);
 
         // Try to read file
         let fileContent;
         try {
             fileContent = readFileSync(sprinklesDir + sprinkle + "/" + sprinkleBundleFile);
-            Logger(`Read '${sprinkleBundleFile}'.`, sprinkle);
+            log.info(`Read '${sprinkleBundleFile}'.`, sprinkle);
         }
         catch (error) {
-            Logger(`No '${sprinkleBundleFile}' detected, or can't be read.`, sprinkle);
+            log.info(`No '${sprinkleBundleFile}' detected, or can't be read.`, sprinkle);
             continue;
         }
 
@@ -289,16 +347,16 @@ export function bundle() {
             rawConfig = JSON.parse(fileContent);
             ValidateRawConfig(rawConfig);
             rawConfigs.push(rawConfig);
-            Logger("Asset bundles validated and loaded.", sprinkle);
+            log.info("Asset bundles validated and loaded.", sprinkle);
         }
         catch (error) {
-            Logger("Asset bundle is invalid.", sprinkle);
+            log.error("Asset bundle is invalid.", sprinkle);
             throw error;
         }
     }
 
     // Merge bundles
-    Logger("Merging asset bundles...");
+    log.info("Merging asset bundles...");
     const rawConfig = MergeRawConfigs(rawConfigs);
 
     // Set up virtual path rules
@@ -341,40 +399,16 @@ export function bundle() {
         }
 
         // Write file
-        Logger("Writing results file...");
+        log.info("Writing results file...");
         writeFileSync("./bundle.result.json", JSON.stringify(resultsObject));
-        Logger("Finished writing results file.")
+        log.info("Finished writing results file.")
     };
 
-    // Log adapter
-    /** @type {import("ts-log").Logger} */
-    const log = {
-        debug(msg, ...params) {
-            if (debug) {
-                Logger(`${msg} ${JSON.stringify(params)}`, "gulp-bundle-assets");
-            }
-        },
-        error(msg, ...params) {
-            Logger(`${msg} ${JSON.stringify(params)}`, "gulp-bundle-assets");
-        },
-        info(msg, ...params) {
-            Logger(`${msg} ${JSON.stringify(params)}`, "gulp-bundle-assets");
-        },
-        trace(msg, ...params) {
-            if (debug) {
-                Logger(`${msg} ${JSON.stringify(params)}`, "gulp-bundle-assets");
-            }
-        },
-        warn(msg, ...params) {
-            Logger(`${msg} ${JSON.stringify(params)}`, "gulp-bundle-assets");
-        }
-    };
-
-    rawConfig.Logger = log;
+    rawConfig.Logger = new Logger(`${bundle.name} - @userfrosting/gulp-bundle-assets`);
     rawConfig.cwd = "../public/assets"
 
     // Open stream
-    Logger("Starting bundle process proper...");
+    log.info("Starting bundle process proper...");
     return src({ globs: sources, virtPathMaps, base: '../public/assets' })
         .pipe(new Bundler(rawConfig, bundleBuilder, resultsCallback))
         .pipe(prune(publicAssetsDir))
@@ -391,14 +425,16 @@ export const frontend = gulp.series(assetsInstall, bundle);
  * @param {() => {}} done Used to mark task completion.
  */
 export function clean(done) {
-    try {
-        Logger("Cleaning vendor assets...");
-        deleteSync(vendorAssetsDir, { force: true });
-        Logger("Finished cleaning vendor assets.");
+    const log = new Logger(clean.name);
 
-        Logger("Cleaning public assets...");
+    try {
+        log.info("Cleaning vendor assets...");
+        deleteSync(vendorAssetsDir, { force: true });
+        log.info("Finished cleaning vendor assets.");
+
+        log.info("Cleaning public assets...");
         deleteSync(publicAssetsDir, { force: true })
-        Logger("Finsihed cleaning public assets.");
+        log.info("Finsihed cleaning public assets.");
 
         done();
     }
