@@ -13,27 +13,27 @@ envConfig({ path: "../app/.env" });
 
 // Set up logging
 
-// Write starting command to log
-writeFileSync(logFile, "\n\n" + process.argv.join(" ") + "\n\n", {
-    flag: 'a'
-});
-
 // Catch stdout and write to build log
 const write = process.stdout.write;
 const w = (...args) => {
     process.stdout.write = write;
     // @ts-ignore
     process.stdout.write(...args);
-    
-    writeFileSync(logFile, stripAnsi(args[0]), {
-        flag: 'a'
-    });
-    
+
+    writeFileSync(
+        logFile,
+        stripAnsi(args[0]),
+        { flag: 'a' }
+    );
+
     // @ts-ignore
     process.stdout.write = w;
 };
 // @ts-ignore
 process.stdout.write = w;
+
+// Write starting command to log, hidden from stdout by gulp
+console.log(process.argv.join(" "));
 
 export { assetsInstall, bundle };
 

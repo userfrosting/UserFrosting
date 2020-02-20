@@ -30,7 +30,7 @@ export { sprinkles };
  */
 export class Logger {
     /**
-     * @param {string} source 
+     * @param {string} source
      */
     constructor(source) {
         this.source = source;
@@ -45,7 +45,7 @@ export class Logger {
      */
     log(logFunc, message, optionalParams) {
         const messageLines = message.split("\n");
-        
+
         if (optionalParams.length > 0) {
             if (messageLines.length > 1) {
                 messageLines.push(JSON.stringify(optionalParams));

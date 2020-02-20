@@ -95,7 +95,7 @@ export async function assetsInstall() {
             dependencies: Object.keys(pkg.dependencies),
             inputDir: vendorAssetsDir + "node_modules/",
             outputDir: vendorAssetsDir + "browser_modules/"
-        })
+        });
     }
     else {
         // Delete npm artefacts
