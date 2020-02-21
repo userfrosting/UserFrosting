@@ -11,12 +11,13 @@ import Bundler, { MergeRawConfigs, ValidateRawConfig } from "@userfrosting/gulp-
 import { readFileSync, writeFileSync } from "fs";
 import { src } from "@userfrosting/vinyl-fs-vpath";
 import { Logger, vendorAssetsDir, sprinklesDir, sprinkles, sprinkleBundleFile, publicAssetsDir } from "./util.js";
+import gulpIf from "gulp-if";
 
 /**
  * Compiles frontend assets. Mapped to npm script "uf-bundle".
  */
-export function bundle() {
-    const log = new Logger(bundle.name);
+export function build() {
+    const log = new Logger(build.name);
 
     // Build sources list
     const sources = [];
@@ -127,13 +128,46 @@ export function bundle() {
         log.info("Finished writing results file.")
     };
 
-    rawConfig.Logger = new Logger(`${bundle.name} - @userfrosting/gulp-bundle-assets`);
-    rawConfig.cwd = publicAssetsDir
+    rawConfig.Logger = new Logger(`${build.name} - @userfrosting/gulp-bundle-assets`);
+    rawConfig.cwd = publicAssetsDir;
 
     // Open stream
     log.info("Starting bundle process proper...");
-    return src({ globs: sources, virtPathMaps, base: publicAssetsDir })
-        .pipe(new Bundler(rawConfig, bundleBuilder, resultsCallback))
+    return src({ globs: sources, virtPathMaps, base: publicAssetsDir, sourcemaps: true })
+        .pipe(gulpIf(stylesAndScriptsFilter, new Bundler(rawConfig, bundleBuilder, resultsCallback)))
         .pipe(prune(publicAssetsDir))
-        .pipe(gulp.dest(publicAssetsDir));
+        .pipe(gulpIf(stylesAndScriptsFilter, gulp.dest(publicAssetsDir, { sourcemaps: "." })))
+        .pipe(gulpIf(everythingElseFilter, gulp.dest(publicAssetsDir)));
 };
+
+/**
+ * Used to filter to just styles and scripts.
+ * @param {import("vinyl").NullFile} fs
+ */
+function stylesAndScriptsFilter(fs) {
+    return scriptsFilter(fs) || stylesFilter(fs);
+}
+
+/**
+ * Used to filter to just styles.
+ * @param {import("vinyl").NullFile} fs
+ */
+function stylesFilter(fs) {
+    return fs.extname === ".css";
+}
+
+/**
+ * Used to filter to just scripts.
+ * @param {import("vinyl").NullFile} fs
+ */
+function scriptsFilter(fs) {
+    return fs.extname === ".js";
+}
+
+/**
+ * Used to filter to everything but styles and scripts.
+ * @param {import("vinyl").NullFile} fs
+ */
+function everythingElseFilter(fs) {
+    return (fs.extname !== ".js") && (fs.extname !== ".css");
+}

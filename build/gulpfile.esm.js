@@ -6,7 +6,7 @@ import gulp from "gulp";
 import stripAnsi from "strip-ansi";
 import { logFile } from "./tasks/util.js";
 import { assetsInstall } from "./tasks/assets-install.js";
-import { bundle } from "./tasks/bundle.js";
+import { build } from "./tasks/build.js";
 
 // Load environment variables
 envConfig({ path: "../app/.env" });
@@ -35,11 +35,11 @@ process.stdout.write = w;
 // Write starting command to log, hidden from stdout by gulp
 console.log(process.argv.join(" "));
 
-export { assetsInstall, bundle };
+export { assetsInstall, build };
 
 /**
  * Run all frontend tasks.
  */
-export const frontend = gulp.series(assetsInstall, bundle);
+export const frontend = gulp.series(assetsInstall, build);
 
 export { clean } from "./tasks/clean.js";
