@@ -2,7 +2,7 @@
   "private": true,
   "dependencies": {
     "@userfrosting/browserify-dependencies": "^2.0.0",
-    "@userfrosting/gulp-bundle-assets": "^4.0.0-alpha.2",
+    "@userfrosting/gulp-bundle-assets": "^4.0.0-alpha.3",
     "@userfrosting/merge-package-dependencies": "^1.2.1",
     "@userfrosting/vinyl-fs-vpath": "^0.3.0",
     "bower": "^1.8.8",

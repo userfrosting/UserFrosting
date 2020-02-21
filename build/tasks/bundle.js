@@ -85,14 +85,14 @@ export function bundle() {
     // Set up virtual path rules
     /** @type {import("@userfrosting/vinyl-fs-vpath").IVirtPathMapping[]} */
     const virtPathMaps = [
-        { match: "../app/assets/node_modules", replace: "../public/assets/vendor" },
-        { match: "../app/assets/browser_modules", replace: "../public/assets/vendor" },
-        { match: "../app/assets/bower_components", replace: "../public/assets/vendor" },
+        { match: `${vendorAssetsDir}node_modules`, replace: `${publicAssetsDir}vendor` },
+        { match: `${vendorAssetsDir}browser_modules`, replace: `${publicAssetsDir}vendor` },
+        { match: `${vendorAssetsDir}bower_components`, replace: `${publicAssetsDir}vendor` },
     ];
     for (const sprinkle of sprinkles) {
         virtPathMaps.push({
             match: sprinklesDir + sprinkle + "/assets",
-            replace: "../public/assets"
+            replace: publicAssetsDir
         });
     }
 
@@ -128,12 +128,12 @@ export function bundle() {
     };
 
     rawConfig.Logger = new Logger(`${bundle.name} - @userfrosting/gulp-bundle-assets`);
-    rawConfig.cwd = "../public/assets"
+    rawConfig.cwd = publicAssetsDir
 
     // Open stream
     log.info("Starting bundle process proper...");
-    return src({ globs: sources, virtPathMaps, base: '../public/assets' })
+    return src({ globs: sources, virtPathMaps, base: publicAssetsDir })
         .pipe(new Bundler(rawConfig, bundleBuilder, resultsCallback))
         .pipe(prune(publicAssetsDir))
-        .pipe(gulp.dest('../public/assets/'));
+        .pipe(gulp.dest(publicAssetsDir));
 };
