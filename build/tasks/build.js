@@ -5,7 +5,7 @@ import concatJs from "gulp-concat";
 import concatCss from "gulp-concat-css";
 import prune from "gulp-prune";
 import rev from "gulp-rev";
-import minifyJs from "gulp-uglify-es";
+import minifyJs from "gulp-terser";
 import { resolve as resolvePath } from "path";
 import Bundler, { MergeRawConfigs, ValidateRawConfig } from "@userfrosting/gulp-bundle-assets";
 import { readFileSync, writeFileSync } from "fs";

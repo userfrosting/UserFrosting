@@ -1,6 +1,5 @@
 // @ts-check
 import gulplog from "gulplog";
-import path from "path";
 import { readFileSync } from "fs";
 
 // Relative to gulpfile.esm.js
