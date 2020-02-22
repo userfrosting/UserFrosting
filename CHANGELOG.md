@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Locked Slim version to 3.12.2 to fix `container-interop/container-interop` replacement with `psr/container`
+- Locked Symfony version to 4.x for backward compatibility
 
 ## [v4.2.3]
 
