@@ -1,7 +1,6 @@
 name: French
 regional: Français
 authors:
-  - Louis Charette
+  - Foo Bar
+  - Bar Foo
 plural_rule: 2
-parents:
-  - en_US

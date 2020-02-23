@@ -3,3 +3,5 @@ regional: Português
 authors:
   - Bruno Silva
 plural_rule: 1
+parents:
+  - en_US

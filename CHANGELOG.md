@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v4.4.0]
 
 ### Changed Requirements
+- PHP 7.3 is now the recommended version, as 7.2 is already security fixes only.
 
 ### Changed Composer Dependencies
 - Reset Slim version to ^3.12
@@ -19,19 +20,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Sprinkle Services Provider can now be autoloaded using the `$servicesproviders` property in the sprinkle bootstrapper class.
 - Current locale code can now be accessed from Twig using the `currentLocale` global variable [(#1056)].
 - Locale now have config & metadata file ([#850])
+- Added `locale:compare`, `locale:dictionary` and `locale:info` Bakery commands.
 
 ### Changed
-- `Interop\Container\Container` has been replaced with `Slim\Container`.
-- New Translator. `\UserFrosting\I18n\MessageTranslator` is now `\UserFrosting\I18n\Translator`.
+- `Interop\Container\ContainerInterface` has been replaced with `Psr\Container\ContainerInterface`.
+- `\UserFrosting\I18n\MessageTranslator` is now `\UserFrosting\I18n\Translator`.
 - Translator service moved to it's own `UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider` class.
 - Travis now uses Xenial instead of Trusty.
-- Improved Bakery debug command output
+- `site.locales.available` config now accept `(string) identifier => (bool) enabled`. Set identifier to false or null to remove it from the list.
+- Locale plural rules moved from the keys file to the new metadata files.
 
 ### Fixed
 - When internationalizing, the lang attribute value of the Twig template is not set to follow changes ([#982])
+- `pt_Br` locale identifier renamed to `pt_BR`.
+- Improved Docker support ([#1057])
+- Improved Bakery debug command output
+- Improve ordering by activity date ([#1061] & [#1062]; Thanks @ktecho!)
+- Updated Vagrant config and documentation
 
 ### Removed
 - Running of Browserify against node package entrypoints citing foundational flaw in implementation.
+- `localePathBuilder` service removed. Task now handled by the `locale` and `translator` services.
 
 ## [v4.3.3]
 
@@ -921,6 +930,9 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1045]: https://github.com/userfrosting/UserFrosting/issues/1045
 [#1050]: https://github.com/userfrosting/UserFrosting/issues/1050
 [#1056]: https://github.com/userfrosting/UserFrosting/issues/1056
+[#1057]: https://github.com/userfrosting/UserFrosting/issues/1057
+[#1061]: https://github.com/userfrosting/UserFrosting/issues/1061
+[#1062]: https://github.com/userfrosting/UserFrosting/issues/1062
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
@@ -930,3 +942,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.3.1]: https://github.com/userfrosting/UserFrosting/compare/v4.3.0...v4.3.1
 [v4.3.2]: https://github.com/userfrosting/UserFrosting/compare/v4.3.1...v4.3.2
 [v4.3.3]: https://github.com/userfrosting/UserFrosting/compare/v4.3.2...v4.3.3
+[v4.4.0]: https://github.com/userfrosting/UserFrosting/compare/v4.3.3...v4.4.0

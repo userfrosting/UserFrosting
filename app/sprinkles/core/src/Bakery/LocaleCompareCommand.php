@@ -11,13 +11,13 @@
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\I18n\Compare;
 use UserFrosting\I18n\Dictionary;
 use UserFrosting\I18n\DictionaryInterface;
-use UserFrosting\I18n\Locale;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\LocaleOption;
 use UserFrosting\System\Bakery\BaseCommand;
 
@@ -88,12 +88,16 @@ class LocaleCompareCommand extends BaseCommand
         $table->setColumnMaxWidth(1, 50);
         $table->setColumnMaxWidth(2, 50);
 
-        foreach ($diff as $key => $value) {
-            $table->addRow([
-                $key,
-                $leftDictionary->get($key),
-                $rightDictionary->get($key),
-            ]);
+        if (empty($diff)) {
+            $table->addRow([new TableCell('No difference between the two locales.', ['colspan' => 3])]);
+        } else {
+            foreach ($diff as $key => $value) {
+                $table->addRow([
+                    $key,
+                    $leftDictionary->get($key),
+                    $rightDictionary->get($key),
+                ]);
+            }
         }
 
         $table->render();
@@ -115,12 +119,16 @@ class LocaleCompareCommand extends BaseCommand
         $table->setHeaders(['Key', $leftDictionary->getLocale()->getIdentifier(), $rightDictionary->getLocale()->getIdentifier()]);
         $table->setColumnMaxWidth(1, 50);
 
-        foreach ($diff as $key) {
-            $table->addRow([
-                $key,
-                $leftDictionary->get($key),
-                $rightDictionary->get($key),
-            ]);
+        if (empty($diff)) {
+            $table->addRow([new TableCell('No missing keys.', ['colspan' => 3])]);
+        } else {
+            foreach ($diff as $key) {
+                $table->addRow([
+                    $key,
+                    $leftDictionary->get($key),
+                    $rightDictionary->get($key),
+                ]);
+            }
         }
 
         $table->render();
@@ -170,9 +178,11 @@ class LocaleCompareCommand extends BaseCommand
         $table->setHeaders(['Key']);
 
         if (empty($diff)) {
-            $table->addRow(['No empty values']);
+            $table->addRow(['No empty values.']);
         } else {
-            $table->addRows($diff);
+            foreach ($diff as $key => $value) {
+                $table->addRow([$value]);
+            }
         }
 
         $table->render();
