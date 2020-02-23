@@ -27,7 +27,6 @@ export function build() {
         sources.push(sprinklesDir + sprinkle + "/assets/**");
     }
     sources.push(vendorAssetsDir + "node_modules/**");
-    sources.push(vendorAssetsDir + "browser_modules/**");
     sources.push(vendorAssetsDir + "bower_components/**");
 
     // Exclusions
@@ -87,7 +86,6 @@ export function build() {
     /** @type {import("@userfrosting/vinyl-fs-vpath").IVirtPathMapping[]} */
     const virtPathMaps = [
         { match: `${vendorAssetsDir}node_modules`, replace: `${publicAssetsDir}vendor` },
-        { match: `${vendorAssetsDir}browser_modules`, replace: `${publicAssetsDir}vendor` },
         { match: `${vendorAssetsDir}bower_components`, replace: `${publicAssetsDir}vendor` },
     ];
     for (const sprinkle of sprinkles) {

@@ -1,7 +1,6 @@
 // @ts-check
 import { Logger, legacyVendorAssetsGlob, sprinkles, sprinklesDir, vendorAssetsDir } from "./util.js";
 import { bower as mergeBowerDeps, npm as mergeNpmDeps } from "@userfrosting/merge-package-dependencies";
-import browserifyDependencies from "@userfrosting/browserify-dependencies";
 import { sync as deleteSync } from "del";
 import childProcess, { exec as _exec } from "child_process";
 import { existsSync } from "fs";
@@ -87,15 +86,6 @@ export async function assetsInstall() {
         catch {
             log.warn("There appear to be some vulerabilities within your dependencies. Updating is recommended.");
         }
-
-        // Browserify dependencies
-        log.info("Running browserify against npm dependencies with a compatible main entrypoint");
-        deleteSync(vendorAssetsDir + "browser_modules/", { force: true });
-        await browserifyDependencies({
-            dependencies: Object.keys(pkg.dependencies),
-            inputDir: vendorAssetsDir + "node_modules/",
-            outputDir: vendorAssetsDir + "browser_modules/"
-        });
     }
     else {
         // Delete npm artefacts
