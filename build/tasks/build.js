@@ -6,7 +6,7 @@ import concatCss from "gulp-concat-css";
 import prune from "gulp-prune";
 import rev from "gulp-rev";
 import minifyJs from "gulp-terser";
-import { resolve as resolvePath } from "path";
+import { relative as relativePath } from "path";
 import Bundler, { MergeRawConfigs, ValidateRawConfig } from "@userfrosting/gulp-bundle-assets";
 import { readFileSync, writeFileSync } from "fs";
 import { src } from "@userfrosting/vinyl-fs-vpath";
@@ -108,7 +108,8 @@ export function build() {
                 resultsObject[name] = {};
             }
             for (const file of files) {
-                resultsObject[name].styles = resolvePath(file.path);
+                // Last one wins?
+                resultsObject[name].styles = relativePath(publicAssetsDir, file.path).replace(/\\/g, "/");
             }
         }
 
@@ -118,7 +119,8 @@ export function build() {
                 resultsObject[name] = {};
             }
             for (const file of files) {
-                resultsObject[name].scripts = resolvePath(file.path);
+                // Last one wins?
+                resultsObject[name].scripts = relativePath(publicAssetsDir, file.path).replace(/\\/g, "/");
             }
         }
 
