@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved Bakery debug command output
 - Improve ordering by activity date ([#1061] & [#1062]; Thanks @ktecho!)
 - Updated Vagrant config and documentation
+- Fixed a bug where `withTrashed` in `findUnique` was not available when `SoftDeletes` trait is not included in a model.
 
 ### Removed
 - `localePathBuilder` service removed. Task now handled by the `locale` and `translator` services.
