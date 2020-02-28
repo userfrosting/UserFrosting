@@ -54,6 +54,9 @@ class AccountControllerTest extends TestCase
         parent::setUp();
         $this->setupTestDatabase();
 
+        // Force start session
+        $this->ci->session;
+
         if ($this->usingInMemoryDatabase() || !static::$initialized) {
 
             // Setup database, then setup User & default role

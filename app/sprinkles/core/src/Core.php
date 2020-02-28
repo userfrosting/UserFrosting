@@ -143,7 +143,10 @@ class Core extends Sprinkle
      */
     public function onAddGlobalMiddleware(Event $event)
     {
-        SlimCsrfProvider::registerMiddleware($event->getApp(), $this->ci->request, $this->ci->csrf);
+        // Don't register CSRF if CLI
+        if (!$this->ci->cli) {
+            SlimCsrfProvider::registerMiddleware($event->getApp(), $this->ci->request, $this->ci->csrf);
+        }
     }
 
     /**
