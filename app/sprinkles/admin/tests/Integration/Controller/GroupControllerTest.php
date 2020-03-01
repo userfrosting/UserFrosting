@@ -675,19 +675,19 @@ class GroupControllerTest extends TestCase
     /**
      * @return GroupController
      */
-    private function getController()
+    private function getController(): GroupController
     {
         return new GroupController($this->ci);
     }
 
-    private function setupUser()
+    private function setupUser(): void
     {
         // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
+        $this->createTestUser(true, true);
 
         // Create test role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+        $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
             'slug' => 'foo',
             'name' => 'bar',
         ]);
