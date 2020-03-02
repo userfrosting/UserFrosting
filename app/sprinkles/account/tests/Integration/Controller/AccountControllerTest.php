@@ -54,9 +54,6 @@ class AccountControllerTest extends TestCase
         parent::setUp();
         $this->setupTestDatabase();
 
-        // Force start session
-        $this->ci->session;
-
         if ($this->usingInMemoryDatabase() || !static::$initialized) {
 
             // Setup database, then setup User & default role
@@ -502,11 +499,13 @@ class AccountControllerTest extends TestCase
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
+
+        // We have to logout the user to avoid problem
+        $this->logoutCurrentUser($testUser);
     }
 
     /**
      * @depends testControllerConstructor
-     * @depends testlogin
      * @param AccountController $controller
      */
     public function testloginWithEmail(AccountController $controller)
@@ -537,6 +536,9 @@ class AccountControllerTest extends TestCase
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
+
+        // We have to logout the user to avoid problem
+        $this->logoutCurrentUser($testUser);
     }
 
     /**

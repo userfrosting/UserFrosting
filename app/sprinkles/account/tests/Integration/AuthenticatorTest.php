@@ -41,9 +41,6 @@ class AuthenticatorTest extends TestCase
         // Setup test database
         $this->setupTestDatabase();
         $this->refreshDatabase();
-
-        // Force start session
-        $this->ci->session;
     }
 
     /**
