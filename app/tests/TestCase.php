@@ -110,7 +110,7 @@ class TestCase extends BaseTestCase
                 call_user_func($callback);
             }
 
-            // Close DB connection
+            // Close DB connection. Can cause "Too many connections" error otherwise
             $this->ci->db->getDatabaseManager()->disconnect();
         }
 
