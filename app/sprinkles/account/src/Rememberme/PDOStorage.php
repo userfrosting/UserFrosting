@@ -21,7 +21,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Persistence;
  */
 class PDOStorage implements StorageInterface
 {
-    /** @var Capsule $db */
+    /** @var Capsule */
     protected $db;
 
     /**
