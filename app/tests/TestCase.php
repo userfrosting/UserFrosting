@@ -52,7 +52,7 @@ class TestCase extends BaseTestCase
     /**
      * Setup the test environment.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!$this->ci) {
             $this->refreshApplication();
@@ -103,7 +103,7 @@ class TestCase extends BaseTestCase
     /**
      * Clean up the testing environment before the next test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->ci) {
             foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {

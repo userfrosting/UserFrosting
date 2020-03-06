@@ -114,7 +114,7 @@ class RegistrationTest extends TestCase
         // Registration should return a valid user, with a new ID
         $this->assertInstanceOf(UserInterface::class, $user);
         $this->assertEquals('FooBar', $user->user_name);
-        $this->assertInternalType('int', $user->id);
+        $this->assertIsInt($user->id);
 
         // Make sure the user is added to the db by querying it
         $users = User::where('email', 'Foo@Bar.com')->get();

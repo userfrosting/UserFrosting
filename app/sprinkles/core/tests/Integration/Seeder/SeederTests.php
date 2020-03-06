@@ -68,7 +68,7 @@ class SeederTests extends TestCase
     public function testgetSeeds(Seeder $seeder)
     {
         $seeds = $seeder->getSeeds();
-        $this->assertInternalType('array', $seeds);
+        $this->assertIsArray($seeds);
         $this->assertCount(3, $seeds);
         $this->assertEquals([
             [
@@ -96,7 +96,7 @@ class SeederTests extends TestCase
     public function testGetSeed(Seeder $seeder)
     {
         $seed = $seeder->getSeed('Seed1');
-        $this->assertInternalType('array', $seed);
+        $this->assertIsArray($seed);
         $this->assertEquals([
             'name'     => 'Seed1',
             'class'    => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',

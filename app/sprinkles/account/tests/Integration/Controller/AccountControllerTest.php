@@ -1595,7 +1595,7 @@ class AccountControllerTest extends TestCase
 
         // Make sure we got a string
         $data = json_decode($body, true);
-        $this->assertInternalType('string', $data['user_name']);
+        $this->assertIsString($data['user_name']);
         $this->assertNotSame('', $data['user_name']);
     }
 
