@@ -38,7 +38,7 @@ class RegistrationTest extends TestCase
         'password'      => 'FooBarFooBar123',
     ];
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -47,7 +47,7 @@ class RegistrationTest extends TestCase
     /**
      * Setup the database schema.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

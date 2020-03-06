@@ -27,7 +27,7 @@ class SessionDatabaseHandlerTest extends TestCase
     use RefreshDatabase;
     use withDatabaseSessionHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

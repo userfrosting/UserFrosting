@@ -20,7 +20,7 @@ class TestDatabaseTraitTest extends TestCase
     /**
      * Setup TestDatabase
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Boot parent TestCase, which will set up the database and connections for us.
         parent::setUp();

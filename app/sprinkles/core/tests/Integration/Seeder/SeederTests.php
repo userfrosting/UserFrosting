@@ -31,7 +31,7 @@ class SeederTests extends TestCase
     /**
      * Setup our fake ci
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Boot parent TestCase
         parent::setUp();
@@ -44,7 +44,7 @@ class SeederTests extends TestCase
         $serviceProvider->register($this->fakeCi);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();

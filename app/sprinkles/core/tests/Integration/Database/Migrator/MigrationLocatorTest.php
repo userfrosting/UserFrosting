@@ -23,7 +23,7 @@ use UserFrosting\UniformResourceLocator\ResourceStream;
  */
 class MigrationLocatorTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();

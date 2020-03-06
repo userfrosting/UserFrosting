@@ -34,7 +34,7 @@ class AuthenticatorTest extends TestCase
     /**
      * Setup the test database.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

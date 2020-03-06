@@ -25,7 +25,7 @@ class DatabaseTests extends TestCase
     /**
      * Setup the database schema.
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Boot parent TestCase, which will set up the database and connections for us.
         parent::setUp();
@@ -112,7 +112,7 @@ class DatabaseTests extends TestCase
     /**
      * Tear down the database schema.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->schema($this->schemaName)->drop('users');
         $this->schema($this->schemaName)->drop('emails');

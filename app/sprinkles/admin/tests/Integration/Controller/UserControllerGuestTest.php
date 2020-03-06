@@ -41,7 +41,7 @@ class UserControllerGuestTest extends TestCase
     /**
      * Setup test database for controller tests
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupTestDatabase();
@@ -59,7 +59,7 @@ class UserControllerGuestTest extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();

@@ -23,7 +23,7 @@ class CacheAlertStreamTest extends TestCase
 
     protected $session_id = 'foo123';
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
