@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests;
 
-use UserFrosting\Sprinkle\Core\Session\DatabaseSessionHandler;
+use Illuminate\Session\DatabaseSessionHandler;
 
 /**
  * Trait used to run test against the `test_integration` db connection
