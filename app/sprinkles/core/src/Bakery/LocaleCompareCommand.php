@@ -52,8 +52,8 @@ class LocaleCompareCommand extends BaseCommand
         $this->io->title('Locale Comparison');
 
         // Get locale to compare
-        $leftLocale = $this->getLocale((string) $input->getOption('left'));     // $question = $this->io->choice('Select locale to compare against', $availableLocales, $defaultLocale);
-        $rightLocale = $this->getLocale((string) $input->getOption('right'));   // $question = $this->io->choice('Select locale to compare from', $availableLocales);
+        $leftLocale = $this->getLocale((string) $input->getOption('left'));
+        $rightLocale = $this->getLocale((string) $input->getOption('right'));
 
         $this->io->section("Comparing `{$leftLocale->getIdentifier()}` with `{$rightLocale->getIdentifier()}`");
 
