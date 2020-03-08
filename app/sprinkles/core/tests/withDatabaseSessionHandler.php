@@ -38,6 +38,9 @@ trait withDatabaseSessionHandler
         // Unset the env when test is done to avoid conflict
         $this->beforeApplicationDestroyedCallbacks[] = function () {
             putenv('TEST_SESSION_HANDLER');
+
+            // Destroy session as we're switching handler anyway
+            $this->ci->session->destroy();
         };
 
         // Refresh app to use new setup
