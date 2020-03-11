@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - New `Locale` service. Provides a list of available locales in diffeent form.
 - New `BaseServicesProvider` abstract class added as base for all ServiceProvider class.
 - Sprinkle Services Provider can now be autoloaded using the `$servicesproviders` property in the sprinkle bootstrapper class.
-- Current locale code can now be accessed from Twig using the `currentLocale` global variable [(#1056)].
+- Current locale code can now be accessed from Twig using the `currentLocale` global variable ([#1056]).
 - Locale now have config & metadata file ([#850])
 - Added `locale:compare`, `locale:dictionary` and `locale:info` Bakery commands.
 - New `cli` service. Returns true if current app is a CLI envrionement, false otherwise.
