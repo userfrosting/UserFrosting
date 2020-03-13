@@ -107,11 +107,11 @@ class SeederTests extends TestCase
     /**
      * @param Seeder $seeder
      * @depends testSeeder
-     * @expectedException \Exception
      */
     public function testUnfoundGetSeed(Seeder $seeder)
     {
-        $seed = $seeder->getSeed('FakeSeed');
+        $this->expectException(\Exception::class);
+        $seeder->getSeed('FakeSeed');
     }
 
     /**
@@ -127,23 +127,21 @@ class SeederTests extends TestCase
     /**
      * @param Seeder $seeder
      * @depends testSeeder
-     * @expectedException \Exception
      */
     public function testGetSeedClassNotSeedInterface(Seeder $seeder)
     {
-        // This class is not an instance of SeedInterface
-        $seeder->getSeedClass('Seed2');
+        $this->expectException(\Exception::class);
+        $seeder->getSeedClass('Seed2'); // This class is not an instance of SeedInterface
     }
 
     /**
      * @param Seeder $seeder
      * @depends testSeeder
-     * @expectedException \Exception
      */
     public function testGetSeedClassException(Seeder $seeder)
     {
-        // The namespace in this class is wrong
-        $seeder->getSeedClass('Test/Seed');
+        $this->expectException(\Exception::class);
+        $seeder->getSeedClass('Test/Seed'); // The namespace in this class is wrong
     }
 
     /**

@@ -127,7 +127,9 @@ class MigrationLocatorTest extends TestCase
     public function testActualInstance()
     {
         // Get sprinkle manager and make sure `core` is returned
-        $this->assertContains('core', $this->ci->sprinkleManager->getSprinkleNames());
+        $sprinklesNames = $this->ci->sprinkleManager->getSprinkleNames();
+        $this->assertIsArray($sprinklesNames);
+        $this->assertContains('core', $sprinklesNames);
 
         // Create a new MigrationLocator instance with our real SprinkleManager and filesystem
         // and ask to find core sprinkle migration files

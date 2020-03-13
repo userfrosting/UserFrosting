@@ -17,6 +17,7 @@ use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Support\Exception\HttpException;
 
 /**
  * RegistrationTest Class
@@ -76,8 +77,6 @@ class RegistrationTest extends TestCase
     /**
      * Test the $requiredProperties property
      * @depends testValidation
-     * @expectedException UserFrosting\Support\Exception\HttpException
-     * @expectedExceptionMessage Account can't be registrated as 'first_name' is required to create a new user.
      */
     public function testMissingFields()
     {
@@ -89,7 +88,9 @@ class RegistrationTest extends TestCase
             'password'      => 'owlFancy1234',
         ]);
 
-        $validation = $registration->validate();
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage("Account can't be registrated as 'first_name' is required to create a new user.");
+        $registration->validate();
     }
 
     /**
@@ -124,8 +125,6 @@ class RegistrationTest extends TestCase
 
     /**
      * @depends testNormalRegistration
-     * @expectedException UserFrosting\Support\Exception\HttpException
-     * @expectedExceptionMessage Username is already in use.
      */
     public function testValidationWithDuplicateUsername()
     {
@@ -134,13 +133,14 @@ class RegistrationTest extends TestCase
 
         // We try to register the same user again. Should throw an error
         $registration = new Registration($this->ci, $this->fakeUserData);
-        $validation = $registration->validate();
+
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage("Username is already in use.");
+        $registration->validate();
     }
 
     /**
      * @depends testNormalRegistration
-     * @expectedException UserFrosting\Support\Exception\HttpException
-     * @expectedExceptionMessage Email is already in use.
      */
     public function testValidationWithDuplicateEmail()
     {
@@ -151,6 +151,12 @@ class RegistrationTest extends TestCase
         $fakeUserData = $this->fakeUserData;
         $fakeUserData['user_name'] = 'BarFoo';
         $registration = new Registration($this->ci, $fakeUserData);
-        $validation = $registration->validate();
+
+        //Set expectations
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage("Email is already in use.");
+
+        // Act
+        $registration->validate();
     }
 }

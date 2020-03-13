@@ -284,7 +284,7 @@ class RoleControllerTest extends TestCase
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertNotEmpty((string) $result->getBody());
-        $this->assertContains('bar', (string) $result->getBody());
+        $this->assertStringContainsString('bar', (string) $result->getBody());
     }
 
     /**

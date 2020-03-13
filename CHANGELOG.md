@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed Composer Dependencies
 - Reset Slim version to ^3.12
+- Updated PHPUnit to 8.5 (Version 7.5 still used for PHP 7.1)
 
 ### Added
 - PHP 7.4 Support & Travis environment.

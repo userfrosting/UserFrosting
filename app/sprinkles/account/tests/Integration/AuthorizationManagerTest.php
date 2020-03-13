@@ -80,14 +80,13 @@ class AuthorizationManagerTest extends TestCase
 
     /**
      * @depends testConstructor
-     * @expectedException \ArgumentCountError
      * @param AuthorizationManager $manager
-     *                                      REQUIRES PHP 7.1 or better
      */
-    /*public function testCheckAccess_withOutUser(AuthorizationManager $manager)
+    public function testCheckAccess_withOutUser(AuthorizationManager $manager)
     {
+        $this->expectException(\ArgumentCountError::class);
         $manager->checkAccess();
-    }*/
+    }
 
     /**
      * @depends testConstructor
