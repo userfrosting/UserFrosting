@@ -49,7 +49,7 @@ class AccountControllerTest extends TestCase
     /**
      * Setup test database for controller tests
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupTestDatabase();
@@ -62,7 +62,7 @@ class AccountControllerTest extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -499,11 +499,13 @@ class AccountControllerTest extends TestCase
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
+
+        // We have to logout the user to avoid problem
+        $this->logoutCurrentUser($testUser);
     }
 
     /**
      * @depends testControllerConstructor
-     * @depends testlogin
      * @param AccountController $controller
      */
     public function testloginWithEmail(AccountController $controller)
@@ -534,6 +536,9 @@ class AccountControllerTest extends TestCase
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
+
+        // We have to logout the user to avoid problem
+        $this->logoutCurrentUser($testUser);
     }
 
     /**
@@ -1590,7 +1595,7 @@ class AccountControllerTest extends TestCase
 
         // Make sure we got a string
         $data = json_decode($body, true);
-        $this->assertInternalType('string', $data['user_name']);
+        $this->assertIsString($data['user_name']);
         $this->assertNotSame('', $data['user_name']);
     }
 

@@ -17,6 +17,7 @@ use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Support\Exception\HttpException;
 
 /**
  * RegistrationTest Class
@@ -38,7 +39,7 @@ class RegistrationTest extends TestCase
         'password'      => 'FooBarFooBar123',
     ];
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -47,7 +48,7 @@ class RegistrationTest extends TestCase
     /**
      * Setup the database schema.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -76,8 +77,6 @@ class RegistrationTest extends TestCase
     /**
      * Test the $requiredProperties property
      * @depends testValidation
-     * @expectedException UserFrosting\Support\Exception\HttpException
-     * @expectedExceptionMessage Account can't be registrated as 'first_name' is required to create a new user.
      */
     public function testMissingFields()
     {
@@ -89,7 +88,9 @@ class RegistrationTest extends TestCase
             'password'      => 'owlFancy1234',
         ]);
 
-        $validation = $registration->validate();
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage("Account can't be registrated as 'first_name' is required to create a new user.");
+        $registration->validate();
     }
 
     /**
@@ -114,7 +115,7 @@ class RegistrationTest extends TestCase
         // Registration should return a valid user, with a new ID
         $this->assertInstanceOf(UserInterface::class, $user);
         $this->assertEquals('FooBar', $user->user_name);
-        $this->assertInternalType('int', $user->id);
+        $this->assertIsInt($user->id);
 
         // Make sure the user is added to the db by querying it
         $users = User::where('email', 'Foo@Bar.com')->get();
@@ -124,8 +125,6 @@ class RegistrationTest extends TestCase
 
     /**
      * @depends testNormalRegistration
-     * @expectedException UserFrosting\Support\Exception\HttpException
-     * @expectedExceptionMessage Username is already in use.
      */
     public function testValidationWithDuplicateUsername()
     {
@@ -134,13 +133,14 @@ class RegistrationTest extends TestCase
 
         // We try to register the same user again. Should throw an error
         $registration = new Registration($this->ci, $this->fakeUserData);
-        $validation = $registration->validate();
+
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage("Username is already in use.");
+        $registration->validate();
     }
 
     /**
      * @depends testNormalRegistration
-     * @expectedException UserFrosting\Support\Exception\HttpException
-     * @expectedExceptionMessage Email is already in use.
      */
     public function testValidationWithDuplicateEmail()
     {
@@ -151,6 +151,12 @@ class RegistrationTest extends TestCase
         $fakeUserData = $this->fakeUserData;
         $fakeUserData['user_name'] = 'BarFoo';
         $registration = new Registration($this->ci, $fakeUserData);
-        $validation = $registration->validate();
+
+        //Set expectations
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage("Email is already in use.");
+
+        // Act
+        $registration->validate();
     }
 }

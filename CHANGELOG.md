@@ -12,15 +12,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed Composer Dependencies
 - Reset Slim version to ^3.12
+- Updated PHPUnit to 8.5 (Version 7.5 still used for PHP 7.1)
 
 ### Added
 - PHP 7.4 Support & Travis environment.
 - New `Locale` service. Provides a list of available locales in diffeent form.
 - New `BaseServicesProvider` abstract class added as base for all ServiceProvider class.
 - Sprinkle Services Provider can now be autoloaded using the `$servicesproviders` property in the sprinkle bootstrapper class.
-- Current locale code can now be accessed from Twig using the `currentLocale` global variable [(#1056)].
+- Current locale code can now be accessed from Twig using the `currentLocale` global variable ([#1056]).
 - Locale now have config & metadata file ([#850])
 - Added `locale:compare`, `locale:dictionary` and `locale:info` Bakery commands.
+- New `cli` service. Returns true if current app is a CLI envrionement, false otherwise.
 
 ### Changed
 - `Interop\Container\ContainerInterface` has been replaced with `Psr\Container\ContainerInterface`.
@@ -37,6 +39,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved Bakery debug command output
 - Improve ordering by activity date ([#1061] & [#1062]; Thanks @ktecho!)
 - Updated Vagrant config and documentation
+- Fixed a bug where `withTrashed` in `findUnique` was not available when `SoftDeletes` trait is not included in a model.
+- CSRF global middleware is not loaded anymore if in a CLI envrionement. This will avoid sessions to be created for bakery and tests by default.
 
 ### Removed
 - Running of Browserify against node package entrypoints citing foundational flaw in implementation.

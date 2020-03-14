@@ -26,7 +26,7 @@ class BelongsToManyThroughTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();

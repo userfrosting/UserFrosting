@@ -120,9 +120,9 @@ class EloquentBuilder extends LaravelEloquentBuilder
             // as a sub-select. First, we'll get the "has" query and use that to get the relation
             // count query. We will normalize the relation name then append the aggregate type as the name.
             $query = $relation->getRelationExistenceQuery(
-               $relation->getRelated()->newQuery(),
-               $this,
-               $expression
+                $relation->getRelated()->newQuery(),
+                $this,
+                $expression
             );
 
             $query->callScope($constraints);

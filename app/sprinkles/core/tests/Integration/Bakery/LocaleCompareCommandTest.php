@@ -29,7 +29,7 @@ class LocaleCompareCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -54,7 +54,7 @@ class LocaleCompareCommandTest extends TestCase
         $this->assertSame(0, $result->getStatusCode());
 
         $output = $result->getDisplay();
-        $this->assertContains('Comparing `en_US` with `fr_FR`', $output);
+        $this->assertStringContainsString('Comparing `en_US` with `fr_FR`', $output);
     }
 
     /**
@@ -69,10 +69,10 @@ class LocaleCompareCommandTest extends TestCase
         $this->assertSame(0, $result->getStatusCode());
 
         $output = $result->getDisplay();
-        $this->assertContains('Comparing `en_US` with `en_US`', $output);
-        $this->assertContains('No difference between the two locales.', $output);
-        $this->assertContains('No missing keys.', $output);
-        $this->assertContains('No empty values.', $output);
+        $this->assertStringContainsString('Comparing `en_US` with `en_US`', $output);
+        $this->assertStringContainsString('No difference between the two locales.', $output);
+        $this->assertStringContainsString('No missing keys.', $output);
+        $this->assertStringContainsString('No empty values.', $output);
     }
 
     /**
@@ -87,9 +87,9 @@ class LocaleCompareCommandTest extends TestCase
         $this->assertSame(0, $result->getStatusCode());
 
         $output = $result->getDisplay();
-        $this->assertContains('Comparing `en_US` with `fr_FR`', $output);
-        $this->assertNotContains('No difference between the two locales.', $output);
-        $this->assertNotContains('No missing keys.', $output);
-        $this->assertNotContains('No empty values.', $output);
+        $this->assertStringContainsString('Comparing `en_US` with `fr_FR`', $output);
+        $this->assertStringNotContainsString('No difference between the two locales.', $output);
+        $this->assertStringNotContainsString('No missing keys.', $output);
+        $this->assertStringNotContainsString('No empty values.', $output);
     }
 }
