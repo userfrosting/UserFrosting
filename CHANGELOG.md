@@ -5,12 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unknown]
-
-### Fixed
-- Browserified node modules not being correctly loaded.
-- Browserified node modules potentially colliding with real entrypoints.
-
 ## [v4.4.0]
 
 ### Changed Requirements
@@ -47,6 +41,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated Vagrant config and documentation
 - Fixed a bug where `withTrashed` in `findUnique` was not available when `SoftDeletes` trait is not included in a model.
 - CSRF global middleware is not loaded anymore if in a CLI envrionement. This will avoid sessions to be created for bakery and tests by default.
+- Browserified node modules not being correctly loaded.
+- Browserified node modules potentially colliding with real entrypoints.
 
 ### Removed
 - `localePathBuilder` service removed. Task now handled by the `locale` and `translator` services.
