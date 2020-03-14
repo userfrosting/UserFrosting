@@ -44,6 +44,7 @@ define('UserFrosting\VENDOR_DIR', APP_DIR . DS . VENDOR_DIR_NAME);
 // Full path to frontend vendor asset directories
 define('UserFrosting\ASSET_DIR', APP_DIR . DS . ASSET_DIR_NAME);
 define('UserFrosting\NPM_ASSET_DIR', ASSET_DIR . DS . 'node_modules');
+define('UserFrosting\BROWSERIFIED_ASSET_DIR', ASSET_DIR . DS . 'browser_modules');
 define('UserFrosting\BOWER_ASSET_DIR', ASSET_DIR . DS . 'bower_components');
 
 // Relative path from within sprinkle directory

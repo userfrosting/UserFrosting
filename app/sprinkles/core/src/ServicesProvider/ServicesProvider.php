@@ -124,8 +124,9 @@ class ServicesProvider
             if ($config['assets.use_raw']) {
 
                 // Register sprinkle assets stream, plus vendor assets in shared streams
-                $locator->registerStream('assets', 'vendor', \UserFrosting\BOWER_ASSET_DIR, true);
                 $locator->registerStream('assets', 'vendor', \UserFrosting\NPM_ASSET_DIR, true);
+                $locator->registerStream('assets', 'vendor', \UserFrosting\BROWSERIFIED_ASSET_DIR, true);
+                $locator->registerStream('assets', 'vendor', \UserFrosting\BOWER_ASSET_DIR, true);
                 $locator->registerStream('assets', '', \UserFrosting\ASSET_DIR_NAME);
 
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
