@@ -83,15 +83,15 @@ export function build() {
     log.info("Merging asset bundles...");
     const rawConfig = MergeRawConfigs(rawConfigs);
 
-    // Set up virtual path rules
-    /** @type {import("@userfrosting/vinyl-fs-vpath").IVirtPathMapping[]} */
-    const virtPathMaps = [
+    // Set up virtual path mappings
+    /** @type {import("@userfrosting/vinyl-fs-vpath").IPathMapper[]} */
+    const pathMappings = [
         { match: `${vendorAssetsDir}node_modules`, replace: `${publicAssetsDir}vendor` },
         { match: `${vendorAssetsDir}browser_modules`, replace: `${publicAssetsDir}vendor` },
         { match: `${vendorAssetsDir}bower_components`, replace: `${publicAssetsDir}vendor` },
     ];
     for (const sprinkle of sprinkles) {
-        virtPathMaps.push({
+        pathMappings.push({
             match: sprinklesDir + sprinkle + "/assets",
             replace: publicAssetsDir
         });
@@ -135,7 +135,7 @@ export function build() {
 
     // Open stream
     log.info("Starting bundle process proper...");
-    return src({ globs: sources, virtPathMaps, base: publicAssetsDir, sourcemaps: true })
+    return src({ globs: sources, pathMappings, base: publicAssetsDir, sourcemaps: true })
         .pipe(gulpIf(stylesAndScriptsFilter, new Bundler(rawConfig, bundleBuilder, resultsCallback)))
         .pipe(prune(publicAssetsDir))
         .pipe(gulpIf(stylesAndScriptsFilter, gulp.dest(publicAssetsDir, { sourcemaps: "." })))
