@@ -14,7 +14,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Middleware to catch requests that fail because they require user authentication.
+ * Middleware to add a 'Cache-Control' header to the request to prevent caching
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
