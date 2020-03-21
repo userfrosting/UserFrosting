@@ -142,6 +142,24 @@ class SiteLocaleTest extends TestCase
         $this->assertSame('en_US', $this->ci->locale->getLocaleIndentifier());
     }
 
+    /**
+     * Test old method of defining the default locale
+     */
+    public function testGetLocaleIndentifierWithCommaSeparatedString(): void
+    {
+        $this->ci->config['site.locales.default'] = 'fr_FR, en_US';
+        $this->assertSame('fr_FR, en_US', $this->ci->locale->getLocaleIndentifier());
+    }
+
+    /**
+     * Test old method of defining the default locale
+     */
+    public function testGetLocaleIndentifierWithCommaSeparatedStringReverseOrder(): void
+    {
+        $this->ci->config['site.locales.default'] = 'en_US,fr_FR';
+        $this->assertSame('en_US,fr_FR', $this->ci->locale->getLocaleIndentifier());
+    }
+
     public function testGetLocaleIndentifierWithBrowserAndComplexLocale(): void
     {
         $request = m::mock(\Psr\Http\Message\ServerRequestInterface::class);
