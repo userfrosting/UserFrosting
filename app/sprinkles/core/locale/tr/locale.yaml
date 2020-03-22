@@ -1,0 +1,7 @@
+name: Turkish
+regional: Türk
+authors:
+  - Dumblledore
+plural_rule: 1
+parents:
+  - en_US

@@ -22,7 +22,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 class EnvironmentInfo
 {
     /**
-     * @var \Interop\Container\ContainerInterface The DI container for your application.
+     * @var \Psr\Container\ContainerInterface The DI container for your application.
      */
     public static $ci;
 

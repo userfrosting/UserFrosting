@@ -23,7 +23,7 @@ use UserFrosting\UniformResourceLocator\ResourceStream;
  */
 class MigrationLocatorTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -127,7 +127,9 @@ class MigrationLocatorTest extends TestCase
     public function testActualInstance()
     {
         // Get sprinkle manager and make sure `core` is returned
-        $this->assertContains('core', $this->ci->sprinkleManager->getSprinkleNames());
+        $sprinklesNames = $this->ci->sprinkleManager->getSprinkleNames();
+        $this->assertIsArray($sprinklesNames);
+        $this->assertContains('core', $sprinklesNames);
 
         // Create a new MigrationLocator instance with our real SprinkleManager and filesystem
         // and ask to find core sprinkle migration files
@@ -136,7 +138,7 @@ class MigrationLocatorTest extends TestCase
 
         // We'll need to convert the array returned by `getMigrations` to a
         // collection to make it easier to search
-        $this->assertInternalType('array', $results);
+        $this->assertIsArray($results);
         $this->assertContains('\UserFrosting\Sprinkle\Core\Database\Migrations\v400\SessionsTable', $results);
     }
 }

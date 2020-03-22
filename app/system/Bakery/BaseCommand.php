@@ -10,7 +10,7 @@
 
 namespace UserFrosting\System\Bakery;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,13 +24,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 abstract class BaseCommand extends Command
 {
     /**
-     *    @var \Symfony\Component\Console\Style\SymfonyStyle
-     *    See http://symfony.com/doc/current/console/style.html
+     * @var \Symfony\Component\Console\Style\SymfonyStyle
+     *
+     * @see http://symfony.com/doc/current/console/style.html
      */
     protected $io;
 
     /**
-     *    @var ContainerInterface The global container object, which holds all of UserFrosting services.
+     * @var ContainerInterface The global container object, which holds all of UserFrosting services.
      */
     protected $ci;
 
@@ -47,7 +48,7 @@ abstract class BaseCommand extends Command
      *
      * @param ContainerInterface $ci
      */
-    public function setContainer(ContainerInterface $ci)
+    public function setContainer(ContainerInterface $ci): void
     {
         $this->ci = $ci;
     }
@@ -57,12 +58,12 @@ abstract class BaseCommand extends Command
      *
      *    @return bool True/False if the app is in production mode
      */
-    protected function isProduction()
+    protected function isProduction(): bool
     {
-        // N.B.: Need to touch the config service first to load dotenv values
+        // Need to touch the config service first to load dotenv values
         $config = $this->ci->config;
         $mode = getenv('UF_MODE') ?: '';
 
-        return $mode == 'production';
+        return $mode === 'production';
     }
 }

@@ -14,8 +14,6 @@
  * @author zbigcheese https://github.com/zbigcheese
  */
 return [
-    '@PLURAL_RULE' => 1,
-
     'ABOUT' => 'O nama',
 
     'CAPTCHA' => [

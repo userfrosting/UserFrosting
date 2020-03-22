@@ -49,7 +49,7 @@ class PDOStorageTest extends TestCase
 
     protected $expire = '2022-12-21 21:21:00';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

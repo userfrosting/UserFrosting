@@ -6,45 +6,52 @@ First, install [Docker Compose](https://docs.docker.com/compose/install/).
 
 Second, initialize a new UserFrosting project:
 
-1. Copy `app/sprinkles.example.json` to `app/sprinkles.json`
-2. Run `chmod 777 app/{logs,cache,sessions}` to fix file permissions for web server. (NOTE: File
+1. Clone UserFrost git repository with `git clone https://github.com/userfrosting/UserFrosting.git userfrosting`
+2. Change to the new directory `cd userfrosting`
+3. Copy `app/sprinkles.example.json` to `app/sprinkles.json`
+4. Copy `app/.env.example` to `app/.env`
+4. Run `chmod 777 app/{logs,cache,sessions}` to fix file permissions for web server. (NOTE: File
    permissions should be properly secured in a production environment!)
-3. Run `docker run --rm -it --volume ${pwd}:/app composer install --ignore-platform-reqs --no-scripts` to install all composer modules. (https://hub.docker.com/_/composer) Sometimes dependencies or Composer scripts require the availability of certain PHP extensions. You can work around this as follows: Pass the `--ignore-platform-reqs and --no-scripts` flags to install or update
-4. Run `docker run --rm -it --volume ${pwd}:/app node:alpine /bin/sh -c "cd /app/build ; npm install; npm run uf-assets-install"` to install all npm modules and frontend vendor assets.
-
-Now you can start up the entire Nginx + PHP + MySQL stack using docker with:
-
-```bash
-$ docker-compose up -d
-```
-
-the `-d` flag will launch this in the background so you can continue to use the terminal window. On the first run you need to init the database (your container name may be different depending on the name of your root directory):
-
-```bash
-$ docker exec -it -u www-data userfrosting_php_1 sh -c 'php bakery migrate'
-```
-
-You also need to setup the first admin user (again, your container name may be different depending on the name of your root directory):
-
-```bash
-$ docker exec -it -u www-data userfrosting_php_1 sh -c 'php bakery create-admin'
-```
+5. Run `docker-compose build --no-cache` to build all the docker containers.
+6. Run `docker-compose up -d` to to start all the containers.
+7. Run `docker-compose exec app sh -c "composer update"` to install all composer modules used in UserFrosting.
+8. Run `docker-compose exec app sh -c "php bakery bake"` to install UserFrosting (database configuration and migrations, creation of admin user, ...). You'll need to provide info to create the admin user.
 
 Now visit `http://localhost:8591/` to see your UserFrosting homepage!
 
-**Paste these into a bash file and execute it!**
+**You can paste these into a bash file and execute it!**
 
 ```bash
+git clone https://github.com/userfrosting/UserFrosting.git userfrosting
+cd userfrosting
+cp app/sprinkles.example.json app/sprinkles.json
+cp app/.env.example app/.env
 chmod 777 app/{logs,cache,sessions}
-docker-compose build --force-rm --no-cache
-docker run --rm -it --volume ${pwd}:/app composer update --ignore-platform-reqs --no-scripts
-docker run --rm -it --volume ${pwd}:/app node:alpine /bin/sh -c "cd /app/build ; npm install ; npm run uf-assets-install"
+docker-compose build --no-cache
 docker-compose up -d
-echo -n "Enter Docker Container Name --> "
-read docker_container
-docker exec -it -u www-data $docker_container sh -c 'php bakery migrate'
-docker exec -it -u www-data $docker_container sh -c 'php bakery create-admin'
+docker-compose exec app sh -c "composer update"
+docker-compose exec app sh -c "php bakery bake"
 ```
+
+**Start / stop containers**
+
+If you need to stop the UserFrosting docker containers, just change to your userfrosting directory and run:
+
+`docker-compose stop`
+
+To start containers again, change to your userfrosting directory and run:
+
+`docker-compose up -d`
+
+**Purge docker containers to start over**
+
+If you need to purge your docker containers (this will not delete any source file or sprinkle, but will empty the database), run:
+
+```
+docker-compose down --remove-orphans
+```
+
+And then start the installation process again.
 
 **This is not (yet) meant for production!**
 

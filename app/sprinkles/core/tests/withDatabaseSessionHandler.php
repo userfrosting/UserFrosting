@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests;
 
-use UserFrosting\Sprinkle\Core\Session\DatabaseSessionHandler;
+use Illuminate\Session\DatabaseSessionHandler;
 
 /**
  * Trait used to run test against the `test_integration` db connection
@@ -38,6 +38,9 @@ trait withDatabaseSessionHandler
         // Unset the env when test is done to avoid conflict
         $this->beforeApplicationDestroyedCallbacks[] = function () {
             putenv('TEST_SESSION_HANDLER');
+
+            // Destroy session as we're switching handler anyway
+            $this->ci->session->destroy();
         };
 
         // Refresh app to use new setup

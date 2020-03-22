@@ -43,42 +43,58 @@ class DebugCommand extends BaseCommand
     {
         // Display header,
         $this->io->title('UserFrosting');
-        $this->io->writeln('UserFrosing version : ' . \UserFrosting\VERSION);
-        $this->io->writeln('OS Name : ' . php_uname('s'));
-        $this->io->writeln('Project Root : ' . \UserFrosting\ROOT_DIR);
 
         // Need to touch the config service first to load dotenv values
         $config = $this->ci->config;
-        $this->io->writeln('Environment mode : ' . getenv('UF_MODE'));
 
-        // Perform tasks
-        $this->checkPhpVersion();
-        $this->checkNodeVersion();
-        $this->checkNpmVersion();
+        // Perform tasks & display info
+        $this->io->definitionList(
+            ['UserFrosing version'  => \UserFrosting\VERSION],
+            ['OS Name'              => php_uname('s')],
+            ['Project Root'         => \UserFrosting\ROOT_DIR],
+            ['Environment mode'     => getenv('UF_MODE')],
+            ['PHP Version'          => $this->checkPhpVersion()],
+            ['Node Version'         => $this->checkNodeVersion()],
+            ['NPM Version'          => $this->checkNpmVersion()]
+        );
+
+        // Now we list Sprinkles
         $this->listSprinkles($input, $output);
+
+        // Show the DB config
         $this->showConfig();
+
+        // Check database connexion
         $this->checkDatabase();
 
         // If all went well and there's no fatal errors, we are ready to bake
         $this->io->success('Ready to bake !');
+
+        // Command return success
+        return 0;
     }
 
     /**
      * Check the minimum version of php.
      * This is done by composer itself, but we do it again for good mesure.
+     *
+     * @return string The current PHP Version
      */
-    protected function checkPhpVersion()
+    protected function checkPhpVersion(): string
     {
-        $this->io->writeln('PHP Version : ' . phpversion());
-        if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
+        $phpVersion = (string) phpversion();
+
+        if (version_compare($phpVersion, \UserFrosting\PHP_MIN_VERSION, '<')) {
             $this->io->error('UserFrosting requires php version ' . \UserFrosting\PHP_MIN_VERSION . " or above. You'll need to update you PHP version before you can continue.");
             exit(1);
         }
 
         // Check for deprecated versions
-        if (version_compare(phpversion(), \UserFrosting\PHP_RECOMMENDED_VERSION, '<')) {
-            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommends version ' . \UserFrosting\PHP_RECOMMENDED_VERSION . ' or above as ' . phpversion() . ' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
+        if (version_compare($phpVersion, \UserFrosting\PHP_RECOMMENDED_VERSION, '<')) {
+            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommend version ' . \UserFrosting\PHP_RECOMMENDED_VERSION . ' or above as ' . $phpVersion . ' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
         }
+
+        return $phpVersion;
     }
 
     /**
@@ -88,7 +104,7 @@ class DebugCommand extends BaseCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    protected function listSprinkles(InputInterface $input, OutputInterface $output)
+    protected function listSprinkles(InputInterface $input, OutputInterface $output): void
     {
         // Check for Sprinkles schema file
         $path = \UserFrosting\SPRINKLES_SCHEMA_FILE;
@@ -114,7 +130,7 @@ class DebugCommand extends BaseCommand
      * Check the database connexion and setup the `.env` file if we can't
      * connect and there's no one found.
      */
-    protected function checkDatabase()
+    protected function checkDatabase(): void
     {
         $this->io->title('Testing database connection...');
 
@@ -133,20 +149,20 @@ class DebugCommand extends BaseCommand
     /**
      * Display database config as for debug purposes.
      */
-    protected function showConfig()
+    protected function showConfig(): void
     {
         // Get config
         $config = $this->ci->config;
 
         // Display database info
         $this->io->title('Database config');
-        $this->io->writeln([
-            'DRIVER : ' . $config['db.default.driver'],
-            'HOST : ' . $config['db.default.host'],
-            'PORT : ' . $config['db.default.port'],
-            'DATABASE : ' . $config['db.default.database'],
-            'USERNAME : ' . $config['db.default.username'],
-            'PASSWORD : ' . ($config['db.default.password'] ? '*********' : ''),
-        ]);
+        $this->io->definitionList(
+            ['DRIVER'   => $config['db.default.driver']],
+            ['HOST'     => $config['db.default.host']],
+            ['PORT'     => $config['db.default.port']],
+            ['DATABASE' => $config['db.default.database']],
+            ['USERNAME' => $config['db.default.username']],
+            ['PASSWORD' => ($config['db.default.password'] ? '*********' : '')]
+        );
     }
 }

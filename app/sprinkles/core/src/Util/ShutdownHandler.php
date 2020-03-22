@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Util;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Core\Http\Concerns\DeterminesContentType;
 
 /**

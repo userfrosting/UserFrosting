@@ -12,7 +12,7 @@ UserFrosting uses the [Laravel/Homestead](https://laravel.com/docs/5.6/homestead
 * Clone Homestead from the root of your cloned fork of the UserFrosting Git repository
 
 ```sh
-git clone -b v7.20.0 https://github.com/laravel/homestead.git vagrant/Homestead
+git clone https://github.com/laravel/homestead.git vagrant/Homestead
 ```
 
 * Run `vagrant up` from the root of your cloned fork of the UserFrosting Git repository

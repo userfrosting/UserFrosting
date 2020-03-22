@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Tests\Unit;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use UserFrosting\Tests\TestCase;
 use UserFrosting\System\Sprinkle\SprinkleManager;
@@ -20,7 +20,7 @@ class SprinkleManagerTest extends TestCase
     /** @var ContainerInterface $fakeCi Our mocked CI used for testing */
     protected $fakeCi;
 
-    public function setUp()
+    public function setUp(): void
     {
         // We don't call parent function to cancel CI creation and get accurate test coverage
         // Run only this test for accurage coverage report on SprinkleManager
@@ -32,7 +32,7 @@ class SprinkleManagerTest extends TestCase
         m::mock('UserFrosting\Sprinkle\Test\Test');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();

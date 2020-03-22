@@ -15,7 +15,6 @@
  * @author Atthaphon Urairat
  */
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'เกี่ยวกับ',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'รหัสยืนยัน',

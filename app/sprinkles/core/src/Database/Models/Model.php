@@ -12,7 +12,7 @@ namespace UserFrosting\Sprinkle\Core\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Core\Database\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Concerns\HasRelationships;
 
@@ -70,7 +70,7 @@ abstract class Model extends LaravelModel
     {
         $query = static::whereRaw("LOWER($identifier) = ?", [mb_strtolower($value)]);
 
-        if ($checkDeleted) {
+        if ($checkDeleted && method_exists($query, 'withTrashed')) {
             $query = $query->withTrashed();
         }
 

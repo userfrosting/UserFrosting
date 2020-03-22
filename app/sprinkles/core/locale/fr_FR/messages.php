@@ -14,7 +14,6 @@
  * @author Louis Charette
  */
 return [
-    '@PLURAL_RULE' => 2,
     'ABOUT'        => 'À propos',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'Captcha',

@@ -1,5 +1,5 @@
 sudo: false
-dist: trusty
+dist: xenial
 language: php
 
 services:
@@ -12,6 +12,7 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
 
 env:
   matrix:
@@ -19,6 +20,9 @@ env:
     - DB=sqlite
     - DB=pgsql
     - DB=memory
+
+matrix:
+  fast_finish: true
 
 cache:
   directories:

@@ -23,7 +23,7 @@ class MigrationRepositoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -31,7 +31,7 @@ class MigrationRepositoryTest extends TestCase
 
     protected $repository;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Boot parent TestCase, which will set up the database and connections for us.
         parent::setUp();

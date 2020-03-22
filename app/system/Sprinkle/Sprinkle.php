@@ -10,7 +10,7 @@
 
 namespace UserFrosting\System\Sprinkle;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventSubscriberInterface;
 
 /**
@@ -26,6 +26,23 @@ class Sprinkle implements EventSubscriberInterface
      * @var ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
+
+    /**
+     * @var string[] List of services provider to register
+     *
+     * @TODO : Move all theses to their own class (Target UF 5.0) and list the one need registering in config
+     */
+    protected $servicesproviders = [];
+
+    /**
+     * Create a new Sprinkle object.
+     *
+     * @param ContainerInterface $ci The global container object, which holds all your services.
+     */
+    public function __construct(ContainerInterface $ci)
+    {
+        $this->ci = $ci;
+    }
 
     /**
      * By default assign all methods as listeners using the default priority.
@@ -47,12 +64,15 @@ class Sprinkle implements EventSubscriberInterface
     }
 
     /**
-     * Create a new Sprinkle object.
-     *
-     * @param ContainerInterface $ci The global container object, which holds all your services.
+     * Register all services providers.
      */
-    public function __construct(ContainerInterface $ci)
+    public function registerServices(): void
     {
-        $this->ci = $ci;
+        foreach ($this->servicesproviders as $provider) {
+            if (class_exists($provider)) {
+                $instance = new $provider($this->ci);
+                $instance->register();
+            }
+        }
     }
 }

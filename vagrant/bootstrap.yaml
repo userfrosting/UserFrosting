@@ -12,12 +12,14 @@ keys:
     - ~/.ssh/id_rsa
 
 folders:
-    - map: "."
-      to: "/home/vagrant/userfrosting"
+    - map: .
+      to: /home/vagrant/userfrosting
 
 sites:
     - map: userfrosting.test
-      to: "/home/vagrant/userfrosting/public"
+      to: /home/vagrant/userfrosting/public
+    - map: phpmyadmin.test
+      to: /usr/share/phpmyadmin
 
 databases:
     - UserFrosting

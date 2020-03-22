@@ -14,7 +14,6 @@
  * @author Alexander Weissman and Abdullah Seba
  */
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'عن',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'كلمة التحقق',

@@ -1,4 +1,4 @@
-# UserFrosting 4.3
+# UserFrosting 4.4
 
 [![Latest Version](https://img.shields.io/github/release/userfrosting/UserFrosting.svg)](https://github.com/userfrosting/UserFrosting/releases)
 ![PHP Version](https://img.shields.io/packagist/php-v/userfrosting/userfrosting.svg?color=brightgreen)
@@ -11,8 +11,8 @@
 | Branch | Version | Build | Coverage | Style |
 | ------ |:-------:|:-----:|:--------:|:-----:|
 | [master] | ![](https://img.shields.io/github/release/userfrosting/userfrosting.svg?color=success&label=Version) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)][UF-Codecov] | [![][style-master]][style] |
-| [hotfix] | ![](https://img.shields.io/badge/Version-v4.3.x-yellow.svg) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=hotfix)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
-| [develop] | ![](https://img.shields.io/badge/Version-v4.4.x-orange.svg) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=develop)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
+| [hotfix] | ![](https://img.shields.io/badge/Version-v4.4.x-yellow.svg) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=hotfix)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
+| [develop] | ![](https://img.shields.io/badge/Version-v4.5.x-orange.svg) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=develop)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
 
 <!-- Links -->
 [master]: https://github.com/userfrosting/UserFrosting
@@ -56,7 +56,7 @@ Please see our [installation guide](https://learn.userfrosting.com/installation)
 
 If you are having trouble installing UserFrosting, please [join us in chat](https://chat.userfrosting.com) or try our [forums](https://forums.userfrosting.com).
 
-If you are generally confused about the structure and layout of the code, or it doesn't look like the kind of PHP code that you're used to, please [start from the beginning](https://learn.userfrosting.com/background).  
+If you are generally confused about the structure and layout of the code, or it doesn't look like the kind of PHP code that you're used to, please [start from the beginning](https://learn.userfrosting.com/background).
 
 ## Mission Objectives
 

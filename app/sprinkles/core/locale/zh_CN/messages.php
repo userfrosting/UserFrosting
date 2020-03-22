@@ -14,7 +14,6 @@
  * @author @BruceGui (https://github.com/BruceGui)
  */
 return [
-    '@PLURAL_RULE' => 0,
     'ABOUT'        => '关于',
     'CAPTCHA'      => [
         '@TRANSLATION' => '验证码',

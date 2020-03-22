@@ -11,6 +11,10 @@
 namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountDisabledException;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountInvalidException;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountNotVerifiedException;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;
@@ -34,7 +38,7 @@ class AuthenticatorTest extends TestCase
     /**
      * Setup the test database.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -134,11 +138,11 @@ class AuthenticatorTest extends TestCase
 
     /**
      * @depends testConstructor
-     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountInvalidException
      * @param Authenticator $authenticator
      */
     public function testValidateUserAccountThrowAccountInvalidException(Authenticator $authenticator)
     {
+        $this->expectException(AccountInvalidException::class);
         $this->invokeMethod($authenticator, 'validateUserAccount', [99999999]);
     }
 
@@ -154,11 +158,11 @@ class AuthenticatorTest extends TestCase
 
     /**
      * @depends testConstructor
-     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountInvalidException
      * @param Authenticator $authenticator
      */
     public function testValidateUserAccountThrowExceptionArgumentNotInt(Authenticator $authenticator)
     {
+        $this->expectException(AccountInvalidException::class);
         $this->invokeMethod($authenticator, 'validateUserAccount', ['stringIsNotInt']);
     }
 
@@ -170,14 +174,11 @@ class AuthenticatorTest extends TestCase
     {
         $testUser = $this->createTestUser();
         $user = $this->invokeMethod($authenticator, 'validateUserAccount', [$testUser->id]);
-        $testUserId = $testUser->id;
-        $userId = $user->id;
-        $this->assertSame($testUserId, $userId);
+        $this->assertSame($testUser->id, $user->id);
     }
 
     /**
      * @depends testConstructor
-     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountDisabledException
      * @param Authenticator $authenticator
      */
     public function testValidateUserAccountWithAccountDisabledException(Authenticator $authenticator)
@@ -185,6 +186,8 @@ class AuthenticatorTest extends TestCase
         $testUser = $this->createTestUser();
         $testUser->flag_enabled = false;
         $testUser->save();
+
+        $this->expectException(AccountDisabledException::class);
         $this->invokeMethod($authenticator, 'validateUserAccount', [$testUser->id]);
     }
 
@@ -277,30 +280,29 @@ class AuthenticatorTest extends TestCase
     /**
      * @depends testConstructor
      * @depends testAttempt_withUserName
-     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException
      * @param Authenticator $authenticator
      */
     public function testAttempt_withNoUser(Authenticator $authenticator)
     {
-        $currentUser = $authenticator->attempt('user_name', 'fooBar', 'barFoo', false);
+        $this->expectException(InvalidCredentialsException::class);
+        $authenticator->attempt('user_name', 'fooBar', 'barFoo', false);
     }
 
     /**
      * @depends testConstructor
      * @depends testAttempt_withUserName
-     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException
      * @param Authenticator $authenticator
      */
     public function testAttempt_withNoPassword(Authenticator $authenticator)
     {
         $testUser = $this->createTestUser(false, false, ['password' => '']);
-        $currentUser = $authenticator->attempt('email', $testUser->email, 'fooBar', false);
+        $this->expectException(InvalidCredentialsException::class);
+        $authenticator->attempt('email', $testUser->email, 'fooBar', false);
     }
 
     /**
      * @depends testConstructor
      * @depends testAttempt_withUserName
-     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountDisabledException
      * @param Authenticator $authenticator
      */
     public function testAttempt_withFlagEnabledFalse(Authenticator $authenticator)
@@ -311,13 +313,13 @@ class AuthenticatorTest extends TestCase
             'flag_enabled' => 0,
         ]);
 
-        $currentUser = $authenticator->attempt('user_name', $testUser->user_name, $password, false);
+        $this->expectException(AccountDisabledException::class);
+        $authenticator->attempt('user_name', $testUser->user_name, $password, false);
     }
 
     /**
      * @depends testConstructor
      * @depends testAttempt_withUserName
-     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountNotVerifiedException
      * @param Authenticator $authenticator
      */
     public function testAttempt_withFlagVerifiedFalse(Authenticator $authenticator)
@@ -328,7 +330,8 @@ class AuthenticatorTest extends TestCase
             'flag_verified' => 0,
         ]);
 
-        $currentUser = $authenticator->attempt('user_name', $testUser->user_name, $password, false);
+        $this->expectException(AccountNotVerifiedException::class);
+        $authenticator->attempt('user_name', $testUser->user_name, $password, false);
     }
 
     /**
@@ -361,7 +364,6 @@ class AuthenticatorTest extends TestCase
     /**
      * @depends testConstructor
      * @depends testAttempt_withUserName
-     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException
      * @param Authenticator $authenticator
      */
     public function testAttempt_withBadPassword(Authenticator $authenticator)
@@ -371,7 +373,8 @@ class AuthenticatorTest extends TestCase
             'password' => Password::hash($password),
         ]);
 
-        $currentUser = $authenticator->attempt('user_name', $testUser->user_name, 'BarFoo', false);
+        $this->expectException(InvalidCredentialsException::class);
+        $authenticator->attempt('user_name', $testUser->user_name, 'BarFoo', false);
     }
 
     /**
