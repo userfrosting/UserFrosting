@@ -77,6 +77,9 @@ vagrant/Homestead/
 .phpunit.result.cache
 .php_cs.cache
 
+# Ignore api doc
+api/
+
 # Igore npm lockfile
 build/package-lock.json
 build/package.lock
