@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     tty: true
     build:
-      context: docker/app
+      context: ./docker/app
     environment:
       - DB_DRIVER=mysql
       - DB_HOST=ufmysql
@@ -17,8 +17,19 @@ services:
       - ./docker/app/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     networks:
       - backend
-
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - reverse-proxy
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
   nginx:
+    environment:
+      VIRTUAL_HOST: userfrosting.localhost
+      VIRTUAL_PORT: 80
     restart: unless-stopped
     tty: true
     ports:
@@ -34,6 +45,7 @@ services:
     networks:
       - frontend
       - backend
+      - reverse-proxy
 
   ufmysql:
     image: mysql:5.7
@@ -48,6 +60,20 @@ services:
       - 8593:3306
     volumes:
       - userfrosting-db:/var/lib/mysql
+  composer:
+    image: "composer"
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: -V
+  node:
+    image: node:alpine
+    build:
+      context: ./docker/node
+    volumes:
+      - .:/app
+    working_dir: /app/build
+    command: npm run uf-assets-install
 
 volumes:
   userfrosting-db:
@@ -56,3 +82,4 @@ volumes:
 networks:
   frontend:
   backend:
+  reverse-proxy:
