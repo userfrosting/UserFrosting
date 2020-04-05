@@ -195,7 +195,7 @@ abstract class Sprunje
             $response = $response->withAddedHeader('Content-Type', 'text/csv; charset=utf-8');
 
             return $response->write($result);
-            // Default to JSON
+        // Default to JSON
         } else {
             $result = $this->getArray();
 
@@ -242,7 +242,7 @@ abstract class Sprunje
         $collection = collect($filteredQuery->get());
 
         // Perform any additional transformations on the dataset
-        $collection = $this->applyTransformations($collection);
+        $this->applyTransformations($collection);
 
         $csv = Writer::createFromFileObject(new \SplTempFileObject());
 
@@ -311,7 +311,7 @@ abstract class Sprunje
         $collection = collect($filteredQuery->get());
 
         // Perform any additional transformations on the dataset
-        $collection = $this->applyTransformations($collection);
+        $this->applyTransformations($collection);
 
         return [$count, $countFiltered, $collection];
     }
@@ -436,7 +436,7 @@ abstract class Sprunje
         ) {
             $offset = $this->options['size'] * $this->options['page'];
             $query->skip($offset)
-                ->take($this->options['size']);
+                  ->take($this->options['size']);
         }
 
         return $this;
