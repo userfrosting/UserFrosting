@@ -56,7 +56,10 @@ class SetupSmtpCommand extends BaseCommand
              ->addOption('force', null, InputOption::VALUE_NONE, 'Force setup if SMTP appears to be already configured')
              ->addOption('smtp_host', null, InputOption::VALUE_OPTIONAL, 'The SMTP server hostname')
              ->addOption('smtp_user', null, InputOption::VALUE_OPTIONAL, 'The SMTP server user')
-             ->addOption('smtp_password', null, InputOption::VALUE_OPTIONAL, 'The SMTP server password');
+             ->addOption('smtp_password', null, InputOption::VALUE_OPTIONAL, 'The SMTP server password')
+             ->addOption('smtp_port', null, InputOption::VALUE_OPTIONAL, 'The SMTP server port')
+             ->addOption('smtp_auth', null, InputOption::VALUE_OPTIONAL, 'The SMTP server authentication')
+             ->addOption('smtp_secure', null, InputOption::VALUE_OPTIONAL, 'The SMTP server security type');
     }
 
     /**
@@ -89,13 +92,19 @@ class SetupSmtpCommand extends BaseCommand
             'SMTP_HOST'     => ($dotenvEditor->keyExists('SMTP_HOST')) ? $dotenvEditor->getValue('SMTP_HOST') : '',
             'SMTP_USER'     => ($dotenvEditor->keyExists('SMTP_USER')) ? $dotenvEditor->getValue('SMTP_USER') : '',
             'SMTP_PASSWORD' => ($dotenvEditor->keyExists('SMTP_PASSWORD')) ? $dotenvEditor->getValue('SMTP_PASSWORD') : '',
+            'SMTP_PORT'     => ($dotenvEditor->keyExists('SMTP_PORT')) ? $dotenvEditor->getValue('SMTP_PORT') : '',
+            'SMTP_AUTH'     => ($dotenvEditor->keyExists('SMTP_AUTH')) ? $dotenvEditor->getValue('SMTP_AUTH') : '',
+            'SMTP_SECURE'   => ($dotenvEditor->keyExists('SMTP_SECURE')) ? $dotenvEditor->getValue('SMTP_SECURE') : '',
         ];
 
         // There may be some custom config or global env values defined on the server.
         // We'll check for that and ask for confirmation in this case.
         if ($config['mail.host'] != $keys['SMTP_HOST'] ||
             $config['mail.username'] != $keys['SMTP_USER'] ||
-            $config['mail.password'] != $keys['SMTP_PASSWORD']) {
+            $config['mail.password'] != $keys['SMTP_PASSWORD'] ||
+            $config['mail.port'] != $keys['SMTP_PORT'] ||
+            $config['mail.auth'] != $keys['SMTP_AUTH'] ||
+            $config['mail.secure'] != $keys['SMTP_SECURE']) {
             $this->io->warning("Current SMTP configuration differ from the configuration defined in `{$this->envPath}`. Global system environment variables might be defined.");
 
             if (!$this->io->confirm('Continue?', false)) {
@@ -130,7 +139,8 @@ class SetupSmtpCommand extends BaseCommand
     protected function askForSmtpMethod(InputInterface $input)
     {
         // If the user defined any of the command input argument, skip right to SMTP method
-        if ($input->getOption('smtp_host') || $input->getOption('smtp_user') || $input->getOption('smtp_password')) {
+        if ($input->getOption('smtp_host') || $input->getOption('smtp_user') || $input->getOption('smtp_password')
+            || $input->getOption('smtp_port') || $input->getOption('smtp_auth') || $input->getOption('smtp_secure') ) {
             return $this->askForSmtp($input);
         }
 
@@ -169,11 +179,17 @@ class SetupSmtpCommand extends BaseCommand
             // Use custom validator to accept empty password
             return $password;
         });
+        $smtpPort = ($input->getOption('smtp_port')) ?: $this->io->ask('SMTP Server Port', 587);
+        $smtpAuth = ($input->getOption('smtp_auth')) ?: $this->io->ask('SMTP Server Authentication', 'true');
+        $smtpSecure = ($input->getOption('smtp_secure')) ?: $this->io->ask('SMTP Server Security type', 'tls');
 
         return [
             'SMTP_HOST'     => $smtpHost,
             'SMTP_USER'     => $smtpUser,
             'SMTP_PASSWORD' => $smtpPassword,
+            'SMTP_PORT'     => $smtpPort,
+            'SMTP_AUTH'     => $smtpAuth,
+            'SMTP_SECURE'   => $smtpSecure,
         ];
     }
 
@@ -216,6 +232,9 @@ class SetupSmtpCommand extends BaseCommand
                 'SMTP_HOST'     => '',
                 'SMTP_USER'     => '',
                 'SMTP_PASSWORD' => '',
+                'SMTP_PORT' => '',
+                'SMTP_AUTH' => '',
+                'SMTP_SECURE' => '',
             ];
         } else {
             $this->askForSmtpMethod($input);
@@ -231,7 +250,8 @@ class SetupSmtpCommand extends BaseCommand
      */
     protected function isSmtpConfigured(DotenvEditor $dotenvEditor)
     {
-        if ($dotenvEditor->keyExists('SMTP_HOST') && $dotenvEditor->keyExists('SMTP_USER') && $dotenvEditor->keyExists('SMTP_PASSWORD')) {
+        if ($dotenvEditor->keyExists('SMTP_HOST') && $dotenvEditor->keyExists('SMTP_USER') && $dotenvEditor->keyExists('SMTP_PASSWORD')
+            && $dotenvEditor->keyExists('SMTP_PORT') && $dotenvEditor->keyExists('SMTP_AUTH') && $dotenvEditor->keyExists('SMTP_SECURE')) {
             return true;
         } else {
             return false;
