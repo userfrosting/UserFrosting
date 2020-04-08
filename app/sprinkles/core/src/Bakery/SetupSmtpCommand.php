@@ -140,7 +140,7 @@ class SetupSmtpCommand extends BaseCommand
     {
         // If the user defined any of the command input argument, skip right to SMTP method
         if ($input->getOption('smtp_host') || $input->getOption('smtp_user') || $input->getOption('smtp_password')
-            || $input->getOption('smtp_port') || $input->getOption('smtp_auth') || $input->getOption('smtp_secure') ) {
+            || $input->getOption('smtp_port') || $input->getOption('smtp_auth') || $input->getOption('smtp_secure')) {
             return $this->askForSmtp($input);
         }
 
@@ -232,9 +232,9 @@ class SetupSmtpCommand extends BaseCommand
                 'SMTP_HOST'     => '',
                 'SMTP_USER'     => '',
                 'SMTP_PASSWORD' => '',
-                'SMTP_PORT' => '',
-                'SMTP_AUTH' => '',
-                'SMTP_SECURE' => '',
+                'SMTP_PORT'     => '',
+                'SMTP_AUTH'     => '',
+                'SMTP_SECURE'   => '',
             ];
         } else {
             $this->askForSmtpMethod($input);
