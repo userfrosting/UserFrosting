@@ -232,9 +232,9 @@ return [
     'mail'    => [
         'mailer'          => 'smtp', // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
         'host'            => env('SMTP_HOST'),
-        'port'            => 587,
-        'auth'            => true,
-        'secure'          => 'tls', // Enable TLS encryption. Set to `tls`, `ssl` or `false` (to disabled)
+        'port'            => getenv('SMTP_PORT') ?: null,
+        'auth'            => getenv('SMTP_AUTH') ?: null,
+        'secure'          => getenv('SMTP_SECURE') ?: null, // Enable TLS encryption. Set to `tls`, `ssl` or `false` (to disabled)
         'username'        => env('SMTP_USER'),
         'password'        => env('SMTP_PASSWORD'),
         'smtp_debug'      => 4,
