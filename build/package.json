@@ -21,7 +21,7 @@
     "strip-ansi": "^6.0.0"
   },
   "scripts": {
-    "uf-bundle": "./node_modules/.bin/gulp bundle",
+    "uf-bundle": "./node_modules/.bin/gulp build",
     "uf-assets-install": "./node_modules/.bin/gulp assetsInstall",
     "uf-frontend": "./node_modules/.bin/gulp frontend",
     "uf-clean": "./node_modules/.bin/gulp clean"
