@@ -5,15 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v4.4.1]
 
 ### Fixed
 - Fixed issue where incompatible NPM packages would be browserified, resulting in install failures.
 - Replaced deprecated Twig class.
-
-## [v4.4.1]
-### Fixed
-- Fixed issue when compiling assets for produciton ([#1078]).
+- Fixed issue when compiling assets for production ([#1078]).
 
 ## [v4.4.0]
 
