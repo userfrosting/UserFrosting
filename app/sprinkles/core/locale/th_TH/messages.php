@@ -12,9 +12,9 @@
  * Thai message token translations for the 'core' sprinkle.
  *
  * @author Karuhut Komol
+ * @author Atthaphon Urairat
  */
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'เกี่ยวกับ',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'รหัสยืนยัน',
@@ -36,32 +36,32 @@ return [
     'HOME'  => 'หน้าแรก',
     'LEGAL' => [
         '@TRANSLATION' => 'นโยบายทางกฎหมาย',
-        // 'DESCRIPTION'  => 'Our legal policy applies to your usage of this website and our services.',
+        'DESCRIPTION'  => 'นโยบายทางกฎหมายของเรามีผลบังคับใช้กับเกี่ยวกับการใช้งานของคุณในเว็บไซต์นี้และบริการของเรา',
     ],
     'LOCALE' => [
         '@TRANSLATION' => 'ภาษา',
     ],
     'NAME'       => 'ชื่อ',
     'NAVIGATION' => 'เมนูนำทาง',
-    // 'NO_RESULTS' => 'Sorry, we\'ve got nothing here.',
+    'NO_RESULTS' => 'ขออภัย แต่ที่นี่ไม่มีอะไร',
     'PAGINATION' => [
         'GOTO'     => 'ข้ามไปยังหน้า',
         'SHOW'     => 'แสดง',
-        // 'OUTPUT'   => '{startRow} to {endRow} of {filteredRows} ({totalRows})',
-        // 'NEXT'     => 'Next page',
-        // 'PREVIOUS' => 'Previous page',
-        // 'FIRST'    => 'First page',
-        // 'LAST'     => 'Last page',
+        'OUTPUT'   => '{startRow} ไปยัง {endRow} ของ {filteredRows} ({totalRows})',
+        'NEXT'     => 'หน้าต่อไป',
+        'PREVIOUS' => 'หน้าที่แล้ว',
+        'FIRST'    => 'หน้าแรก',
+        'LAST'     => 'หน้าสุดท้าย',
     ],
     'PRIVACY' => [
         '@TRANSLATION' => 'นโยบายความเป็นส่วนตัว',
-        // 'DESCRIPTION'  => 'Our privacy policy outlines what kind of information we collect from you and how we will use it.',
+        'DESCRIPTION'  => 'นโยบายความเป็นส่วนตัวของเราซึ่งสรุปประเภทของข้อมูลที่เรารวบรวมจากคุณและวิธีการที่เราจะใช้มัน',
     ],
     'SLUG'                     => 'ข้อกำหนด',
     'SLUG_CONDITION'           => 'ข้อกำหนด/เงื่อนไข',
-    // 'SLUG_IN_USE'              => 'A <strong>{{slug}}</strong> slug already exists',
+    'SLUG_IN_USE'              => '<strong>{{slug}}</strong> มีอยู่แล้ว',
     'STATUS'                   => 'สถานะ',
-    // 'SUGGEST'                  => 'Suggest',
+    'SUGGEST'                  => 'คำแนะนำ',
     'UNKNOWN'                  => 'ไม่ทราบ',
     'ACTIONS'                  => 'การดำเนินการ',
     'ACTIVATE'                 => 'เปิดใช้งาน',
@@ -98,5 +98,5 @@ return [
     'OPTIONAL'                 => 'ตัวเลือกเพิ่มเติม',
     'BUILT_WITH_UF'            => 'สร้างด้วย <a href="http://www.userfrosting.com">UserFrosting</a>',
     'ADMINLTE_THEME_BY'        => 'ธีมโดย <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a></strong> สงวนลิขสิทธิ์',
-    // 'WELCOME_TO'               => 'Welcome to {{title}}!',
+    'WELCOME_TO'               => 'ยินดีต้อนรับสู่ {{title}}!',
 ];

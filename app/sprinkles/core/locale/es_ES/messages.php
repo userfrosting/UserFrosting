@@ -14,7 +14,6 @@
  * @author rafa31gz
  */
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'Acerca de',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'Captcha',

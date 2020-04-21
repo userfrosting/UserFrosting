@@ -395,7 +395,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\Translator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled page
@@ -469,7 +469,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\Translator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "slug", "description" for this role
@@ -805,7 +805,7 @@ class RoleController extends SimpleController
         // Get PUT parameters: (name, slug, description)
         $params = $request->getParsedBody();
 
-        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\Translator $translator */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -981,7 +981,7 @@ class RoleController extends SimpleController
         // Get validated and transformed value
         $fieldValue = $data[$fieldName];
 
-        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\Translator $translator */
         $ms = $this->ci->alerts;
 
         // Begin transaction - DB will be rolled back if an exception occurs

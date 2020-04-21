@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 use UserFrosting\Sprinkle\Core\Alert\AlertStream;
 use UserFrosting\Sprinkle\Core\Alert\CacheAlertStream;
 use Illuminate\Cache\Repository as Cache;
-use UserFrosting\I18n\MessageTranslator;
+use UserFrosting\I18n\Translator;
 
 class CacheAlertStreamTest extends TestCase
 {
@@ -23,7 +23,7 @@ class CacheAlertStreamTest extends TestCase
 
     protected $session_id = 'foo123';
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -31,7 +31,7 @@ class CacheAlertStreamTest extends TestCase
 
     public function testConstructor()
     {
-        $translator = m::mock(MessageTranslator::class);
+        $translator = m::mock(Translator::class);
         $cache = m::mock(Cache::class);
         $stream = new CacheAlertStream($this->key, $translator, $cache, $this->session_id);
 
@@ -44,13 +44,13 @@ class CacheAlertStreamTest extends TestCase
      */
     public function testSetTranslator()
     {
-        $translator = m::mock(MessageTranslator::class);
+        $translator = m::mock(Translator::class);
         $cache = m::mock(Cache::class);
         $stream = new CacheAlertStream($this->key, $translator, $cache, $this->session_id);
 
         $this->assertSame($translator, $stream->translator());
 
-        $translator2 = m::mock(MessageTranslator::class);
+        $translator2 = m::mock(Translator::class);
         $this->assertNotSame($translator, $translator2);
         $this->assertInstanceOf(CacheAlertStream::class, $stream->setTranslator($translator2));
         $this->assertSame($translator2, $stream->translator());
@@ -62,7 +62,7 @@ class CacheAlertStreamTest extends TestCase
     public function testAddMessage()
     {
         // Build Mock
-        $translator = m::mock(MessageTranslator::class);
+        $translator = m::mock(Translator::class);
         $cache = m::mock(Cache::class);
         $tags = m::mock(\Illuminate\Cache\TaggedCache::class);
 
@@ -86,7 +86,7 @@ class CacheAlertStreamTest extends TestCase
     public function testAddMessageWithExistingkey()
     {
         // Build Mock
-        $translator = m::mock(MessageTranslator::class);
+        $translator = m::mock(Translator::class);
         $cache = m::mock(Cache::class);
         $tags = m::mock(\Illuminate\Cache\TaggedCache::class);
 
@@ -111,7 +111,7 @@ class CacheAlertStreamTest extends TestCase
     public function testAddMessageWithExistingkeyNotEmpty()
     {
         // Build Mock
-        $translator = m::mock(MessageTranslator::class);
+        $translator = m::mock(Translator::class);
         $cache = m::mock(Cache::class);
         $tags = m::mock(\Illuminate\Cache\TaggedCache::class);
 
@@ -136,7 +136,7 @@ class CacheAlertStreamTest extends TestCase
     public function testResetMessageStream()
     {
         // Build Mock
-        $translator = m::mock(MessageTranslator::class);
+        $translator = m::mock(Translator::class);
         $cache = m::mock(Cache::class);
         $tags = m::mock(\Illuminate\Cache\TaggedCache::class);
 
@@ -167,7 +167,7 @@ class CacheAlertStreamTest extends TestCase
     public function testAddMessageTranslated()
     {
         // Build Mock
-        $translator = m::mock(MessageTranslator::class);
+        $translator = m::mock(Translator::class);
         $cache = m::mock(Cache::class);
         $tags = m::mock(\Illuminate\Cache\TaggedCache::class);
 
@@ -198,7 +198,7 @@ class CacheAlertStreamTest extends TestCase
     public function testGetAndClearMessages()
     {
         // Build Mock
-        $translator = m::mock(MessageTranslator::class);
+        $translator = m::mock(Translator::class);
         $cache = m::mock(Cache::class);
         $tags = m::mock(\Illuminate\Cache\TaggedCache::class);
 
@@ -223,7 +223,7 @@ class CacheAlertStreamTest extends TestCase
     public function testAddValidationErrors()
     {
         // Build Mock
-        $translator = m::mock(MessageTranslator::class);
+        $translator = m::mock(Translator::class);
         $cache = m::mock(Cache::class);
         $tags = m::mock(\Illuminate\Cache\TaggedCache::class);
         $validator = m::mock(\UserFrosting\Fortress\ServerSideValidator::class);

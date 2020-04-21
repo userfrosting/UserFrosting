@@ -14,7 +14,6 @@
  * @author Bruno Silva (brunomnsilva@gmail.com)
  */
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'Acerca',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'Captcha',

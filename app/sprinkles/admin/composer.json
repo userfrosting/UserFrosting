@@ -9,6 +9,15 @@
         {
             "name": "Alexander Weissman",
             "homepage": "https://alexanderweissman.com"
+        },
+        {
+            "name": "Louis Charette",
+            "homepage": "https://bbqsoftwares.com"
+        },
+        {
+            "name": "Jordan Mele",
+            "email": "SiliconSoldier@outlook.com.au",
+            "homepage": "https://blog.djmm.me"
         }
     ],
     "autoload": {

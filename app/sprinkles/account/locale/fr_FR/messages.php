@@ -25,7 +25,7 @@ return [
         'SESSION_COMPROMISED' => [
             '@TRANSLATION' => 'Votre session a été compromise. Vous devez vous déconnecter de tous les périphériques, puis vous reconnecter et vous assurer que vos données n\'ont pas été altérées.',
             'TITLE'        => 'Votre compte peut avoir été compromis',
-            // 'TEXT'         => 'Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{url}}">log in</a> and check your account for suspicious activity.  You may also wish to change your password.',
+            'TEXT'         => 'Quelqu\'un a peut-être utilisé vos informations de connexion pour accéder à cette page. Pour votre sécurité, toutes les sessions ont été déconnectées. <a href="{{url}">Connectez-vous</a> et vérifiez votre compte pour toute activité suspecte. Vous voudrez peut-être aussi changer votre mot de passe.',
         ],
         'SESSION_EXPIRED' => 'Votre session a expiré. Veuillez vous connecter à nouveau.',
         'SETTINGS'        => [
@@ -83,9 +83,9 @@ return [
         'CONFIRM_NEW_EXPLAIN' => 'Confirmer le mot de passe',
         'CONFIRM_NEW_HELP'    => 'Obligatoire uniquement si vous sélectionnez un nouveau mot de passe',
         'CREATE'              => [
-            // '@TRANSLATION' => 'Create Password',
-            // 'PAGE'         => 'Choose a password for your new account.',
-            // 'SET'          => 'Set Password and Sign In',
+            '@TRANSLATION' => 'Créer un mot de passe',
+            'PAGE'         => 'Choisissez un mot de passe pour votre nouveau compte.',
+            'SET'          => 'Définir le mot de passe et se connecter',
         ],
         'CURRENT'         => 'Mot de passe actuel',
         'CURRENT_EXPLAIN' => 'Vous devez confirmer votre mot de passe actuel pour apporter des modifications',

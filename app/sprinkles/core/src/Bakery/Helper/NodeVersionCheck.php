@@ -20,38 +20,34 @@ trait NodeVersionCheck
     /**
      * Check the minimum version requirement of Node installed.
      *
-     * @param bool $displayVersion
+     * @return string Node version
      */
-    protected function checkNodeVersion($displayVersion = true)
+    protected function checkNodeVersion()
     {
         $npmVersion = trim(exec('node -v'));
-
-        if ($displayVersion) {
-            $this->io->writeln("Node Version : $npmVersion");
-        }
 
         if (version_compare($npmVersion, \UserFrosting\NODE_MIN_VERSION, '<')) {
             $this->io->error('UserFrosting requires Node version ' . \UserFrosting\NODE_MIN_VERSION . ' or above. Check the documentation for more details.');
             exit(1);
         }
+
+        return $npmVersion;
     }
 
     /**
      * Check the minimum version requirement for Npm.
      *
-     * @param bool $displayVersion
+     * @return string NPM version
      */
-    protected function checkNpmVersion($displayVersion = true)
+    protected function checkNpmVersion()
     {
         $npmVersion = trim(exec('npm -v'));
-
-        if ($displayVersion) {
-            $this->io->writeln("NPM Version : $npmVersion");
-        }
 
         if (version_compare($npmVersion, \UserFrosting\NPM_MIN_VERSION, '<')) {
             $this->io->error('UserFrosting requires npm version ' . \UserFrosting\NPM_MIN_VERSION . ' or above. Check the documentation for more details.');
             exit(1);
         }
+
+        return $npmVersion;
     }
 }

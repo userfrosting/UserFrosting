@@ -11,7 +11,7 @@
 namespace UserFrosting\System\Sprinkle;
 
 use Illuminate\Support\Str;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\Support\Exception\FileNotFoundException;
 use UserFrosting\Support\Exception\JsonException;
 
@@ -260,6 +260,7 @@ class SprinkleManager
      */
     public function registerServices($sprinkleName)
     {
+        //Register the default services
         $fullClassName = $this->getSprinkleDefaultServiceProvider($sprinkleName);
 
         // Check that class exists, and register services
@@ -267,6 +268,11 @@ class SprinkleManager
             // Register core services
             $serviceProvider = new $fullClassName();
             $serviceProvider->register($this->ci);
+        }
+
+        // Register services from other providers
+        if ($this->sprinkles[$sprinkleName] instanceof Sprinkle) {
+            $this->sprinkles[$sprinkleName]->registerServices();
         }
     }
 

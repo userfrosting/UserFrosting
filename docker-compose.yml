@@ -1,10 +1,10 @@
 version: "3.2"
 services:
-  php:
+  app:
     restart: unless-stopped
     tty: true
     build:
-      context: ./docker/php
+      context: docker/app
     environment:
       - DB_DRIVER=mysql
       - DB_HOST=ufmysql
@@ -14,7 +14,7 @@ services:
       - DB_PASSWORD=secret
     volumes:
       - .:/app
-      - ./docker/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./docker/app/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     networks:
       - backend
 
@@ -29,7 +29,7 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - php
+      - app
       - ufmysql
     networks:
       - frontend

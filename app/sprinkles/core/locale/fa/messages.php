@@ -14,7 +14,6 @@
  * @author aminakbari
  */
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'درباره',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'کد امنیتی',
@@ -36,7 +35,7 @@ return [
     'HOME'  => 'خانه',
     'LEGAL' => [
         '@TRANSLATION' => 'سیاست حقوقی',
-        // 'DESCRIPTION'  => 'Our legal policy applies to your usage of this website and our services.',
+        'DESCRIPTION'  => 'سیاست های قانونی ما در مورد استفاده شما از این وب سایت و خدمات ما اعمال می شود.',
     ],
     'LOCALE' => [
         '@TRANSLATION' => 'زبان',
@@ -48,14 +47,14 @@ return [
         'GOTO'     => 'پرش به صفحه',
         'SHOW'     => 'نمایش',
         'OUTPUT'   => '{startRow} تا {endRow} از {filteredRows} ({totalRows})',
-        // 'NEXT'     => 'Next page',
-        // 'PREVIOUS' => 'Previous page',
-        // 'FIRST'    => 'First page',
-        // 'LAST'     => 'Last page',
+        'NEXT'     => 'صفحه بعد',
+        'PREVIOUS' => 'صفحه قبلی',
+        'FIRST'    => 'صفحه اول',
+        'LAST'     => 'آخرین صفحه',
     ],
     'PRIVACY' => [
         '@TRANSLATION' => 'سیاست حفظ حریم خصوصی',
-        // 'DESCRIPTION'  => 'Our privacy policy outlines what kind of information we collect from you and how we will use it.',
+        'DESCRIPTION'  => 'سیاست های حفظ حریم خصوصی ما مشخص می کند که چه نوع اطلاعاتی را از شما جمع می کنیم و چگونه از آنها استفاده خواهیم کرد.',
     ],
     'SLUG'                     => 'اسلاگ',
     'SLUG_CONDITION'           => 'اسلاگ/شرایط',
@@ -98,5 +97,5 @@ return [
     'OPTIONAL'                 => 'اختیاری',
     'BUILT_WITH_UF'            => 'ساخته شده با <a href="http://www.userfrosting.com">یوزرفراستینگ</a>',
     'ADMINLTE_THEME_BY'        => 'قالب از <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> تمامی حقوق محفوظ است',
-    // 'WELCOME_TO'               => 'Welcome to {{title}}!',
+    'WELCOME_TO'               => 'خوش آمدید به {{title}}!',
 ];

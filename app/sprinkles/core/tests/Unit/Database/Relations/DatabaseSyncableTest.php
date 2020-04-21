@@ -22,7 +22,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\HasManySyncable;
  */
 class DatabaseSyncableTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();

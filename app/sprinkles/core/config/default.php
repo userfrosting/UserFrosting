@@ -327,26 +327,24 @@ return [
             // Should be ordered according to https://en.wikipedia.org/wiki/List_of_languages_by_total_number_of_speakers,
             // with the exception of English, which as the default language comes first.
             'available' => [
-                'en_US' => 'English',
-                'zh_CN' => '中文',
-                'es_ES' => 'Español',
-                'ar'    => 'العربية',
-                'pt_PT' => 'Português',
-                'ru_RU' => 'русский',
-                'de_DE' => 'Deutsch',
-                'fr_FR' => 'Français',
-                'tr'    => 'Türk',
-                'it_IT' => 'Italiano',
-                'th_TH' => 'ภาษาไทย',
-                'fa'    => 'فارسی',
-                'el'    => 'Greek',
-
+                'en_US' => true,
+                'zh_CN' => true,
+                'es_ES' => true,
+                'ar'    => true,
+                'pt_BR' => true,
+                'pt_PT' => true,
+                'ru_RU' => true,
+                'de_DE' => true,
+                'fr_FR' => true,
+                'tr'    => true,
+                'it_IT' => true,
+                'th_TH' => true,
+                'fa'    => true,
+                'el'    => true,
+                'sr_RS' => true,
             ],
-            // This can be a comma-separated list, to load multiple fallback locales.
-            // Supported browser requested languages always have first preference.
-            // First locale is the base one and the other one are loaded on top.
-            // For example, 'en_US,es_ES' will use the English (en_US)
-            // translation as a base and load the Spanish (es_ES) translation on top.
+            // The default locale to use for non-registered users.
+            // Browser requested languages might overwrite this value.
             'default' => 'en_US',
         ],
         'title' => 'UserFrosting', // Site display name

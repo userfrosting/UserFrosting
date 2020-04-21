@@ -29,7 +29,7 @@ class UserModelTest extends TestCase
     /**
      * Setup the database schema.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

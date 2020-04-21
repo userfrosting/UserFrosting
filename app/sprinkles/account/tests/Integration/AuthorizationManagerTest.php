@@ -29,7 +29,7 @@ class AuthorizationManagerTest extends TestCase
     /**
      * Setup the test database.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -38,7 +38,7 @@ class AuthorizationManagerTest extends TestCase
         $this->refreshDatabase();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -80,14 +80,13 @@ class AuthorizationManagerTest extends TestCase
 
     /**
      * @depends testConstructor
-     * @expectedException \ArgumentCountError
      * @param AuthorizationManager $manager
-     *                                      REQUIRES PHP 7.1 or better
      */
-    /*public function testCheckAccess_withOutUser(AuthorizationManager $manager)
+    public function testCheckAccess_withOutUser(AuthorizationManager $manager)
     {
+        $this->expectException(\ArgumentCountError::class);
         $manager->checkAccess();
-    }*/
+    }
 
     /**
      * @depends testConstructor

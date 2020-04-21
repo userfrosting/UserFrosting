@@ -12,7 +12,7 @@ namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
 
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;
-use UserFrosting\Sprinkle\Core\Session\DatabaseSessionHandler;
+use Illuminate\Session\DatabaseSessionHandler;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Tests\withDatabaseSessionHandler;
@@ -27,7 +27,7 @@ class SessionDatabaseHandlerTest extends TestCase
     use RefreshDatabase;
     use withDatabaseSessionHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

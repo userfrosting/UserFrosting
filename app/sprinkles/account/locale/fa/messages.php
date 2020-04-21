@@ -25,7 +25,7 @@ return [
         'SESSION_COMPROMISED' => [
             '@TRANSLATION' => 'ممکن است سژن شما مورد حمله واقع شده باشد. بهتر است با همه دستگاه های خود از وب سایت خارج شوید و دوباره وارد شوید. همچنین توجه بفرمایید که اطلاعات حسابتان، مورد حمله واقع نشده باشد. ',
             'TITLE'        => 'ممکن است که اکانت شما مورد حمله واقع شده باشد',
-            // 'TEXT'         => 'Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{url}}">log in</a> and check your account for suspicious activity.  You may also wish to change your password.',
+            'TEXT'         => 'ممکن است شخصی برای ورود به این صفحه از اطلاعات ورود شما استفاده کرده باشد. برای امنیت شما ، تمام سژن ها از سیستم خارج شدند. لطفاً <a href="{{url}}">وارد شوید</a> و حساب کاربری خود را برای فعالیت مشکوک بررسی نمایید. همچنین بهتر است رمز عبور خود را تغییر دهید.',
         ],
         'SESSION_EXPIRED' => 'سژن شما به پایان رسیده است. لطفا دوباره وارد شوید.',
         'SETTINGS'        => [
@@ -83,9 +83,9 @@ return [
         'CONFIRM_NEW_EXPLAIN' => 'رمز عبور جدید را تکرار کنید',
         'CONFIRM_NEW_HELP'    => 'فقط زمانی لازم است که می خواهید گذرواژه جدیدی انتخاب کنید',
         'CREATE'              => [
-            // '@TRANSLATION' => 'Create Password',
-            // 'PAGE'         => 'Choose a password for your new account.',
-            // 'SET'          => 'Set Password and Sign In',
+            '@TRANSLATION' => 'ایجاد رمز عبور',
+            'PAGE'         => 'برای حساب جدید خود رمزعبور انتخاب کنید.',
+            'SET'          => 'گذرواژه خود را تنظیم کرده و وارد سیستم شوید',
         ],
         'CURRENT'         => 'گذرواژه فعلی',
         'CURRENT_EXPLAIN' => 'شما باید گذرواژه فعلی خود را وارد کنید تا بتوانید اطلاعات را به روز رسانی کنید',
@@ -129,7 +129,7 @@ return [
     ],
     'REMEMBER_ME'             => 'من را به خاطر بسپار!',
     'REMEMBER_ME_ON_COMPUTER' => 'من را در این دستگاه به خاطر بسپار (برای دستگاه های عمومی پیشنهاد نمی شود)',
-    // 'SIGN_IN_HERE'            => 'Already have an account? <a href="{{url}}">Sign in here.</a>',
+    'SIGN_IN_HERE'            => 'حساب دارید؟ <a href="{{url}}">اینجا وارد شوید</a>.',
     'SIGNIN'                  => 'ورود',
     'SIGNIN_OR_REGISTER'      => 'ثبت نام کنید و یا وارد شوید',
     'SIGNUP'                  => 'ثبت نام',

@@ -11,9 +11,9 @@
 namespace UserFrosting\Sprinkle\Account\ServicesProvider;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Interop\Container\ContainerInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
@@ -38,7 +38,7 @@ class ServicesProvider
     /**
      * Register UserFrosting's account services.
      *
-     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
+     * @param ContainerInterface $container A DI container implementing ArrayAccess and psr-container.
      */
     public function register(ContainerInterface $container)
     {
@@ -91,30 +91,6 @@ class ServicesProvider
             $handler->registerHandler('\UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedException', '\UserFrosting\Sprinkle\Account\Error\Handler\AuthCompromisedExceptionHandler');
 
             return $handler;
-        });
-
-        /*
-         * Extends the 'localePathBuilder' service, adding any locale files from the user theme.
-         *
-         * @return \UserFrosting\I18n\LocalePathBuilder
-         */
-        $container->extend('localePathBuilder', function ($pathBuilder, $c) {
-            // Add paths for user theme, if a user is logged in
-            // We catch any authorization-related exceptions, so that error pages can be rendered.
-            try {
-                /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-                $authenticator = $c->authenticator;
-                $currentUser = $c->currentUser;
-            } catch (\Exception $e) {
-                return $pathBuilder;
-            }
-
-            // Add user locale
-            if ($authenticator->check()) {
-                $pathBuilder->addLocales($currentUser->locale);
-            }
-
-            return $pathBuilder;
         });
 
         /*

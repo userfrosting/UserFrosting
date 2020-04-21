@@ -54,7 +54,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
     /**
      * Setup migration instances used for all tests
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Boot parent TestCase, which will set up the database and connections for us.
         parent::setUp();

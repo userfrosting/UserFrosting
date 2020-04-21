@@ -9,7 +9,6 @@
  */
 
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'Σχετικά',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'Captcha',
@@ -52,9 +51,9 @@ return [
         '@TRANSLATION' => 'Πολιτική απορρήτου',
         'DESCRIPTION'  => 'Η πολιτική απορρήτου μας περιγράφει τι είδους πληροφορίες συλλέγουμε από εσάς και πώς θα το χρησιμοποιήσουμε    ',
     ],
-    'SLUG'                     => 'Slug',
-    'SLUG_CONDITION'           => 'Slug/ Προϋποθέσεις',
-    'SLUG_IN_USE'              => 'Υπάρχει ήδη ένα slug <strong> {{slug}} </ strong>',
+    'SLUG'                     => 'Τεκμήριo',
+    'SLUG_CONDITION'           => 'Τεκμήριo/ Προϋποθέσεις',
+    'SLUG_IN_USE'              => 'Υπάρχει ήδη ένα τεκμήριo <strong> {{slug}} </ strong>',
     'STATUS'                   => 'Κατάσταση',
     'SUGGEST'                  => 'Προτείνετε',
     'UNKNOWN'                  => 'Άγνωστο',

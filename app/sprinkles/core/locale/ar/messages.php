@@ -14,7 +14,6 @@
  * @author Alexander Weissman and Abdullah Seba
  */
 return [
-    '@PLURAL_RULE' => 1,
     'ABOUT'        => 'عن',
     'CAPTCHA'      => [
         '@TRANSLATION' => 'كلمة التحقق',
@@ -43,11 +42,11 @@ return [
     ],
     'NAME'       => 'اسم',
     'NAVIGATION' => 'التنقل',
-    // 'NO_RESULTS' => 'Sorry, we\'ve got nothing here.',
+    'NO_RESULTS' => 'آسف ، ليس لدينا شيء هنا.',
     'PAGINATION' => [
         'GOTO'     => 'انتقال إلى الصفحة',
         'SHOW'     => 'عرض',
-        // 'OUTPUT'   => '{startRow} to {endRow} of {filteredRows} ({totalRows})',
+        'OUTPUT'   => '{startRow} إلى {endRow} من {filteredRows} ({totalRows})',
         'NEXT'     => 'الصفحة التالية',
         'PREVIOUS' => 'الصفحة السابقة',
         'FIRST'    => 'الصفحة الأولى',
@@ -57,11 +56,11 @@ return [
         '@TRANSLATION' => 'سياسة الخصوصية',
         'DESCRIPTION'  => 'تحدد سياسة الخصوصية لدينا نوع المعلومات التي نجمعها منك وكيفية استخدامها.',
     ],
-    // 'SLUG'                     => 'Slug',
-    'SLUG_CONDITION'           => 'Slug/الظروف',
-    // 'SLUG_IN_USE'              => 'A <strong>{{slug}}</strong> slug already exists',
+    'SLUG'                     => '\'سبيكة\'',
+    'SLUG_CONDITION'           => 'سبيكة\'الظروف\'',
+    'SLUG_IN_USE'              => 'يوجد <strong> {{slug}} </strong> سبيكة',
     'STATUS'                   => 'الحالة',
-    // 'SUGGEST'                  => 'Suggest',
+    'SUGGEST'                  => 'اقترح',
     'UNKNOWN'                  => 'غير معروف',
     'ACTIONS'                  => 'الأفعال',
     'ACTIVATE'                 => 'تفعيل',

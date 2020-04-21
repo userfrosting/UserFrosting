@@ -49,7 +49,7 @@ class AccountControllerTest extends TestCase
     /**
      * Setup test database for controller tests
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupTestDatabase();
@@ -62,7 +62,7 @@ class AccountControllerTest extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -113,7 +113,7 @@ class AccountControllerTest extends TestCase
         // Force locale config
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
+            'en_US' => true,
         ];
 
         // Create fake mailer
@@ -154,7 +154,7 @@ class AccountControllerTest extends TestCase
         $this->ci->config['site.registration.require_email_verification'] = false;
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
+            'en_US' => true,
         ];
 
         // Bypass security feature
@@ -499,11 +499,13 @@ class AccountControllerTest extends TestCase
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
+
+        // We have to logout the user to avoid problem
+        $this->logoutCurrentUser($testUser);
     }
 
     /**
      * @depends testControllerConstructor
-     * @depends testlogin
      * @param AccountController $controller
      */
     public function testloginWithEmail(AccountController $controller)
@@ -534,6 +536,9 @@ class AccountControllerTest extends TestCase
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
+
+        // We have to logout the user to avoid problem
+        $this->logoutCurrentUser($testUser);
     }
 
     /**
@@ -875,8 +880,8 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
-            'fr_FR' => 'Français',
+            'en_US' => true,
+            'fr_FR' => true,
         ];
 
         // Recreate controller to use user
@@ -897,7 +902,7 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
+            'en_US' => true,
         ];
 
         // Recreate controller to use config & user
@@ -967,8 +972,8 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
-            'fr_FR' => 'Français',
+            'en_US' => true,
+            'fr_FR' => true,
         ];
 
         // Recreate controller to use user
@@ -1000,8 +1005,8 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
-            'fr_FR' => 'Français',
+            'en_US' => true,
+            'fr_FR' => true,
         ];
 
         // Recreate controller to use user
@@ -1427,7 +1432,7 @@ class AccountControllerTest extends TestCase
         // Force locale config
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
+            'en_US' => true,
         ];
 
         // Recreate controller to use fake user
@@ -1590,7 +1595,7 @@ class AccountControllerTest extends TestCase
 
         // Make sure we got a string
         $data = json_decode($body, true);
-        $this->assertInternalType('string', $data['user_name']);
+        $this->assertIsString($data['user_name']);
         $this->assertNotSame('', $data['user_name']);
     }
 

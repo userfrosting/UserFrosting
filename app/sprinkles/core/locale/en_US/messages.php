@@ -14,8 +14,6 @@
  * @author Alexander Weissman
  */
 return [
-    '@PLURAL_RULE' => 1,
-
     'ABOUT' => 'About',
 
     'CAPTCHA' => [

@@ -10,10 +10,12 @@
 
 namespace UserFrosting\Sprinkle\Core;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\Event;
 use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
+use UserFrosting\Sprinkle\Core\I18n\LocaleServicesProvider;
+use UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\System\Sprinkle\Sprinkle;
@@ -25,6 +27,14 @@ use UserFrosting\System\Sprinkle\Sprinkle;
  */
 class Core extends Sprinkle
 {
+    /**
+     * @var string[] List of services provider to register
+     */
+    protected $servicesproviders = [
+        LocaleServicesProvider::class,
+        TranslatorServicesProvider::class,
+    ];
+
     /**
      * Create a new Sprinkle object.
      *
@@ -63,9 +73,20 @@ class Core extends Sprinkle
     }
 
     /**
-     * Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
+     * Register all sprinkles services providers.
      */
     public function onSprinklesRegisterServices()
+    {
+        $this->setupShutdownHandlerService();
+    }
+
+    /**
+     * Steps required to register the ShutdownHandler Service.
+     * Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
+     *
+     * @TODO: Move to it's own serviceProvider class (Target UF 5.0)
+     */
+    public function setupShutdownHandlerService(): void
     {
         // Set up any global PHP settings from the config service.
         $config = $this->ci->config;
@@ -122,7 +143,10 @@ class Core extends Sprinkle
      */
     public function onAddGlobalMiddleware(Event $event)
     {
-        SlimCsrfProvider::registerMiddleware($event->getApp(), $this->ci->request, $this->ci->csrf);
+        // Don't register CSRF if CLI
+        if (!$this->ci->cli) {
+            SlimCsrfProvider::registerMiddleware($event->getApp(), $this->ci->request, $this->ci->csrf);
+        }
     }
 
     /**

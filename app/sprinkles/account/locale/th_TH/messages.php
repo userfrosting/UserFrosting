@@ -12,6 +12,7 @@
  * Thai message token translations for the 'account' sprinkle.
  *
  * @author Karuhut Komol
+ * @author Atthaphon Urairat
  */
 return [
     'ACCOUNT' => [
@@ -25,7 +26,7 @@ return [
         'SESSION_COMPROMISED' => [
             '@TRANSLATION' => 'เซสชันของคุณถูกลักลอบใช้ คุณควรจะออกจากระบบบนอุปกรณ์ทั้งหมดแล้วกลับเข้าสู่ระบบและตรวจสอบให้แน่ใจว่าไม่มีการแก้ไขข้อมูลของคุณ',
             'TITLE'        => 'บัญชีของคุณอาจถูกบุกรุก',
-            // 'TEXT'         => 'Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{url}}">log in</a> and check your account for suspicious activity.  You may also wish to change your password.',
+            'TEXT'         => 'อาจมีใครบางคนกำลังใช้ข้อมูลการเข้าสู่ระบบของคุณเพื่อเพื่อเข้าใช้งานหน้านี้ เพื่อความปลอดภัยของคุณเซสชันทั้งหมดจะถูกระงับ โปรด <a href="{{url}}">ลงชื่อเข้าใช้</a> และตรวจสอบบัญชีของคุณว่ามีกิจกรรมที่น่าสงสัยหรือไม่ คุณอาจทำการเปลี่ยนรหัสผ่านของคุณ',
         ],
         'SESSION_EXPIRED' => 'เซสชันของคุณหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง',
         'SETTINGS'        => [
@@ -48,15 +49,15 @@ return [
     'EMAIL' => [
         'INVALID'               => 'อีเมล <strong>{{email}}</strong> ไม่มีอยู่จริง',
         'IN_USE'                => 'อีเมล <strong>{{email}}</strong> ได้ถูกใช้งานแล้ว',
-        // 'VERIFICATION_REQUIRED' => 'Email (verification required - use a real address!)',
+        'VERIFICATION_REQUIRED' => 'อีเมล (ต้องมีการยืนยัน - ใช้ที่อยู่จริง!)',
     ],
-    // 'EMAIL_OR_USERNAME'   => 'Username or email address',
+    'EMAIL_OR_USERNAME'   => 'ชื่อผู้ใช้หรืออีเมล',
     'FIRST_NAME'          => 'ชื่อจริง',
     'HEADER_MESSAGE_ROOT' => 'คุณได้เข้าสู่ระบบเป็นผู้ดูแลสูงสุด',
     'LAST_NAME'           => 'นามสกุล',
     'LOCALE'              => [
         'ACCOUNT' => 'ภาษาและสถานที่ที่จะใช้สำหรับบัญชีของคุณ',
-        // 'INVALID' => '<strong>{{locale}}</strong> is not a valid locale.',
+        'INVALID' => '<strong>{{locale}}</strong> ไม่ใช่สถานที่ที่ถูกต้อง',
     ],
     'LOGIN' => [
         '@TRANSLATION'     => 'เข้าสู่ะระบบ',
@@ -66,7 +67,7 @@ return [
     ],
     'LOGOUT'         => 'ออกจากระบบ',
     'NAME'           => 'ชื่อ',
-    // 'NAME_AND_EMAIL' => 'Name and email',
+    'NAME_AND_EMAIL' => 'ชื่อและอีเมล',
     'PAGE'           => [
         'LOGIN' => [
             'DESCRIPTION' => 'เข้าสู่ระบบไปยังบัญชี {{site_name}} หรือสมัครสมาชิกสำหรับบัญชีใหม่',
@@ -83,9 +84,9 @@ return [
         'CONFIRM_NEW_EXPLAIN' => 'กรอกรหัสผ่านใหม่ของคุณอีกครั้ง',
         'CONFIRM_NEW_HELP'    => 'กรอกเฉพาะเมื่อคุณต้องการตั้งรหัสผ่านใหม่',
         'CREATE'              => [
-            // '@TRANSLATION' => 'Create Password',
-            // 'PAGE'         => 'Choose a password for your new account.',
-            // 'SET'          => 'Set Password and Sign In',
+            '@TRANSLATION' => 'สร้างรหัสผ่าน',
+            'PAGE'         => 'เลือกรหัสผ่านสำหรับบัญชีใหม่ของคุณ',
+            'SET'          => 'ตั้งรหัสผ่านและลงชื่อเข้าใช้',
         ],
         'CURRENT'         => 'รหัสผ่านปัจจุบัน',
         'CURRENT_EXPLAIN' => 'คุณจะต้องยืนยันรหัสผ่านปัจจุบันเพื่อแก้ไขข้อมูล',
@@ -113,8 +114,8 @@ return [
         'UPDATED' => 'ปรังปรุงรหัสผ่านของบัญชีแล้ว',
     ],
     'PROFILE' => [
-        // 'SETTINGS' => 'Profile settings',
-        // 'UPDATED'  => 'Profile settings updated',
+        'SETTINGS' => 'การตั้งค่าโปรไฟล์',
+        'UPDATED'  => 'แก้ไขการตั้งค่าโปรไฟล์แล้ว',
     ],
     'RATE_LIMIT_EXCEEDED' => 'ถึงขีดจำกัดสำหรับการกระทำนี้แล้ว คุณจะต้องรออีก {{delay}} วินาที ก่อนที่คุณจะได้รับอนุญาตให้ลองใหม่อีกครั้ง',
     'REGISTER'            => 'สมัครสมาชิก',
@@ -129,7 +130,7 @@ return [
     ],
     'REMEMBER_ME'             => 'จำฉันไว้ในระบบ!',
     'REMEMBER_ME_ON_COMPUTER' => 'จำฉันไว้ในระบบบนคอมพิวเตอร์นี้ (ไม่แนะนำสำหรับคอมพิวเตอร์สาธารณะ)',
-    // 'SIGN_IN_HERE'            => 'Already have an account? <a href="{{url}}">Sign in here.</a>',
+    'SIGN_IN_HERE'            => 'หากมีบัญชีอยู่แล้ว? <a href="{{url}}">เข้าสู่ระบบที่นี่</a>',
     'SIGNIN'                  => 'เข้าสู่ะระบบ',
     'SIGNIN_OR_REGISTER'      => 'เข้าสู่ระบบหรือสมัครสมาชิก',
     'SIGNUP'                  => 'สมัครสมาชิก',
@@ -141,7 +142,7 @@ return [
         'CHOOSE'        => 'เลือกชื่อผู้ใช้ที่เป็นเป็นเอกลักษณ์',
         'INVALID'       => 'ชื่อผู้ใช้ไม่ถูกต้อง',
         'IN_USE'        => 'ชื่อผู้ใช้ <strong>{{user_name}}</strong> ถูกใช้งานแล้ว',
-        // 'NOT_AVAILABLE' => 'Username <strong>{{user_name}}</strong> is not available. Choose a different name, or click \'suggest\'.',
+        'NOT_AVAILABLE' => 'ชื่อผู้ใช้ <strong>{{user_name}}</strong> ไม่สามารถใช้ได้ กรุณาเลือกชื่ออื่นหรือคลิก \'แนะนำ\'',
     ],
     'USER_ID_INVALID'       => 'ไม่พบหมายเลขผู้ใช้ที่ร้องขอมา',
     'USER_OR_EMAIL_INVALID' => 'ชื่อผู้ใช้หรือที่อยู่อีเมลไม่ถูกต้อง',
