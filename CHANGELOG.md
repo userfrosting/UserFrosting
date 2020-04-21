@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Fixed issue where incompatible NPM packages would be browserified, resulting in install failures.
+- Replaced deprecated Twig class.
 
 ## [v4.4.1]
 ### Fixed

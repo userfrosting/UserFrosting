@@ -13,6 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Error\Handler;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Twig\Error\LoaderError;
 use UserFrosting\Sprinkle\Core\Error\Renderer\JsonRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\PlainTextRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\WhoopsRenderer;
@@ -153,7 +154,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
         try {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/$httpCode.html.twig");
-        } catch (\Twig_Error_Loader $e) {
+        } catch (LoaderError $e) {
             $template = $this->ci->view->getEnvironment()->loadTemplate('pages/abstract/error.html.twig');
         }
 

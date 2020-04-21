@@ -11,6 +11,10 @@
 namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Psr\Container\ContainerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 use UserFrosting\Assets\AssetsTemplatePlugin;
 use UserFrosting\Sprinkle\Core\Util\Util;
 
@@ -19,7 +23,7 @@ use UserFrosting\Sprinkle\Core\Util\Util;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class CoreExtension extends AbstractExtension implements GlobalsInterface
 {
     /**
      * @var ContainerInterface The global container object, which holds all your services.
@@ -49,20 +53,20 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
     /**
      * Adds Twig functions `getAlerts` and `translate`.
      *
-     * @return array[\Twig_SimpleFunction]
+     * @return array[TwigFunction]
      */
     public function getFunctions()
     {
         return [
             // Add Twig function for fetching alerts
-            new \Twig_SimpleFunction('getAlerts', function ($clear = true) {
+            new TwigFunction('getAlerts', function ($clear = true) {
                 if ($clear) {
                     return $this->services['alerts']->getAndClearMessages();
                 } else {
                     return $this->services['alerts']->messages();
                 }
             }),
-            new \Twig_SimpleFunction('translate', function ($hook, $params = []) {
+            new TwigFunction('translate', function ($hook, $params = []) {
                 return $this->services['translator']->translate($hook, $params);
             }, [
                 'is_safe' => ['html'],
@@ -73,7 +77,7 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
     /**
      * Adds Twig filters `unescape`.
      *
-     * @return array[\Twig_SimpleFilter]
+     * @return array[TwigFilter]
      */
     public function getFilters()
     {
@@ -84,10 +88,10 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
              * @param   string   $num   A unformatted phone number
              * @return  string   Returns the formatted phone number
              */
-            new \Twig_SimpleFilter('phone', function ($num) {
+            new TwigFilter('phone', function ($num) {
                 return Util::formatPhoneNumber($num);
             }),
-            new \Twig_SimpleFilter('unescape', function ($string) {
+            new TwigFilter('unescape', function ($string) {
                 return html_entity_decode($string);
             }),
         ];
