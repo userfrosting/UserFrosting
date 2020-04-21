@@ -414,6 +414,7 @@ class AccountController extends SimpleController
         } catch (\Exception $e) {
             // only let unsuccessful logins count toward the throttling limit
             $throttler->logEvent('sign_in_attempt', $throttleData);
+
             throw $e;
         }
 
