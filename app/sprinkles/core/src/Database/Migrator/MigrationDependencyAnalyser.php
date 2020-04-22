@@ -233,17 +233,19 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     * Normalize class so all class starts with '/'
+     * Normalize class so all class starts with '/'.
      *
      * @param string[] $classes
+     *
      * @return string[]
      */
     protected function normalizeClasses(array $classes): array
     {
         return array_map(function (string $class) {
             if ($class[0] !== '\\') {
-                return '\\'.$class;
+                return '\\' . $class;
             }
+
             return $class;
         }, $classes);
     }
