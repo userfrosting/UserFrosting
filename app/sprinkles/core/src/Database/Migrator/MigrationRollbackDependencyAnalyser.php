@@ -21,18 +21,6 @@ namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 class MigrationRollbackDependencyAnalyser extends MigrationDependencyAnalyser
 {
     /**
-     * Constructor.
-     *
-     * @param array $installed The installed migrations
-     * @param array $rollback  The migrations to rollback
-     */
-    public function __construct(array $installed = [], array $rollback = [])
-    {
-        $this->pending = collect($installed);
-        $this->installed = collect($rollback);
-    }
-
-    /**
      * Received each installed migrations and determine if it depends on the
      * migrations we want to delete (rollback). It can if no other installed
      * migrations depends on it. In this context, fulfillable/unfulfillable

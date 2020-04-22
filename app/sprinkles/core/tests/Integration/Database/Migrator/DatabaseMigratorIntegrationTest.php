@@ -87,18 +87,26 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $this->assertTrue($this->schema->hasTable('users'));
         $this->assertTrue($this->schema->hasTable('password_resets'));
 
-        $this->assertEquals($this->locator->getMigrations(), $ran);
+        $this->assertEquals([
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
+        ], $ran);
     }
 
     public function testRepository()
     {
         $ran = $this->migrator->run();
 
+        $expected = [
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
+        ];
+
         // Theses assertions makes sure the repository and the migration returns the same format
         // N.B.: getLast return the migrations in reverse order (last ran first)
-        $this->assertEquals($this->locator->getMigrations(), $ran);
-        $this->assertEquals(array_reverse($this->locator->getMigrations()), $this->repository->getLast());
-        $this->assertEquals($this->locator->getMigrations(), $this->repository->getMigrationsList());
+        $this->assertEquals($expected, $ran);
+        $this->assertEquals(array_reverse($expected), $this->repository->getLast());
+        $this->assertEquals($expected, $this->repository->getMigrationsList());
     }
 
     public function testMigrationsCanBeRolledBack()
@@ -168,10 +176,15 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $this->assertTrue($this->schema->hasTable('users'));
         $this->assertTrue($this->schema->hasTable('password_resets'));
 
+        $expected = [
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
+        ];
+
         $rolledBack = $this->migrator->rollback(['pretend' => true]);
         $this->assertTrue($this->schema->hasTable('users'));
         $this->assertTrue($this->schema->hasTable('password_resets'));
-        $this->assertEquals(array_reverse($this->locator->getMigrations()), $rolledBack);
+        $this->assertEquals(array_reverse($expected), $rolledBack);
     }
 
     public function testChangeRepositoryAndDeprecatedClass()
@@ -310,7 +323,7 @@ class MigrationLocatorStub extends MigrationLocator
     public function getMigrations()
     {
         return [
-            'UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ];
     }

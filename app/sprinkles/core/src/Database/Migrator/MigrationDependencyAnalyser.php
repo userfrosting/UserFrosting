@@ -59,8 +59,8 @@ class MigrationDependencyAnalyser
      */
     public function __construct(array $pending = [], array $installed = [])
     {
-        $this->pending = collect($pending);
-        $this->installed = collect($installed);
+        $this->pending = collect($this->normalizeClasses($pending));
+        $this->installed = collect($this->normalizeClasses($installed));
     }
 
     /**
@@ -219,16 +219,32 @@ class MigrationDependencyAnalyser
         // We can remove this one the non static property is removed
         $reflectionClass = new ReflectionClass($migration);
         if ($reflectionClass->hasProperty('dependencies') && $reflectionClass->getProperty('dependencies')->isStatic()) {
-            return $migration::$dependencies;
+            return $this->normalizeClasses($migration::$dependencies);
         } elseif (property_exists($migration, 'dependencies')) {
             if (Config::get('debug.deprecation')) {
                 Debug::warning("`$migration` uses a non static `dependencies` property. Please change the `dependencies` property to a static property.");
             }
             $instance = new $migration();
 
-            return $instance->dependencies;
+            return $this->normalizeClasses($instance->dependencies);
         } else {
             return [];
         }
+    }
+
+    /**
+     * Normalize class so all class starts with '/'
+     *
+     * @param string[] $classes
+     * @return string[]
+     */
+    protected function normalizeClasses(array $classes): array
+    {
+        return array_map(function (string $class) {
+            if ($class[0] !== '\\') {
+                return '\\'.$class;
+            }
+            return $class;
+        }, $classes);
     }
 }
