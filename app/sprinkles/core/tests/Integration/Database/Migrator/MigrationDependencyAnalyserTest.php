@@ -24,13 +24,18 @@ class MigrationDependencyAnalyserTest extends TestCase
     public function testAnalyser()
     {
         $migrations = [
+            'UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
+        ];
+
+        $expected = [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ];
 
         $analyser = new MigrationDependencyAnalyser($migrations, []);
 
-        $this->assertEquals($migrations, $analyser->getFulfillable());
+        $this->assertEquals($expected, $analyser->getFulfillable());
         $this->assertEquals([], $analyser->getUnfulfillable());
     }
 
@@ -50,7 +55,7 @@ class MigrationDependencyAnalyserTest extends TestCase
     {
         $analyser = new MigrationDependencyAnalyser([
             '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            'UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ], []);
 
@@ -65,7 +70,7 @@ class MigrationDependencyAnalyserTest extends TestCase
     public function testAnalyserWithUnfulfillable()
     {
         $migrations = [
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            'UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\UnfulfillableTable',
         ];
