@@ -21,10 +21,10 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  *
  * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  *
- * @property string slug
- * @property string name
- * @property string description
- * @property string icon
+ * @property string $slug
+ * @property string $name
+ * @property string $description
+ * @property string $icon
  */
 class Group extends Model
 {

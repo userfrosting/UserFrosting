@@ -17,9 +17,9 @@ namespace UserFrosting\Sprinkle\Core\Database\Models;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
- * @property string type
- * @property string ip
- * @property string request_data
+ * @property string $type
+ * @property string $ip
+ * @property string $request_data
  */
 class Throttle extends Model
 {

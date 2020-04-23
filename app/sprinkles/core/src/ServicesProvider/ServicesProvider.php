@@ -28,6 +28,7 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
+use Twig\Extension\DebugExtension;
 use UserFrosting\Assets\AssetBundles\GulpBundleAssetsCompiledBundles as CompiledAssetBundles;
 use UserFrosting\Assets\AssetLoader;
 use UserFrosting\Assets\Assets;
@@ -636,7 +637,7 @@ class ServicesProvider
 
             if ($c->config['debug.twig']) {
                 $twig->enableDebug();
-                $view->addExtension(new \Twig_Extension_Debug());
+                $view->addExtension(new DebugExtension());
             }
 
             // Register the Slim extension with Twig

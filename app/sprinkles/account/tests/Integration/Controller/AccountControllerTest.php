@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Account\Tests\Integration\Controller;
 
 use Mockery as m;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception;
 use UserFrosting\Sprinkle\Account\Controller\AccountController;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
@@ -616,6 +617,74 @@ class AccountControllerTest extends TestCase
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     */
+    public function testloginThrottlerCountsFailedLogins()
+    {
+        // Create fake throttler
+        $throttler = m::mock(Throttler::class);
+        $throttler->shouldReceive('getDelay')->once()->with('sign_in_attempt', ['user_identifier' => 'foo'])->andReturn(0);
+        $throttler->shouldReceive('logEvent')->once()->with('sign_in_attempt', ['user_identifier' => 'foo']);
+        $this->ci->throttler = $throttler;
+
+        // Recreate controller to use fake throttler
+        $controller = $this->getController();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'user_name'  => 'foo',
+            'password'   => 'bar',
+            'rememberme' => false,
+        ]);
+
+        $this->expectException(Exception\InvalidCredentialsException::class);
+
+        $controller->login($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     */
+    public function testloginThrottlerDoesntCountSuccessfulLogins()
+    {
+        // Create a test user
+        $testUser = $this->createTestUser();
+
+        // Faker doesn't hash the password. Let's do that now
+        $unhashed = $testUser->password;
+        $testUser->password = Password::hash($testUser->password);
+        $testUser->save();
+
+        // Create fake throttler
+        $throttler = m::mock(Throttler::class);
+        $throttler->shouldReceive('getDelay')->once()->with('sign_in_attempt', ['user_identifier' => $testUser->email])->andReturn(0);
+        $throttler->shouldNotReceive('logEvent');
+        $this->ci->throttler = $throttler;
+
+        // Recreate controller to use fake throttler and test user
+        $controller = $this->getController();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'user_name'  => $testUser->email,
+            'password'   => $unhashed,
+            'rememberme' => false,
+        ]);
+
+        $result = $controller->login($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        // Can't assert the status code or data, as this can be overwrited by sprinkles
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+
+        // We have to logout the user to avoid problem
+        $this->logoutCurrentUser($testUser);
     }
 
     /**

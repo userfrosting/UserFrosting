@@ -58,7 +58,7 @@ Contains breaking changes that will need to wait for the next version to be inte
 When ready, changes should be merged into both **master** and **hotfix**.
 
 #### `feature-*`
-New features that introduce some breaking changes or incomplete code should be committed in a separate `feature-{name}` branch.  
+New features that introduce some breaking changes or incomplete code should be committed in a separate `feature-{name}` branch.
 
 When ready, the branch should be **[squashed-merged](https://github.com/blog/2141-squash-your-commits)** ([guide](https://stackoverflow.com/a/5309051/445757)) into `develop` (or `hotfix` if it doesn't introduce a breaking change).
 
@@ -117,11 +117,13 @@ Additionally, the `learn` repository can have `dev-*` for learn specific feature
 
 ## Building the API documentation
 
-To build the API documentation, install [ApiGen](http://www.apigen.org/) globally and then run:
+To build the API documentation, install [phpDocumentor](https://www.phpdoc.org) globally and then run from the UserFrosting root :
 
-`apigen generate --source UserFrosting/app,userfrosting-assets/src,userfrosting-config/Config,userfrosting-fortress/Fortress,userfrosting-i18n/I18n,userfrosting-session/Session,userfrosting-support/Support --destination userfrosting-api --exclude *vendor*,*_meta* --template-theme "bootstrap"`
+```
+phpdoc
+```
 
-from inside your dev directory.
+The resulting documentation will be available in `api/`.
 
 ## Automatically fixing coding style with PHP-CS-Fixer
 
@@ -135,6 +137,6 @@ app/vendor/bin/php-cs-fixer fix
 
 ## Useful tools
 
-If you are using **Atom**, be sure to checkout theses useful packages :  
+If you are using **Atom**, be sure to checkout theses useful packages :
  - [Docblockr](https://atom.io/packages/docblockr) : Used to generate [documentation block](https://github.com/userfrosting/UserFrosting/blob/master/STYLE-GUIDE.md#documentation).
  - [php-ide-serenata](https://atom.io/packages/php-ide-serenata) : Integrates [Serenata](https://gitlab.com/Serenata/Serenata) as PHP IDE, providing autocompletion, code navigation, refactoring, signature help, linting and annotations.

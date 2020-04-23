@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.4.1]
+
+### Fixed
+- Fixed issue where incompatible NPM packages would be browserified, resulting in install failures.
+- Replaced deprecated Twig class.
+- Fixed issue when compiling assets for production ([#1078]).
+- Migration dependencies should work with and without leading `\` ([#1023])
+- Throttler don't count successful logins ([#1073])
+
 ## [v4.4.0]
 
 ### Changed Requirements
@@ -921,6 +930,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1017]: https://github.com/userfrosting/UserFrosting/issues/1017
 [#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
 [#1019]: https://github.com/userfrosting/UserFrosting/issues/1019
+[#1023]: https://github.com/userfrosting/UserFrosting/issues/1023
 [#1027]: https://github.com/userfrosting/UserFrosting/issues/1027
 [#1028]: https://github.com/userfrosting/UserFrosting/issues/1028
 [#1030]: https://github.com/userfrosting/UserFrosting/issues/1030
@@ -938,6 +948,8 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1057]: https://github.com/userfrosting/UserFrosting/issues/1057
 [#1061]: https://github.com/userfrosting/UserFrosting/issues/1061
 [#1062]: https://github.com/userfrosting/UserFrosting/issues/1062
+[#1073]: https://github.com/userfrosting/UserFrosting/issues/1073
+[#1078]: https://github.com/userfrosting/UserFrosting/issues/1078
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
