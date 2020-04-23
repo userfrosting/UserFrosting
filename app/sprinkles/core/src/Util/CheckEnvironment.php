@@ -311,9 +311,8 @@ class CheckEnvironment
             $this->locator->findResource('session://') => true,
         ];
 
-        if ($this->isProduction() && $this->skipSprinkleDirCheck()) {
+        if ($this->isProduction()) {
             // Should be write-protected in production!
-            // Overriding this check based on the .env setting returned by skipSprinkleDirCheck().
             $shouldBeWriteable = array_merge($shouldBeWriteable, [
                 \UserFrosting\SPRINKLES_DIR => false,
                 \UserFrosting\VENDOR_DIR    => false,
@@ -384,15 +383,5 @@ class CheckEnvironment
     public function isProduction()
     {
         return getenv('UF_MODE') == 'production';
-    }
-
-    /**
-     * Determine whether or not we are running in production mode.
-     *
-     * @return bool
-     */
-    public function skipSprinkleDirCheck()
-    {
-        return getenv('UF_PROD_DIRCHECK');
     }
 }
