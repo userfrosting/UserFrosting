@@ -24,6 +24,21 @@ RUN apt-get install -y \
     zip \
     nodejs
 
+# Optional XDebug Install
+#RUN curl -fsSL 'https://xdebug.org/files/xdebug-2.9.4.tgz' -o xdebug.tar.gz \
+#    && mkdir -p xdebug \
+#    && tar -xf xdebug.tar.gz -C xdebug --strip-components=1 \
+#    && rm xdebug.tar.gz \
+#    && ( \
+#    cd xdebug \
+#    && phpize \
+#    && ./configure --enable-xdebug \
+#    && make -j$(nproc) \
+#    && make install \
+#    ) \
+#    && rm -r xdebug \
+#    && docker-php-ext-enable xdebug   
+
 # COMPOSER INSTALL
 RUN curl -sSfo /tmp/composer.phar https://getcomposer.org/installer
 RUN php /tmp/composer.phar --install-dir=/usr/local/bin --filename=composer
