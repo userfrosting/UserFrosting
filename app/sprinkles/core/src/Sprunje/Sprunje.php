@@ -242,7 +242,7 @@ abstract class Sprunje
         $collection = collect($filteredQuery->get());
 
         // Perform any additional transformations on the dataset
-        $this->applyTransformations($collection);
+        $collection = $this->applyTransformations($collection);
 
         $csv = Writer::createFromFileObject(new \SplTempFileObject());
 
@@ -311,7 +311,7 @@ abstract class Sprunje
         $collection = collect($filteredQuery->get());
 
         // Perform any additional transformations on the dataset
-        $this->applyTransformations($collection);
+        $collection = $this->applyTransformations($collection);
 
         return [$count, $countFiltered, $collection];
     }
