@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+
+### Fixed
+
+- Sprunje applyTransformations method not returning the $collections object ([#1068])
+
 ## [v4.4.1]
 
 ### Fixed
@@ -948,6 +954,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1057]: https://github.com/userfrosting/UserFrosting/issues/1057
 [#1061]: https://github.com/userfrosting/UserFrosting/issues/1061
 [#1062]: https://github.com/userfrosting/UserFrosting/issues/1062
+[#1068]: https://github.com/userfrosting/UserFrosting/issues/1068
 [#1073]: https://github.com/userfrosting/UserFrosting/issues/1073
 [#1078]: https://github.com/userfrosting/UserFrosting/issues/1078
 

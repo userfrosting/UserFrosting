@@ -66,6 +66,25 @@ class SprunjeTest extends TestCase
         $builder->shouldReceive('orderBy')->once()->with('species', 'asc');
         $sprunje->applySorts($builder);
     }
+
+    public function testSprunjeApplyTransformations(): void
+    {
+        $sprunje = new SprunjeStub([]);
+
+        $builder = $sprunje->getQuery();
+        $builder->shouldReceive('count')->andReturn(2);
+        $builder->shouldReceive('get')->andReturn([
+            ['id' => '1', 'name' => 'Foo'],
+            ['id' => '2', 'name' => 'Bar'],
+        ]);
+
+        $result = $sprunje->getModels();
+
+        $this->assertSame([
+            ['id' => '1', 'name' => 'FooFoo'],
+            ['id' => '2', 'name' => 'BarBar'],
+        ], $result[2]->toArray());
+    }
 }
 
 class SprunjeStub extends Sprunje
@@ -92,6 +111,17 @@ class SprunjeStub extends Sprunje
         $builder->makePartial();
 
         return $builder;
+    }
+
+    protected function applyTransformations($collection)
+    {
+        $collection = $collection->map(function ($item, $key) {
+            $item['name'] = $item['name'] . $item['name'];
+
+            return $item;
+        });
+
+        return $collection;
     }
 }
 
