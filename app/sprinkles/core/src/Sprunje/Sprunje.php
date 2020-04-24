@@ -11,6 +11,8 @@
 namespace UserFrosting\Sprinkle\Core\Sprunje;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use League\Csv\Writer;
 use Psr\Http\Message\ResponseInterface as Response;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
@@ -48,7 +50,7 @@ abstract class Sprunje
     /**
      * Default HTTP request parameters.
      *
-     * @var array[string]
+     * @var array<string,mixed>
      */
     protected $options = [
         'sorts'   => [],
@@ -62,28 +64,28 @@ abstract class Sprunje
     /**
      * Fields to allow filtering upon.
      *
-     * @var array[string]
+     * @var string[]
      */
     protected $filterable = [];
 
     /**
      * Fields to allow listing (enumeration) upon.
      *
-     * @var array[string]
+     * @var string[]
      */
     protected $listable = [];
 
     /**
      * Fields to allow sorting upon.
      *
-     * @var array[string]
+     * @var string[]
      */
     protected $sortable = [];
 
     /**
      * List of fields to exclude when processing an "_all" filter.
      *
-     * @var array[string]
+     * @var string[]
      */
     protected $excludeForAll = [];
 
@@ -227,7 +229,7 @@ abstract class Sprunje
     /**
      * Run the query and build a CSV object by flattening the resulting collection.  Ignores any pagination.
      *
-     * @return \SplTempFileObject
+     * @return Writer
      */
     public function getCsv()
     {
@@ -250,7 +252,7 @@ abstract class Sprunje
 
         // Flatten collection while simultaneously building the column names from the union of each element's keys
         $collection->transform(function ($item, $key) use (&$columnNames) {
-            $item = array_dot($item->toArray());
+            $item = Arr::dot($item->toArray());
             foreach ($item as $itemKey => $itemValue) {
                 if (!in_array($itemKey, $columnNames)) {
                     $columnNames[] = $itemKey;
@@ -319,7 +321,7 @@ abstract class Sprunje
     /**
      * Get lists of values for specified fields in 'lists' option, calling a custom lister callback when appropriate.
      *
-     * @return array
+     * @return array<string,mixed>
      */
     public function getListable()
     {
@@ -327,7 +329,7 @@ abstract class Sprunje
         foreach ($this->listable as $name) {
 
             // Determine if a custom filter method has been defined
-            $methodName = 'list' . studly_case($name);
+            $methodName = 'list' . Str::studly($name);
 
             if (method_exists($this, $methodName)) {
                 $result[$name] = $this->$methodName();
@@ -408,7 +410,7 @@ abstract class Sprunje
             }
 
             // Determine if a custom sort method has been defined
-            $methodName = 'sort' . studly_case($name);
+            $methodName = 'sort' . Str::studly($name);
 
             if (method_exists($this, $methodName)) {
                 $this->$methodName($query, $direction);
@@ -453,7 +455,7 @@ abstract class Sprunje
     protected function filterAll($query, $value)
     {
         foreach ($this->filterable as $name) {
-            if (studly_case($name) != 'all' && !in_array($name, $this->excludeForAll)) {
+            if (Str::studly($name) != 'all' && !in_array($name, $this->excludeForAll)) {
                 // Since we want to match _any_ of the fields, we wrap the field callback in a 'orWhere' callback
                 $query->orWhere(function ($fieldQuery) use ($name, $value) {
                     $this->buildFilterQuery($fieldQuery, $name, $value);
@@ -475,7 +477,7 @@ abstract class Sprunje
      */
     protected function buildFilterQuery($query, $name, $value)
     {
-        $methodName = 'filter' . studly_case($name);
+        $methodName = 'filter' . Str::studly($name);
 
         // Determine if a custom filter method has been defined
         if (method_exists($this, $methodName)) {
@@ -512,9 +514,9 @@ abstract class Sprunje
     /**
      * Set any transformations you wish to apply to the collection, after the query is executed.
      *
-     * @param \Illuminate\Database\Eloquent\Collection $collection
+     * @param \Illuminate\Support\Collection $collection
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Support\Collection
      */
     protected function applyTransformations($collection)
     {
@@ -534,7 +536,7 @@ abstract class Sprunje
      *
      * @param string $column
      *
-     * @return array
+     * @return array<array<string,mixed>>
      */
     protected function getColumnValues($column)
     {
