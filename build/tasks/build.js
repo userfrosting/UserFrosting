@@ -10,14 +10,15 @@ import { relative as relativePath } from "path";
 import Bundler, { MergeRawConfigs, ValidateRawConfig } from "@userfrosting/gulp-bundle-assets";
 import { readFileSync, writeFileSync } from "fs";
 import { src } from "@userfrosting/vinyl-fs-vpath";
-import { Logger, vendorAssetsDir, sprinklesDir, sprinkles, sprinkleBundleFile, publicAssetsDir } from "./util.js";
+import { vendorAssetsDir, sprinklesDir, sprinkles, sprinkleBundleFile, publicAssetsDir } from "./util.js";
 import gulpIf from "gulp-if";
+import { GulpLogLogger } from "@userfrosting/ts-log-adapter-gulplog";
 
 /**
  * Compiles frontend assets. Mapped to npm script "uf-bundle".
  */
 export function build() {
-    const log = new Logger(build.name);
+    const log = new GulpLogLogger(build.name);
 
     // Build sources list
     const sources = [];
@@ -130,7 +131,7 @@ export function build() {
         log.info("Finished writing results file.")
     };
 
-    rawConfig.Logger = new Logger(`${build.name} - @userfrosting/gulp-bundle-assets`);
+    rawConfig.Logger = new GulpLogLogger(`${build.name} - @userfrosting/gulp-bundle-assets`);
     rawConfig.cwd = publicAssetsDir;
 
     // Open stream

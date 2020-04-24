@@ -1,13 +1,14 @@
 // @ts-check
 import { sync as deleteSync } from "del";
-import { vendorAssetsDir, publicAssetsDir, Logger } from "./util.js";
+import { vendorAssetsDir, publicAssetsDir } from "./util.js";
+import { GulpLogLogger } from "@userfrosting/ts-log-adapter-gulplog";
 
 /**
  * Clean vendor and public asset folders.
  * @param {(err?) => {}} done Used to mark task completion.
  */
 export function clean(done) {
-    const log = new Logger(clean.name);
+    const log = new GulpLogLogger(clean.name);
 
     try {
         log.info("Cleaning vendor assets...");
@@ -16,11 +17,12 @@ export function clean(done) {
 
         log.info("Cleaning public assets...");
         deleteSync(publicAssetsDir, { force: true })
-        log.info("Finsihed cleaning public assets.");
+        log.info("Finished cleaning public assets.");
 
         done();
     }
     catch (error) {
+        log.error("Completed with error");
         done(error);
     }
 };

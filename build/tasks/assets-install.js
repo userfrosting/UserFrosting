@@ -1,32 +1,36 @@
 // @ts-check
-import { Logger, legacyVendorAssetsGlob, sprinkles, sprinklesDir, vendorAssetsDir } from "./util.js";
+import { legacyVendorAssetsGlob, sprinkles, sprinklesDir, vendorAssetsDir } from "./util.js";
 import { bower as mergeBowerDeps, npm as mergeNpmDeps } from "@userfrosting/merge-package-dependencies";
 import browserifyDependencies from "@userfrosting/browserify-dependencies";
 import { sync as deleteSync } from "del";
 import childProcess, { exec as _exec } from "child_process";
 import { existsSync } from "fs";
 import { promisify } from "util";
+import { GulpLogLogger } from "@userfrosting/ts-log-adapter-gulplog";
 
 // Promisify exec
 const exec = promisify(_exec);
 
 /**
  * Runs the provided command and captures output.
+ * @todo Add support for realtime logging
  * @param {string} source Used to annotate logs.
  * @param {string} cmd Command to execute.
  * @param {childProcess.ExecOptions} options Options to pass to `exec`.
  */
 async function runCommand(source, cmd, options) {
-    const log = new Logger(`${source}> ${cmd}`)
+    const log = new GulpLogLogger(`${source}> ${cmd}`)
     log.info("Running command");
 
     try {
         const result = await exec(cmd, options);
-        if (result.stdout) log.info(result.stdout);
-        if (result.stderr) log.error(result.stderr);
+        if (result.stdout) result.stdout.split("\n").forEach(msg => log.info(msg));
+        if (result.stderr) result.stderr.split("\n").forEach(msg => log.error(msg));
     } catch (e) {
-        if (e.stdout) log.info(e.stdout);
-        if (e.stderr) log.error(e.stderr);
+        /** @type {{ stdout: string, stderr: string }} */
+        const err = e;
+        if (e.stdout) err.stdout.split("\n").forEach(msg => log.info(msg));
+        if (e.stderr) err.stderr.split("\n").forEach(msg => log.error(msg));
         log.error("Command has completed with an error");
         throw e;
     }
@@ -38,7 +42,7 @@ async function runCommand(source, cmd, options) {
  * Installs vendor assets. Mapped to npm script "uf-assets-install".
  */
 export async function assetsInstall() {
-    const log = new Logger(assetsInstall.name);
+    const log = new GulpLogLogger(assetsInstall.name);
 
     // Clean up any legacy assets
     if (deleteSync(legacyVendorAssetsGlob, { force: true }))
