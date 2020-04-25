@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Admin;
 
-use UserFrosting\System\Sprinkle\Sprinkle;
+use UserFrosting\Sprinkle\Core\Sprinkle\Sprinkle;
 
 /**
  * Bootstrapper class for the 'admin' sprinkle.

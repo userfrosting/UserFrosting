@@ -8,12 +8,12 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Tests\Unit;
+namespace UserFrosting\Sprinkle\Core\Tests\Unit\Sprinkle;
 
 use Psr\Container\ContainerInterface;
 use Mockery as m;
 use UserFrosting\Tests\TestCase;
-use UserFrosting\System\Sprinkle\SprinkleManager;
+use UserFrosting\Sprinkle\Core\Sprinkle\SprinkleManager;
 
 class SprinkleManagerTest extends TestCase
 {
@@ -134,7 +134,7 @@ class SprinkleManagerTest extends TestCase
      */
     public function testGetSprinklePath($sprinkleName, SprinkleManager $sprinkleManager)
     {
-        $basePath = 'app/tests/Unit/data/';
+        $basePath = __DIR__ . '/data/';
         $sprinkleManager->setSprinklesPath($basePath);
         $this->assertSame($basePath . $sprinkleName, $sprinkleManager->getSprinklePath($sprinkleName));
     }
@@ -146,7 +146,7 @@ class SprinkleManagerTest extends TestCase
      */
     public function testGetSprinklePathWherePathDoesntExist(SprinkleManager $sprinkleManager)
     {
-        $basePath = 'app/tests/Unit/foo/';
+        $basePath = __DIR__ . '/foo/';
         $sprinkleManager->setSprinklesPath($basePath);
 
         $this->expectException(\UserFrosting\Support\Exception\FileNotFoundException::class);
@@ -188,7 +188,7 @@ class SprinkleManagerTest extends TestCase
      */
     public function testAddResources(SprinkleManager $sprinkleManager)
     {
-        $basePath = 'app/tests/Unit/data/';
+        $basePath = __DIR__ . '/data/';
         $sprinkleManager->setSprinklesPath($basePath);
 
         $this->assertNull($sprinkleManager->addResources());

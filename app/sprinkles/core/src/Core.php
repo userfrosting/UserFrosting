@@ -18,7 +18,7 @@ use UserFrosting\Sprinkle\Core\I18n\LocaleServicesProvider;
 use UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
-use UserFrosting\System\Sprinkle\Sprinkle;
+use UserFrosting\Sprinkle\Core\Sprinkle\Sprinkle;
 
 /**
  * Bootstrapper class for the core sprinkle.
@@ -170,6 +170,8 @@ class Core extends Sprinkle
         $locator->registerStream('routes', '', \UserFrosting\ROUTE_DIR_NAME);
         $locator->registerStream('schema', '', \UserFrosting\SCHEMA_DIR_NAME);
         $locator->registerStream('templates', '', \UserFrosting\TEMPLATE_DIR_NAME);
+        $locator->registerStream('bakery', '', \UserFrosting\BAKERY_DIR);
+        $locator->registerStream('sprinkles', '', '');
 
         // Register core sprinkle class streams
         $locator->registerStream('seeds', '', \UserFrosting\SEEDS_DIR);

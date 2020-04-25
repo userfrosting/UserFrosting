@@ -14,7 +14,9 @@ use RocketTheme\Toolbox\Event\Event;
 use RocketTheme\Toolbox\Event\EventDispatcher;
 use Slim\App;
 use Slim\Container;
+use UserFrosting\Sprinkle\Core\Sprinkle\SprinkleManager;
 use UserFrosting\Support\Exception\FileNotFoundException;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * UserFrosting Main Class.
@@ -105,6 +107,15 @@ class UserFrosting
         // Register system services
         $serviceProvider = new ServicesProvider();
         $serviceProvider->register($this->ci);
+
+        // Register Locator & SprinkleManager
+        // TODO : This whole sprinkle setup should probably be revamped, and moved to the `Core` Sprinkle initialisation
+        $this->ci['locator'] = function ($c) {
+            return new ResourceLocator(\UserFrosting\ROOT_DIR);
+        };
+        $this->ci['sprinkleManager'] = function ($c) {
+            return new SprinkleManager($c);
+        };
 
         // Boot the Sprinkle manager, which creates Sprinkle classes and subscribes them to the event dispatcher
         $sprinkleManager = $this->ci->sprinkleManager;

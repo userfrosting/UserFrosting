@@ -12,8 +12,6 @@ namespace UserFrosting\System;
 
 use Psr\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventDispatcher;
-use UserFrosting\System\Sprinkle\SprinkleManager;
-use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * UserFrosting system services provider.
@@ -38,32 +36,6 @@ class ServicesProvider
          */
         $container['eventDispatcher'] = function ($c) {
             return new EventDispatcher();
-        };
-
-        /*
-         * Path/file locator service.
-         *
-         * Register custom streams for the application, and add paths for app-level streams.
-         *
-         * @return \UserFrosting\UniformResourceLocator\ResourceLocator
-         */
-        $container['locator'] = function ($c) {
-            $locator = new ResourceLocator(\UserFrosting\ROOT_DIR);
-
-            // Register streams
-            $locator->registerStream('bakery', '', \UserFrosting\BAKERY_DIR);
-            $locator->registerStream('sprinkles', '', '');
-
-            return $locator;
-        };
-
-        /*
-         * Set up sprinkle manager service.
-         *
-         * @return \UserFrosting\System\Sprinkle\SprinkleManager
-         */
-        $container['sprinkleManager'] = function ($c) {
-            return new SprinkleManager($c);
         };
     }
 }
