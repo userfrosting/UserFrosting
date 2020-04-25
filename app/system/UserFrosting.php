@@ -104,18 +104,8 @@ class UserFrosting
      */
     protected function setupSprinkles()
     {
-        // Register system services
-        $serviceProvider = new ServicesProvider();
-        $serviceProvider->register($this->ci);
-
-        // Register Locator & SprinkleManager
-        // TODO : This whole sprinkle setup should probably be revamped, and moved to the `Core` Sprinkle initialisation
-        $this->ci['locator'] = function ($c) {
-            return new ResourceLocator(\UserFrosting\ROOT_DIR);
-        };
-        $this->ci['sprinkleManager'] = function ($c) {
-            return new SprinkleManager($c);
-        };
+        // Register basic sevices
+        $this->setupBasicServices();
 
         // Boot the Sprinkle manager, which creates Sprinkle classes and subscribes them to the event dispatcher
         $sprinkleManager = $this->ci->sprinkleManager;
@@ -139,6 +129,41 @@ class UserFrosting
         // Register Sprinkle services
         $sprinkleManager->registerAllServices();
         $this->fireEvent('onSprinklesRegisterServices');
+    }
+
+    /**
+     * @todo This whole sprinkle setup should probably be revamped, and moved to the `Core` Sprinkle initialisation
+     */
+    protected function setupBasicServices(): void
+    {
+        /*
+         * Path/file locator service.
+         *
+         * Register custom streams for the application, and add paths for app-level streams.
+         *
+         * @return \UserFrosting\UniformResourceLocator\ResourceLocator
+         */
+        $this->ci['locator'] = function ($c) {
+            return new ResourceLocator(\UserFrosting\ROOT_DIR);
+        };
+
+        /*
+         * Set up sprinkle manager service.
+         *
+         * @return \UserFrosting\System\Sprinkle\SprinkleManager
+         */
+        $this->ci['sprinkleManager'] = function ($c) {
+            return new SprinkleManager($c);
+        };
+
+        /*
+         * Set up the event dispatcher, required by Sprinkles to hook into the UF lifecycle.
+         *
+         * @return \RocketTheme\Toolbox\Event\EventDispatcher
+         */
+        $this->ci['eventDispatcher'] = function ($c) {
+            return new EventDispatcher();
+        };
     }
 
     /**
