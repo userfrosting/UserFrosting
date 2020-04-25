@@ -15,8 +15,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
-use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
 use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
+use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
 
 /**
  * Create root user CLI command.

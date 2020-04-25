@@ -13,8 +13,8 @@ namespace UserFrosting\Sprinkle\Core\Bakery\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use UserFrosting\Support\DotenvEditor\DotenvEditor;
 use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
+use UserFrosting\Support\DotenvEditor\DotenvEditor;
 
 /**
  * Setup wizard CLI Tools.

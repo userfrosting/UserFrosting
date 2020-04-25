@@ -14,9 +14,9 @@ use Carbon\Carbon;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
 use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
-use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
 
 /**
  * TestMail CLI Command.

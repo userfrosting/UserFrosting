@@ -12,9 +12,9 @@ namespace UserFrosting\Sprinkle\Core\Bakery\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck;
-use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
 
 /**
  * Debug CLI tool.

@@ -14,9 +14,9 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
 use UserFrosting\Support\DotenvEditor\DotenvEditor;
 use UserFrosting\Support\Repository\Repository as Config;
-use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
 
 /**
  * DB Setup Wizard CLI Tools.

@@ -18,8 +18,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\I18n\Compare;
 use UserFrosting\I18n\Dictionary;
 use UserFrosting\I18n\DictionaryInterface;
-use UserFrosting\Sprinkle\Core\Bakery\Helper\LocaleOption;
 use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
+use UserFrosting\Sprinkle\Core\Bakery\Helper\LocaleOption;
 
 /**
  * locale:missing-keys command.

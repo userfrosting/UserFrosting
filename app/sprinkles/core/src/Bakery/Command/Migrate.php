@@ -13,9 +13,9 @@ namespace UserFrosting\Sprinkle\Core\Bakery\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\ConfirmableTrait;
 use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
-use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
 
 /**
  * migrate Bakery Command

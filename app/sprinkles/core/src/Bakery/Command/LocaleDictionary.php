@@ -15,8 +15,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\I18n\Dictionary;
-use UserFrosting\Sprinkle\Core\Bakery\Helper\LocaleOption;
 use UserFrosting\Sprinkle\Core\Bakery\AbstractCommand;
+use UserFrosting\Sprinkle\Core\Bakery\Helper\LocaleOption;
 
 /**
  * locale:dictionary command.
