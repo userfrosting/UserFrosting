@@ -105,6 +105,7 @@ $rules = [
 $finder = PhpCsFixer\Finder::create()
     ->exclude([
       'vendor',
+      'assets',
     ])
     ->in([__DIR__ . '/app', __DIR__ . '/public']);
 
