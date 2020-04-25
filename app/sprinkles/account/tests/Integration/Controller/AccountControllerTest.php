@@ -30,7 +30,7 @@ use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\NotFoundException;
 use UserFrosting\Support\Exception\ForbiddenException;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 
 /**
  * Tests AccountController

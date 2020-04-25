@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Database;
 
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;

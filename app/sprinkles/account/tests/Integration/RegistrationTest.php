@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
 use Mockery as m;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Account\Account\Registration;

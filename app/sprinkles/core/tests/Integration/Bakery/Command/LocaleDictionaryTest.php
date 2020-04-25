@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Bakery\Command;
 
 use UserFrosting\Sprinkle\Core\Bakery\Command\LocaleDictionary;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**

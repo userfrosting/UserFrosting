@@ -12,7 +12,7 @@ namespace UserFrosting\Sprinkle\Core\Tests\Unit\Sprinkle;
 
 use Psr\Container\ContainerInterface;
 use Mockery as m;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 use UserFrosting\Sprinkle\Core\Sprinkle\SprinkleManager;
 
 class SprinkleManagerTest extends TestCase

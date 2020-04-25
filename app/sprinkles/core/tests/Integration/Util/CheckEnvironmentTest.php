@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Util;
 
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 
 /**
  * CheckEnvironement Test

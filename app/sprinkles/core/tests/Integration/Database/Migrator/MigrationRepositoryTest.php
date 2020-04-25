@@ -14,7 +14,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Illuminate\Support\Collection;
 use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 
 /**
  * DatabaseMigrationRespository Test

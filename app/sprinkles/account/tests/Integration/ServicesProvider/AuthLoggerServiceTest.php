@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Account\Tests\Integration\ServicesProvider;
 
 use Monolog\Logger;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 
 /**
  * Integration tests for `authLogger` service.

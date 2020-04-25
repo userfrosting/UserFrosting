@@ -16,7 +16,7 @@ use Psr\Container\ContainerInterface;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 use Slim\Container;
 
 class SeederTests extends TestCase

@@ -8,10 +8,10 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Tests;
+namespace UserFrosting\Sprinkle\Core\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
-use UserFrosting\System\UserFrosting;
+use UserFrosting\Sprinkle\Core\UserFrosting;
 
 /**
  * Class to handle Test

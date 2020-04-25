@@ -13,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\FileSessionHandler;
 use UserFrosting\Session\Session;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 
 /**
  * Integration tests for the session service.

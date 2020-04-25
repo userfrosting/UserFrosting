@@ -14,7 +14,7 @@ use RuntimeException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use UserFrosting\Sprinkle\Core\Error\Handler\ExceptionHandler;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 
 class ExceptionHandlerTest extends TestCase
 {

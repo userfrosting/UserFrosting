@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests;
 
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 
 /**
  * Special TestCase for Controller Tests

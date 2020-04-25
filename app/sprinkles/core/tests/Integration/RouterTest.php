@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests\Integration;
 
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
 
 class RouterTest extends TestCase
 {
