@@ -26,7 +26,7 @@ if (!file_exists(__DIR__ . '/app/vendor/autoload.php')) {
     require_once __DIR__ . '/app/vendor/autoload.php';
 }
 
-use UserFrosting\System\Bakery\Bakery;
+use UserFrosting\Sprinkle\Core\Bakery\Bakery;
 
 /**
  * Get and run CLI App

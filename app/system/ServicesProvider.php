@@ -51,7 +51,6 @@ class ServicesProvider
             $locator = new ResourceLocator(\UserFrosting\ROOT_DIR);
 
             // Register streams
-            $locator->registerStream('bakery', '', \UserFrosting\BAKERY_SYSTEM_DIR, true);
             $locator->registerStream('bakery', '', \UserFrosting\BAKERY_DIR);
             $locator->registerStream('sprinkles', '', '');
 

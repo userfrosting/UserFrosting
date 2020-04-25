@@ -41,8 +41,5 @@ define('UserFrosting\SPRINKLES_DIR', APP_DIR . DS . SPRINKLES_DIR_NAME);
 // Full path to sprinkles schema file
 define('UserFrosting\SPRINKLES_SCHEMA_FILE', APP_DIR . DS . 'sprinkles.json');
 
-// Full path to system Bakery commands
-define('UserFrosting\BAKERY_SYSTEM_DIR', APP_DIR . DS . 'system' . DS . 'Bakery' . DS . 'Command');
-
 // Relative path from within sprinkle directory
-define('UserFrosting\BAKERY_DIR', SRC_DIR_NAME . DS . 'Bakery');
+define('UserFrosting\BAKERY_DIR', SRC_DIR_NAME . DS . 'Bakery' . DS . 'Command');
