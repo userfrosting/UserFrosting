@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use UserFrosting\System\UserFrosting;
+use UserFrosting\Sprinkle\Core\UserFrosting;
 use UserFrosting\UniformResourceLocator\Resource;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 

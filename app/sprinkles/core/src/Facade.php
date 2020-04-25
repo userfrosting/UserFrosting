@@ -8,7 +8,7 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\System;
+namespace UserFrosting\Sprinkle\Core;
 
 use Mockery;
 use Mockery\MockInterface;
