@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 ### Changed
+- Changed `.php_cs` to `.php_cs.dist`
+- Changed `phpunit.xml` to `phpunit.xml.dist`
 
 ### Fixed
 
