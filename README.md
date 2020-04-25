@@ -38,13 +38,13 @@ UserFrosting is a secure, modern user management system written in PHP and built
 ## Features
 
 ### User login screen
-![User login script](screenshots/login.png)
+![User login script](.github/screenshots/login.png)
 
 ### User management page
-![PHP user management script](screenshots/users.png)
+![PHP user management script](.github/screenshots/users.png)
 
 ### Permissions management page
-![UserFrosting permissions management](screenshots/permissions.png)
+![UserFrosting permissions management](.github/screenshots/permissions.png)
 
 ## [Demo](https://demo.userfrosting.com)
 
@@ -139,5 +139,5 @@ Backers help us continue to develop UserFrosting by pledging a regular monthly c
 
 Support this project by becoming a sponsor. Sponsors have contributed a total of $500 or more to UserFrosting (either as an ongoing backer or one-time contributions). Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/userfrosting#sponsor)]
 
-[![USOR Games](sponsors/usor.png)](https://usorgames.com)
-[![Next Generation Internet](sponsors/nextgi.png)](https://nextgi.com)
+[![USOR Games](.github/sponsors/usor.png)](https://usorgames.com)
+[![Next Generation Internet](.github/sponsors/nextgi.png)](https://nextgi.com)
