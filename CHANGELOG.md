@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed `phpunit.xml` to `phpunit.xml.dist`.
 - Moved `*Command` Bakery class to `Command/*` namespace.
 - Replaced `UserFrosting\System\Bakery\BaseCommand` with `UserFrosting\Sprinkle\Core\Bakery\AbstractCommand`.
+- SprinkleManager `isAvailable` and `getSprinkle` methods are now case sensitive.
 
 ### Fixed
 

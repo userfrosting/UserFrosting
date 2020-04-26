@@ -19,6 +19,8 @@ use RocketTheme\Toolbox\Event\EventSubscriberInterface;
  * Represents a sprinkle (plugin, theme, site, etc), and the code required to boot up that sprinkle.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ * @todo Make sure all required methods from SprinkleManager are here, or in an abstract / interface
+ * @todo Should sprinkle name (and possibly metadata) be defined in this class ?
  */
 class Sprinkle implements EventSubscriberInterface
 {
@@ -30,7 +32,7 @@ class Sprinkle implements EventSubscriberInterface
     /**
      * @var string[] List of services provider to register
      *
-     * @TODO : Move all theses to their own class (Target UF 5.0) and list the one need registering in config
+     * @todo Move all services providers to their own class (Target UF 5.0) and list the one need registering in config
      */
     protected $servicesproviders = [];
 

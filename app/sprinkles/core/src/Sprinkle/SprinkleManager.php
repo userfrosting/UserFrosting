@@ -31,7 +31,7 @@ class SprinkleManager
     protected $ci;
 
     /**
-     * @var Sprinkle[] An array of sprinkles.
+     * @var (Sprinkle|null)[] An array of sprinkles : array<name, instance>
      */
     protected $sprinkles = [];
 
@@ -51,22 +51,11 @@ class SprinkleManager
     }
 
     /**
-     * Register resource streams for all base sprinkles.
-     * For each sprinkle, register its resources and then run its initializer.
-     */
-    public function addResources()
-    {
-        foreach ($this->sprinkles as $sprinkleName => $sprinkle) {
-            $this->addSprinkleResources($sprinkleName);
-        }
-    }
-
-    /**
      * Register a sprinkle as a locator location.
      *
      * @param string $sprinkleName
      */
-    public function addSprinkleResources($sprinkleName)
+    public function addSprinkleResources(string $sprinkleName): void
     {
         /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
         $locator = $this->ci->locator;
@@ -80,16 +69,10 @@ class SprinkleManager
      *
      * @return string
      */
-    public function getSprinklePath($sprinkleName)
+    public function getSprinklePath(string $sprinkleName): string
     {
-        // Get Sprinkle and make sure it exist
-        $sprinkle = $this->getSprinkle($sprinkleName);
-        if (!$sprinkle) {
-            throw new FileNotFoundException("Sprinkle `$sprinkleName` doesn't exist.");
-        }
-
         // Get path and make sure it exist
-        $path = $this->getSprinklesPath() . $sprinkle;
+        $path = $this->getSprinklesPath() . $sprinkleName;
         if (!file_exists($path)) {
             throw new FileNotFoundException("Sprinkle `$sprinkleName` should be found at `$path`, but that directory doesn't exist.");
         }
@@ -104,7 +87,7 @@ class SprinkleManager
      *
      * @return string
      */
-    protected function getSprinkleClass($sprinkleName)
+    protected function getSprinkleClass(string $sprinkleName): string
     {
         $className = Str::studly($sprinkleName);
 
@@ -118,7 +101,7 @@ class SprinkleManager
      *
      * @return string The Sprinkle Namespace
      */
-    public function getSprinkleClassNamespace($sprinkleName)
+    public function getSprinkleClassNamespace(string $sprinkleName): string
     {
         $className = Str::studly($sprinkleName);
 
@@ -132,7 +115,7 @@ class SprinkleManager
      *
      * @return string
      */
-    protected function getSprinkleDefaultServiceProvider($sprinkleName)
+    protected function getSprinkleDefaultServiceProvider(string $sprinkleName): string
     {
         return $this->getSprinkleClassNamespace($sprinkleName) . '\\ServicesProvider\\ServicesProvider';
     }
@@ -145,9 +128,10 @@ class SprinkleManager
      *
      * @param string $sprinkleName The name of the Sprinkle to initialize.
      *
-     * @return mixed Sprinkle class instance or null if no such class exist
+     * @return Sprinkle|null Sprinkle class instance or null if no such class exist
+     * @todo Enforce a Sprinkle class as of 5.0 or 4.5.0
      */
-    public function bootSprinkle($sprinkleName)
+    public function bootSprinkle(string $sprinkleName): ?Sprinkle
     {
         $fullClassName = $this->getSprinkleClass($sprinkleName);
 
@@ -155,9 +139,13 @@ class SprinkleManager
         if (class_exists($fullClassName)) {
             $sprinkle = new $fullClassName($this->ci);
 
+            if (!$sprinkle instanceof Sprinkle) {
+                throw new \Exception("$fullClassName must be an instance of " . Sprinkle::class); // TODO Custom exception
+            }
+
             return $sprinkle;
         } else {
-            return;
+            return null;
         }
     }
 
@@ -166,7 +154,7 @@ class SprinkleManager
      *
      * @return string[]
      */
-    public function getSprinkleNames()
+    public function getSprinkleNames(): array
     {
         return array_keys($this->sprinkles);
     }
@@ -174,9 +162,9 @@ class SprinkleManager
     /**
      * Returns a list of available sprinkles.
      *
-     * @return Sprinkle[]
+     * @return (Sprinkle|null)[]
      */
-    public function getSprinkles()
+    public function getSprinkles(): array
     {
         return $this->sprinkles;
     }
@@ -187,15 +175,21 @@ class SprinkleManager
      *
      * @param string[] $sprinkleNames
      */
-    public function init(array $sprinkleNames)
+    public function init(array $sprinkleNames): void
     {
         foreach ($sprinkleNames as $sprinkleName) {
             $sprinkle = $this->bootSprinkle($sprinkleName);
 
             if ($sprinkle) {
+                $sprinkle->registerServices();
+
                 // Subscribe the sprinkle to the event dispatcher
                 $this->ci->eventDispatcher->addSubscriber($sprinkle);
             }
+
+            // Register service
+            $this->registerServices($sprinkleName);
+            $this->addSprinkleResources($sprinkleName);
 
             $this->sprinkles[$sprinkleName] = $sprinkle;
         }
@@ -206,9 +200,9 @@ class SprinkleManager
      *
      * @param string $schemaPath
      */
-    public function initFromSchema($schemaPath)
+    public function initFromSchema(string $schemaPath): void
     {
-        $baseSprinkleNames = $this->loadSchema($schemaPath)->base;
+        $baseSprinkleNames = $this->loadSchema($schemaPath);
         $this->init($baseSprinkleNames);
     }
 
@@ -220,45 +214,34 @@ class SprinkleManager
      *
      * @return bool
      */
-    public function isAvailable($sprinkleName)
+    public function isAvailable(string $sprinkleName): bool
     {
-        return (bool) $this->getSprinkle($sprinkleName);
+        return key_exists($sprinkleName, $this->sprinkles);
     }
 
     /**
-     * Find sprinkle value from the sprinkles.json.
+     * Return the sprinkle class instance by name.
      *
      * @param string $sprinkleName
      *
-     * @return string|false Return sprinkle name or false if sprinkle not found
+     * @return Sprinkle|null Return sprinkle name or false if sprinkle not found
      */
-    public function getSprinkle($sprinkleName)
+    public function getSprinkle(string $sprinkleName): ?Sprinkle
     {
-        $mathches = preg_grep("/^$sprinkleName$/i", $this->getSprinkleNames());
-
-        if (count($mathches) <= 0) {
-            return false;
+        if (!$this->isAvailable($sprinkleName)) {
+            throw new \Exception("Sprinkle $sprinkleName not found."); //TODO : Change for custom exception
         }
 
-        return array_values($mathches)[0];
-    }
-
-    /**
-     * Interate through the list of loaded Sprinkles, and invoke their ServiceProvider classes.
-     */
-    public function registerAllServices()
-    {
-        foreach ($this->getSprinkleNames() as $sprinkleName) {
-            $this->registerServices($sprinkleName);
-        }
+        return $this->sprinkles[$sprinkleName];
     }
 
     /**
      * Register services for a specified Sprinkle.
      *
      * @param string $sprinkleName
+     * @deprecated 4.5.0 Services class should be registered in the main Sprinkle class.
      */
-    public function registerServices($sprinkleName)
+    public function registerServices(string $sprinkleName): void
     {
         //Register the default services
         $fullClassName = $this->getSprinkleDefaultServiceProvider($sprinkleName);
@@ -269,11 +252,6 @@ class SprinkleManager
             $serviceProvider = new $fullClassName();
             $serviceProvider->register($this->ci);
         }
-
-        // Register services from other providers
-        if ($this->sprinkles[$sprinkleName] instanceof Sprinkle) {
-            $this->sprinkles[$sprinkleName]->registerServices();
-        }
     }
 
     /**
@@ -281,7 +259,7 @@ class SprinkleManager
      *
      * @return string
      */
-    public function getSprinklesPath()
+    public function getSprinklesPath(): string
     {
         return $this->sprinklesPath;
     }
@@ -293,7 +271,7 @@ class SprinkleManager
      *
      * @return static
      */
-    public function setSprinklesPath($sprinklesPath)
+    public function setSprinklesPath(string $sprinklesPath)
     {
         $this->sprinklesPath = $sprinklesPath;
 
@@ -307,7 +285,7 @@ class SprinkleManager
      *
      * @return string[]
      */
-    protected function loadSchema($schemaPath)
+    protected function loadSchema(string $schemaPath): array
     {
         $sprinklesFile = @file_get_contents($schemaPath);
 
@@ -324,6 +302,6 @@ class SprinkleManager
             throw new JsonException($errorMessage);
         }
 
-        return $data;
+        return $data->base;
     }
 }

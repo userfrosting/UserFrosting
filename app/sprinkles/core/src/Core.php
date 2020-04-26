@@ -10,7 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Core;
 
-use Psr\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\Event;
 use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
@@ -36,25 +35,12 @@ class Core extends Sprinkle
     ];
 
     /**
-     * Create a new Sprinkle object.
-     *
-     * @param ContainerInterface $ci The global container object, which holds all your services.
-     */
-    public function __construct(ContainerInterface $ci)
-    {
-        $this->ci = $ci;
-
-        $this->registerStreams();
-    }
-
-    /**
      * Defines which events in the UF lifecycle our Sprinkle should hook into.
      */
     public static function getSubscribedEvents()
     {
         return [
             'onSprinklesInitialized'      => ['onSprinklesInitialized', 0],
-            'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0],
             'onAddGlobalMiddleware'       => ['onAddGlobalMiddleware', 0],
             'onAppInitialize'             => ['onAppInitialize', 0],
         ];
@@ -70,13 +56,8 @@ class Core extends Sprinkle
 
         // Set container for environment info class
         EnvironmentInfo::$ci = $this->ci;
-    }
 
-    /**
-     * Register all sprinkles services providers.
-     */
-    public function onSprinklesRegisterServices()
-    {
+        $this->registerStreams();
         $this->setupShutdownHandlerService();
     }
 
@@ -151,8 +132,9 @@ class Core extends Sprinkle
 
     /**
      * Register Core sprinkle locator streams.
+     * @todo See if this should be an common thing across sprinkles
      */
-    protected function registerStreams()
+    protected function registerStreams(): void
     {
         /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
         $locator = $this->ci->locator;

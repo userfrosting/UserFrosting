@@ -111,23 +111,20 @@ class Test extends AbstractCommand
      */
     protected function parseSprinkleTestScope($testscope)
     {
-        /** @var \UserFrosting\System\Sprinkle\SprinkleManager $sprinkleManager */
+        /** @var \UserFrosting\Sprinkle\Core\Sprinkle\SprinkleManager $sprinkleManager */
         $sprinkleManager = $this->ci->sprinkleManager;
 
-        // Get the Sprinkle name from the SprinkleManager, as we need the correct case
-        $sprinkle = $sprinkleManager->getSprinkle($testscope);
-
         // Make sure sprinkle exist
-        if (!$sprinkle) {
+        if (!$sprinkleManager->isAvailable($testscope)) {
             $this->io->error("Sprinkle $testscope not found");
             exit(1);
         }
 
-        $sprinkleName = Str::studly($sprinkle);
+        $sprinkleName = Str::studly($testscope);
         $this->io->note("Executing all tests for Sprinkle '$sprinkleName'");
 
         // Check if sprinkle has phpunit.xml file
-        $phpunitConfig = $sprinkleManager->getSprinklePath($sprinkle) . \UserFrosting\DS . 'phpunit.xml';
+        $phpunitConfig = $sprinkleManager->getSprinklePath($testscope) . \UserFrosting\DS . 'phpunit.xml';
         if (file_exists($phpunitConfig)) {
             return " -c $phpunitConfig ";
         }

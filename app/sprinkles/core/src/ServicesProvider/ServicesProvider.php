@@ -59,6 +59,7 @@ use UserFrosting\Sprinkle\Core\Util\RawAssetBundles;
 use UserFrosting\Support\Exception\NotFoundException;
 use UserFrosting\Support\Repository\Loader\ArrayFileLoader;
 use UserFrosting\Support\Repository\Repository;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * UserFrosting core services provider.
@@ -419,6 +420,17 @@ class ServicesProvider
          */
         $container['filesystem'] = function ($c) {
             return new FilesystemManager($c->config);
+        };
+
+        /*
+         * Path/file locator service.
+         *
+         * Register custom streams for the application, and add paths for app-level streams.
+         *
+         * @return \UserFrosting\UniformResourceLocator\ResourceLocator
+         */
+        $container['locator'] = function ($c) {
+            return new ResourceLocator(\UserFrosting\ROOT_DIR);
         };
 
         /*
