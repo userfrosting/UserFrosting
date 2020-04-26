@@ -51,73 +51,40 @@ class SprinkleManager
     }
 
     /**
-     * Register a sprinkle as a locator location.
+     * Initialize all base sprinkles in a specified Sprinkles schema file (e.g. 'sprinkles.json').
      *
-     * @param string $sprinkleName
+     * @param string $schemaPath
      */
-    public function addSprinkleResources(string $sprinkleName): void
+    public function initFromSchema(string $schemaPath): void
     {
-        /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
-        $locator = $this->ci->locator;
-        $locator->registerLocation($sprinkleName, $this->getSprinklePath($sprinkleName));
+        $baseSprinkleNames = $this->loadSchema($schemaPath);
+        $this->init($baseSprinkleNames);
     }
 
     /**
-     * Returns sprinkle base path from name.
+     * Initialize a list of Sprinkles, instantiating their boot classes (if they exist),
+     * and subscribing them to the event dispatcher.
      *
-     * @param string $sprinkleName
-     *
-     * @return string
+     * @param string[] $sprinkleNames
      */
-    public function getSprinklePath(string $sprinkleName): string
+    public function init(array $sprinkleNames): void
     {
-        // Get path and make sure it exist
-        $path = $this->getSprinklesPath() . $sprinkleName;
-        if (!file_exists($path)) {
-            throw new FileNotFoundException("Sprinkle `$sprinkleName` should be found at `$path`, but that directory doesn't exist.");
+        foreach ($sprinkleNames as $sprinkleName) {
+            $sprinkle = $this->bootSprinkle($sprinkleName);
+
+            if ($sprinkle) {
+                $sprinkle->registerServices();
+
+                // Subscribe the sprinkle to the event dispatcher
+                $this->ci->eventDispatcher->addSubscriber($sprinkle);
+            }
+
+            // Register service
+            $this->registerServices($sprinkleName);
+            $this->addSprinkleResources($sprinkleName);
+
+            $this->sprinkles[$sprinkleName] = $sprinkle;
         }
-
-        return $path;
-    }
-
-    /**
-     * Returns the sprinkle class.
-     *
-     * @param string $sprinkleName
-     *
-     * @return string
-     */
-    protected function getSprinkleClass(string $sprinkleName): string
-    {
-        $className = Str::studly($sprinkleName);
-
-        return $this->getSprinkleClassNamespace($sprinkleName) . "\\$className";
-    }
-
-    /**
-     * Returns the claculated sprinkle namespace.
-     *
-     * @param string $sprinkleName
-     *
-     * @return string The Sprinkle Namespace
-     */
-    public function getSprinkleClassNamespace(string $sprinkleName): string
-    {
-        $className = Str::studly($sprinkleName);
-
-        return "UserFrosting\\Sprinkle\\$className";
-    }
-
-    /**
-     * Returns the sprinkle service provider class.
-     *
-     * @param string $sprinkleName
-     *
-     * @return string
-     */
-    protected function getSprinkleDefaultServiceProvider(string $sprinkleName): string
-    {
-        return $this->getSprinkleClassNamespace($sprinkleName) . '\\ServicesProvider\\ServicesProvider';
     }
 
     /**
@@ -151,6 +118,19 @@ class SprinkleManager
     }
 
     /**
+     * Return if a Sprinkle is available
+     * Can be used by other Sprinkles to test if their dependencies are met.
+     *
+     * @param string $sprinkleName The name of the Sprinkle
+     *
+     * @return bool
+     */
+    public function isAvailable(string $sprinkleName): bool
+    {
+        return array_key_exists($sprinkleName, $this->sprinkles);
+    }
+
+    /**
      * Returns a list of available sprinkle names.
      *
      * @return string[]
@@ -171,56 +151,6 @@ class SprinkleManager
     }
 
     /**
-     * Initialize a list of Sprinkles, instantiating their boot classes (if they exist),
-     * and subscribing them to the event dispatcher.
-     *
-     * @param string[] $sprinkleNames
-     */
-    public function init(array $sprinkleNames): void
-    {
-        foreach ($sprinkleNames as $sprinkleName) {
-            $sprinkle = $this->bootSprinkle($sprinkleName);
-
-            if ($sprinkle) {
-                $sprinkle->registerServices();
-
-                // Subscribe the sprinkle to the event dispatcher
-                $this->ci->eventDispatcher->addSubscriber($sprinkle);
-            }
-
-            // Register service
-            $this->registerServices($sprinkleName);
-            $this->addSprinkleResources($sprinkleName);
-
-            $this->sprinkles[$sprinkleName] = $sprinkle;
-        }
-    }
-
-    /**
-     * Initialize all base sprinkles in a specified Sprinkles schema file (e.g. 'sprinkles.json').
-     *
-     * @param string $schemaPath
-     */
-    public function initFromSchema(string $schemaPath): void
-    {
-        $baseSprinkleNames = $this->loadSchema($schemaPath);
-        $this->init($baseSprinkleNames);
-    }
-
-    /**
-     * Return if a Sprinkle is available
-     * Can be used by other Sprinkles to test if their dependencies are met.
-     *
-     * @param string $sprinkleName The name of the Sprinkle
-     *
-     * @return bool
-     */
-    public function isAvailable(string $sprinkleName): bool
-    {
-        return array_key_exists($sprinkleName, $this->sprinkles);
-    }
-
-    /**
      * Return the sprinkle class instance by name.
      *
      * @param string $sprinkleName
@@ -237,23 +167,47 @@ class SprinkleManager
     }
 
     /**
-     * Register services for a specified Sprinkle.
+     * Register a sprinkle as a locator location.
+     *
+     * @param string $sprinkleName
+     */
+    public function addSprinkleResources(string $sprinkleName): void
+    {
+        /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
+        $locator = $this->ci->locator;
+        $locator->registerLocation($sprinkleName, $this->getSprinklePath($sprinkleName));
+    }
+
+    /**
+     * Returns sprinkle base path from name.
      *
      * @param string $sprinkleName
      *
-     * @deprecated 4.5.0 Services class should be registered in the main Sprinkle class.
+     * @return string
      */
-    public function registerServices(string $sprinkleName): void
+    public function getSprinklePath(string $sprinkleName): string
     {
-        //Register the default services
-        $fullClassName = $this->getSprinkleDefaultServiceProvider($sprinkleName);
-
-        // Check that class exists, and register services
-        if (class_exists($fullClassName)) {
-            // Register core services
-            $serviceProvider = new $fullClassName();
-            $serviceProvider->register($this->ci);
+        // Get path and make sure it exist
+        $path = $this->getSprinklesPath() . $sprinkleName;
+        if (!file_exists($path)) {
+            throw new FileNotFoundException("Sprinkle `$sprinkleName` should be found at `$path`, but that directory doesn't exist.");
         }
+
+        return $path;
+    }
+
+    /**
+     * Returns the claculated sprinkle namespace.
+     *
+     * @param string $sprinkleName
+     *
+     * @return string The Sprinkle Namespace
+     */
+    public function getSprinkleClassNamespace(string $sprinkleName): string
+    {
+        $className = Str::studly($sprinkleName);
+
+        return "UserFrosting\\Sprinkle\\$className";
     }
 
     /**
@@ -278,6 +232,52 @@ class SprinkleManager
         $this->sprinklesPath = $sprinklesPath;
 
         return $this;
+    }
+
+    /**
+     * Register services for a specified Sprinkle.
+     *
+     * @param string $sprinkleName
+     *
+     * @deprecated 4.5.0 Services class should be registered in the main Sprinkle class.
+     */
+    public function registerServices(string $sprinkleName): void
+    {
+        //Register the default services
+        $fullClassName = $this->getSprinkleDefaultServiceProvider($sprinkleName);
+
+        // Check that class exists, and register services
+        if (class_exists($fullClassName)) {
+            // Register core services
+            $serviceProvider = new $fullClassName();
+            $serviceProvider->register($this->ci);
+        }
+    }
+
+    /**
+     * Returns the sprinkle class.
+     *
+     * @param string $sprinkleName
+     *
+     * @return string
+     */
+    protected function getSprinkleClass(string $sprinkleName): string
+    {
+        $className = Str::studly($sprinkleName);
+
+        return $this->getSprinkleClassNamespace($sprinkleName) . "\\$className";
+    }
+
+    /**
+     * Returns the sprinkle service provider class.
+     *
+     * @param string $sprinkleName
+     *
+     * @return string
+     */
+    protected function getSprinkleDefaultServiceProvider(string $sprinkleName): string
+    {
+        return $this->getSprinkleClassNamespace($sprinkleName) . '\\ServicesProvider\\ServicesProvider';
     }
 
     /**
