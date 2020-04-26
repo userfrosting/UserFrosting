@@ -14,6 +14,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 ### Changed
+- Moved constants from `app/define.php` to `app/sprinkles/core/define.php`.
+- Moved some requirements from `/composer.json` to `app/sprinkles/core/composer.json`.
+- Moved `UserFrosting\Tests\TestCase` to `UserFrosting\Sprinkle\Core\Tests\TestCase`.
+- Moved `UserFrosting\System\Sprinkle\Sprinkle` to `UserFrosting\Sprinkle\Core\Sprinkle\Sprinkle`.
+- Moved `UserFrosting\System\Facade` to `UserFrosting\Sprinkle\Core\Facade`.
+- Moved `UserFrosting\System\SlimAppEvent` to `UserFrosting\Sprinkle\Core\SlimAppEvent`.
+- Moved `UserFrosting\System\Sprinkle\SprinkleManager` to `UserFrosting\Sprinkle\Core\Sprinkle\SprinkleManager`.
+- Moved `UserFrosting\System\UserFrosting` to `UserFrosting\Sprinkle\Core\UserFrosting`.
 - Changed `.php_cs` to `.php_cs.dist`.
 - Changed `phpunit.xml` to `phpunit.xml.dist`.
 - Moved `*Command` Bakery class to `Command/*` namespace.
