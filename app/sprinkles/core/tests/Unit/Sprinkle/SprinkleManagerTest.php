@@ -166,7 +166,7 @@ class SprinkleManagerTest extends TestCase
      * @param string          $sprinkleName
      * @param SprinkleManager $sprinkleManager
      * @testWith        ["foo"]
-     *                  ["bar"]
+     *                  ["Bar"]
      *                  ["test"]
      */
     public function testGetSprinklePath($sprinkleName, SprinkleManager $sprinkleManager): void

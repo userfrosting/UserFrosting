@@ -311,7 +311,7 @@ class SprinkleManager
         $sprinkles = $data->base;
         $sprinkles = array_intersect_key(
             $sprinkles,
-            array_unique(array_map('strtolower',$sprinkles))
+            array_unique(array_map('strtolower', $sprinkles))
         );
 
         return $sprinkles;
