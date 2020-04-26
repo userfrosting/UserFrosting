@@ -129,6 +129,7 @@ class SprinkleManager
      * @param string $sprinkleName The name of the Sprinkle to initialize.
      *
      * @return Sprinkle|null Sprinkle class instance or null if no such class exist
+     *
      * @todo Enforce a Sprinkle class as of 5.0 or 4.5.0
      */
     public function bootSprinkle(string $sprinkleName): ?Sprinkle
@@ -216,7 +217,7 @@ class SprinkleManager
      */
     public function isAvailable(string $sprinkleName): bool
     {
-        return key_exists($sprinkleName, $this->sprinkles);
+        return array_key_exists($sprinkleName, $this->sprinkles);
     }
 
     /**
@@ -239,6 +240,7 @@ class SprinkleManager
      * Register services for a specified Sprinkle.
      *
      * @param string $sprinkleName
+     *
      * @deprecated 4.5.0 Services class should be registered in the main Sprinkle class.
      */
     public function registerServices(string $sprinkleName): void

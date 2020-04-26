@@ -43,6 +43,7 @@ class UserFrosting
         $this->ci = new Container();
 
         // Save CLI status inside the DI container
+        // TODO : Move into setup base services
         $this->ci['cli'] = function ($container) use ($cli) {
             return $cli;
         };

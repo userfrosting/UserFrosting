@@ -19,6 +19,7 @@ use RocketTheme\Toolbox\Event\EventSubscriberInterface;
  * Represents a sprinkle (plugin, theme, site, etc), and the code required to boot up that sprinkle.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
+ *
  * @todo Make sure all required methods from SprinkleManager are here, or in an abstract / interface
  * @todo Should sprinkle name (and possibly metadata) be defined in this class ?
  */

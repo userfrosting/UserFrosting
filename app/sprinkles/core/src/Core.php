@@ -132,6 +132,7 @@ class Core extends Sprinkle
 
     /**
      * Register Core sprinkle locator streams.
+     *
      * @todo See if this should be an common thing across sprinkles
      */
     protected function registerStreams(): void
