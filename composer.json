@@ -27,16 +27,7 @@
         "php": ">=7.1",
         "ext-gd": "*",
         "composer/installers": "^1.4.0",
-        "userfrosting/uniformresourcelocator": "~4.4.0",
-        "symfony/console": "^4.3",
         "wikimedia/composer-merge-plugin": "^1.4.0"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.13",
-        "phpunit/phpunit": "^7.5 | ^8.5",
-        "mockery/mockery": "^1.2",
-        "league/factory-muffin": "^3.0",
-        "league/factory-muffin-faker": "^2.0"
     },
     "extra": {
         "merge-plugin": {
@@ -55,17 +46,6 @@
     "autoload": {
         "files" : [
             "app/defines.php"
-        ],
-        "psr-4": {
-            "UserFrosting\\System\\": "app/system/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "UserFrosting\\Tests\\": "app/tests/"
-        }
-    },
-    "scripts": {
-        "test" : "phpunit --colors=always"
+        ]
     }
 }

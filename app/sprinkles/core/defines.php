@@ -10,6 +10,30 @@
 
 namespace UserFrosting;
 
+// Some standard defines
+define('UserFrosting\VERSION', '4.5.0-dev');
+define('UserFrosting\PHP_MIN_VERSION', '7.1');
+define('UserFrosting\PHP_RECOMMENDED_VERSION', '7.3');
+define('UserFrosting\NODE_MIN_VERSION', 'v10.12.0');
+define('UserFrosting\NPM_MIN_VERSION', '6.0.0');
+
+// Directories and Paths
+
+// Names of sprinkle directories
+define('UserFrosting\SPRINKLES_DIR_NAME', 'sprinkles');
+
+// Names of src directories within Sprinkles
+define('UserFrosting\SRC_DIR_NAME', 'src');
+
+// Full path to Sprinkles directory
+define('UserFrosting\SPRINKLES_DIR', APP_DIR . DS . SPRINKLES_DIR_NAME);
+
+// Full path to sprinkles schema file
+define('UserFrosting\SPRINKLES_SCHEMA_FILE', APP_DIR . DS . 'sprinkles.json');
+
+// Relative path from within sprinkle directory
+define('UserFrosting\BAKERY_DIR', SRC_DIR_NAME . DS . 'Bakery' . DS . 'Command');
+
 // Names of root directories
 define('UserFrosting\BUILD_DIR_NAME', 'build');
 define('UserFrosting\PUBLIC_DIR_NAME', 'public');

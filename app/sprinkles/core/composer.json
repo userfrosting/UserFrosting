@@ -51,7 +51,16 @@
         "userfrosting/i18n": "~4.4.0",
         "userfrosting/session": "~4.4.0",
         "userfrosting/support": "~4.4.0",
+        "userfrosting/uniformresourcelocator": "~4.4.0",
+        "symfony/console": "^4.3",
         "vlucas/phpdotenv": "^3.4.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.13",
+        "phpunit/phpunit": "^7.5 | ^8.5",
+        "mockery/mockery": "^1.2",
+        "league/factory-muffin": "^3.0",
+        "league/factory-muffin-faker": "^2.0"
     },
     "autoload": {
         "files" : [
