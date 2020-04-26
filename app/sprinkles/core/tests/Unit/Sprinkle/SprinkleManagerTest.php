@@ -103,7 +103,7 @@ class SprinkleManagerTest extends TestCase
         $this->assertIsArray($sprinkles);
         $this->assertCount(3, $sprinkles);
         $this->assertNull($sprinkles['foo']);
-        $this->assertNull($sprinkles['bar']);
+        $this->assertNull($sprinkles['Bar']);
         $this->assertInstanceOf(Sprinkle::class, $sprinkles['test']);
 
         return $sprinkleManager;
@@ -116,7 +116,7 @@ class SprinkleManagerTest extends TestCase
     public function testGetSprinkleNames(SprinkleManager $sprinkleManager): void
     {
         $sprinkles = $sprinkleManager->getSprinkleNames();
-        $this->assertSame(['foo', 'bar', 'test'], $sprinkles);
+        $this->assertSame(['foo', 'Bar', 'test'], $sprinkles);
     }
 
     /**
@@ -126,11 +126,11 @@ class SprinkleManagerTest extends TestCase
     public function testGetSprinkle(SprinkleManager $sprinkleManager): void
     {
         $this->assertNull($sprinkleManager->getSprinkle('foo'));
-        $this->assertNull($sprinkleManager->getSprinkle('bar'));
+        $this->assertNull($sprinkleManager->getSprinkle('Bar'));
         $this->assertInstanceOf(Sprinkle::class, $sprinkleManager->getSprinkle('test'));
 
-        $this->expectExceptionMessage('Sprinkle fOo not found.');
-        $sprinkleManager->getSprinkle('fOo');
+        $this->expectExceptionMessage('Sprinkle bar not found.');
+        $sprinkleManager->getSprinkle('bar');
     }
 
     /**
@@ -139,7 +139,8 @@ class SprinkleManagerTest extends TestCase
      * @param string          $sprinkleName
      * @param bool            $isAvailable
      * @param SprinkleManager $sprinkleManager
-     * @testWith        ["bar", true]
+     * @testWith        ["Bar", true]
+     *                  ["bar", false]
      *                  ["test", true]
      *                  ["foo", true]
      *                  ["fOo", false]
@@ -256,6 +257,8 @@ class SprinkleManagerTest extends TestCase
     public function testLoadSprinkleWithDuplicateSprinkles(): void
     {
         $sprinkleManager = m::mock(SprinkleManager::class, [$this->fakeCi])->makePartial();
+
+        // Make sure the sprinkles are not booted twice
         $sprinkleManager->shouldReceive('bootSprinkle')->with('foo')->once();
         $sprinkleManager->shouldReceive('bootSprinkle')->with('Bar')->once();
 
@@ -268,10 +271,12 @@ class SprinkleManagerTest extends TestCase
             'Bar'  => null,
         ], $sprinkles);
 
+        // Test isAvailable work with only the correct case.
         $this->assertTrue($sprinkleManager->isAvailable('foo'));
         $this->assertFalse($sprinkleManager->isAvailable('Foo'));
         $this->assertFalse($sprinkleManager->isAvailable('FOO'));
 
+        // Test getSprinklePath get the right case
         $this->assertsame(__DIR__ . '/data/Bar', $sprinkleManager->getSprinklePath('Bar'));
         $this->assertNotsame(__DIR__ . '/data/Bar', $sprinkleManager->getSprinklePath('bar'));
         $this->assertsame(__DIR__ . '/data/foo', $sprinkleManager->getSprinklePath('foo'));

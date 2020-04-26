@@ -306,11 +306,12 @@ class SprinkleManager
             throw new JsonException($errorMessage);
         }
 
-        // Remove duplicates
+        // Remove duplicates, keep the first one
+        // @see https://stackoverflow.com/a/2276400/445757
         $sprinkles = $data->base;
         $sprinkles = array_intersect_key(
             $sprinkles,
-            array_unique(array_map("StrToLower",$sprinkles))
+            array_unique(array_map('strtolower',$sprinkles))
         );
 
         return $sprinkles;
