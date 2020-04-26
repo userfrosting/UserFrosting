@@ -116,7 +116,7 @@ class Debug extends AbstractCommand
         $command = $this->getApplication()->find('sprinkle:list');
         $command->run($input, $output);
 
-        /** @var \UserFrosting\System\Sprinkle\SprinkleManager $sprinkleManager */
+        /** @var \UserFrosting\Sprinkle\Core\Sprinkle\SprinkleManager $sprinkleManager */
         $sprinkleManager = $this->ci->sprinkleManager;
 
         // Throw fatal error if the `core` sprinkle is missing

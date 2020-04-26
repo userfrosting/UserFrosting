@@ -42,17 +42,8 @@ class UserFrosting
         // First, we create our DI container
         $this->ci = new Container();
 
-        // Save CLI status inside the DI container
-        // TODO : Move into setup base services
-        $this->ci['cli'] = function ($container) use ($cli) {
-            return $cli;
-        };
-
-        // Set up facade reference to container.
-        Facade::setFacadeContainer($this->ci);
-
         // Setup UF App
-        $this->setupApp();
+        $this->setupApp($cli);
     }
 
     /**
@@ -128,14 +119,23 @@ class UserFrosting
     }
 
     /**
-     * @todo This whole sprinkle setup should probably be revamped, and moved to the `Core` Sprinkle initialisation
+     * @param bool $cli
      */
-    protected function setupBasicServices(): void
+    protected function setupBasicServices(bool $cli): void
     {
+        /*
+         * Service to tell if the app is currently running in CLI mode.
+         *
+         * @return bool
+         */
+        $this->ci['cli'] = function () use ($cli) {
+            return $cli;
+        };
+
         /*
          * Set up sprinkle manager service.
          *
-         * @return \UserFrosting\System\Sprinkle\SprinkleManager
+         * @return \UserFrosting\Sprinkle\Core\Sprinkle\SprinkleManager
          */
         $this->ci['sprinkleManager'] = function ($c) {
             return new SprinkleManager($c);
@@ -153,11 +153,16 @@ class UserFrosting
 
     /**
      * Setup UserFrosting App, load sprinkles, load routes, etc.
+     *
+     * @param bool $cli
      */
-    protected function setupApp(): void
+    protected function setupApp(bool $cli): void
     {
+        // Set up facade reference to container.
+        Facade::setFacadeContainer($this->ci);
+
         // Register basic sevices
-        $this->setupBasicServices();
+        $this->setupBasicServices($cli);
 
         // Setup sprinkles
         $this->setupSprinkles();

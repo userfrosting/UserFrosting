@@ -40,7 +40,7 @@ class SprinkleList extends AbstractCommand
     {
         $this->io->title('Loaded Sprinkles');
 
-        /** @var \UserFrosting\System\Sprinkle\SprinkleManager $sprinkleManager */
+        /** @var \UserFrosting\Sprinkle\Core\Sprinkle\SprinkleManager $sprinkleManager */
         $sprinkleManager = $this->ci->sprinkleManager;
 
         // Get sprinkle list

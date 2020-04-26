@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 ### Changed
+- Refactored SprinkleManager
 - Moved constants from `app/define.php` to `app/sprinkles/core/define.php`.
 - Moved some requirements from `/composer.json` to `app/sprinkles/core/composer.json`.
 - Moved `UserFrosting\Tests\TestCase` to `UserFrosting\Sprinkle\Core\Tests\TestCase`.
@@ -30,9 +31,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+### Deprecated
+- `onSprinklesAddResources` and `onSprinklesRegisterServices` events. Use `onSprinklesInitialized` event instead.
+
 ### Removed
 - Removed deprecated `UserFrosting\System\Bakery\Migration` (deprecated in 4.2.0).
 - Removed deprecated `UserFrosting\Tests\DatabaseTransactions` (deprecated in 4.2.0).
+- SprinkleManager : Removed `addResources`, `registerAllServices`.
 
 ## [v4.4.1]
 

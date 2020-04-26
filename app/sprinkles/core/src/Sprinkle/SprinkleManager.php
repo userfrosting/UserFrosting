@@ -90,7 +90,7 @@ class SprinkleManager
     /**
      * Takes the name of a Sprinkle, and creates an instance of the initializer object (if defined).
      *
-     * Creates an object of a subclass of UserFrosting\System\Sprinkle\Sprinkle if defined for the sprinkle (converting to StudlyCase).
+     * Creates an object of a subclass of UserFrosting\Sprinkle\Core\Sprinkle\Sprinkle if defined for the sprinkle (converting to StudlyCase).
      * Otherwise, returns null.
      *
      * @param string $sprinkleName The name of the Sprinkle to initialize.
