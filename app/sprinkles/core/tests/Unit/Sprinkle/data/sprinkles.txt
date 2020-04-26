@@ -4,7 +4,7 @@
     },
     "base": [
         "foo",
-        "bar",
+        "Bar",
         "test"
     ]
 }
