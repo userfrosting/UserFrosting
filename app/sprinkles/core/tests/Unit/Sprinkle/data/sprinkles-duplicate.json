@@ -5,7 +5,7 @@
     "base": [
         "foo",
         "FOO",
-        "bar",
-        "bar"
+        "Bar",
+        "Bar"
     ]
 }

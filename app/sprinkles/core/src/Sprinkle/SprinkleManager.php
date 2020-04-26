@@ -274,6 +274,8 @@ class SprinkleManager
      * @param string $sprinkleName
      *
      * @return string
+     *
+     * @deprecated 4.5.0
      */
     protected function getSprinkleDefaultServiceProvider(string $sprinkleName): string
     {
@@ -304,6 +306,13 @@ class SprinkleManager
             throw new JsonException($errorMessage);
         }
 
-        return $data->base;
+        // Remove duplicates
+        $sprinkles = $data->base;
+        $sprinkles = array_intersect_key(
+            $sprinkles,
+            array_unique(array_map("StrToLower",$sprinkles))
+        );
+
+        return $sprinkles;
     }
 }

@@ -255,18 +255,27 @@ class SprinkleManagerTest extends TestCase
      */
     public function testLoadSprinkleWithDuplicateSprinkles(): void
     {
-        $sprinkleManager = new SprinkleManager($this->fakeCi);
+        $sprinkleManager = m::mock(SprinkleManager::class, [$this->fakeCi])->makePartial();
+        $sprinkleManager->shouldReceive('bootSprinkle')->with('foo')->once();
+        $sprinkleManager->shouldReceive('bootSprinkle')->with('Bar')->once();
+
         $sprinkleManager->setSprinklesPath($this->basePath);
         $sprinkleManager->initFromSchema(__DIR__ . '/data/sprinkles-duplicate.json');
+        $sprinkles = $sprinkleManager->getSprinkles();
+
         $this->assertEquals([
             'foo'  => null,
-            'FOO'  => null,
-            'bar'  => null,
-        ], $sprinkleManager->getSprinkles());
+            'Bar'  => null,
+        ], $sprinkles);
 
-        $this->assertFalse($sprinkleManager->isAvailable('Foo'));
         $this->assertTrue($sprinkleManager->isAvailable('foo'));
-        $this->assertTrue($sprinkleManager->isAvailable('FOO'));
+        $this->assertFalse($sprinkleManager->isAvailable('Foo'));
+        $this->assertFalse($sprinkleManager->isAvailable('FOO'));
+
+        $this->assertsame(__DIR__ . '/data/Bar', $sprinkleManager->getSprinklePath('Bar'));
+        $this->assertNotsame(__DIR__ . '/data/Bar', $sprinkleManager->getSprinklePath('bar'));
+        $this->assertsame(__DIR__ . '/data/foo', $sprinkleManager->getSprinklePath('foo'));
+        $this->assertNotsame(__DIR__ . '/data/foo', $sprinkleManager->getSprinklePath('FOO'));
     }
 }
 
