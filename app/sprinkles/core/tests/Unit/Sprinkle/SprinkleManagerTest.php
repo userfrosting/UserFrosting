@@ -278,9 +278,7 @@ class SprinkleManagerTest extends TestCase
 
         // Test getSprinklePath get the right case
         $this->assertsame(__DIR__ . '/data/Bar', $sprinkleManager->getSprinklePath('Bar'));
-        $this->assertNotsame(__DIR__ . '/data/Bar', $sprinkleManager->getSprinklePath('bar'));
         $this->assertsame(__DIR__ . '/data/foo', $sprinkleManager->getSprinklePath('foo'));
-        $this->assertNotsame(__DIR__ . '/data/foo', $sprinkleManager->getSprinklePath('FOO'));
     }
 }
 
