@@ -10,7 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Core;
 
-use RocketTheme\Toolbox\Event\Event;
 use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\I18n\LocaleServicesProvider;
@@ -36,8 +35,11 @@ class Core extends Sprinkle
 
     /**
      * Defines which events in the UF lifecycle our Sprinkle should hook into.
+     * Theses are registered with the eventDispatcher during sprinkle initialisation.
+     *
+     * @return mixed[] List of events to subscribe, formatted as ['eventName' => ['methodName', $priority]].
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'onSprinklesInitialized'      => ['onSprinklesInitialized', 0],
@@ -49,7 +51,7 @@ class Core extends Sprinkle
     /**
      * Set static references to DI container in necessary classes.
      */
-    public function onSprinklesInitialized()
+    public function onSprinklesInitialized(): void
     {
         // Set container for data model
         Model::$ci = $this->ci;
@@ -64,8 +66,6 @@ class Core extends Sprinkle
     /**
      * Steps required to register the ShutdownHandler Service.
      * Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
-     *
-     * @TODO: Move to it's own serviceProvider class (Target UF 5.0)
      */
     public function setupShutdownHandlerService(): void
     {
@@ -110,9 +110,9 @@ class Core extends Sprinkle
     /**
      * Register routes.
      *
-     * @param Event $event
+     * @param SlimAppEvent $event
      */
-    public function onAppInitialize(Event $event)
+    public function onAppInitialize(SlimAppEvent $event)
     {
         $this->ci->router->loadRoutes($event->getApp());
     }
@@ -120,9 +120,9 @@ class Core extends Sprinkle
     /**
      * Add CSRF middleware.
      *
-     * @param Event $event
+     * @param SlimAppEvent $event
      */
-    public function onAddGlobalMiddleware(Event $event)
+    public function onAddGlobalMiddleware(SlimAppEvent $event)
     {
         // Don't register CSRF if CLI
         if (!$this->ci->cli) {
@@ -132,8 +132,6 @@ class Core extends Sprinkle
 
     /**
      * Register Core sprinkle locator streams.
-     *
-     * @todo See if this should be an common thing across sprinkles
      */
     protected function registerStreams(): void
     {
