@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 - Removed deprecated `UserFrosting\System\Bakery\Migration` (deprecated in 4.2.0).
 - Removed deprecated `UserFrosting\Tests\DatabaseTransactions` (deprecated in 4.2.0).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Tests\ControllerTestCase` (deprecated in 4.2.2).
 - SprinkleManager : Removed `addResources`, `registerAllServices`.
 
 ## [v4.4.1]

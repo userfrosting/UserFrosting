@@ -16,8 +16,10 @@ use UserFrosting\Support\Exception\NotFoundException;
 /**
  * Tests CoreController
  */
-class CoreControllerTest extends ControllerTestCase
+class CoreControllerTest extends TestCase
 {
+    use withController;
+
     /**
      * @return CoreController
      */
