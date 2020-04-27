@@ -97,7 +97,7 @@ class SprinkleManager
      *
      * @return Sprinkle|null Sprinkle class instance or null if no such class exist
      *
-     * @todo Enforce a Sprinkle class as of 5.0 or 4.5.0
+     * @todo Enforce a Sprinkle class (not null) as of 5.0 or 4.5.0
      */
     public function bootSprinkle(string $sprinkleName): ?Sprinkle
     {
@@ -108,7 +108,7 @@ class SprinkleManager
             $sprinkle = new $fullClassName($this->ci);
 
             if (!$sprinkle instanceof Sprinkle) {
-                throw new \Exception("$fullClassName must be an instance of " . Sprinkle::class); // TODO Custom exception
+                throw new SprinkleClassException("$fullClassName must be an instance of " . Sprinkle::class);
             }
 
             return $sprinkle;
@@ -160,7 +160,7 @@ class SprinkleManager
     public function getSprinkle(string $sprinkleName): ?Sprinkle
     {
         if (!$this->isAvailable($sprinkleName)) {
-            throw new \Exception("Sprinkle $sprinkleName not found."); //TODO : Change for custom exception
+            throw new SprinkleNotFoundException("Sprinkle $sprinkleName not found.");
         }
 
         return $this->sprinkles[$sprinkleName];

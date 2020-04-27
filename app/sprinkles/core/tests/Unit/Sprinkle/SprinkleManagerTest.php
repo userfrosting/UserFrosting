@@ -13,8 +13,12 @@ namespace UserFrosting\Sprinkle\Core\Tests\Unit\Sprinkle;
 use Psr\Container\ContainerInterface;
 use Mockery as m;
 use UserFrosting\Sprinkle\Core\Sprinkle\Sprinkle;
-use UserFrosting\Sprinkle\Core\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Sprinkle\SprinkleClassException;
 use UserFrosting\Sprinkle\Core\Sprinkle\SprinkleManager;
+use UserFrosting\Sprinkle\Core\Sprinkle\SprinkleNotFoundException;
+use UserFrosting\Sprinkle\Core\Tests\TestCase;
+use UserFrosting\Support\Exception\FileNotFoundException;
+use UserFrosting\Support\Exception\JsonException;
 
 class SprinkleManagerTest extends TestCase
 {
@@ -66,7 +70,7 @@ class SprinkleManagerTest extends TestCase
     public function testLoadSprinkleWithNonExistingFile(): void
     {
         $sprinkleManager = new SprinkleManager($this->fakeCi);
-        $this->expectException(\UserFrosting\Support\Exception\FileNotFoundException::class);
+        $this->expectException(FileNotFoundException::class);
         $sprinkleManager->initFromSchema('foo.json');
     }
 
@@ -82,7 +86,7 @@ class SprinkleManagerTest extends TestCase
         // Setup test sprinkle mock class so it can be found by `class_exist`
         class_alias(BlahSprinkleStub::class, 'UserFrosting\Sprinkle\Blah\Blah');
 
-        //$this->expectException(); //TODO
+        $this->expectException(SprinkleClassException::class);
         $this->expectExceptionMessage("UserFrosting\Sprinkle\Blah\Blah must be an instance of UserFrosting\Sprinkle\Core\Sprinkle\Sprinkle");
         $sprinkleManager->bootSprinkle('blah');
     }
@@ -129,6 +133,7 @@ class SprinkleManagerTest extends TestCase
         $this->assertNull($sprinkleManager->getSprinkle('Bar'));
         $this->assertInstanceOf(Sprinkle::class, $sprinkleManager->getSprinkle('test'));
 
+        $this->expectException(SprinkleNotFoundException::class);
         $this->expectExceptionMessage('Sprinkle bar not found.');
         $sprinkleManager->getSprinkle('bar');
     }
@@ -183,7 +188,7 @@ class SprinkleManagerTest extends TestCase
     {
         $sprinkleManager->setSprinklesPath(__DIR__ . '/foo/');
 
-        $this->expectException(\UserFrosting\Support\Exception\FileNotFoundException::class);
+        $this->expectException(FileNotFoundException::class);
         $sprinkleManager->getSprinklePath('foo');
     }
 
@@ -194,7 +199,7 @@ class SprinkleManagerTest extends TestCase
      */
     public function testGetSprinklePathWhereSprinkleDoesntExist(SprinkleManager $sprinkleManager): void
     {
-        $this->expectException(\UserFrosting\Support\Exception\FileNotFoundException::class);
+        $this->expectException(FileNotFoundException::class);
         $sprinkleManager->getSprinklePath('blah');
     }
 
@@ -246,7 +251,7 @@ class SprinkleManagerTest extends TestCase
     public function testLoadSprinkleWithBadJson(): void
     {
         $sprinkleManager = new SprinkleManager($this->fakeCi);
-        $this->expectException(\UserFrosting\Support\Exception\JsonException::class);
+        $this->expectException(JsonException::class);
         $sprinkleManager->initFromSchema(__DIR__ . '/data/sprinkles-bad.json');
     }
 
