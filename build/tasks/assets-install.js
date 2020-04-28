@@ -89,7 +89,7 @@ export async function assetsInstall() {
             await runCommand(assetsInstall.name, "npm audit", { cwd: vendorAssetsDir });
         }
         catch {
-            log.warn("There appear to be some vulerabilities within your dependencies. Updating is recommended.");
+            log.warn("There appear to be some vulnerabilities within your dependencies. Updating is recommended.");
         }
 
         // Browserify dependencies
@@ -118,8 +118,7 @@ export async function assetsInstall() {
     for (const sprinkle of sprinkles) {
         const path = sprinklesDir + sprinkle + "/bower.json";
         if (existsSync(path)) {
-            // TODO: We should really have a link to docs in the message
-            log.warn(`DEPRECATED: Detected bower.json in ${sprinkle} Sprinkle. Support for bower (bower.json) will be removed in the future, please use npm/yarn (package.json) instead.`);
+            log.warn(`DEPRECATED: Detected bower.json in ${sprinkle} Sprinkle. Support for bower (bower.json) will be removed in the future, please use npm/yarn (package.json) instead. https://learn.userfrosting.com/upgrading/41-to-42#bower-deprecation-new-npm-support`);
             bowerPaths.push(path);
         }
     }
