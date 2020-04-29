@@ -8,9 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [unreleased]
 
 ### Fixed
-
 - Locale matcher can fail when client provided locale identifier has incorrect casing ([#1087])
 - Sprunje applyTransformations method not returning the $collections object ([#1068])
+- Old assets in `app/assets/browser_modules` not being deleted during install ([#1092])
 
 ## [v4.4.1]
 
