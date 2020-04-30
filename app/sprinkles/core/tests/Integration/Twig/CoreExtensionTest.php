@@ -12,6 +12,7 @@ namespace UserFrosting\Sprinkle\Core\Tests\Integration\Twig;
 
 use Mockery;
 use UserFrosting\Sprinkle\Core\Alert\AlertStream;
+use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -70,5 +71,12 @@ class CoreExtensionTest extends TestCase
         $this->assertNotSame($string, $this->ci->view->fetchFromString("{{ foo|unescape }}", ['foo' => htmlentities($string)]));
         $this->assertNotSame($string, $this->ci->view->fetchFromString("{{ foo|raw }}", ['foo' => htmlentities($string)]));
         $this->assertSame($string, $this->ci->view->fetchFromString("{{ foo|unescape|raw }}", ['foo' => htmlentities($string)]));
+    }
+
+    public function testCurrentLocaleGlobal(): void
+    {
+        $this->ci->locale = Mockery::mock(SiteLocale::class)->shouldReceive('getLocaleIndentifier')->once()->andReturn('zz-ZZ')->getMock();
+
+        $this->assertSame('zz-ZZ', $this->ci->view->fetchFromString("{{ currentLocale }}"));
     }
 }
