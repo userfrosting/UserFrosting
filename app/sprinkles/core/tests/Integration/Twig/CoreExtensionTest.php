@@ -56,4 +56,19 @@ class CoreExtensionTest extends TestCase
         $result = $this->ci->view->fetchFromString('{{ translate("USER", 2) }}');
         $this->assertSame('Users', $result);
     }
+
+    public function testPhoneFilter(): void
+    {
+        $result = $this->ci->view->fetchFromString('{{ data|phone }}', ['data' => '5551234567']);
+        $this->assertSame('(555) 123-4567', $result);
+    }
+
+    public function testUnescapeFilter(): void
+    {
+        $string = "I'll \"walk\" the <b>dog</b> now";
+        $this->assertNotSame($string, $this->ci->view->fetchFromString("{{ foo }}", ['foo' => htmlentities($string)]));
+        $this->assertNotSame($string, $this->ci->view->fetchFromString("{{ foo|unescape }}", ['foo' => htmlentities($string)]));
+        $this->assertNotSame($string, $this->ci->view->fetchFromString("{{ foo|raw }}", ['foo' => htmlentities($string)]));
+        $this->assertSame($string, $this->ci->view->fetchFromString("{{ foo|unescape|raw }}", ['foo' => htmlentities($string)]));
+    }
 }
