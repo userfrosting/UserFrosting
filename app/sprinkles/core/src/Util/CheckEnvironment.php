@@ -311,7 +311,7 @@ class CheckEnvironment
             $this->locator->findResource('session://') => true,
         ];
 
-        if ($this->isProduction()) {
+        if ($this->isProduction() && !$this->skipPermissionsCheck()) {
             // Should be write-protected in production!
             $shouldBeWriteable = array_merge($shouldBeWriteable, [
                 \UserFrosting\SPRINKLES_DIR => false,
@@ -383,5 +383,15 @@ class CheckEnvironment
     public function isProduction()
     {
         return getenv('UF_MODE') == 'production';
+    }
+
+    /**
+     * Determine whether or not directory that required write-protection in production mode should be checked.
+     *
+     * @return bool True if we should skip the check, false will proceed.
+     */
+    public function skipPermissionsCheck()
+    {
+        return getenv('SKIP_PERMISSION_CHECK') ? true : false;
     }
 }
