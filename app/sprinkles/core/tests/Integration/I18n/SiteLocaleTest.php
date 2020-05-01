@@ -168,8 +168,35 @@ class SiteLocaleTest extends TestCase
 
         $this->ci->config['site.locales.default'] = 'fr_FR';
         $this->ci->request = $request;
+
+        /** @var SiteLocale */
         $service = $this->ci->locale;
-        $this->assertSame('en_US', $service->getLocaleIndentifier());
+
+        // Get locale
+        $locale = $service->getLocaleIndentifier();
+
+        // Assertions
+        $this->assertSame('en_US', $locale);
+        $this->assertTrue($service->isAvailable($locale));
+    }
+
+    public function testGetLocaleIndentifierWithBrowserAndComplexLocaleInLowerCase(): void
+    {
+        $request = m::mock(\Psr\Http\Message\ServerRequestInterface::class);
+        $request->shouldReceive('hasHeader')->with('Accept-Language')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->with('Accept-Language')->once()->andReturn('en-us, en;q=0.9, fr;q=0.8, de;q=0.7, *;q=0.5');
+
+        $this->ci->config['site.locales.default'] = 'fr_FR';
+        $this->ci->request = $request;
+
+        /** @var SiteLocale */
+        $service = $this->ci->locale;
+
+        // Get locale
+        $locale = $service->getLocaleIndentifier();
+
+        $this->assertSame('en_US', $locale);
+        $this->assertTrue($service->isAvailable($locale));
     }
 
     public function testGetLocaleIndentifierWithBrowserAndMultipleLocale(): void
