@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [v4.4.2]
 
 ### Fixed
 - Locale matcher can fail when client provided locale identifier has incorrect casing ([#1087])
 - Sprunje applyTransformations method not returning the $collections object ([#1068])
 - Old assets in `app/assets/browser_modules` not being deleted during install ([#1092])
+- Added `SKIP_PERMISSION_CHECK` env to skip check for local directories that needs to be write protected. This can be used for local production env testing.
 
 ## [v4.4.1]
 
@@ -971,3 +972,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.3.3]: https://github.com/userfrosting/UserFrosting/compare/v4.3.2...v4.3.3
 [v4.4.0]: https://github.com/userfrosting/UserFrosting/compare/v4.3.3...v4.4.0
 [v4.4.1]: https://github.com/userfrosting/UserFrosting/compare/v4.4.0...v4.4.1
+[v4.4.2]: https://github.com/userfrosting/UserFrosting/compare/v4.4.1...v4.4.2
