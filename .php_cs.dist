@@ -103,10 +103,11 @@ $rules = [
 ];
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude([
-      'vendor',
-    ])
-    ->in([__DIR__ . '/app', __DIR__ . '/public']);
+    ->in([
+        __DIR__ . '/app/sprinkles',
+        __DIR__ . '/app/system',
+        __DIR__ . '/public'
+    ]);
 
 return PhpCsFixer\Config::create()
     ->setRules($rules)
