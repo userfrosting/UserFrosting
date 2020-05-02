@@ -195,7 +195,7 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     * Returns the migration dependency list
+     * Returns the migration dependency list.
      *
      * @param string $migration The migration class
      *
