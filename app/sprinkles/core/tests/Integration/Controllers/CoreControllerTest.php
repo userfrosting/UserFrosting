@@ -12,12 +12,15 @@ namespace UserFrosting\Sprinkle\Core\Tests;
 
 use UserFrosting\Sprinkle\Core\Controller\CoreController;
 use UserFrosting\Support\Exception\NotFoundException;
+use UserFrosting\Tests\TestCase;
 
 /**
  * Tests CoreController
  */
-class CoreControllerTest extends ControllerTestCase
+class CoreControllerTest extends TestCase
 {
+    use withController;
+
     /**
      * @return CoreController
      */

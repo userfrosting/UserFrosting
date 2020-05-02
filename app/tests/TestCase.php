@@ -58,28 +58,11 @@ class TestCase extends BaseTestCase
             $this->refreshApplication();
         }
 
-        $this->setUpTraits();
-
         foreach ($this->afterApplicationCreatedCallbacks as $callback) {
             call_user_func($callback);
         }
 
         $this->setUpHasRun = true;
-    }
-
-    /**
-     * Boot the testing helper traits.
-     *
-     * @deprecated
-     */
-    protected function setUpTraits()
-    {
-        $uses = array_flip(class_uses_recursive(static::class));
-
-        if (isset($uses[DatabaseTransactions::class])) {
-            Debug::warning("`UserFrosting\Tests\DatabaseTransactions` has been deprecated and will be removed in future versions.  Please use `UserFrosting\Sprinkle\Core\Tests\DatabaseTransactions` class instead.");
-            $this->beginDatabaseTransaction();
-        }
     }
 
     /**
