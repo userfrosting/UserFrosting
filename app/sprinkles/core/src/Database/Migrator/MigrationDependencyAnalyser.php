@@ -65,8 +65,6 @@ class MigrationDependencyAnalyser
 
     /**
      * Analyse the dependencies.
-     *
-     * @return void
      */
     public function analyse(): void
     {

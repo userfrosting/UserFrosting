@@ -67,16 +67,16 @@ class CoreExtensionTest extends TestCase
     public function testUnescapeFilter(): void
     {
         $string = "I'll \"walk\" the <b>dog</b> now";
-        $this->assertNotSame($string, $this->ci->view->fetchFromString("{{ foo }}", ['foo' => htmlentities($string)]));
-        $this->assertNotSame($string, $this->ci->view->fetchFromString("{{ foo|unescape }}", ['foo' => htmlentities($string)]));
-        $this->assertNotSame($string, $this->ci->view->fetchFromString("{{ foo|raw }}", ['foo' => htmlentities($string)]));
-        $this->assertSame($string, $this->ci->view->fetchFromString("{{ foo|unescape|raw }}", ['foo' => htmlentities($string)]));
+        $this->assertNotSame($string, $this->ci->view->fetchFromString('{{ foo }}', ['foo' => htmlentities($string)]));
+        $this->assertNotSame($string, $this->ci->view->fetchFromString('{{ foo|unescape }}', ['foo' => htmlentities($string)]));
+        $this->assertNotSame($string, $this->ci->view->fetchFromString('{{ foo|raw }}', ['foo' => htmlentities($string)]));
+        $this->assertSame($string, $this->ci->view->fetchFromString('{{ foo|unescape|raw }}', ['foo' => htmlentities($string)]));
     }
 
     public function testCurrentLocaleGlobal(): void
     {
         $this->ci->locale = Mockery::mock(SiteLocale::class)->shouldReceive('getLocaleIndentifier')->once()->andReturn('zz-ZZ')->getMock();
 
-        $this->assertSame('zz-ZZ', $this->ci->view->fetchFromString("{{ currentLocale }}"));
+        $this->assertSame('zz-ZZ', $this->ci->view->fetchFromString('{{ currentLocale }}'));
     }
 }
