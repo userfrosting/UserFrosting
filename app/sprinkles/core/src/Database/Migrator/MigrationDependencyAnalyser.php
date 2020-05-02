@@ -10,9 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
-use ReflectionClass;
-use UserFrosting\Sprinkle\Core\Facades\Config;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
 /**
@@ -199,7 +196,6 @@ class MigrationDependencyAnalyser
 
     /**
      * Returns the migration dependency list
-     * Also handles the old deprecated behaviour where dependencies where not in a static property.
      *
      * @param string $migration The migration class
      *
@@ -212,19 +208,9 @@ class MigrationDependencyAnalyser
             throw new BadClassNameException("Unable to find the migration class '$migration'. Run 'php bakery migrate:clean' to remove stale migrations.");
         }
 
-        // If the `dependencies` property exist and is static, use this one.
-        // Otherwise, get a class instance and the non static property
-        // We can remove this one the non static property is removed
-        $reflectionClass = new ReflectionClass($migration);
-        if ($reflectionClass->hasProperty('dependencies') && $reflectionClass->getProperty('dependencies')->isStatic()) {
+        // If the `dependencies` property exist, use it
+        if (property_exists($migration, 'dependencies')) {
             return $this->normalizeClasses($migration::$dependencies);
-        } elseif (property_exists($migration, 'dependencies')) {
-            if (Config::get('debug.deprecation')) {
-                Debug::warning("`$migration` uses a non static `dependencies` property. Please change the `dependencies` property to a static property.");
-            }
-            $instance = new $migration();
-
-            return $this->normalizeClasses($instance->dependencies);
         } else {
             return [];
         }

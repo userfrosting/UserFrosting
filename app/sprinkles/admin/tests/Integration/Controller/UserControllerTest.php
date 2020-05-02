@@ -824,41 +824,6 @@ class UserControllerTest extends TestCase
      * @depends testUpdateField
      * @param UserController $controller
      */
-    public function testUpdateFieldWithDeprecatedSupport(UserController $controller)
-    {
-        // Create a user
-        $user = $this->createTestUser();
-
-        // Set post data
-        $data = [
-            'value' => 'deprecated', //<-- Use old `value`
-        ];
-        $request = $this->getRequest()->withParsedBody($data);
-
-        // Get controller stuff
-        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'first_name']);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertJson((string) $result->getBody());
-        $this->assertSame('[]', (string) $result->getBody());
-
-        // Make sure user was update
-        $editedUser = User::where('user_name', $user->user_name)->first();
-        $this->assertSame('deprecated', $editedUser->first_name);
-        $this->assertNotSame($user->first_name, $editedUser->first_name);
-        $this->assertSame($user->last_name, $editedUser->last_name);
-
-        // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
-        $ms = $this->ci->alerts;
-        $messages = $ms->getAndClearMessages();
-        $this->assertSame('success', end($messages)['type']);
-    }
-
-    /**
-     * @depends testControllerConstructorWithUser
-     * @depends testUpdateField
-     * @param UserController $controller
-     */
     public function testUpdateFieldWithNoUser(UserController $controller)
     {
         $this->expectException(NotFoundException::class);

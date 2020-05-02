@@ -15,8 +15,6 @@ use Illuminate\Support\Arr;
 use UserFrosting\Sprinkle\Core\Database\MigrationInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationDependencyAnalyser as Analyser;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRollbackDependencyAnalyser as RollbackAnalyser;
-use UserFrosting\Sprinkle\Core\Facades\Config;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
 /**
@@ -182,18 +180,6 @@ class Migrator
         $this->repository->log($migrationClassName, $batch);
 
         $this->note("<info>Migrated:</info>  {$migrationClassName}");
-
-        /*
-         * If the migration has a `seed` method, run it
-         * @deprecated Since 4.2.0. Use a seeder instead
-         */
-        if (method_exists($migration, 'seed')) {
-            if (Config::get('debug.deprecation')) {
-                Debug::warning('Migration `seed` method has been deprecated and will be removed in future versions. Please use a Seeder instead.');
-            }
-            $this->runMigration($migration, 'seed');
-            $this->note("<info>Seeded:</info>  {$migrationClassName}");
-        }
     }
 
     /**
@@ -396,10 +382,7 @@ class Migrator
     protected function runMigration(MigrationInterface $migration, $method)
     {
         $callback = function () use ($migration, $method) {
-            // We keep this for seed...
-            if (method_exists($migration, $method)) {
-                $migration->{$method}();
-            }
+            $migration->{$method}();
         };
 
         if ($this->getSchemaGrammar()->supportsSchemaTransactions()) {

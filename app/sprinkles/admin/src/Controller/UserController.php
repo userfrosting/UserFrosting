@@ -1326,9 +1326,6 @@ class UserController extends SimpleController
         // Make sure data is part of $_PUT data
         if (isset($put[$fieldName])) {
             $fieldData = $put[$fieldName];
-        } elseif (isset($put['value'])) {
-            /** @deprecated - Fieldname should be used instead of `value` */
-            $fieldData = $put['value'];
         } else {
             throw new BadRequestException();
         }

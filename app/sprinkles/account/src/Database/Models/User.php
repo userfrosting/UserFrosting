@@ -217,22 +217,6 @@ class User extends Model implements UserInterface
     }
 
     /**
-     * Determines whether a user exists, including checking soft-deleted records.
-     *
-     * @deprecated since 4.1.7 This method conflicts with and overrides the Builder::exists() method.  Use Model::findUnique instead.
-     *
-     * @param mixed  $value
-     * @param string $identifier
-     * @param bool   $checkDeleted set to true to include soft-deleted records
-     *
-     * @return User|null
-     */
-    public static function exists($value, $identifier = 'user_name', $checkDeleted = true)
-    {
-        return static::findUnique($value, $identifier, $checkDeleted);
-    }
-
-    /**
      * Return a cache instance specific to that user.
      *
      * @return \Illuminate\Contracts\Cache\Store

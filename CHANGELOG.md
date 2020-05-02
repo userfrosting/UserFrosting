@@ -23,6 +23,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed deprecated `UserFrosting\System\Bakery\Migration` (deprecated in 4.2.0).
 - Removed deprecated `UserFrosting\Tests\DatabaseTransactions` (deprecated in 4.2.0).
 - Removed deprecated `UserFrosting\Sprinkle\Core\Tests\ControllerTestCase` (deprecated in 4.2.2).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Model\UFModel` (deprecated in 4.1).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Sprunje\Sprunje::getResults` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Account\Database\Models\User::exists` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Models\Model::export` (deprecated in 4.1.8).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Models\Model::queryBuilder` (deprecated in 4.1.8).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique::withLimit` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique::withOffset` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Error\RendererWhoopsRenderer::getResourcesPath`.
+- Removed deprecated `UserFrosting\Sprinkle\Core\Error\RendererWhoopsRenderer::setResourcesPath`.
+- Removed deprecated Handlebar `ifCond` (Deprecated in 4.1).
+- Removed migration seed.
+- Removed support for migration with non static `$dependencies` properties.
+- Removed support for deprecared `determineRedirectOnLogin` service (deprecated in 4.1.10).
 
 ## [v4.4.2]
 

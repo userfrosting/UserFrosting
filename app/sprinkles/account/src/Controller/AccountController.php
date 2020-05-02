@@ -418,7 +418,7 @@ class AccountController extends SimpleController
             throw $e;
         }
 
-        $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
+        $ms->addMessageTranslated('success', 'WELCOME', $currentUser->toArray());
 
         // Set redirect, if relevant
         $redirectOnLogin = $this->ci->get('redirect.onLogin');
@@ -1191,7 +1191,7 @@ class AccountController extends SimpleController
         $user = $passwordReset->user;
         $authenticator->login($user);
 
-        $ms->addMessageTranslated('success', 'WELCOME', $user->export());
+        $ms->addMessageTranslated('success', 'WELCOME', $user->toArray());
 
         return $response->withJson([], 200);
     }

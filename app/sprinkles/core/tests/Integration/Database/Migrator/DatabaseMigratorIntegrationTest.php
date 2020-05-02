@@ -242,7 +242,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
 
     public function testUnfulfillableMigrations()
     {
-        // Change the repository so we can test with the DeprecatedStub
+        // Change the repository so we can test with the unfulfillable Stub
         $locator = new UnfulfillableMigrationLocatorStub($this->ci->locator);
         $this->migrator->setLocator($locator);
 

@@ -560,29 +560,6 @@ class WhoopsRenderer extends ErrorRenderer
     }
 
     /**
-     * @deprecated
-     *
-     * @return string
-     */
-    public function getResourcesPath()
-    {
-        $allPaths = $this->getResourcePaths();
-
-        // Compat: return only the first path added
-        return end($allPaths) ?: null;
-    }
-
-    /**
-     * @deprecated
-     *
-     * @param string $resourcesPath
-     */
-    public function setResourcesPath($resourcesPath)
-    {
-        $this->addResourcePath($resourcesPath);
-    }
-
-    /**
      * Return the application paths.
      *
      * @return array
