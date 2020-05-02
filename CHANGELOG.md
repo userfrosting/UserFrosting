@@ -14,10 +14,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 ### Changed
+- Changed `.php_cs` to `.php_cs.dist`.
+- Changed `phpunit.xml` to `phpunit.xml.dist`.
 
 ### Fixed
 
 ### Removed
+- Removed deprecated `UserFrosting\System\Bakery\Migration` (deprecated in 4.2.0).
+- Removed deprecated `UserFrosting\Tests\DatabaseTransactions` (deprecated in 4.2.0).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Tests\ControllerTestCase` (deprecated in 4.2.2).
 
 ## [v4.4.2]
 
