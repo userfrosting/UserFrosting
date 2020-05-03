@@ -22,6 +22,8 @@ class SiteLocale
 {
     /**
      * @var ContainerInterface
+     *
+     * @todo Change this to only the config service
      */
     protected $ci;
 
@@ -124,6 +126,8 @@ class SiteLocale
      * Returns the locale intentifier (ie. en_US) to use.
      *
      * @return string Locale intentifier
+     *
+     * @todo This should accept the request service as argument, or null, in which case the `getBrowserLocale` method would be skipped
      */
     public function getLocaleIndentifier(): string
     {
@@ -142,6 +146,8 @@ class SiteLocale
      * Return the browser locale.
      *
      * @return string|null Returns null if no valid locale can be found
+     *
+     * @todo This should accept the request service as argument.
      */
     protected function getBrowserLocale(): ?string
     {

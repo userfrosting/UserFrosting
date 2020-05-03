@@ -22,6 +22,8 @@ class CacheHelper
 {
     /**
      * @var ContainerInterface The global container object, which holds all your services.
+     *
+     * @todo Change this, only the locator service is required
      */
     protected $ci;
 
