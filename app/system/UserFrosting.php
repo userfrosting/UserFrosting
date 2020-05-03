@@ -63,7 +63,7 @@ class UserFrosting
      */
     public function fireEvent($eventName, Event $event = null)
     {
-        /** @var EventDispatcher $events */
+        /** @var EventDispatcher */
         $eventDispatcher = $this->ci->eventDispatcher;
 
         return $eventDispatcher->dispatch($eventName, $event);
@@ -74,7 +74,7 @@ class UserFrosting
      *
      * @return App
      */
-    public function getApp()
+    public function getApp(): App
     {
         return $this->app;
     }
@@ -84,7 +84,7 @@ class UserFrosting
      *
      * @return Container
      */
-    public function getContainer()
+    public function getContainer(): Container
     {
         return $this->ci;
     }
@@ -92,7 +92,7 @@ class UserFrosting
     /**
      * Initialize the application.  Set up Sprinkles and the Slim app, define routes, register global middleware, and run Slim.
      */
-    public function run()
+    public function run(): void
     {
         $this->app->run();
     }
@@ -100,13 +100,14 @@ class UserFrosting
     /**
      * Register system services, load all sprinkles, and add their resources and services.
      */
-    protected function setupSprinkles()
+    protected function setupSprinkles(): void
     {
         // Register system services
         $serviceProvider = new ServicesProvider();
         $serviceProvider->register($this->ci);
 
         // Boot the Sprinkle manager, which creates Sprinkle classes and subscribes them to the event dispatcher
+        /** @var \UserFrosting\System\Sprinkle\SprinkleManager */
         $sprinkleManager = $this->ci->sprinkleManager;
 
         try {
@@ -133,7 +134,7 @@ class UserFrosting
     /**
      * Setup UserFrosting App, load sprinkles, load routes, etc.
      */
-    protected function setupApp()
+    protected function setupApp(): void
     {
         // Setup sprinkles
         $this->setupSprinkles();
@@ -157,7 +158,7 @@ class UserFrosting
      *
      * @param string $errorMessage Message to display [Default ""]
      */
-    protected function renderSprinkleErrorPage($errorMessage = '')
+    protected function renderSprinkleErrorPage(string $errorMessage = '')
     {
         ob_clean();
         $title = 'UserFrosting Application Error';
@@ -181,7 +182,7 @@ class UserFrosting
      *
      * @param string $errorMessage Message to display [Default ""]
      */
-    protected function renderSprinkleErrorCli($errorMessage = '')
+    protected function renderSprinkleErrorCli(string $errorMessage = '')
     {
         exit($errorMessage . PHP_EOL);
     }
