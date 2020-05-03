@@ -10,7 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Core;
 
-use Psr\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\Event;
 use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
