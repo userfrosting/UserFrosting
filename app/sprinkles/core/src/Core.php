@@ -36,18 +36,6 @@ class Core extends Sprinkle
     ];
 
     /**
-     * Create a new Sprinkle object.
-     *
-     * @param ContainerInterface $ci The global container object, which holds all your services.
-     */
-    public function __construct(ContainerInterface $ci)
-    {
-        $this->ci = $ci;
-
-        $this->registerStreams();
-    }
-
-    /**
      * Defines which events in the UF lifecycle our Sprinkle should hook into.
      */
     public static function getSubscribedEvents()
@@ -70,6 +58,8 @@ class Core extends Sprinkle
 
         // Set container for environment info class
         EnvironmentInfo::$ci = $this->ci;
+
+        $this->registerStreams();
     }
 
     /**
