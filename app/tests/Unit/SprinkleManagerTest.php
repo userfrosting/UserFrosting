@@ -15,6 +15,7 @@ use Mockery as m;
 use UserFrosting\Support\Exception\FileNotFoundException;
 use UserFrosting\Support\Exception\JsonException;
 use UserFrosting\System\Sprinkle\Sprinkle;
+use UserFrosting\System\Sprinkle\SprinkleClassException;
 use UserFrosting\Tests\TestCase;
 use UserFrosting\System\Sprinkle\SprinkleManager;
 
@@ -70,6 +71,23 @@ class SprinkleManagerTest extends TestCase
         $sprinkleManager = new SprinkleManager($this->fakeCi);
         $this->expectException(FileNotFoundException::class);
         $sprinkleManager->initFromSchema('foo.json');
+    }
+
+    /**
+     * Will test the instanceof sprinkle check is done + that the right class
+     * is gnerated with the exception message assertion
+     *
+     * @depends testConstructor
+     * @param SprinkleManager $sprinkleManager
+     */
+    public function testGetSprinklesWihoutMockClass(SprinkleManager $sprinkleManager): void
+    {
+        // Setup test sprinkle mock class so it can be found by `class_exist`
+        class_alias(BlahSprinkleStub::class, 'UserFrosting\Sprinkle\Blah\Blah');
+
+        $this->expectException(SprinkleClassException::class);
+        $this->expectExceptionMessage("UserFrosting\Sprinkle\Blah\Blah must be an instance of UserFrosting\System\Sprinkle\Sprinkle");
+        $sprinkleManager->bootSprinkle('blah');
     }
 
     /**
@@ -271,6 +289,6 @@ class TestSprinkleStub extends Sprinkle
 {
 }
 
-/*class BlahSprinkleStub
+class BlahSprinkleStub
 {
-}*/
+}

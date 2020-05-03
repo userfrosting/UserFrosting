@@ -155,6 +155,10 @@ class SprinkleManager
         if (class_exists($fullClassName)) {
             $sprinkle = new $fullClassName($this->ci);
 
+            if (!$sprinkle instanceof Sprinkle) {
+                throw new SprinkleClassException("$fullClassName must be an instance of " . Sprinkle::class);
+            }
+
             return $sprinkle;
         } else {
             return null;
