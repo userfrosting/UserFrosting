@@ -278,12 +278,12 @@ class RoleControllerGuestTest extends TestCase
     /**
      * @return RoleController
      */
-    private function getController()
+    protected function getController()
     {
         return new RoleController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         // Guest user, won't have any access
         $testUser = $this->createTestUser(false, true);

@@ -164,7 +164,7 @@ class UserControllerCreateTest extends TestCase
     /**
      * @return UserController
      */
-    private function getController()
+    protected function getController()
     {
         return new UserController($this->ci);
     }

@@ -162,12 +162,12 @@ class PermissionControllerTest extends TestCase
     /**
      * @return PermissionController
      */
-    private function getController()
+    protected function getController()
     {
         return new PermissionController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         // Admin user, WILL have access
         $testUser = $this->createTestUser(true, true);

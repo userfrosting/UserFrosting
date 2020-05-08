@@ -383,12 +383,12 @@ class GroupControllerGuestTest extends TestCase
     /**
      * @return GroupController
      */
-    private function getController()
+    protected function getController()
     {
         return new GroupController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         // Guest user, won't have any access
         $testUser = $this->createTestUser(false, true);

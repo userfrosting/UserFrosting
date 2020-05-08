@@ -166,7 +166,7 @@ class AdminControllerTest extends ControllerTestCase
     /**
      * @return AdminController
      */
-    private function getController()
+    protected function getController()
     {
         return new AdminController($this->ci);
     }

@@ -112,7 +112,7 @@ class ActivityControllerTest extends ControllerTestCase
     /**
      * @return ActivityController
      */
-    private function getController()
+    protected function getController()
     {
         return new ActivityController($this->ci);
     }

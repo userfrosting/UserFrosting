@@ -866,12 +866,12 @@ class RoleControllerTest extends TestCase
     /**
      * @return RoleController
      */
-    private function getController()
+    protected function getController()
     {
         return new RoleController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         // Admin user, WILL have access
         $testUser = $this->createTestUser(true, true);

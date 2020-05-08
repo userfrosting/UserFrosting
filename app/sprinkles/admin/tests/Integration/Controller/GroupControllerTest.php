@@ -675,12 +675,12 @@ class GroupControllerTest extends TestCase
     /**
      * @return GroupController
      */
-    private function getController(): GroupController
+    protected function getController(): GroupController
     {
         return new GroupController($this->ci);
     }
 
-    private function setupUser(): void
+    protected function setupUser(): void
     {
         // Admin user, WILL have access
         $this->createTestUser(true, true);
