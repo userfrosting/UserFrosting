@@ -18,8 +18,7 @@ $fm->define(User::class)->setDefinitions([
     'first_name'    => Faker::firstNameMale(),
     'last_name'     => Faker::firstNameMale(),
     'user_name'     => function ($object, $saved) {
-        $name = $object->first_name . '_' . $object->last_name;
-        return $name;
+        return $object->first_name . '_' . $object->last_name;
     },
     'email'         => Faker::unique()->email(),
     'locale'        => 'en_US',
