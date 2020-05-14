@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\RoleController;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
@@ -290,7 +291,7 @@ class RoleControllerGuestTest extends TestCase
 
         // Create test role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
+        $role = $fm->create(Role::class, [
             'slug' => 'foo',
             'name' => 'bar',
         ]);

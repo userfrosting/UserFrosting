@@ -12,6 +12,8 @@ namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use Mockery as m;
 use League\FactoryMuffin\Faker\Facade as Faker;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\UserController;
@@ -644,7 +646,7 @@ class UserControllerTest extends TestCase
 
         // Also create a group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Set post data
         $data = [
@@ -1083,7 +1085,7 @@ class UserControllerTest extends TestCase
     {
         // Create a user
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+        $role = $fm->create(Role::class);
 
         // Expected input :
         // value[0][role_id]: 2

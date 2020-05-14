@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use Mockery as m;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\UserController;
@@ -70,7 +71,7 @@ class UserControllerCreateTest extends TestCase
         $controller = $this->getController();
 
         // Create a fake group
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Set post data
         $data = [
@@ -121,7 +122,7 @@ class UserControllerCreateTest extends TestCase
         $this->ci->mailer = $mailer;
 
         // Also create a group
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Create will fail on PGSQL if a user is created with forced id
         // because it mess the auto_increment

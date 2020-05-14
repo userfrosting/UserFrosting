@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
+use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\PermissionController;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
@@ -174,7 +175,7 @@ class PermissionControllerTest extends TestCase
 
         // Create test Permission
         $fm = $this->ci->factory;
-        $permission = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Permission', [
+        $permission = $fm->create(Permission::class, [
             'slug' => 'foo',
             'name' => 'bar',
         ]);

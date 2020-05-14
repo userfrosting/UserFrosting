@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use Mockery as m;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\UserController;
@@ -111,7 +112,7 @@ class UserControllerGuestTest extends TestCase
 
         // Create a fake group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Set post data
         $data = [
@@ -521,7 +522,7 @@ class UserControllerGuestTest extends TestCase
     {
         // Create a user
         $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+        $user = $fm->create(User::class, [
             'user_name'  => 'testUpdateInfoWithNoPermissions',
             'first_name' => 'foo',
         ]);
@@ -553,13 +554,13 @@ class UserControllerGuestTest extends TestCase
 
         // Create a user
         $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+        $user = $fm->create(User::class, [
             'user_name'  => 'testUpdateInfoWithPartialPermissions',
             'first_name' => 'foo',
         ]);
 
         // Also create a group
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Set post data
         $data = [
@@ -609,7 +610,7 @@ class UserControllerGuestTest extends TestCase
         // In case the user don't exist
         if (!$user) {
             $fm = $this->ci->factory;
-            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+            $user = $fm->create(User::class, [
                 'id' => $this->ci->config['reserved_user_ids.master'],
             ]);
         }
@@ -652,7 +653,7 @@ class UserControllerGuestTest extends TestCase
 
         // Create a user
         $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+        $user = $fm->create(User::class, [
             'user_name'  => 'testUpdateFieldWithPartialPermissions',
             'first_name' => 'foo',
         ]);
@@ -703,7 +704,7 @@ class UserControllerGuestTest extends TestCase
         // In case the user don't exist
         if (!$user) {
             $fm = $this->ci->factory;
-            $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+            $user = $fm->create(User::class, [
                 'id' => $this->ci->config['reserved_user_ids.master'],
             ]);
         }
@@ -760,7 +761,7 @@ class UserControllerGuestTest extends TestCase
 
         // Create test user
         $fm = $this->ci->factory;
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User', [
+        $user = $fm->create(User::class, [
             'id'        => '9999',
             'user_name' => 'userfoo',
             'email'     => 'bar@foo.com',
