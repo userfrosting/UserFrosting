@@ -9,11 +9,12 @@
  */
 
 use League\FactoryMuffin\Faker\Facade as Faker;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 
 /*
  * General factory for the Role Model
  */
-$fm->define('UserFrosting\Sprinkle\Account\Database\Models\Role')->setDefinitions([
+$fm->define(Role::class)->setDefinitions([
     'name'        => Faker::word(),
     'description' => Faker::paragraph(),
     'slug'        => function ($object, $saved) {

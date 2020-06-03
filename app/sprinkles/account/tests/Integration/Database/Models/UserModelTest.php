@@ -76,7 +76,7 @@ class UserModelTest extends TestCase
         $this->assertSame(1, Persistence::where('user_id', $user->id)->count());
 
         //$user->roles - role_users
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+        $role = $fm->create(Role::class);
         $user->roles()->attach($role->id);
         $this->assertSame(1, $user->roles()->count());
 

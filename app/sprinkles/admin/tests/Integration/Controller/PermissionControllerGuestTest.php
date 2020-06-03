@@ -140,12 +140,12 @@ class PermissionControllerGuestTest extends TestCase
     /**
      * @return PermissionController
      */
-    private function getController()
+    protected function getController()
     {
         return new PermissionController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         $this->createTestUser(false, true);
     }

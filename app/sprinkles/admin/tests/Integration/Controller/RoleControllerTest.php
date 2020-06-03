@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use League\FactoryMuffin\Faker\Facade as Faker;
+use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
@@ -197,7 +198,7 @@ class RoleControllerTest extends TestCase
     {
         // Create test role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+        $role = $fm->create(Role::class);
 
         // Get controller stuff
         $result = $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => $role->slug]);
@@ -254,7 +255,7 @@ class RoleControllerTest extends TestCase
 
         // Create a role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+        $role = $fm->create(Role::class);
 
         // Associate user to role
         $testUser->roles()->attach($role);
@@ -352,7 +353,7 @@ class RoleControllerTest extends TestCase
 
         // Create test role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+        $role = $fm->create(Role::class);
 
         // Associate user to role
         $testUser->roles()->attach($role);
@@ -512,7 +513,7 @@ class RoleControllerTest extends TestCase
     {
         // Create a role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
+        $role = $fm->create(Role::class, [
             'name' => 'barbar',
             'slug' => 'foofoo',
         ]);
@@ -614,7 +615,7 @@ class RoleControllerTest extends TestCase
     {
         // Create a role
         $fm = $this->ci->factory;
-        $role2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+        $role2 = $fm->create(Role::class);
 
         // Set post data
         $data = [
@@ -644,7 +645,7 @@ class RoleControllerTest extends TestCase
     {
         // Create a role
         $fm = $this->ci->factory;
-        $role2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+        $role2 = $fm->create(Role::class);
 
         // Set post data
         $data = [
@@ -749,7 +750,7 @@ class RoleControllerTest extends TestCase
     {
         // Create a role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
+        $role = $fm->create(Role::class, [
             'name' => 'bar123',
             'slug' => 'foo123',
         ]);
@@ -830,7 +831,7 @@ class RoleControllerTest extends TestCase
     {
         // Create a role
         $fm = $this->ci->factory;
-        $permission = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Permission');
+        $permission = $fm->create(Permission::class);
 
         // Expected input :
         // value[0][permission_id]: 2
@@ -866,19 +867,19 @@ class RoleControllerTest extends TestCase
     /**
      * @return RoleController
      */
-    private function getController()
+    protected function getController()
     {
         return new RoleController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         // Admin user, WILL have access
         $testUser = $this->createTestUser(true, true);
 
         // Create test role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
+        $role = $fm->create(Role::class, [
             'slug' => 'foo',
             'name' => 'bar',
         ]);
