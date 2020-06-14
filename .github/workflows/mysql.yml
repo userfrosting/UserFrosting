@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        operating-system: [ubuntu-latest, windows-latest] #, macOS-latest
+        operating-system: [ubuntu-latest] #, windows-latest, macOS-latest
         php-versions: ['7.1', '7.2', '7.3', '7.4']
 
     env:
@@ -21,12 +21,12 @@ jobs:
       TEST_DB: default
       UF_MODE: debug
 
-    # services:
-    #   redis:
-    #     image: redis
-    #     ports:
-    #       - 6379/tcp
-    #     options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379/tcp
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout
@@ -53,17 +53,17 @@ jobs:
       - name: Copy sprinkles.json
         run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
 
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v2
-        with:
-          path: vendor
-          key: ${{ runner.os }}-node-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      # - name: Cache Composer packages
+      #   id: composer-cache
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: vendor
+      #     key: ${{ runner.os }}-node-${{ hashFiles('**/composer.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-node-
 
       - name: Install dependencies
-        if: steps.composer-cache.outputs.cache-hit != 'true'
+        # if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run Bakery Debug
