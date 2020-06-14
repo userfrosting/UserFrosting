@@ -14,14 +14,14 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Middleware to catch requests that fail because they require user authentication.
+ * Middleware to add a 'Cache-Control' header to the response to prevent caching.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class NoCache
 {
     /**
-     * Invoke the NoCache middleware, adding headers to the request to prevent caching.
+     * Invoke the NoCache middleware, adding headers to the response to prevent caching.
      *
      * @param Request  $request  PSR7 request
      * @param Response $response PSR7 response

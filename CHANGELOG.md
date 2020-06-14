@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.5.0]
+
+### Changed Requirements
+
+### Changed Composer Dependencies
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [v4.4.2]
+
+### Fixed
+- Locale matcher can fail when client provided locale identifier has incorrect casing ([#1087])
+- Sprunje applyTransformations method not returning the $collections object ([#1068])
+- Old assets in `app/assets/browser_modules` not being deleted during install ([#1092])
+- Added `SKIP_PERMISSION_CHECK` env to skip check for local directories that needs to be write protected. This can be used for local production env testing.
+
+## [v4.4.1]
+
+### Fixed
+- Fixed issue where incompatible NPM packages would be browserified, resulting in install failures.
+- Replaced deprecated Twig class.
+- Fixed issue when compiling assets for production ([#1078]).
+- Migration dependencies should work with and without leading `\` ([#1023])
+- Throttler don't count successful logins ([#1073])
+
 ## [v4.4.0]
 
 ### Changed Requirements
@@ -12,15 +43,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed Composer Dependencies
 - Reset Slim version to ^3.12
+- Updated PHPUnit to 8.5 (Version 7.5 still used for PHP 7.1)
 
 ### Added
 - PHP 7.4 Support & Travis environment.
 - New `Locale` service. Provides a list of available locales in diffeent form.
 - New `BaseServicesProvider` abstract class added as base for all ServiceProvider class.
 - Sprinkle Services Provider can now be autoloaded using the `$servicesproviders` property in the sprinkle bootstrapper class.
-- Current locale code can now be accessed from Twig using the `currentLocale` global variable [(#1056)].
+- Current locale code can now be accessed from Twig using the `currentLocale` global variable ([#1056]).
 - Locale now have config & metadata file ([#850])
 - Added `locale:compare`, `locale:dictionary` and `locale:info` Bakery commands.
+- New `cli` service. Returns true if current app is a CLI envrionement, false otherwise.
 
 ### Changed
 - `Interop\Container\ContainerInterface` has been replaced with `Psr\Container\ContainerInterface`.
@@ -36,6 +69,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved Docker support ([#1057])
 - Improved Bakery debug command output
 - Improve ordering by activity date ([#1061] & [#1062]; Thanks @ktecho!)
+- Updated Vagrant config and documentation
+- Fixed a bug where `withTrashed` in `findUnique` was not available when `SoftDeletes` trait is not included in a model.
+- CSRF global middleware is not loaded anymore if in a CLI envrionement. This will avoid sessions to be created for bakery and tests by default.
+- Browserified node modules not being correctly loaded.
+- Browserified node modules potentially colliding with real entrypoints.
 
 ### Removed
 - `localePathBuilder` service removed. Task now handled by the `locale` and `translator` services.
@@ -914,6 +952,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1017]: https://github.com/userfrosting/UserFrosting/issues/1017
 [#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
 [#1019]: https://github.com/userfrosting/UserFrosting/issues/1019
+[#1023]: https://github.com/userfrosting/UserFrosting/issues/1023
 [#1027]: https://github.com/userfrosting/UserFrosting/issues/1027
 [#1028]: https://github.com/userfrosting/UserFrosting/issues/1028
 [#1030]: https://github.com/userfrosting/UserFrosting/issues/1030
@@ -931,6 +970,11 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1057]: https://github.com/userfrosting/UserFrosting/issues/1057
 [#1061]: https://github.com/userfrosting/UserFrosting/issues/1061
 [#1062]: https://github.com/userfrosting/UserFrosting/issues/1062
+[#1068]: https://github.com/userfrosting/UserFrosting/issues/1068
+[#1073]: https://github.com/userfrosting/UserFrosting/issues/1073
+[#1078]: https://github.com/userfrosting/UserFrosting/issues/1078
+[#1087]: https://github.com/userfrosting/UserFrosting/issues/1087
+[#1092]: https://github.com/userfrosting/UserFrosting/issues/1092
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
@@ -941,3 +985,5 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.3.2]: https://github.com/userfrosting/UserFrosting/compare/v4.3.1...v4.3.2
 [v4.3.3]: https://github.com/userfrosting/UserFrosting/compare/v4.3.2...v4.3.3
 [v4.4.0]: https://github.com/userfrosting/UserFrosting/compare/v4.3.3...v4.4.0
+[v4.4.1]: https://github.com/userfrosting/UserFrosting/compare/v4.4.0...v4.4.1
+[v4.4.2]: https://github.com/userfrosting/UserFrosting/compare/v4.4.1...v4.4.2

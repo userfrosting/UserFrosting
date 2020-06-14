@@ -396,13 +396,11 @@ class AccountController extends SimpleController
             return $response->withJson([], 429);
         }
 
-        // Log throttleable event
-        $throttler->logEvent('sign_in_attempt', $throttleData);
-
         // If credential is an email address, but email login is not enabled, raise an error.
-        // Note that we do this after logging throttle event, so this error counts towards throttling limit.
+        // Note that this error counts towards the throttling limit.
         if ($isEmail && !$config['site.login.enable_email']) {
             $ms->addMessageTranslated('danger', 'USER_OR_PASS_INVALID');
+            $throttler->logEvent('sign_in_attempt', $throttleData);
 
             return $response->withJson([], 403);
         }
@@ -411,7 +409,14 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
 
-        $currentUser = $authenticator->attempt(($isEmail ? 'email' : 'user_name'), $userIdentifier, $data['password'], $data['rememberme']);
+        try {
+            $currentUser = $authenticator->attempt(($isEmail ? 'email' : 'user_name'), $userIdentifier, $data['password'], $data['rememberme']);
+        } catch (\Exception $e) {
+            // only let unsuccessful logins count toward the throttling limit
+            $throttler->logEvent('sign_in_attempt', $throttleData);
+
+            throw $e;
+        }
 
         $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
 

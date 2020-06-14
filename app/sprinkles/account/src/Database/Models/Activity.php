@@ -21,11 +21,11 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
- * @property string ip_address
- * @property int user_id
- * @property string type
- * @property datetime occurred_at
- * @property string description
+ * @property string $ip_address
+ * @property int $user_id
+ * @property string $type
+ * @property datetime $occurred_at
+ * @property string $description
  */
 class Activity extends Model
 {

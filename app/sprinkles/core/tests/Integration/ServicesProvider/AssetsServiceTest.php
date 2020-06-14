@@ -50,7 +50,7 @@ class AssetsServiceTest extends TestCase
         // @TODO
 
         // Should throw a FileNotFoundException or JsonException
-        $this->expectedException(\Exception::class);
+        $this->expectException(\Exception::class);
         $assets = $this->ci->assets;
     }*/
 }

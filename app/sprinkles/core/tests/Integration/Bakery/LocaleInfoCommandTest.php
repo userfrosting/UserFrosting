@@ -29,7 +29,7 @@ class LocaleInfoCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -54,7 +54,7 @@ class LocaleInfoCommandTest extends TestCase
         $this->assertSame(0, $result->getStatusCode());
 
         $output = $result->getDisplay();
-        $this->assertNotContains('Spanish', $output);
-        $this->assertContains('English', $output);
+        $this->assertStringNotContainsString('Spanish', $output);
+        $this->assertStringContainsString('English', $output);
     }
 }

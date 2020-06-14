@@ -91,7 +91,7 @@ class DebugCommand extends BaseCommand
 
         // Check for deprecated versions
         if (version_compare($phpVersion, \UserFrosting\PHP_RECOMMENDED_VERSION, '<')) {
-            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommends version ' . \UserFrosting\PHP_RECOMMENDED_VERSION . ' or above as ' . $phpVersion . ' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
+            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommend version ' . \UserFrosting\PHP_RECOMMENDED_VERSION . ' or above as ' . $phpVersion . ' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
         }
 
         return $phpVersion;

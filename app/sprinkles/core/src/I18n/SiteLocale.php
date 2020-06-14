@@ -169,7 +169,10 @@ class SiteLocale
                     $identifier = trim(str_replace('-', '_', $parts[0]));
 
                     // Ensure locale available
-                    if (in_array(strtolower($identifier), array_map('strtolower', $availableLocales))) {
+                    $localeIndex = array_search(strtolower($identifier), array_map('strtolower', $availableLocales));
+
+                    if ($localeIndex !== false) {
+                        $matchedLocale = $availableLocales[$localeIndex];
 
                         // Determine preference level (q=0.x), and add to $foundLocales
                         // If no preference level, set as 1
@@ -181,7 +184,7 @@ class SiteLocale
                         }
 
                         // Add to list, and format for UF's i18n.
-                        $foundLocales[$identifier] = $preference;
+                        $foundLocales[$matchedLocale] = $preference;
                     }
                 }
             }

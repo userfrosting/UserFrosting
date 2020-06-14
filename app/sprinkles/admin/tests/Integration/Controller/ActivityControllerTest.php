@@ -35,7 +35,6 @@ class ActivityControllerTest extends ControllerTestCase
 
     /**
      * @depends testControllerConstructor
-     * @expectedException \UserFrosting\Support\Exception\ForbiddenException
      */
     public function testGetList_GuestUser()
     {

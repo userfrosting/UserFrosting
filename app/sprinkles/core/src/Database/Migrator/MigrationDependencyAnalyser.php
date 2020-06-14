@@ -59,14 +59,16 @@ class MigrationDependencyAnalyser
      */
     public function __construct(array $pending = [], array $installed = [])
     {
-        $this->pending = collect($pending);
-        $this->installed = collect($installed);
+        $this->pending = collect($this->normalizeClasses($pending));
+        $this->installed = collect($this->normalizeClasses($installed));
     }
 
     /**
      * Analyse the dependencies.
+     *
+     * @return void
      */
-    public function analyse()
+    public function analyse(): void
     {
         // Reset fulfillable/unfulfillable lists
         $this->analysed = false;
@@ -94,7 +96,7 @@ class MigrationDependencyAnalyser
      *
      * @return bool True/False if the migration is fulfillable
      */
-    protected function validateClassDependencies($migrationName)
+    protected function validateClassDependencies(string $migrationName): bool
     {
         // If it's already marked as fulfillable, it's fulfillable
         // Return true directly (it's already marked)
@@ -141,7 +143,7 @@ class MigrationDependencyAnalyser
      *
      * @return array
      */
-    public function getFulfillable()
+    public function getFulfillable(): array
     {
         if (!$this->analysed) {
             $this->analyse();
@@ -155,7 +157,7 @@ class MigrationDependencyAnalyser
      *
      * @return array
      */
-    public function getUnfulfillable()
+    public function getUnfulfillable(): array
     {
         if (!$this->analysed) {
             $this->analyse();
@@ -171,7 +173,7 @@ class MigrationDependencyAnalyser
      *
      * @return bool True, it's fulfillable
      */
-    protected function markAsFulfillable($migration)
+    protected function markAsFulfillable(string $migration): bool
     {
         $this->fulfillable->push($migration);
 
@@ -186,7 +188,7 @@ class MigrationDependencyAnalyser
      *
      * @return bool False, it's not fullfillable
      */
-    protected function markAsUnfulfillable($migration, $dependency)
+    protected function markAsUnfulfillable(string $migration, $dependency): bool
     {
         if (is_array($dependency)) {
             $dependency = implode(', ', $dependency);
@@ -205,9 +207,8 @@ class MigrationDependencyAnalyser
      *
      * @return array The dependency list
      */
-    protected function getMigrationDependencies($migration)
+    protected function getMigrationDependencies(string $migration): array
     {
-
         // Make sure class exists
         if (!class_exists($migration)) {
             throw new BadClassNameException("Unable to find the migration class '$migration'. Run 'php bakery migrate:clean' to remove stale migrations.");
@@ -218,16 +219,34 @@ class MigrationDependencyAnalyser
         // We can remove this one the non static property is removed
         $reflectionClass = new ReflectionClass($migration);
         if ($reflectionClass->hasProperty('dependencies') && $reflectionClass->getProperty('dependencies')->isStatic()) {
-            return $migration::$dependencies;
+            return $this->normalizeClasses($migration::$dependencies);
         } elseif (property_exists($migration, 'dependencies')) {
             if (Config::get('debug.deprecation')) {
                 Debug::warning("`$migration` uses a non static `dependencies` property. Please change the `dependencies` property to a static property.");
             }
             $instance = new $migration();
 
-            return $instance->dependencies;
+            return $this->normalizeClasses($instance->dependencies);
         } else {
             return [];
         }
+    }
+
+    /**
+     * Normalize class so all class starts with '/'.
+     *
+     * @param string[] $classes
+     *
+     * @return string[]
+     */
+    protected function normalizeClasses(array $classes): array
+    {
+        return array_map(function (string $class) {
+            if ($class[0] !== '\\') {
+                return '\\' . $class;
+            }
+
+            return $class;
+        }, $classes);
     }
 }

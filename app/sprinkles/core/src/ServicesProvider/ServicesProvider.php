@@ -17,7 +17,9 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Session\DatabaseSessionHandler;
 use Illuminate\Session\FileSessionHandler;
+use Illuminate\Session\NullSessionHandler;
 use League\FactoryMuffin\FactoryMuffin;
 use League\FactoryMuffin\Faker\Facade as Faker;
 use Monolog\Formatter\LineFormatter;
@@ -26,6 +28,7 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
+use Twig\Extension\DebugExtension;
 use UserFrosting\Assets\AssetBundles\GulpBundleAssetsCompiledBundles as CompiledAssetBundles;
 use UserFrosting\Assets\AssetLoader;
 use UserFrosting\Assets\Assets;
@@ -47,8 +50,6 @@ use UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Router;
-use UserFrosting\Sprinkle\Core\Session\DatabaseSessionHandler;
-use UserFrosting\Sprinkle\Core\Session\NullSessionHandler;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
@@ -124,9 +125,9 @@ class ServicesProvider
             if ($config['assets.use_raw']) {
 
                 // Register sprinkle assets stream, plus vendor assets in shared streams
-                $locator->registerStream('assets', 'vendor', \UserFrosting\BOWER_ASSET_DIR, true);
                 $locator->registerStream('assets', 'vendor', \UserFrosting\NPM_ASSET_DIR, true);
                 $locator->registerStream('assets', 'vendor', \UserFrosting\BROWSERIFIED_ASSET_DIR, true);
+                $locator->registerStream('assets', 'vendor', \UserFrosting\BOWER_ASSET_DIR, true);
                 $locator->registerStream('assets', '', \UserFrosting\ASSET_DIR_NAME);
 
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
@@ -636,7 +637,7 @@ class ServicesProvider
 
             if ($c->config['debug.twig']) {
                 $twig->enableDebug();
-                $view->addExtension(new \Twig_Extension_Debug());
+                $view->addExtension(new DebugExtension());
             }
 
             // Register the Slim extension with Twig

@@ -14,6 +14,7 @@ use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
+use UserFrosting\Support\Exception\FileNotFoundException;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -122,5 +123,20 @@ class TranslatorServicesProviderTest extends TestCase
 
         $this->assertInstanceOf(Translator::class, $this->ci->translator);
         $this->assertSame('en_US', $this->ci->translator->getLocale()->getIdentifier());
+    }
+
+    /**
+     * Make sure old method of defining the default locale error message.
+     */
+    public function testOldDefaultLocaleConfig(): void
+    {
+        $this->ci->config['site.locales.default'] = 'fr_FR,en_US';
+
+        // Set expectations
+        $this->expectException(FileNotFoundException::class);
+        $this->expectExceptionMessage("The repository file 'locale://fr_FR,en_US/locale.yaml' could not be found.");
+
+        // Boot translator
+        $translator = $this->ci->translator;
     }
 }

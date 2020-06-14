@@ -20,9 +20,9 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
- * @property string slug
- * @property string name
- * @property string description
+ * @property string $slug
+ * @property string $name
+ * @property string $description
  */
 class Role extends Model
 {

@@ -39,7 +39,7 @@ class PermissionControllerTest extends TestCase
     /**
      * Setup test database for controller tests
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupTestDatabase();
@@ -100,7 +100,7 @@ class PermissionControllerTest extends TestCase
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertNotEmpty((string) $result->getBody());
-        $this->assertContains('bar', (string) $result->getBody());
+        $this->assertStringContainsString('bar', (string) $result->getBody());
     }
 
     /**

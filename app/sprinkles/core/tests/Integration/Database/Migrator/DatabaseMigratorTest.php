@@ -30,7 +30,7 @@ use UserFrosting\Tests\TestCase;
  */
 class DatabaseMigratorTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -64,7 +64,7 @@ class DatabaseMigratorTest extends TestCase
     /**
      * Setup base mock and migrator instance.
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Boot parent TestCase
         parent::setUp();

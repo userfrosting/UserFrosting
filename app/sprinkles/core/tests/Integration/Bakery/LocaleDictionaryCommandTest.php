@@ -29,7 +29,7 @@ class LocaleDictionaryCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -53,8 +53,8 @@ class LocaleDictionaryCommandTest extends TestCase
         $this->assertSame(0, $result->getStatusCode());
 
         $output = $result->getDisplay();
-        $this->assertNotContains('Dictionary for English locale', $output);
-        $this->assertContains('Dictionary for French locale', $output);
+        $this->assertStringNotContainsString('Dictionary for English locale', $output);
+        $this->assertStringContainsString('Dictionary for French locale', $output);
     }
 
     public function testCommand(): void
@@ -65,7 +65,7 @@ class LocaleDictionaryCommandTest extends TestCase
         $this->assertSame(0, $result->getStatusCode());
 
         $output = $result->getDisplay();
-        $this->assertNotContains('Dictionary for English locale', $output);
-        $this->assertContains('Dictionary for French locale', $output);
+        $this->assertStringNotContainsString('Dictionary for English locale', $output);
+        $this->assertStringContainsString('Dictionary for French locale', $output);
     }
 }

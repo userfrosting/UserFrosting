@@ -343,11 +343,8 @@ return [
                 'el'    => true,
                 'sr_RS' => true,
             ],
-            // This can be a comma-separated list, to load multiple fallback locales.
-            // Supported browser requested languages always have first preference.
-            // First locale is the base one and the other one are loaded on top.
-            // For example, 'en_US,es_ES' will use the English (en_US)
-            // translation as a base and load the Spanish (es_ES) translation on top.
+            // The default locale to use for non-registered users.
+            // Browser requested languages might overwrite this value.
             'default' => 'en_US',
         ],
         'title' => 'UserFrosting', // Site display name

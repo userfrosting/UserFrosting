@@ -1,7 +1,7 @@
 # Ignores text editor metadata
 *.komodoproject
-.php_cs.cache
-.serenata
+.editorconfig
+.vscode
 
 # Ignores Mac metadata.  You can configure this globally if you use a Mac: http://islegend.com/development/setting-global-gitignore-mac-windows/
 .DS_Store
@@ -72,6 +72,13 @@ app/assets/*
 # Ignore Vagrant & Homestead VM
 vagrant/Homestead/
 .vagrant/*
+
+# Ignore dev utils cache
+.phpunit.result.cache
+.php_cs.cache
+
+# Ignore api doc
+api/
 
 # Igore npm lockfile
 build/package-lock.json

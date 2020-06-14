@@ -32,22 +32,19 @@ class UserFrosting
     protected $app;
 
     /**
-     * @var bool Is the app in CLI mode
-     */
-    protected $isCli;
-
-    /**
      * Create the UserFrosting application instance.
      *
      * @param bool $cli Is the app in CLI mode. Set to false if setting up in an HTTP/web environment, true if setting up for CLI scripts.
      */
-    public function __construct($cli = false)
+    public function __construct(bool $cli = false)
     {
         // First, we create our DI container
         $this->ci = new Container();
 
-        // Assign vars
-        $this->isCli = $cli;
+        // Save CLI status inside the DI container
+        $this->ci['cli'] = function ($container) use ($cli) {
+            return $cli;
+        };
 
         // Set up facade reference to container.
         Facade::setFacadeContainer($this->ci);
@@ -115,7 +112,7 @@ class UserFrosting
         try {
             $sprinkleManager->initFromSchema(\UserFrosting\SPRINKLES_SCHEMA_FILE);
         } catch (FileNotFoundException $e) {
-            if (!$this->isCli) {
+            if (!$this->ci->cli) {
                 $this->renderSprinkleErrorPage($e->getMessage());
             } else {
                 $this->renderSprinkleErrorCli($e->getMessage());

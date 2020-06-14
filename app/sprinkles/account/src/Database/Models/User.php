@@ -25,21 +25,21 @@ use UserFrosting\Sprinkle\Core\Facades\Debug;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
- * @property int id
- * @property string user_name
- * @property string first_name
- * @property string last_name
- * @property string email
- * @property string locale
- * @property string theme
- * @property int group_id
- * @property bool flag_verified
- * @property bool flag_enabled
- * @property int last_activity_id
- * @property timestamp created_at
- * @property timestamp updated_at
- * @property string password
- * @property timestamp deleted_at
+ * @property int $id
+ * @property string $user_name
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $email
+ * @property string $locale
+ * @property string $theme
+ * @property int $group_id
+ * @property bool $flag_verified
+ * @property bool $flag_enabled
+ * @property int $last_activity_id
+ * @property timestamp $created_at
+ * @property timestamp $updated_at
+ * @property string $password
+ * @property timestamp $deleted_at
  */
 class User extends Model implements UserInterface
 {

@@ -20,10 +20,10 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  *
  * @author Louis Charette
  *
- * @property string user_id
- * @property string token
- * @property string persistent_token
- * @property string expires_at
+ * @property string $user_id
+ * @property string $token
+ * @property string $persistent_token
+ * @property string $expires_at
  */
 class Persistence extends Model
 {

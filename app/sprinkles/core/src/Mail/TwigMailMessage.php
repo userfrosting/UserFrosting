@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Mail;
 
 use Slim\Views\Twig;
+use Twig\Template;
 
 /**
  * MailMessage Class.
@@ -27,7 +28,7 @@ class TwigMailMessage extends MailMessage
     protected $params;
 
     /**
-     * @var \Twig_Template The Twig template object, to source the content for this message.
+     * @var Template The Twig template object, to source the content for this message.
      */
     protected $template;
 
@@ -91,9 +92,9 @@ class TwigMailMessage extends MailMessage
     /**
      * Sets the Twig template object for this message.
      *
-     * @param \Twig_Template $template The Twig template object, to source the content for this message.
+     * @param Template $template The Twig template object, to source the content for this message.
      */
-    public function setTemplate(\Twig_Template $template)
+    public function setTemplate(Template $template)
     {
         $this->template = $template;
 
