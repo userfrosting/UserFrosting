@@ -4,38 +4,34 @@ jobs:
   build:
     name: PHP ${{ matrix.php-versions }} - ${{ matrix.operating-system }}
     runs-on: ${{ matrix.operating-system }}
+
     strategy:
       fail-fast: false
       matrix:
         operating-system: [ubuntu-latest, windows-latest] #, macOS-latest
         php-versions: ['7.1', '7.2', '7.3', '7.4']
+
     env:
       DB_DRIVER: mysql
-      DB_HOST: localhost
-      DB_USER: root
+      DB_HOST: 127.0.0.1
+      DB_USER: userfrosting
       DB_PASSWORD: password
       DB_NAME: userfrosting
       DB_PORT: 3306
       TEST_DB: default
       UF_MODE: debug
+
     services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: false
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: userfrosting
-        ports:
-          - 3306/tcp
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
       redis:
         image: redis
         ports:
           - 6379/tcp
         options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v1 #https://github.com/shivammathur/setup-php
         with:
@@ -43,29 +39,46 @@ jobs:
           extensions: mbstring, dom, fileinfo, gd
           coverage: xdebug #optional
           tools: pecl
+
+      - name: Shutdown Ubuntu MySQL (SUDO)
+        run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
+
+      - name: Set up MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql database: 'userfrosting'
+          mysql user: 'userfrosting'
+          mysql password: 'password'
+
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
       - name: Cache composer dependencies
         uses: actions/cache@v1
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-
+
       - name: Copy sprinkles.json
         run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
+
       - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
-      - name: Create Database
-        run: touch userfrosting.db
+
       - name: Run Bakery Debug
         run: php bakery debug
+
       - name: Build Assets
         run: php bakery build-assets
+
       - name: Run Migrations
         run: php bakery migrate
+
       - name: Test with phpunit
         run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
+
       # - name: Codecov
       #   uses: codecov/codecov-action@v1.0.5
       #   with:
