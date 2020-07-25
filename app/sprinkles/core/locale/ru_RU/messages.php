@@ -115,6 +115,6 @@ return [
 
     // Misc.
     'BUILT_WITH_UF'     => 'Создано через <a href="http://www.userfrosting.com"> UserFrosting</a>',
-    'ADMINLTE_THEME_BY' => 'Тема от <strong><a href="http://almsaeedstudio.com"> Almsaeed Studio</a>.</strong> Все права защищены',
+    'ADMINLTE_THEME_BY' => 'Тема от <strong><a href="https://adminlte.io"> AdminLTE</a>.</strong> Все права защищены',
     'WELCOME_TO'        => 'Добро пожаловать на {{title}}!',
 ];
