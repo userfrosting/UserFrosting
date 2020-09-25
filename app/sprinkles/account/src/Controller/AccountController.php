@@ -1286,7 +1286,7 @@ class AccountController extends SimpleController
                 $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
                 $error = true;
             } elseif ($this->ci->config['site.registration.require_email_verification']) {
-                // If email verification is configured										         app/sprinkles/account/src/Account/Registration.php
+                // If email verification is configured
 
                 // Avoid setting email until verified
                 $data['newEmail'] = $data['email'];
