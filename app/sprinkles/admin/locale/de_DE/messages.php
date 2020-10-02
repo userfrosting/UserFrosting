@@ -56,6 +56,7 @@ return [
         'MANAGE'              => 'Gruppe verwalten',
         'NAME'                => 'Gruppenname',
         'NAME_EXPLAIN'        => 'Geben Sie einen Namen für die Gruppe ein',
+        'NONE'                => 'Keine Gruppe',
         'NOT_EMPTY'           => 'Sie können das nicht tun, denn es sind noch Benutzer mit der Gruppe <strong>{{name}}</strong> verbunden.',
         'PAGE_DESCRIPTION'    => 'Eine Liste der Gruppen für Ihre Website. Bietet Verwaltungstools für das Bearbeiten und Löschen von Gruppen.',
         'SUMMARY'             => 'Gruppen Zusammenfassung',
