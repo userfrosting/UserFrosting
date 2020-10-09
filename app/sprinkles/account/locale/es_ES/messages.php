@@ -39,6 +39,7 @@ return [
             '@TRANSLATION' => 'Configuraciones de la cuenta',
             'DESCRIPTION'  => 'Actualiza la configuración de su cuenta, incluido el correo electrónico, el nombre y la contraseña.',
             'UPDATED'      => 'Configuración de la cuenta actualizada',
+            'NEW_EMAIL'     => 'Se ha enviado un enlace para actualizar tu correo electrónico a <strong>{{newEmail}}</strong>. El correo electrónico actual <strong>{{email}}</strong> será utilizado hasta que este paso sea completado.',
         ],
 
         'TOOLS' => 'Herramientas de la cuenta',

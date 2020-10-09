@@ -70,6 +70,7 @@ class User extends Model implements UserInterface
         'last_activity_id',
         'password',
         'deleted_at',
+        'newEmail',
     ];
 
     /**
