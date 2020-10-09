@@ -1182,13 +1182,19 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
 
-        // Log out any existing user, and create a new session
-        if ($authenticator->check()) {
-            $authenticator->logout();
+        // Remove persistent sessions across all browsers/devices, and create a new session
+        $user = $passwordReset->user;
+
+        // Make sure logout will have a valid user
+        if (!$authenticator->check()) {
+            $authenticator->login($user);
         }
 
+        // Remove persistent sessions
+        $authenticator->logout(true);
+
         // Auto-login the user (without "remember me")
-        $user = $passwordReset->user;
+        // Create a new session
         $authenticator->login($user);
 
         $ms->addMessageTranslated('success', 'WELCOME', $user->export());
@@ -1300,6 +1306,20 @@ class AccountController extends SimpleController
         $currentUser->fill($data);
 
         $currentUser->save();
+
+        // If user changed his password, remove persistent sessions across all browsers/devices, and create a new session
+        if (isset($data['password'])) {
+
+            /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+            $authenticator = $this->ci->authenticator;
+
+            // Keep user to re-login after persistent session cleanup
+            $user = $currentUser;
+            $authenticator->logout(true);
+
+            // Auto-login the user (without "remember me")
+            $authenticator->login($user);
+        }
 
         // Create activity record
         $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated their account settings.", [
