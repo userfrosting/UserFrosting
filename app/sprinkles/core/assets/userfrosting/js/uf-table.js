@@ -437,7 +437,7 @@
         $.extend(table.config.pager.ajaxObject.data, tableState);
 
         // Merge in any additional parameters
-        $.extend(table.config.pager.ajaxObject.data, this.settings.addParams);
+        $.extend(true, table.config.pager.ajaxObject.data, this.settings.addParams);
 
         return url;
     };
@@ -526,7 +526,7 @@
         delete tableState.size;
 
         // Merge in any additional request parameters
-        $.extend(tableState, this.settings.addParams);
+        $.extend(true, tableState, this.settings.addParams);
 
         // Causes download to begin
         window.location = this.settings.dataUrl + '?' + $.param(tableState);
