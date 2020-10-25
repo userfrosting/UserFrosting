@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Client-side assets containing glob characters causing crashes when building assets.
 - Fixed issue where merging of package dependencies would show as "undefined", resulting in debugging challenges where there are issues.
 
+## [v4.4.4]
+
+### Changed
+- Replaced AdminLTE credit in default footer (old link was dead).
+
 ## [v4.4.3]
 
 ### Fixed

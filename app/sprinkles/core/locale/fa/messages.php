@@ -96,6 +96,6 @@ return [
     'NO'                       => 'خیر',
     'OPTIONAL'                 => 'اختیاری',
     'BUILT_WITH_UF'            => 'ساخته شده با <a href="http://www.userfrosting.com">یوزرفراستینگ</a>',
-    'ADMINLTE_THEME_BY'        => 'قالب از <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> تمامی حقوق محفوظ است',
+    'ADMINLTE_THEME_BY'        => 'قالب از <strong><a href="https://adminlte.io">AdminLTE</a>.</strong> تمامی حقوق محفوظ است',
     'WELCOME_TO'               => 'خوش آمدید به {{title}}!',
 ];
