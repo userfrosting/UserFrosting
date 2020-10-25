@@ -12,6 +12,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { src } from "@userfrosting/vinyl-fs-vpath";
 import { Logger, vendorAssetsDir, sprinklesDir, sprinkles, sprinkleBundleFile, publicAssetsDir } from "./util.js";
 import gulpIf from "gulp-if";
+import gulpSourcemaps from "gulp-sourcemaps";
 
 /**
  * Compiles frontend assets. Mapped to npm script "uf-bundle".
@@ -135,7 +136,8 @@ export function build() {
 
     // Open stream
     log.info("Starting bundle process proper...");
-    return src({ globs: sources, pathMappings, base: publicAssetsDir, sourcemaps: true })
+    return src({ globs: sources, pathMappings, base: publicAssetsDir })
+        .pipe(gulpSourcemaps.init())
         .pipe(gulpIf(stylesAndScriptsFilter, new Bundler(rawConfig, bundleBuilder, resultsCallback)))
         .pipe(prune(publicAssetsDir))
         .pipe(gulpIf(stylesAndScriptsFilter, gulp.dest(publicAssetsDir, { sourcemaps: "." })))
