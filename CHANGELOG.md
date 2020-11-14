@@ -6,8 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [v4.4.4]
-### Changed
+
+### Fixed
 - Replaced AdminLTE credit in default footer (old link was dead).
+- Lock Travis to Composer V1 to avoid error until Composer V2 support can be fixed.
 
 ## [v4.4.3]
 
