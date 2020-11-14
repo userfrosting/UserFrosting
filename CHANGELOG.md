@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Replaced AdminLTE credit in default footer (old link was dead).
 - Lock Travis to Composer V1 to avoid error until Composer V2 support can be fixed.
+- Remove whitespace at top of page templates ([#1107])
 
 ## [v4.4.3]
 
@@ -975,6 +976,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1078]: https://github.com/userfrosting/UserFrosting/issues/1078
 [#1087]: https://github.com/userfrosting/UserFrosting/issues/1087
 [#1092]: https://github.com/userfrosting/UserFrosting/issues/1092
+[#1107]: https://github.com/userfrosting/UserFrosting/pull/1107
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
