@@ -12,6 +12,7 @@ php:
   - 7.2
   - 7.3
   - 7.4
+  - 8.0snapshot
 
 env:
   jobs:
@@ -19,6 +20,8 @@ env:
     - DB=sqlite
     - DB=pgsql
     - DB=memory
+  allow_failures:
+    - php: 8.0snapshot
 
 jobs:
   fast_finish: true
@@ -28,6 +31,8 @@ cache:
     - $HOME/.composer/cache
 
 before_install:
+  # Force use of Composer 1.x
+  - composer self-update --1
   # copy sprinkles.json
   - cp app/sprinkles.example.json app/sprinkles.json
   # set up db
