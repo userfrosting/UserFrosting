@@ -19,9 +19,9 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
- * @property int $user_id
- * @property hash $token
- * @property bool $completed
+ * @property int      $user_id
+ * @property hash     $token
+ * @property bool     $completed
  * @property datetime $expires_at
  * @property datetime $completed_at
  */
