@@ -90,7 +90,7 @@ return [
     'YES'                      => 'Ναι',
     'NO'                       => 'Όχι',
     'OPTIONAL'                 => 'Προαιρετικό',
-    'BUILT_WITH_UF'            => 'Κατασκευάστηκε με το <a href="http://www.userfrosting.com">UserFrosting </a>',
-    'ADMINLTE_THEME_BY'        => 'Θέμα από <strong> <a href="http://almsaeedstudio.com\\>> Almsaeed Studio </a>. </ Strong> Όλα τα δικαιώματα διατηρούνται',
+    'BUILT_WITH_UF'            => 'Κατασκευάστηκε με το <a href="http://www.userfrosting.com">UserFrosting</a>',
+    'ADMINLTE_THEME_BY'        => 'Θέμα από <strong><a href="https://adminlte.io">AdminLTE</a>. </strong>Όλα τα δικαιώματα διατηρούνται',
     'WELCOME_TO'               => 'Καλώς ορίσατε στο {{title}}!',
 ];

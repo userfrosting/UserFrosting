@@ -9,11 +9,12 @@
  */
 
 use League\FactoryMuffin\Faker\Facade as Faker;
+use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 
 /*
  * General factory for the Permission Model
  */
-$fm->define('UserFrosting\Sprinkle\Account\Database\Models\Permission')->setDefinitions([
+$fm->define(Permission::class)->setDefinitions([
     'name'        => Faker::word(),
     'description' => Faker::paragraph(),
     'conditions'  => Faker::word(),

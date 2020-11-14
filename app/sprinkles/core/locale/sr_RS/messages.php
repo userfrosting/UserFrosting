@@ -115,6 +115,6 @@ return [
 
     // Misc.
     'BUILT_WITH_UF'     => 'Napravljeno sa <a href="http://www.userfrosting.com">UserFrosting-om</a>',
-    'ADMINLTE_THEME_BY' => 'Temu napravio <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> Sva prava zadržana',
+    'ADMINLTE_THEME_BY' => 'Temu napravio <strong><a href="https://adminlte.io">AdminLTE</a>.</strong> Sva prava zadržana',
     'WELCOME_TO'        => 'Dobrodočšli na {{title}}!',
 ];

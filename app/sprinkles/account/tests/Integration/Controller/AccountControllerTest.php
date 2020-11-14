@@ -1753,7 +1753,7 @@ class AccountControllerTest extends TestCase
     /**
      * @return AccountController
      */
-    private function getController()
+    protected function getController()
     {
         return new AccountController($this->ci);
     }

@@ -96,6 +96,6 @@ return [
     'NO'                       => 'Não',
     'OPTIONAL'                 => 'Opcional',
     'BUILT_WITH_UF'            => 'Desenvolvido sobre <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY'        => 'Tema por <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> Todos os direitos reservados',
+    'ADMINLTE_THEME_BY'        => 'Tema por <strong><a href="https://adminlte.io">AdminLTE</a>.</strong> Todos os direitos reservados',
     // 'WELCOME_TO'               => 'Welcome to {{title}}!',
 ];

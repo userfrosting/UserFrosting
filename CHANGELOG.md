@@ -18,7 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed `phpunit.xml` to `phpunit.xml.dist`.
 
 ### Fixed
-
+- Replaced AdminLTE credit in default footer (old link was dead).
+- 
 ### Removed
 - Removed deprecated `UserFrosting\System\Bakery\Migration` (deprecated in 4.2.0).
 - Removed deprecated `UserFrosting\Tests\DatabaseTransactions` (deprecated in 4.2.0).
@@ -36,6 +37,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed migration seed.
 - Removed support for migration with non static `$dependencies` properties.
 - Removed support for deprecared `determineRedirectOnLogin` service (deprecated in 4.1.10).
+
+## [v4.4.3]
+
+### Fixed
+- Changed some private methods to protected in tests for easier extension.
+- Tentative fix for duplication of user_name in user Factories.
+- Factories now uses `::class` reference instead of string.
+- Fix `ExceptionHandlerTest` test to speed things up.
 
 ## [v4.4.2]
 
@@ -1005,3 +1014,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.4.0]: https://github.com/userfrosting/UserFrosting/compare/v4.3.3...v4.4.0
 [v4.4.1]: https://github.com/userfrosting/UserFrosting/compare/v4.4.0...v4.4.1
 [v4.4.2]: https://github.com/userfrosting/UserFrosting/compare/v4.4.1...v4.4.2
+[v4.4.3]: https://github.com/userfrosting/UserFrosting/compare/v4.4.2...v4.4.3

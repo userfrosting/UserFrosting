@@ -97,6 +97,6 @@ return [
     'NO'                       => 'ไม่',
     'OPTIONAL'                 => 'ตัวเลือกเพิ่มเติม',
     'BUILT_WITH_UF'            => 'สร้างด้วย <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY'        => 'ธีมโดย <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a></strong> สงวนลิขสิทธิ์',
+    'ADMINLTE_THEME_BY'        => 'ธีมโดย <strong><a href="https://adminlte.io">AdminLTE</a></strong> สงวนลิขสิทธิ์',
     'WELCOME_TO'               => 'ยินดีต้อนรับสู่ {{title}}!',
 ];
