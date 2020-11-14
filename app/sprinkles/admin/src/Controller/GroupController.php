@@ -107,7 +107,7 @@ class GroupController extends SimpleController
 
         // All checks passed!  log events/activities and create group
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $currentUser) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $currentUser) {
             // Create the group
             $group = $classMapper->createInstance('group', $data);
 
