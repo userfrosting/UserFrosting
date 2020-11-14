@@ -20,11 +20,11 @@ env:
     - DB=sqlite
     - DB=pgsql
     - DB=memory
-  allow_failures:
-    - php: 8.0snapshot
 
 jobs:
   fast_finish: true
+  allow_failures:
+    - php: 8.0snapshot
 
 cache:
   directories:
