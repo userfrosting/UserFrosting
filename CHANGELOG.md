@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Remove whitespace at top of page templates ([#1107])
 - Deep extend when adding global query params in ufTable ([#1114])
 - Check for null key in Unique::buildTertiaryDictionary ([#1109])
+- Client-side assets containing glob characters causing crashes when building assets.
+- Fixed issue where merging of package dependencies would show as "undefined", resulting in debugging challenges where there are issues.
 
 ## [v4.4.3]
 
