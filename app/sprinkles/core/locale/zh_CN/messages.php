@@ -96,6 +96,6 @@ return [
     'NO'                       => '不是',
     'OPTIONAL'                 => '可选择的',
     'BUILT_WITH_UF'            => '使用 <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY'        => '主题作者 <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong>保留所有权',
+    'ADMINLTE_THEME_BY'        => '主题作者 <strong><a href="https://adminlte.io">AdminLTE</a>.</strong>保留所有权',
     // 'WELCOME_TO'               => 'Welcome to {{title}}!',
 ];

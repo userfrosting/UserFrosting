@@ -12,6 +12,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { src } from "@userfrosting/vinyl-fs-vpath";
 import { Logger, vendorAssetsDir, sprinklesDir, sprinkles, sprinkleBundleFile, publicAssetsDir } from "./util.js";
 import gulpIf from "gulp-if";
+import gulpSourcemaps from "gulp-sourcemaps";
 
 /**
  * Compiles frontend assets. Mapped to npm script "uf-bundle".
@@ -135,11 +136,15 @@ export function build() {
 
     // Open stream
     log.info("Starting bundle process proper...");
-    return src({ globs: sources, pathMappings, base: publicAssetsDir, sourcemaps: true })
+    return src({ globs: sources, pathMappings, base: publicAssetsDir })
+        .pipe(gulpSourcemaps.init({ loadMaps: true }))
         .pipe(gulpIf(stylesAndScriptsFilter, new Bundler(rawConfig, bundleBuilder, resultsCallback)))
         .pipe(prune(publicAssetsDir))
-        .pipe(gulpIf(stylesAndScriptsFilter, gulp.dest(publicAssetsDir, { sourcemaps: "." })))
-        .pipe(gulpIf(everythingElseFilter, gulp.dest(publicAssetsDir)));
+        .pipe(gulpIf(
+            stylesAndScriptsFilter,
+            gulp.dest(publicAssetsDir, { sourcemaps: true }),
+            gulp.dest(publicAssetsDir)
+        ));
 };
 
 /**
@@ -164,12 +169,4 @@ function stylesFilter(fs) {
  */
 function scriptsFilter(fs) {
     return fs.extname === ".js";
-}
-
-/**
- * Used to filter to everything but styles and scripts.
- * @param {import("vinyl").NullFile} fs
- */
-function everythingElseFilter(fs) {
-    return (fs.extname !== ".js") && (fs.extname !== ".css");
 }
