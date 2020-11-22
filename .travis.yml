@@ -45,7 +45,7 @@ before_install:
 
 before_script:
   # install deps and UF
-  - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install --no-interaction
+  - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer update --no-interaction
   - php bakery debug
   - php bakery build-assets
   - php bakery migrate
