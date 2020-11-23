@@ -8,7 +8,6 @@ services:
   - redis
 
 php:
-  - 7.1
   - 7.2
   - 7.3
   - 7.4
@@ -20,8 +19,11 @@ env:
     - DB=mysql
       COMPOSER=2
     - DB=sqlite
+      COMPOSER=1
     - DB=pgsql
+      COMPOSER=1
     - DB=memory
+      COMPOSER=1
 
 jobs:
   fast_finish: true
@@ -31,8 +33,9 @@ cache:
     - $HOME/.composer/cache
 
 before_install:
-  # Force use of Composer 2.x
+  # Force use of Composer 1x or 2.x
   - composer self-update --$COMPOSER
+  - composer config -g github-oauth.github.com "$TOKEN"
   # copy sprinkles.json
   - cp app/sprinkles.example.json app/sprinkles.json
   # set up db
