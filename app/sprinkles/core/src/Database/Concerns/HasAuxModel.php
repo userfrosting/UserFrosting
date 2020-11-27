@@ -114,8 +114,8 @@ trait HasAuxModel
     /**
      * Set a given attribute on the main model or aux model.
      *
-     * @param  string $key
-     * @param  mixed  $value
+     * @param string $key
+     * @param mixed  $value
      *
      * @return mixed
      */
@@ -137,6 +137,7 @@ trait HasAuxModel
      * Get an attribute from the main model or aux model.
      *
      * @param string $key
+     *
      * @return mixed
      */
     public function getAttribute($key)
@@ -171,6 +172,7 @@ trait HasAuxModel
      * Remove the 'aux' relationship from all array/json representations.
      *
      * @param array $values
+     *
      * @return array
      */
     protected function getArrayableItems(array $values)
