@@ -10,9 +10,9 @@
 
 namespace UserFrosting\Sprinkle\Core\Database\Scopes;
 
-use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
 
 class AuxModelScope implements Scope
 {

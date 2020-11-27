@@ -12,7 +12,6 @@ namespace UserFrosting\Sprinkle\Core\Database\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-
 use UserFrosting\Sprinkle\Core\Database\Scopes\AuxModelScope;
 
 /**
@@ -73,7 +72,7 @@ trait HasAuxModel
     }
 
     /**
-     * If this instance doesn't already have a related aux model (either in the db on in the current object), then create one
+     * If this instance doesn't already have a related aux model (either in the db on in the current object), then create one.
      */
     protected function linkAuxModel()
     {
@@ -101,7 +100,7 @@ trait HasAuxModel
     }
 
     /**
-     * Copy the parent id to the aux model, if the parent has an id at this point but the aux doesn't
+     * Copy the parent id to the aux model, if the parent has an id at this point but the aux doesn't.
      */
     protected function setAuxModelPrimaryKey()
     {
@@ -117,6 +116,7 @@ trait HasAuxModel
      *
      * @param  string $key
      * @param  mixed  $value
+     *
      * @return mixed
      */
     public function setAttribute($key, $value)
@@ -136,7 +136,7 @@ trait HasAuxModel
     /**
      * Get an attribute from the main model or aux model.
      *
-     * @param  string $key
+     * @param string $key
      * @return mixed
      */
     public function getAttribute($key)
@@ -170,7 +170,7 @@ trait HasAuxModel
     /**
      * Remove the 'aux' relationship from all array/json representations.
      *
-     * @param  array $values
+     * @param array $values
      * @return array
      */
     protected function getArrayableItems(array $values)
@@ -194,7 +194,7 @@ trait HasAuxModel
     }
 
     /**
-     * Determine aux column names, if not explicitly set in model
+     * Determine aux column names, if not explicitly set in model.
      */
     protected function getAuxColumns()
     {
