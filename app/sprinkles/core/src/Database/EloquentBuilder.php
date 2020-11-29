@@ -28,6 +28,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
      *
      * @param int   $id
      * @param array $columns
+     *
      * @throws \UserFrosting\Support\Exception\BadRequestException
      *
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
