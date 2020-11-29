@@ -10,7 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\NotFoundException;
 
 /**

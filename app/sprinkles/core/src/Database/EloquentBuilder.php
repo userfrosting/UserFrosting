@@ -26,9 +26,10 @@ class EloquentBuilder extends LaravelEloquentBuilder
      * Find a model by its primary integer-valued key or throw an exception if
      * something other than a nonnegative integer is provided.
      *
-     * @param  int $id
-     * @param  array $columns
+     * @param int   $id
+     * @param array $columns
      * @throws \UserFrosting\Support\Exception\BadRequestException
+     *
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
      */
     public function findInt($id, $columns = ['*'])
