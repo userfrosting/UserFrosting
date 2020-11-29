@@ -29,12 +29,7 @@ class UserPermissionSprunje extends PermissionSprunje
      */
     protected function baseQuery()
     {
-        // Requires a user id
-        if (!isset($this->options['user_id'])) {
-            throw new BadRequestException();
-        }
-
-        $user = $this->classMapper->getClassMapping('user')::find($this->options['user_id']);
+        $user = $this->classMapper->getClassMapping('user')::findInt($this->options['user_id']);
 
         // If the user doesn't exist, return 404
         if (!$user) {

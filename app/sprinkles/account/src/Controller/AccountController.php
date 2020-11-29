@@ -920,7 +920,7 @@ class AccountController extends SimpleController
         }
 
         // Security measure: do not allow registering new users until the master account has been created.
-        if (!$classMapper->getClassMapping('user')::find($config['reserved_user_ids.master'])) {
+        if (!$classMapper->getClassMapping('user')::findInt($config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.MASTER_NOT_EXISTS');
 
             return $response->withJson([], 403);

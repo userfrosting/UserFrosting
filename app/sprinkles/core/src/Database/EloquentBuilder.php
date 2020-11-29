@@ -13,6 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Database;
 use Illuminate\Database\Eloquent\Builder as LaravelEloquentBuilder;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
+use UserFrosting\Support\Exception\BadRequestException;
 
 /**
  * UserFrosting's custom Eloquent Builder Class.
@@ -21,6 +22,24 @@ use Illuminate\Support\Str;
  */
 class EloquentBuilder extends LaravelEloquentBuilder
 {
+    /**
+     * Find a model by its primary integer-valued key or throw an exception if
+     * something other than a nonnegative integer is provided.
+     *
+     * @param  int $id
+     * @param  array $columns
+     * @throws \UserFrosting\Support\Exception\BadRequestException
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
+     */
+    public function findInt($id, $columns = ['*'])
+    {
+        if (!isset($id) || (filter_var($id, FILTER_VALIDATE_INT) === false)) {
+            throw new BadRequestException();
+        }
+
+        return $this->find($id, $columns);
+    }
+
     /**
      * Add subselect queries to sum the relations.
      *

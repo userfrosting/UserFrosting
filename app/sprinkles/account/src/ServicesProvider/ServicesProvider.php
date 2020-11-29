@@ -263,7 +263,7 @@ class ServicesProvider
                  * @return bool true if the user is in the group, false otherwise.
                  */
                 'in_group' => function ($user_id, $group_id) {
-                    $user = User::find($user_id);
+                    $user = User::findInt($user_id);
 
                     return $user->group_id == $group_id;
                 },
