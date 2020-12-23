@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [master, develop]
+    branches: [*]
   pull_request:
-    branches: [master, develop]
+    branches: [*]
   schedule:
   - cron: "0 0 * * 5"
 
