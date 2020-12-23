@@ -67,9 +67,7 @@ jobs:
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
     
     - name: Install Dependencies
-      run: | 
-        composer install --no-ansi --no-interaction --no-scripts --no-progress
-        composer install --no-ansi --no-interaction --no-scripts --no-progress
+      run: composer install --prefer-dist --no-progress --no-suggest
     
     - name: Create Database
       if: ${{ matrix.database == 'sqlite' }}
