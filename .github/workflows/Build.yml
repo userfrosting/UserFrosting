@@ -15,12 +15,16 @@ jobs:
       fail-fast: false
       matrix:
         php_versions: ['7.1', '7.2', '7.3', '7.4']
-        node_versions: ['10', '11', '12', '14']
+        node_versions: ['10'] # ['10', '11', '12', '14'] 
         os: [ubuntu-latest, windows-latest]
         database: ['mysql', 'sqlite']
 
     runs-on: ${{ matrix.os }}
     name: Build - PHP ${{ matrix.php_versions }} - Node ${{ matrix.node_versions }} - ${{ matrix.os }} - ${{ matrix.database }}
+
+    env:
+      TEST_DB: default
+      UF_MODE: debug
 
     steps:
     - uses: actions/checkout@v2
@@ -61,7 +65,7 @@ jobs:
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
     
     - name: Install Dependencies
-      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      run: composer install --no-ansi --no-interaction --no-scripts --no-progress
     
     - name: Create Database
       if: ${{ matrix.database == 'sqlite' }}
@@ -82,7 +86,7 @@ jobs:
         php bakery debug
         php bakery build-assets
         php bakery migrate
-        vendor/bin/phpunit --coverage-clover=coverage.xml
+        php bakery test -c --coverage-format=clover
     
     - name: Execute tests (Unit and Feature tests) via PHPUnit & SQLite Env
       if: ${{ matrix.database == 'sqlite' }}
@@ -93,10 +97,10 @@ jobs:
         php bakery debug
         php bakery build-assets
         php bakery migrate
-        vendor/bin/phpunit --coverage-clover=coverage.xml
+        php bakery test -c --coverage-format=clover
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
-        file: ./coverage.xml
+        file: ./_meta/coverage.xml
         fail_ci_if_error: true
