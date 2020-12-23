@@ -38,6 +38,7 @@ jobs:
         tools: pecl, composer:v1
     
     - name: Setup Redis-server
+      if: ${{ matrix.os == 'ubuntu-latest' }}
       uses: supercharge/redis-github-action@1.1.0
       with:
         redis-version: 6
@@ -65,7 +66,9 @@ jobs:
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
     
     - name: Install Dependencies
-      run: composer install --no-ansi --no-interaction --no-scripts --no-progress
+      run: | 
+        composer install --no-ansi --no-interaction --no-scripts --no-progress
+        composer install --no-ansi --no-interaction --no-scripts --no-progress
     
     - name: Create Database
       if: ${{ matrix.database == 'sqlite' }}
