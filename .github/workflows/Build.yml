@@ -1,0 +1,102 @@
+name: Build
+
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+    branches: [master, develop]
+  schedule:
+  - cron: "0 0 * * 5"
+
+jobs:
+  PHPUnit:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php_versions: ['7.1', '7.2', '7.3', '7.4']
+        node_versions: ['10', '11', '12', '14']
+        os: [ubuntu-latest, windows-latest]
+        database: ['mysql', 'sqlite']
+
+    runs-on: ${{ matrix.os }}
+    name: Build - PHP ${{ matrix.php_versions }} - Node ${{ matrix.node_versions }} - ${{ matrix.os }} - ${{ matrix.database }}
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_versions }}
+        extensions: mbstring, dom, fileinfo, gd, memcached, redis
+        coverage: xdebug
+        tools: pecl
+    
+    - name: Setup Redis-server
+      uses: supercharge/redis-github-action@1.1.0
+      with:
+        redis-version: 6
+    
+    - name: Setup Memcached
+      uses: niden/actions-memcached@v7
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node_versions }}
+    
+    - name: Shutdown Ubuntu MySQL (SUDO)
+      if: ${{ matrix.database == 'mysql' }}
+      run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
+    
+    - name: Set up MySQL
+      if: ${{ matrix.database == 'mysql' }}
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        mysql database: 'userfrosting'
+        mysql user: 'userfrosting'
+        mysql password: 'password'
+    
+    - name: Copy .env
+      run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
+    
+    - name: Install Dependencies
+      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    
+    - name: Create Database
+      if: ${{ matrix.database == 'sqlite' }}
+      run: |
+        mkdir -p database
+        touch database/database.sqlite
+    
+    - name: Execute tests (Unit and Feature tests) via PHPUnit & MySQL Env
+      if: ${{ matrix.database == 'mysql' }}
+      env:
+        DB_CONNECTION: mysql
+        DB_HOST: 127.0.0.1
+        DB_USER: userfrosting
+        DB_PASSWORD: password
+        DB_DATABASE: userfrosting
+        DB_PORT: 3306
+      run: |
+        php bakery debug
+        php bakery build-assets
+        php bakery migrate
+        vendor/bin/phpunit --coverage-clover=coverage.xml
+    
+    - name: Execute tests (Unit and Feature tests) via PHPUnit & SQLite Env
+      if: ${{ matrix.database == 'sqlite' }}
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
+      run: |
+        php bakery debug
+        php bakery build-assets
+        php bakery migrate
+        vendor/bin/phpunit --coverage-clover=coverage.xml
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: true
