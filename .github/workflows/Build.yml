@@ -104,5 +104,5 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
-        file: ./_meta/coverage.xml
+        file: ./_meta/coverage/coverage.xml
         fail_ci_if_error: true
