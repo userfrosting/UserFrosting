@@ -31,7 +31,7 @@ jobs:
         php-version: ${{ matrix.php_versions }}
         extensions: mbstring, dom, fileinfo, gd, memcached, redis
         coverage: xdebug
-        tools: pecl
+        tools: pecl, composer:v1
     
     - name: Setup Redis-server
       uses: supercharge/redis-github-action@1.1.0
