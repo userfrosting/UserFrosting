@@ -16,7 +16,7 @@ jobs:
       matrix:
         php_versions: ['7.1', '7.2', '7.3', '7.4']
         node_versions: ['10'] # ['10', '11', '12', '14'] 
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest] # [ubuntu-latest, windows-latest]
         database: ['mysql', 'sqlite']
 
     runs-on: ${{ matrix.os }}
@@ -78,7 +78,7 @@ jobs:
     - name: Execute build with MySQL Env
       if: ${{ matrix.database == 'mysql' }}
       env:
-        DB_CONNECTION: mysql
+        DB_DRIVER: mysql
         DB_HOST: 127.0.0.1
         DB_USER: userfrosting
         DB_PASSWORD: password
@@ -93,7 +93,7 @@ jobs:
     - name: Execute build with SQLite Env
       if: ${{ matrix.database == 'sqlite' }}
       env:
-        DB_CONNECTION: sqlite
+        DB_DRIVER: sqlite
         DB_NAME: database/database.sqlite
       run: |
         php bakery debug
