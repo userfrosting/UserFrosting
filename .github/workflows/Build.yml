@@ -294,7 +294,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['7.1', '7.2', '7.3', '7.4']
+        php_versions: ['7.4']
         node_versions: ['10', '11', '12', '14'] 
         os: [ubuntu-latest, windows-latest]
 
