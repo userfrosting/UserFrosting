@@ -165,88 +165,88 @@ PHPUnit-ubuntu-SQLite:
         file: ./_meta/coverage/coverage.xml
         fail_ci_if_error: true
 
-  PHPUnit-windows:
+PHPUnit-windows:
 
-    strategy:
-      fail-fast: false
-      matrix:
-        php_versions: ['7.1', '7.2', '7.3', '7.4']
+  strategy:
+    fail-fast: false
+    matrix:
+      php_versions: ['7.1', '7.2', '7.3', '7.4']
 
-    runs-on: windows-latest
-    name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
+  runs-on: windows-latest
+  name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
 
-    env:
-      TEST_DB: default
-      UF_MODE: debug
-      DB_DRIVER: sqlite
-      DB_NAME: database/database.sqlite
+  env:
+    TEST_DB: default
+    UF_MODE: debug
+    DB_DRIVER: sqlite
+    DB_NAME: database/database.sqlite
 
-    steps:
-    - uses: actions/checkout@v2
-    
-    - name: Setup PHP, with composer and extensions
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php_versions }}
-        extensions: mbstring, dom, fileinfo, gd, pdo, sqlite, pdo_sqlite
-        coverage: xdebug
-        tools: pecl, composer:v1
-    
-    - name: Copy .env
-      run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
-    
-    - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
-    
-    - name: Create Database
-      run: |
-        mkdir -p database
-        touch database/database.sqlite
-        
-    - name: Execute build with SQLite Env
-      run: |
-        php bakery debug
-        php bakery migrate
-        php bakery test -c --coverage-format=clover
-    
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./_meta/coverage/coverage.xml
-        fail_ci_if_error: true
+  steps:
+  - uses: actions/checkout@v2
+  
+  - name: Setup PHP, with composer and extensions
+    uses: shivammathur/setup-php@v2
+    with:
+      php-version: ${{ matrix.php_versions }}
+      extensions: mbstring, dom, fileinfo, gd, pdo, sqlite, pdo_sqlite
+      coverage: xdebug
+      tools: pecl, composer:v1
+  
+  - name: Copy .env
+    run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
+  
+  - name: Install Dependencies
+    run: composer install --prefer-dist --no-progress --no-suggest
+  
+  - name: Create Database
+    run: |
+      mkdir -p database
+      touch database/database.sqlite
+      
+  - name: Execute build with SQLite Env
+    run: |
+      php bakery debug
+      php bakery migrate
+      php bakery test -c --coverage-format=clover
+  
+  - name: Upload coverage to Codecov
+    uses: codecov/codecov-action@v1
+    with:
+      file: ./_meta/coverage/coverage.xml
+      fail_ci_if_error: true
 
-  asset-build:
+asset-build:
 
-    strategy:
-      fail-fast: false
-      matrix:
-        php_versions: ['7.1', '7.2', '7.3', '7.4']
-        node_versions: ['10', '11', '12', '14'] 
-        os: [ubuntu-latest, windows-latest]
+  strategy:
+    fail-fast: false
+    matrix:
+      php_versions: ['7.1', '7.2', '7.3', '7.4']
+      node_versions: ['10', '11', '12', '14'] 
+      os: [ubuntu-latest, windows-latest]
 
-    runs-on: ${{ matrix.os }}
-    name: Assets Build - PHP ${{ matrix.php_versions }} - Node ${{ matrix.node_versions }} - ${{ matrix.os }}
+  runs-on: ${{ matrix.os }}
+  name: Assets Build - PHP ${{ matrix.php_versions }} - Node ${{ matrix.node_versions }} - ${{ matrix.os }}
 
-    steps:
-    - uses: actions/checkout@v2
-    
-    - name: Setup PHP, with composer and extensions
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php_versions }}
-        extensions: mbstring, dom, fileinfo, gd
-        coverage: xdebug
-        tools: pecl, composer:v1
+  steps:
+  - uses: actions/checkout@v2
+  
+  - name: Setup PHP, with composer and extensions
+    uses: shivammathur/setup-php@v2
+    with:
+      php-version: ${{ matrix.php_versions }}
+      extensions: mbstring, dom, fileinfo, gd
+      coverage: xdebug
+      tools: pecl, composer:v1
 
-    - uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node_versions }}
-    
-    - name: Copy .env
-      run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
-    
-    - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
-    
-    - name: Execute build
-      run: php bakery build-assets
+  - uses: actions/setup-node@v2
+    with:
+      node-version: ${{ matrix.node_versions }}
+  
+  - name: Copy .env
+    run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
+  
+  - name: Install Dependencies
+    run: composer install --prefer-dist --no-progress --no-suggest
+  
+  - name: Execute build
+    run: php bakery build-assets
