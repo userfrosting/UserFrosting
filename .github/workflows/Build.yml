@@ -9,18 +9,16 @@ on:
   - cron: "0 0 * * 5"
 
 jobs:
-  PHPUnit:
+  PHPUnit-ubuntu:
 
     strategy:
       fail-fast: false
       matrix:
         php_versions: ['7.1', '7.2', '7.3', '7.4']
-        node_versions: ['10'] # ['10', '11', '12', '14'] 
-        os: [ubuntu-latest] # [ubuntu-latest, windows-latest]
         database: ['mysql', 'sqlite']
 
-    runs-on: ${{ matrix.os }}
-    name: Build - PHP ${{ matrix.php_versions }} - Node ${{ matrix.node_versions }} - ${{ matrix.os }} - ${{ matrix.database }}
+    runs-on: ubuntu-latest
+    name: PHPUnit - PHP ${{ matrix.php_versions }} - ${{ matrix.database }}
 
     env:
       TEST_DB: default
@@ -38,18 +36,12 @@ jobs:
         tools: pecl, composer:v1
     
     - name: Setup Redis-server
-      if: ${{ matrix.os == 'ubuntu-latest' }}
       uses: supercharge/redis-github-action@1.1.0
       with:
         redis-version: 6
     
     - name: Setup Memcached
-      if: ${{ matrix.os == 'ubuntu-latest' }}
       uses: niden/actions-memcached@v7
-
-    - uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node_versions }}
     
     - name: Shutdown Ubuntu MySQL (SUDO)
       if: ${{ matrix.database == 'mysql' }}
@@ -79,7 +71,7 @@ jobs:
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
     
-    - name: Create Database
+    - name: Create SQLite Database
       if: ${{ matrix.database == 'sqlite' }}
       run: |
         mkdir -p database
@@ -96,7 +88,6 @@ jobs:
         DB_PORT: 3306
       run: |
         php bakery debug
-        php bakery build-assets
         php bakery migrate
         php bakery test -c --coverage-format=clover
     
@@ -107,7 +98,6 @@ jobs:
         DB_NAME: database/database.sqlite
       run: |
         php bakery debug
-        php bakery build-assets
         php bakery migrate
         php bakery test -c --coverage-format=clover
     
@@ -116,3 +106,89 @@ jobs:
       with:
         file: ./_meta/coverage/coverage.xml
         fail_ci_if_error: true
+
+  PHPUnit-windows:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php_versions: ['7.1', '7.2', '7.3', '7.4']
+
+    runs-on: windows-latest
+    name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
+
+    env:
+      TEST_DB: default
+      UF_MODE: debug
+      DB_DRIVER: sqlite
+      DB_NAME: database/database.sqlite
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_versions }}
+        extensions: mbstring, dom, fileinfo, gd
+        coverage: xdebug
+        tools: pecl, composer:v1
+    
+    - name: Copy .env
+      run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
+    
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+    
+    - name: Create Database
+      run: |
+        mkdir -p database
+        touch database/database.sqlite
+        
+    - name: Execute build with SQLite Env
+      run: |
+        php bakery debug
+        php bakery migrate
+        php bakery test -c --coverage-format=clover
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        file: ./_meta/coverage/coverage.xml
+        fail_ci_if_error: true
+
+  asset-build:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php_versions: ['7.1', '7.2', '7.3', '7.4']
+        node_versions: ['10', '11', '12', '14'] 
+        os: [ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+    name: Assets Build - PHP ${{ matrix.php_versions }} - Node ${{ matrix.node_versions }} - ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_versions }}
+        extensions: mbstring, dom, fileinfo, gd
+        coverage: xdebug
+        tools: pecl, composer:v1
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node_versions }}
+    
+    - name: Copy .env
+      run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
+    
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+    
+    - name: Execute build
+      run: php bakery build-assets
