@@ -9,20 +9,25 @@ on:
   - cron: "0 0 * * 5"
 
 jobs:
-  PHPUnit-ubuntu:
+  PHPUnit-ubuntu-MySQL:
 
     strategy:
       fail-fast: false
       matrix:
         php_versions: ['7.1', '7.2', '7.3', '7.4']
-        database: ['mysql', 'sqlite']
 
     runs-on: ubuntu-latest
-    name: PHPUnit - PHP ${{ matrix.php_versions }} - ${{ matrix.database }}
+    name: PHPUnit - PHP ${{ matrix.php_versions }} - MySQL
 
     env:
       TEST_DB: default
       UF_MODE: debug
+      DB_DRIVER: mysql
+      DB_HOST: 127.0.0.1
+      DB_USER: userfrosting
+      DB_PASSWORD: password
+      DB_NAME: userfrosting
+      DB_PORT: 3306
 
     steps:
     - uses: actions/checkout@v2
@@ -34,6 +39,10 @@ jobs:
         extensions: mbstring, dom, fileinfo, gd, memcached, redis
         coverage: xdebug
         tools: pecl, composer:v1
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 10
     
     - name: Setup Redis-server
       uses: supercharge/redis-github-action@1.1.0
@@ -44,11 +53,10 @@ jobs:
       uses: niden/actions-memcached@v7
     
     - name: Shutdown Ubuntu MySQL (SUDO)
-      if: ${{ matrix.database == 'mysql' }}
       run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
     
     - name: Set up MySQL (PHP <= 7.3 -> MySQL 5)
-      if: ${{ matrix.database == 'mysql' && matrix.php_versions != 7.4 }}
+      if: ${{ matrix.php_versions != 7.4 }}
       uses: mirromutth/mysql-action@v1.1
       with:
         mysql version: '5'
@@ -57,7 +65,7 @@ jobs:
         mysql password: 'password'
 
     - name: Set up MySQL (PHP >= 7.4 -> MySQL 8)
-      if: ${{ matrix.database == 'mysql' && matrix.php_versions == 7.4 }}
+      if: ${{ matrix.php_versions == 7.4 }}
       uses: mirromutth/mysql-action@v1.1
       with:
         mysql version: '8'
@@ -71,35 +79,85 @@ jobs:
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
     
+    - name: Bakery Debug
+      run: php bakery debug
+
+    - name: Migrate DB
+      run: php bakery migrate
+
+    - name: Build Assets
+      run: php bakery build-assets
+
+    - name: Execute tests
+      run: php bakery test -c --coverage-format=clover
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        file: ./_meta/coverage/coverage.xml
+        fail_ci_if_error: true
+
+PHPUnit-ubuntu-SQLite:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php_versions: ['7.1', '7.2', '7.3', '7.4']
+
+    runs-on: ubuntu-latest
+    name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
+
+    env:
+      TEST_DB: default
+      UF_MODE: debug
+      DB_DRIVER: sqlite
+      DB_NAME: database/database.sqlite
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_versions }}
+        extensions: mbstring, dom, fileinfo, gd, memcached, redis
+        coverage: xdebug
+        tools: pecl, composer:v1
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 10
+    
+    - name: Setup Redis-server
+      uses: supercharge/redis-github-action@1.1.0
+      with:
+        redis-version: 6
+    
+    - name: Setup Memcached
+      uses: niden/actions-memcached@v7
+    
+    - name: Copy .env
+      run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
+    
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+    
     - name: Create SQLite Database
-      if: ${{ matrix.database == 'sqlite' }}
       run: |
         mkdir -p database
         touch database/database.sqlite
     
-    - name: Execute build with MySQL Env
-      if: ${{ matrix.database == 'mysql' }}
-      env:
-        DB_DRIVER: mysql
-        DB_HOST: 127.0.0.1
-        DB_USER: userfrosting
-        DB_PASSWORD: password
-        DB_NAME: userfrosting
-        DB_PORT: 3306
-      run: |
-        php bakery debug
-        php bakery migrate
-        php bakery test -c --coverage-format=clover
-    
-    - name: Execute build with SQLite Env
-      if: ${{ matrix.database == 'sqlite' }}
-      env:
-        DB_DRIVER: sqlite
-        DB_NAME: database/database.sqlite
-      run: |
-        php bakery debug
-        php bakery migrate
-        php bakery test -c --coverage-format=clover
+    - name: Bakery Debug
+      run: php bakery debug
+
+    - name: Migrate DB
+      run: php bakery migrate
+
+    # - name: Build Assets
+    #  run: php bakery build-assets
+
+    - name: Execute tests
+      run: php bakery test -c --coverage-format=clover
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
@@ -130,7 +188,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php_versions }}
-        extensions: mbstring, dom, fileinfo, gd
+        extensions: mbstring, dom, fileinfo, gd, pdo, sqlite, pdo_sqlite
         coverage: xdebug
         tools: pecl, composer:v1
     
