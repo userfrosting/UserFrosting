@@ -153,8 +153,8 @@ jobs:
       - name: Migrate DB
         run: php bakery migrate
 
-      # - name: Build Assets
-      #  run: php bakery build-assets
+      - name: Build Assets
+        run: php bakery build-assets
 
       - name: Execute tests
         run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
