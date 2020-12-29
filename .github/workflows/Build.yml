@@ -195,6 +195,13 @@ jobs:
           extensions: mbstring, dom, fileinfo, gd, memcached, redis
           coverage: xdebug
           tools: pecl, composer:v1
+      
+      - name: Setup PostgreSQL
+        uses: harmon758/postgresql-action@v1
+        with:
+          postgresql db: 'userfrosting'
+          postgresql user: 'userfrosting'
+          postgresql password: 'password'
 
       - uses: actions/setup-node@v2
         with:
@@ -213,13 +220,6 @@ jobs:
       
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
-      
-      - name: Setup PostgreSQL
-        uses: huaxk/postgis-action@v1
-        with:
-          postgresql db: 'userfrosting'
-          postgresql user: 'userfrosting'
-          postgresql password: 'password'
       
       - name: Bakery Debug
         run: php bakery debug
