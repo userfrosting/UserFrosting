@@ -265,6 +265,10 @@ jobs:
         extensions: mbstring, dom, fileinfo, gd, pdo, sqlite, pdo_sqlite
         coverage: xdebug
         tools: pecl, composer:v1
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 10
     
     - name: Copy .env
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
@@ -272,16 +276,22 @@ jobs:
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
     
-    - name: Create Database
+    - name: Create SQLite Database
       run: |
         mkdir -p database
         touch database/database.sqlite
-        
-    - name: Execute build with SQLite Env
-      run: |
-        php bakery debug
-        php bakery migrate
-        app/vendor/bin/phpunit --coverage-clover=coverage.xml
+
+    - name: Bakery Debug
+      run: php bakery debug
+
+    - name: Migrate DB
+      run: php bakery migrate
+
+    - name: Build Assets
+      run: php bakery build-assets
+
+    - name: Execute tests
+      run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
