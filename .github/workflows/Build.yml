@@ -215,7 +215,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest
       
       - name: Setup PostgreSQL
-        uses: Harmon758/postgresql-action@v1.0.0
+        uses: huaxk/postgis-action@v1
         with:
           postgresql db: 'userfrosting'
           postgresql user: 'userfrosting'
