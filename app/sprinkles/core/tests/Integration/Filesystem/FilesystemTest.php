@@ -134,19 +134,23 @@ class FilesystemTest extends TestCase
 
     /**
      * @depends testNonExistingAdapter
+     * @see https://github.com/thephpleague/flysystem/blob/13352d2303b67ecfc1306ef1fdb507df1a0fc79f/src/Adapter/Local.php#L47
      */
     public function testAddingAdapter()
     {
         $filesystemManager = $this->ci->filesystem;
 
         $filesystemManager->extend('localTest', function ($configService, $config) {
-            return new Filesystem(new LocalAdapter($config['root']));
+            $adapter = new LocalAdapter($config['root']);
+
+            return new Filesystem($adapter);
         });
 
         $disk = $filesystemManager->disk('testingDriver');
         $this->assertInstanceOf(FilesystemAdapter::class, $disk);
 
         // Make sure the path was set correctly
-        $this->assertEquals(\UserFrosting\STORAGE_DIR . \UserFrosting\DS . 'testingDriver' . \UserFrosting\DS, $disk->path(''));
+        $path = $disk->path('');
+        $this->assertEquals(\UserFrosting\STORAGE_DIR . \UserFrosting\DS . 'testingDriver' . DIRECTORY_SEPARATOR, $path);
     }
 }

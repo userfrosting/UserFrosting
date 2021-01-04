@@ -15,6 +15,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\I18n\Locale;
 use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
 use UserFrosting\Tests\TestCase;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * SiteLocaleTest class.
@@ -86,11 +87,9 @@ class SiteLocaleTest extends TestCase
      */
     public function testgetAvailableOptions(): void
     {
-        // Implement fake locale file location
-
-        /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
-        $locator = $this->ci->locator;
-        $locator->removeStream('locale')->registerStream('locale', '', __DIR__ . '/data', true);
+        // Implement fake locale file location & locator
+        $locator = new ResourceLocator(__DIR__);
+        $locator->registerStream('locale', '', 'data', true);
 
         // Set expectations. Note the sort applied here
         $expected = [
@@ -98,7 +97,9 @@ class SiteLocaleTest extends TestCase
             'fr_FR' => 'Tomato', // Just to be sure the fake locale are loaded ;)
         ];
 
-        $options = $this->ci->locale->getAvailableOptions();
+        /** @var \UserFrosting\Sprinkle\Core\I18n\SiteLocale */
+        $locale = $this->ci->locale;
+        $options = $locale->getAvailableOptions();
 
         $this->assertIsArray($options);
         $this->assertSame($expected, $options);

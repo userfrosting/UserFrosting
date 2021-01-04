@@ -472,11 +472,13 @@ trait Unique
         foreach ($models as $model) {
             $tertiaryKeyValue = $model->pivot->{$this->tertiaryKey};
 
-            $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
+            if (!is_null($tertiaryKeyValue)) {
+                $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
 
-            $this->transferPivotsToTertiary($model, $tertiaryModel);
+                $this->transferPivotsToTertiary($model, $tertiaryModel);
 
-            $dictionary[$model->getKey()][] = $tertiaryModel;
+                $dictionary[$model->getKey()][] = $tertiaryModel;
+            }
         }
 
         return $dictionary;

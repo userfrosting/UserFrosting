@@ -38,6 +38,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed support for migration with non static `$dependencies` properties.
 - Removed support for deprecared `determineRedirectOnLogin` service (deprecated in 4.1.10).
 
+## [v4.4.4]
+
+### Fixed
+- Replaced AdminLTE credit in default footer (old link was dead).
+- Lock Travis to Composer V1 to avoid error until Composer V2 support can be fixed.
+- Remove whitespace at top of page templates ([#1107])
+- Deep extend when adding global query params in ufTable ([#1114])
+- Check for null key in Unique::buildTertiaryDictionary ([#1109])
+- Client-side assets containing glob characters causing crashes when building assets.
+- Fixed issue where merging of package dependencies would show as "undefined", resulting in debugging challenges where there are issues.
+
 ## [v4.4.3]
 
 ### Fixed
@@ -1002,6 +1013,9 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1078]: https://github.com/userfrosting/UserFrosting/issues/1078
 [#1087]: https://github.com/userfrosting/UserFrosting/issues/1087
 [#1092]: https://github.com/userfrosting/UserFrosting/issues/1092
+[#1107]: https://github.com/userfrosting/UserFrosting/pull/1107
+[#1109]: https://github.com/userfrosting/UserFrosting/pull/1109
+[#1114]: https://github.com/userfrosting/UserFrosting/pull/1114
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
@@ -1015,3 +1029,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.4.1]: https://github.com/userfrosting/UserFrosting/compare/v4.4.0...v4.4.1
 [v4.4.2]: https://github.com/userfrosting/UserFrosting/compare/v4.4.1...v4.4.2
 [v4.4.3]: https://github.com/userfrosting/UserFrosting/compare/v4.4.2...v4.4.3
+[v4.4.4]: https://github.com/userfrosting/UserFrosting/compare/v4.4.3...v4.4.4

@@ -3,22 +3,22 @@
 [![Latest Version](https://img.shields.io/github/release/userfrosting/UserFrosting.svg)](https://github.com/userfrosting/UserFrosting/releases)
 ![PHP Version](https://img.shields.io/packagist/php-v/userfrosting/userfrosting.svg?color=brightgreen)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![Join the chat at https://chat.userfrosting.com/channel/support](https://demo.rocket.chat/images/join-chat.svg)](https://chat.userfrosting.com/channel/support)
+[![Join the chat at https://chat.userfrosting.com/channel/support](https://chat.userfrosting.com/api/v1/shield.svg?name=UserFrosting)](https://chat.userfrosting.com/channel/support)
 [![Backers on Open Collective](https://opencollective.com/userfrosting/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/userfrosting/sponsors/badge.svg)](#sponsors)
 [![Donate](https://img.shields.io/badge/Open%20Collective-Donate-blue.svg)](https://opencollective.com/userfrosting#backer)
 
 | Branch | Version | Build | Coverage | Style |
 | ------ |:-------:|:-----:|:--------:|:-----:|
-| [master] | ![](https://img.shields.io/github/release/userfrosting/userfrosting.svg?color=success&label=Version) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)][UF-Codecov] | [![][style-master]][style] |
-| [hotfix] | ![](https://img.shields.io/badge/Version-v4.4.x-yellow.svg) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=hotfix)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
-| [develop] | ![](https://img.shields.io/badge/Version-v4.5.x-orange.svg) | [![](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=develop)][UF-Travis] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
+| [master] | ![](https://img.shields.io/github/release/userfrosting/userfrosting.svg?color=success&label=Version) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=master)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)][UF-Codecov] | [![][style-master]][style] |
+| [hotfix] | ![](https://img.shields.io/badge/Version-v4.4.x-yellow.svg) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=hotfix)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
+| [develop] | ![](https://img.shields.io/badge/Version-v4.5.x-orange.svg) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=develop)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
 
 <!-- Links -->
 [master]: https://github.com/userfrosting/UserFrosting
 [hotfix]: https://github.com/userfrosting/UserFrosting/tree/hotfix
 [develop]: https://github.com/userfrosting/UserFrosting/tree/develop
-[UF-Travis]: https://travis-ci.org/userfrosting/UserFrosting
+[UF-Build]: https://github.com/userfrosting/userfrosting/actions?query=workflow%3ABuild
 [UF-Codecov]: https://codecov.io/gh/userfrosting/userfrosting
 [style-master]: https://github.styleci.io/repos/18148206/shield?branch=master&style=flat
 [style-hotfix]: https://github.styleci.io/repos/18148206/shield?branch=hotfix&style=flat
