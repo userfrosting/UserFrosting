@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Bakery\Helper;
 
-use Composer\Semver;
+use Composer\Semver\Semver;
 
 /**
  * Helper trait to check NodeJS and NPM version dependencies.
