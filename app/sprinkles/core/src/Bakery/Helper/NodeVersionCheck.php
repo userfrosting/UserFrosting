@@ -10,6 +10,8 @@
 
 namespace UserFrosting\Sprinkle\Core\Bakery\Helper;
 
+use Composer\Semver;
+
 /**
  * Helper trait to check NodeJS and NPM version dependencies.
  *
@@ -24,10 +26,10 @@ trait NodeVersionCheck
      */
     protected function checkNodeVersion()
     {
-        $npmVersion = trim(exec('node -v'));
+        $nodeVersion = trim(exec('node -v'));
 
-        if (version_compare($npmVersion, \UserFrosting\NODE_MIN_VERSION, '<')) {
-            $this->io->error('UserFrosting requires Node version ' . \UserFrosting\NODE_MIN_VERSION . ' or above. Check the documentation for more details.');
+        if (Semver::satisfies($nodeVersion, \UserFrosting\NODE_MIN_VERSION)) {
+            $this->io->error('UserFrosting requires a Node version that satisfies ' . \UserFrosting\NODE_MIN_VERSION . '. Check the documentation for more details.');
             exit(1);
         }
 
@@ -43,8 +45,8 @@ trait NodeVersionCheck
     {
         $npmVersion = trim(exec('npm -v'));
 
-        if (version_compare($npmVersion, \UserFrosting\NPM_MIN_VERSION, '<')) {
-            $this->io->error('UserFrosting requires npm version ' . \UserFrosting\NPM_MIN_VERSION . ' or above. Check the documentation for more details.');
+        if (Semver::satisfies($nodeVersion, \UserFrosting\NPM_MIN_VERSION)) {
+            $this->io->error('UserFrosting requires a NPM version that satisfies ' . \UserFrosting\NPM_MIN_VERSION . ' or above. Check the documentation for more details.');
             exit(1);
         }
 
