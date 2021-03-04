@@ -28,8 +28,8 @@ trait NodeVersionCheck
     {
         $nodeVersion = trim(exec('node -v'));
 
-        if (Semver::satisfies($nodeVersion, \UserFrosting\NODE_MIN_VERSION)) {
-            $this->io->error('UserFrosting requires a Node version that satisfies ' . \UserFrosting\NODE_MIN_VERSION . '. Check the documentation for more details.');
+        if (!Semver::satisfies($nodeVersion, \UserFrosting\NODE_MIN_VERSION)) {
+            $this->io->error('UserFrosting requires a Node version that satisfies "' . \UserFrosting\NODE_MIN_VERSION . '", but found . Check the documentation for more details.');
             exit(1);
         }
 
@@ -45,8 +45,8 @@ trait NodeVersionCheck
     {
         $npmVersion = trim(exec('npm -v'));
 
-        if (Semver::satisfies($nodeVersion, \UserFrosting\NPM_MIN_VERSION)) {
-            $this->io->error('UserFrosting requires a NPM version that satisfies ' . \UserFrosting\NPM_MIN_VERSION . ' or above. Check the documentation for more details.');
+        if (!Semver::satisfies($npmVersion, \UserFrosting\NPM_MIN_VERSION)) {
+            $this->io->error('UserFrosting requires a NPM version that satisfies "' . \UserFrosting\NPM_MIN_VERSION . '" or above. Check the documentation for more details.');
             exit(1);
         }
 
