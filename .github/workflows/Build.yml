@@ -36,7 +36,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php_versions }}
-        extensions: mbstring, dom, fileinfo, gd, memcached, redis
+        extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
         coverage: xdebug
         tools: pecl, composer:v1
 
@@ -72,6 +72,12 @@ jobs:
         mysql database: 'userfrosting'
         mysql user: 'userfrosting'
         mysql password: 'password'
+
+    - name: Wait for MySQL
+      run: |
+        while ! mysqladmin ping --host=127.0.0.1 --password=password --silent; do
+          sleep 1
+        done
     
     - name: Copy .env
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
@@ -120,7 +126,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php_versions }}
-          extensions: mbstring, dom, fileinfo, gd, memcached, redis
+          extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
           coverage: xdebug
           tools: pecl, composer:v1
 
@@ -192,7 +198,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php_versions }}
-          extensions: mbstring, dom, fileinfo, gd, memcached, redis
+          extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
           coverage: xdebug
           tools: pecl, composer:v1
       
