@@ -16,10 +16,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Changed `.php_cs` to `.php_cs.dist`.
 - Changed `phpunit.xml` to `phpunit.xml.dist`.
+- Raised NodeJS version requirement from `>=10.12.0` to `^12.17.0 || >=14.0.0`.
+- Raised NPM version requirement from `>=6.0.0` to `>=6.14.4`.
 
 ### Fixed
 - Replaced AdminLTE credit in default footer (old link was dead).
-- 
+
 ### Removed
 - Removed deprecated `UserFrosting\System\Bakery\Migration` (deprecated in 4.2.0).
 - Removed deprecated `UserFrosting\Tests\DatabaseTransactions` (deprecated in 4.2.0).
