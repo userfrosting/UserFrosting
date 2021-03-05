@@ -98,6 +98,7 @@ jobs:
       run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
     
     - name: Upload coverage to Codecov
+      if: github.event_name != 'schedule'
       uses: codecov/codecov-action@v1
       with:
         file: ./coverage.xml
@@ -166,6 +167,7 @@ jobs:
         run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
       
       - name: Upload coverage to Codecov
+        if: github.event_name != 'schedule'
         uses: codecov/codecov-action@v1
         with:
           file: ./coverage.xml
@@ -198,7 +200,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php_versions }}
-          extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
+          extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite, pdo_pgsql
           coverage: xdebug
           tools: pecl, composer:v1
       
@@ -240,6 +242,7 @@ jobs:
         run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
       
       - name: Upload coverage to Codecov
+        if: github.event_name != 'schedule'
         uses: codecov/codecov-action@v1
         with:
           file: ./coverage.xml
@@ -311,7 +314,7 @@ jobs:
       fail-fast: false
       matrix:
         php_versions: ['7.4']
-        node_versions: ['10', '11', '12', '14'] 
+        node_versions: ['10', '12', '14'] 
         os: [ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
