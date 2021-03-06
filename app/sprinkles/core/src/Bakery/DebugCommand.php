@@ -49,10 +49,10 @@ class DebugCommand extends BaseCommand
 
         // Perform tasks & display info
         $this->io->definitionList(
-            ['UserFrosing version'  => \UserFrosting\VERSION],
+            ['UserFrosting version'  => \UserFrosting\VERSION],
             ['OS Name'              => php_uname('s')],
             ['Project Root'         => \UserFrosting\ROOT_DIR],
-            ['Environment mode'     => getenv('UF_MODE')],
+            ['Environment mode'     => env('UF_MODE', 'default')],
             ['PHP Version'          => $this->checkPhpVersion()],
             ['Node Version'         => $this->checkNodeVersion()],
             ['NPM Version'          => $this->checkNpmVersion()]

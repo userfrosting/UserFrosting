@@ -25,7 +25,7 @@ return [
     */
     'address_book' => [
         'admin' => [
-            'email' => getenv('SMTP_USER') ?: null,
+            'email' => env('SMTP_USER'),
             'name'  => 'Site Administrator',
         ],
     ],
@@ -97,7 +97,7 @@ return [
     * Note : CSRF Middleware should only be disabled for dev or debug purposes.
     */
     'csrf' => [
-        'enabled'          => (getenv('CSRF_ENABLED') !== false) ? getenv('CSRF_ENABLED') : true,
+        'enabled'          => env('CSRF_ENABLED', true),
         'name'             => 'csrf',
         'storage_limit'    => 200,
         'strength'         => 16,
@@ -124,12 +124,12 @@ return [
     */
     'db' => [
         'default' => [
-            'driver'    => getenv('DB_DRIVER') ?: 'mysql',
-            'host'      => getenv('DB_HOST') ?: 'localhost',
-            'port'      => getenv('DB_PORT') ?: null,
-            'database'  => getenv('DB_NAME') ?: null,
-            'username'  => getenv('DB_USER') ?: null,
-            'password'  => getenv('DB_PASSWORD') ?: null,
+            'driver'    => env('DB_DRIVER', 'mysql'),
+            'host'      => env('DB_HOST', 'localhost'),
+            'port'      => env('DB_PORT'),
+            'database'  => env('DB_NAME'),
+            'username'  => env('DB_USER'),
+            'password'  => env('DB_PASSWORD'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -160,8 +160,8 @@ return [
     * Supported Drivers for disk: "local", "ftp", "sftp", "s3", "rackspace"
     */
     'filesystems' => [
-        'default' => getenv('FILESYSTEM_DRIVER') ?: 'local',
-        'cloud'   => getenv('FILESYSTEM_CLOUD') ?: 's3',
+        'default' => env('FILESYSTEM_DRIVER', 'local'),
+        'cloud'   => env('FILESYSTEM_CLOUD', 's3'),
 
         'disks' => [
             /*
@@ -196,11 +196,11 @@ return [
              */
             's3' => [
                 'driver' => 's3',
-                'key'    => getenv('AWS_ACCESS_KEY_ID') ?: '',
-                'secret' => getenv('AWS_SECRET_ACCESS_KEY') ?: '',
-                'region' => getenv('AWS_DEFAULT_REGION') ?: '', // See : http://docs.aws.amazon.com/general/latest/gr/rande.html
-                'bucket' => getenv('AWS_BUCKET') ?: '',
-                'url'    => getenv('AWS_URL') ?: '',
+                'key'    => env('AWS_ACCESS_KEY_ID', ''),
+                'secret' => env('AWS_SECRET_ACCESS_KEY', ''),
+                'region' => env('AWS_DEFAULT_REGION', ''), // See : http://docs.aws.amazon.com/general/latest/gr/rande.html
+                'bucket' => env('AWS_BUCKET', ''),
+                'url'    => env('AWS_URL', ''),
             ],
             /*
              * Rackspace Config. Config should go in .env file. see :
@@ -213,12 +213,12 @@ return [
              */
             'rackspace' => [
                 'driver'    => 'rackspace',
-                'username'  => getenv('RACKSPACE_USERNAME') ?: '',
-                'key'       => getenv('RACKSPACE_KEY') ?: '',
-                'container' => getenv('RACKSPACE_CONTAINER') ?: '',
-                'endpoint'  => getenv('RACKSPACE_ENDPOINT') ?: '',
-                'region'    => getenv('RACKSPACE_REGION') ?: '',
-                'url_type'  => getenv('RACKSPACE_URL_TYPE') ?: '',
+                'username'  => env('RACKSPACE_USERNAME', ''),
+                'key'       => env('RACKSPACE_KEY', ''),
+                'container' => env('RACKSPACE_CONTAINER', ''),
+                'endpoint'  => env('RACKSPACE_ENDPOINT', ''),
+                'region'    => env('RACKSPACE_REGION', ''),
+                'url_type'  => env('RACKSPACE_URL_TYPE', ''),
             ],
         ],
     ],
@@ -231,12 +231,12 @@ return [
     */
     'mail'    => [
         'mailer'          => 'smtp', // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
-        'host'            => getenv('SMTP_HOST') ?: null,
+        'host'            => env('SMTP_HOST'),
         'port'            => 587,
         'auth'            => true,
         'secure'          => 'tls', // Enable TLS encryption. Set to `tls`, `ssl` or `false` (to disabled)
-        'username'        => getenv('SMTP_USER') ?: null,
-        'password'        => getenv('SMTP_PASSWORD') ?: null,
+        'username'        => env('SMTP_USER'),
+        'password'        => env('SMTP_PASSWORD'),
         'smtp_debug'      => 4,
         'message_options' => [
             'CharSet'   => 'UTF-8',
