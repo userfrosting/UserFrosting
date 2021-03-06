@@ -8,16 +8,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v4.5.0]
 
 ### Changed Requirements
+- Drop PHP 7.1 support. PHP 7.4 is now recommended.
+- Raised NodeJS version requirement from `>=10.12.0` to `^12.17.0 || >=14.0.0` ([#1138]).
+- Raised NPM version requirement from `>=6.0.0` to `>=6.14.4` ([#1138]).
 
 ### Changed Composer Dependencies
+- Updated `wikimedia/composer-merge-plugin` from `^1.4.0` to `^2.1.0` ([#1117]).
 
 ### Added
+- Composer 2 support ([#1117]).
 
 ### Changed
+- Implement findInt ([#1117])
 - Changed `.php_cs` to `.php_cs.dist`.
 - Changed `phpunit.xml` to `phpunit.xml.dist`.
-- Raised NodeJS version requirement from `>=10.12.0` to `^12.17.0 || >=14.0.0`.
-- Raised NPM version requirement from `>=6.0.0` to `>=6.14.4`.
 
 ### Fixed
 - Replaced AdminLTE credit in default footer (old link was dead).
@@ -1029,6 +1033,9 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1114]: https://github.com/userfrosting/UserFrosting/pull/1114
 [#1126]: https://github.com/userfrosting/UserFrosting/pull/1126
 [#1128]: https://github.com/userfrosting/UserFrosting/pull/1128
+[#1117]: https://github.com/userfrosting/UserFrosting/issues/1117
+[#1138]: https://github.com/userfrosting/UserFrosting/pull/1138
+[#1124]: https://github.com/userfrosting/UserFrosting/pull/1124
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
