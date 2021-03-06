@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.4.5]
+
+### Changed
+- Replaced Travis with Github Actions
+- Force Composer 1.0 for Docker ([#1126])
+- Update error.html.twig - add container ([#1128])
+- Update some tests
+- Update Vagrant doc & config
+
 ## [v4.4.4]
 
 ### Fixed
@@ -983,6 +992,8 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1107]: https://github.com/userfrosting/UserFrosting/pull/1107
 [#1109]: https://github.com/userfrosting/UserFrosting/pull/1109
 [#1114]: https://github.com/userfrosting/UserFrosting/pull/1114
+[#1126]: https://github.com/userfrosting/UserFrosting/pull/1126
+[#1128]: https://github.com/userfrosting/UserFrosting/pull/1128
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
@@ -997,3 +1008,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.4.2]: https://github.com/userfrosting/UserFrosting/compare/v4.4.1...v4.4.2
 [v4.4.3]: https://github.com/userfrosting/UserFrosting/compare/v4.4.2...v4.4.3
 [v4.4.4]: https://github.com/userfrosting/UserFrosting/compare/v4.4.3...v4.4.4
+[v4.4.5]: https://github.com/userfrosting/UserFrosting/compare/v4.4.4...v4.4.5
