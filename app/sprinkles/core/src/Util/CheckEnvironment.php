@@ -382,7 +382,7 @@ class CheckEnvironment
      */
     public function isProduction()
     {
-        return getenv('UF_MODE') == 'production';
+        return env('UF_MODE') == 'production';
     }
 
     /**
@@ -392,6 +392,6 @@ class CheckEnvironment
      */
     public function skipPermissionsCheck()
     {
-        return getenv('SKIP_PERMISSION_CHECK') ? true : false;
+        return env('SKIP_PERMISSION_CHECK', false);
     }
 }

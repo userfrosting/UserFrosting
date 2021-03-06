@@ -240,7 +240,7 @@ class ServicesProvider
             }
 
             // Get configuration mode from environment
-            $mode = getenv('UF_MODE') ?: '';
+            $mode = env('UF_MODE', '');
 
             // Construct and load config repository
             $builder = new ConfigPathBuilder($c->locator, 'config://');
