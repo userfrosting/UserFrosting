@@ -240,7 +240,9 @@ class ServicesProvider
             }
 
             // Get configuration mode from environment
-            $mode = env('UF_MODE', '');
+            // TODO : Change to env. It doesn't looks likes it work with dotenv load above.
+            // $mode = env('UF_MODE', '');
+            $mode = getenv('UF_MODE') ?: '';
 
             // Construct and load config repository
             $builder = new ConfigPathBuilder($c->locator, 'config://');
