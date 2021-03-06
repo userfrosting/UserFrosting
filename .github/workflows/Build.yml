@@ -83,7 +83,7 @@ jobs:
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
     
     - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
     
     - name: Bakery Debug
       run: php bakery debug
@@ -147,7 +147,7 @@ jobs:
         run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
       
       - name: Install Dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
       
       - name: Create SQLite Database
         run: |
@@ -227,7 +227,7 @@ jobs:
         run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
       
       - name: Install Dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
       
       - name: Bakery Debug
         run: php bakery debug
@@ -283,7 +283,7 @@ jobs:
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
     
     - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
     
     - name: Create SQLite Database
       run: |
@@ -339,7 +339,7 @@ jobs:
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
     
     - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
     
     - name: Execute build
       run: php bakery build-assets
