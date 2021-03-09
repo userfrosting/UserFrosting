@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Implement findInt ([#1117]).
 - Replace getenv() with env() ([#1121]). 
+- Added more SMTP options in env and setup:smtl bakery command ([#1077]).
 - Changed `.php_cs` to `.php_cs.dist`.
 - Changed `phpunit.xml` to `phpunit.xml.dist`.
 
@@ -1038,6 +1039,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1138]: https://github.com/userfrosting/UserFrosting/pull/1138
 [#1124]: https://github.com/userfrosting/UserFrosting/pull/1124
 [#1121]: https://github.com/userfrosting/UserFrosting/pull/1121
+[#1077]: https://github.com/userfrosting/UserFrosting/pull/1077
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
