@@ -180,15 +180,20 @@ class SetupSmtpCommand extends BaseCommand
             return $password;
         });
         $smtpPort = ($input->getOption('smtp_port')) ?: $this->io->ask('SMTP Server Port', 587);
-        $smtpAuth = ($input->getOption('smtp_auth')) ?: $this->io->ask('SMTP Server Authentication', 'true');
-        $smtpSecure = ($input->getOption('smtp_secure')) ?: $this->io->ask('SMTP Server Security type', 'tls');
+        $smtpAuth = ($input->getOption('smtp_auth')) ?: $this->io->confirm('SMTP Server Authentication', true);
+        $smtpSecure = ($input->getOption('smtp_secure')) ?: $this->io->choice('SMTP Server Security type', ['tls', 'ssl', 'Other...'], 'tls');
+
+        // Ask for custom input if 'other' was chosen
+        if ($smtpSecure == 'Other...') {
+            $smtpSecure = $this->io->ask('Enter custom SMTP Server Security type');
+        }
 
         return [
             'SMTP_HOST'     => $smtpHost,
             'SMTP_USER'     => $smtpUser,
             'SMTP_PASSWORD' => $smtpPassword,
             'SMTP_PORT'     => $smtpPort,
-            'SMTP_AUTH'     => $smtpAuth,
+            'SMTP_AUTH'     => ($smtpAuth) ? 'true' : 'false',
             'SMTP_SECURE'   => $smtpSecure,
         ];
     }
