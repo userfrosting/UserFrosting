@@ -17,8 +17,11 @@ use LogicException;
  */
 class VersionCompareException extends LogicException
 {
-    protected string $version;
-    protected string $contraint;
+    /** @var string */
+    protected $version;
+    
+    /** @var string */
+    protected $contraint;
 
     /**
      * @return self
