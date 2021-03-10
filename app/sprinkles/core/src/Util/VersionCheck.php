@@ -22,7 +22,8 @@ trait VersionCheck
      * Check the minimum version of php.
      *
      * @throws VersionCompareException If contraint version is not matched.
-     * @return string                  The current PHP Version
+     *
+     * @return string The current PHP Version
      */
     protected function checkPhpVersion(): string
     {
@@ -31,6 +32,7 @@ trait VersionCheck
         if (!Semver::satisfies($phpVersion, \UserFrosting\PHP_MIN_VERSION)) {
             $exception = new VersionCompareException('UserFrosting requires php version ' . \UserFrosting\PHP_MIN_VERSION . ' or above. You have ' . $phpVersion . ". You'll need to update you PHP version before you can continue.");
             $exception->setContraint(\UserFrosting\PHP_MIN_VERSION)->setVersion($phpVersion);
+
             throw $exception;
         }
 
@@ -42,7 +44,8 @@ trait VersionCheck
      * This should be done by composer itself, but we do it again for good mesure.
      *
      * @throws VersionCompareException If contraint version is not matched.
-     * @return string                  The current PHP Version
+     *
+     * @return string The current PHP Version
      */
     protected function checkPhpDeprecatedVersion(): string
     {
@@ -51,6 +54,7 @@ trait VersionCheck
         if (!Semver::satisfies($phpVersion, \UserFrosting\PHP_RECOMMENDED_VERSION)) {
             $exception = new VersionCompareException('While your PHP version is still supported by UserFrosting, we recommend version ' . \UserFrosting\PHP_RECOMMENDED_VERSION . ' or above as ' . $phpVersion . ' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
             $exception->setContraint(\UserFrosting\PHP_RECOMMENDED_VERSION)->setVersion($phpVersion);
+
             throw $exception;
         }
 
@@ -61,7 +65,8 @@ trait VersionCheck
      * Check the minimum version requirement of Node installed.
      *
      * @throws VersionCompareException If contraint version is not matched.
-     * @return string                  Node version
+     *
+     * @return string Node version
      */
     protected function checkNodeVersion(): string
     {
@@ -70,6 +75,7 @@ trait VersionCheck
         if (!Semver::satisfies($nodeVersion, \UserFrosting\NODE_MIN_VERSION)) {
             $exception = new VersionCompareException('UserFrosting requires a Node version that satisfies "' . \UserFrosting\NODE_MIN_VERSION . '", but found . Check the documentation for more details.');
             $exception->setContraint(\UserFrosting\NODE_MIN_VERSION)->setVersion($nodeVersion);
+
             throw $exception;
         }
 
@@ -80,7 +86,8 @@ trait VersionCheck
      * Check the minimum version requirement for Npm.
      *
      * @throws VersionCompareException If contraint version is not matched.
-     * @return string                  NPM version
+     *
+     * @return string NPM version
      */
     protected function checkNpmVersion(): string
     {
@@ -89,6 +96,7 @@ trait VersionCheck
         if (!Semver::satisfies($npmVersion, \UserFrosting\NPM_MIN_VERSION)) {
             $exception = new VersionCompareException('UserFrosting requires a NPM version that satisfies "' . \UserFrosting\NPM_MIN_VERSION . '" or above. Check the documentation for more details.');
             $exception->setContraint(\UserFrosting\NPM_MIN_VERSION)->setVersion($npmVersion);
+
             throw $exception;
         }
 

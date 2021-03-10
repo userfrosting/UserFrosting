@@ -13,8 +13,8 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
-use UserFrosting\Sprinkle\Core\Util\VersionCheck;
 use UserFrosting\Sprinkle\Core\Exceptions\VersionCompareException;
+use UserFrosting\Sprinkle\Core\Util\VersionCheck;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
