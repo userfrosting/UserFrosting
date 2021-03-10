@@ -376,7 +376,7 @@ class CheckEnvironment
         } catch (VersionCompareException $e) {
             $this->resultsFailed['phpVersion'] = [
                 'title'   => "<i class='fas fa-code fa-fw'></i> You need to upgrade your PHP installation.",
-                'message' => "I'm sorry, UserFrosting requires version " . $e->getContraint() . ' or greater. Version ' . $e->getVersion() . ' detected. Please upgrade your version of PHP, or contact your web hosting service and ask them to upgrade it for you.',
+                'message' => $e->getMessage(),
                 'success' => false,
             ];
 
@@ -386,7 +386,7 @@ class CheckEnvironment
         // No problem found !
         $this->resultsSuccess['phpVersion'] = [
             'title'   => "<i class='fas fa-code fa-fw'></i> PHP version checks out!",
-            'message' => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION . 'or higher.  Great!',
+            'message' => 'Your PHP version satisfy UserFrosting required contraint. Great!',
             'success' => true,
         ];
 

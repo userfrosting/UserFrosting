@@ -30,7 +30,8 @@ trait VersionCheck
         $phpVersion = (string) phpversion();
 
         if (!Semver::satisfies($phpVersion, \UserFrosting\PHP_MIN_VERSION)) {
-            $exception = new VersionCompareException('UserFrosting requires php version ' . \UserFrosting\PHP_MIN_VERSION . ' or above. You have ' . $phpVersion . ". You'll need to update you PHP version before you can continue.");
+            $message = 'UserFrosting requires a PHP version that satisfies "' . \UserFrosting\PHP_MIN_VERSION . '", but found ' . $phpVersion . ". You'll need to update you PHP version before you can continue.";
+            $exception = new VersionCompareException($message);
             $exception->setContraint(\UserFrosting\PHP_MIN_VERSION)->setVersion($phpVersion);
 
             throw $exception;
@@ -52,7 +53,8 @@ trait VersionCheck
         $phpVersion = (string) phpversion();
 
         if (!Semver::satisfies($phpVersion, \UserFrosting\PHP_RECOMMENDED_VERSION)) {
-            $exception = new VersionCompareException('While your PHP version is still supported by UserFrosting, we recommend version ' . \UserFrosting\PHP_RECOMMENDED_VERSION . ' or above as ' . $phpVersion . ' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
+            $message = 'UserFrosting recommend a PHP version that satisfies "' . \UserFrosting\PHP_RECOMMENDED_VERSION . '". While your PHP version (' . $phpVersion . ') is still supported by UserFrosting, we recommend upgrading as your current version will soon be unsupported. See http://php.net/supported-versions.php for more info.';
+            $exception = new VersionCompareException($message);
             $exception->setContraint(\UserFrosting\PHP_RECOMMENDED_VERSION)->setVersion($phpVersion);
 
             throw $exception;
@@ -73,7 +75,8 @@ trait VersionCheck
         $nodeVersion = trim(exec('node -v'));
 
         if (!Semver::satisfies($nodeVersion, \UserFrosting\NODE_MIN_VERSION)) {
-            $exception = new VersionCompareException('UserFrosting requires a Node version that satisfies "' . \UserFrosting\NODE_MIN_VERSION . '", but found . Check the documentation for more details.');
+            $message = 'UserFrosting requires a Node version that satisfies "' . \UserFrosting\NODE_MIN_VERSION . '", but found ' . $nodeVersion . '. Check the documentation for more details.';
+            $exception = new VersionCompareException($message);
             $exception->setContraint(\UserFrosting\NODE_MIN_VERSION)->setVersion($nodeVersion);
 
             throw $exception;
@@ -94,7 +97,8 @@ trait VersionCheck
         $npmVersion = trim(exec('npm -v'));
 
         if (!Semver::satisfies($npmVersion, \UserFrosting\NPM_MIN_VERSION)) {
-            $exception = new VersionCompareException('UserFrosting requires a NPM version that satisfies "' . \UserFrosting\NPM_MIN_VERSION . '" or above. Check the documentation for more details.');
+            $message = 'UserFrosting requires a NPM version that satisfies "' . \UserFrosting\NPM_MIN_VERSION . '", but found ' . $npmVersion . '. Check the documentation for more details.';
+            $exception = new VersionCompareException($message);
             $exception->setContraint(\UserFrosting\NPM_MIN_VERSION)->setVersion($npmVersion);
 
             throw $exception;

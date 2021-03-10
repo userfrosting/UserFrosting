@@ -13,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Exceptions;
 use LogicException;
 
 /**
- * Version Compare Exception. Used when a class name is dynamically invoked, but the class does not exist.
+ * Version Compare Exception. Used when a version contraint is not matched.
  */
 class VersionCompareException extends LogicException
 {
