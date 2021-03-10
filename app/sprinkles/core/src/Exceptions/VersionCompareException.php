@@ -19,7 +19,7 @@ class VersionCompareException extends LogicException
 {
     /** @var string */
     protected $version;
-    
+
     /** @var string */
     protected $contraint;
 
