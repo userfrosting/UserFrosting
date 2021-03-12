@@ -24,8 +24,6 @@ use UserFrosting\UniformResourceLocator\ResourceLocator;
  */
 class CheckEnvironment
 {
-    use VersionCheck;
-
     /**
      * @var ResourceLocator Locator service for stream resources.
      */
@@ -372,7 +370,7 @@ class CheckEnvironment
     public function checkPhp(): bool
     {
         try {
-            $this->checkPhpVersion();
+            VersionValidator::validatePhpVersion();
         } catch (VersionCompareException $e) {
             $this->resultsFailed['phpVersion'] = [
                 'title'   => "<i class='fas fa-code fa-fw'></i> You need to upgrade your PHP installation.",

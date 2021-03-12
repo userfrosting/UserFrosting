@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Sprinkle\Core\Exceptions\VersionCompareException;
-use UserFrosting\Sprinkle\Core\Util\VersionCheck;
+use UserFrosting\Sprinkle\Core\Util\VersionValidator;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -25,8 +25,6 @@ use UserFrosting\System\Bakery\BaseCommand;
  */
 class BuildAssets extends BaseCommand
 {
-    use VersionCheck;
-
     /**
      * @var string Path to the build/ directory
      */
@@ -54,8 +52,8 @@ class BuildAssets extends BaseCommand
 
         // Validate Node and npm version
         try {
-            $this->checkNodeVersion();
-            $this->checkNpmVersion();
+            VersionValidator::validateNodeVersion();
+            VersionValidator::validateNpmVersion();
         } catch (VersionCompareException $e) {
             $this->io->error($e->getMessage());
             exit(1);

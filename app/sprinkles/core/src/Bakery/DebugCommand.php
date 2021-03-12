@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
 use UserFrosting\Sprinkle\Core\Exceptions\VersionCompareException;
-use UserFrosting\Sprinkle\Core\Util\VersionCheck;
+use UserFrosting\Sprinkle\Core\Util\VersionValidator;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -25,7 +25,6 @@ use UserFrosting\System\Bakery\BaseCommand;
 class DebugCommand extends BaseCommand
 {
     use DatabaseTest;
-    use VersionCheck;
 
     /**
      * {@inheritdoc}
@@ -50,9 +49,9 @@ class DebugCommand extends BaseCommand
 
         // Validate PHP, Node and npm version
         try {
-            $phpVersion = $this->checkPhpVersion();
-            $nodeVersion = $this->checkNodeVersion();
-            $npmVersion = $this->checkNpmVersion();
+            VersionValidator::validatePhpVersion();
+            VersionValidator::validateNodeVersion();
+            VersionValidator::validateNpmVersion();
         } catch (VersionCompareException $e) {
             $this->io->error($e->getMessage());
             exit(1);
@@ -60,7 +59,7 @@ class DebugCommand extends BaseCommand
 
         // Validate deprecated versions
         try {
-            $this->checkPhpDeprecatedVersion();
+            VersionValidator::validatePhpDeprecation();
         } catch (VersionCompareException $e) {
             $this->io->warning($e->getMessage());
         }
@@ -71,9 +70,9 @@ class DebugCommand extends BaseCommand
             ['OS Name'              => php_uname('s')],
             ['Project Root'         => \UserFrosting\ROOT_DIR],
             ['Environment mode'     => env('UF_MODE', 'default')],
-            ['PHP Version'          => $phpVersion],
-            ['Node Version'         => $nodeVersion],
-            ['NPM Version'          => $npmVersion]
+            ['PHP Version'          => VersionValidator::getPhpVersion()],
+            ['Node Version'         => VersionValidator::getNodeVersion()],
+            ['NPM Version'          => VersionValidator::getNpmVersion()]
         );
 
         // Now we list Sprinkles
