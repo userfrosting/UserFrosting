@@ -77,6 +77,15 @@ class VersionValidatorTest extends TestCase
         $this->expectException(VersionCompareException::class);
         VersionCheckFaillureStub::validateNpmVersion();
     }
+
+    /**
+     * @depends testValidatePHP
+     * Test for 'Invalid version string' issue
+     */
+    public function testValidatePHPForInvalidVersionString($version, $expected): void
+    {
+        $this->assertTrue(VersionCheckInvalidStub::validatePhpVersion());
+    }
 }
 
 /**
@@ -158,5 +167,16 @@ class VersionCheckFaillureStub extends VersionValidator
     public static function getNpmConstraint(): string
     {
         return '>=6.14.4';
+    }
+}
+
+/**
+ * Hardcoded value for 'Invalid version string' issue.
+ */
+class VersionCheckInvalidStub extends VersionValidator
+{
+    public static function getPhpVersion(): string
+    {
+        return '7.2.34-18+ubuntu20.04.1+deb.sury.org+1';
     }
 }
