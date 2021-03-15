@@ -28,7 +28,6 @@ class VersionValidator
     public static function validatePhpVersion(): bool
     {
         $phpVersion = static::getPhpVersion();
-        $phpVersion = static::sanitizePHP($phpVersion);
         $constraint = static::getPhpConstraint();
 
         if (!Semver::satisfies($phpVersion, $constraint)) {
@@ -53,7 +52,6 @@ class VersionValidator
     public static function validatePhpDeprecation(): bool
     {
         $phpVersion = static::getPhpVersion();
-        $phpVersion = static::sanitizePHP($phpVersion);
         $constraint = static::getPhpRecommended();
 
         if (!Semver::satisfies($phpVersion, $constraint)) {
@@ -115,12 +113,18 @@ class VersionValidator
 
     /**
      * Returns system php version.
+     * Handle non semver compliant version of PHP returned by some OS.
+     *
+     * @see https://github.com/composer/semver/issues/125
      *
      * @return string
      */
     public static function getPhpVersion(): string
     {
-        return (string) phpversion();
+        $version = (string) phpversion();
+        $version = preg_replace('#^([^~+-]+).*$#', '$1', $version);
+
+        return $version;
     }
 
     /**
@@ -181,19 +185,5 @@ class VersionValidator
     public static function getNpmConstraint(): string
     {
         return \UserFrosting\NPM_MIN_VERSION;
-    }
-
-    /**
-     * Handle non semver compliant version of PHP returned by some OS.
-     *
-     * @see https://github.com/composer/semver/issues/125
-     *
-     * @param string $version
-     *
-     * @return string
-     */
-    protected static function sanitizePHP(string $version): string
-    {
-        return preg_replace('#^([^~+-]+).*$#', '$1', $version);
     }
 }

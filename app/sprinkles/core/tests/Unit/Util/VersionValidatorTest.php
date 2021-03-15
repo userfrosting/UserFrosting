@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests\Unit;
 
+use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 use UserFrosting\Sprinkle\Core\Exceptions\VersionCompareException;
 use UserFrosting\Sprinkle\Core\Util\VersionValidator;
@@ -19,164 +20,149 @@ use UserFrosting\Sprinkle\Core\Util\VersionValidator;
  */
 class VersionValidatorTest extends TestCase
 {
+    use PHPMock;
+
     /**
-     * N.B.: This test only attest the method doesn't throw errors and
-     * returns the correct type. The actual value can't be tested.
+     * Assert PHP related methods.
+     *
+     * @dataProvider phpVersionProvider
+     * @runInSeparateProcess
+     *
+     * @param string $version
+     * @param string $sanitized
+     * @param bool   $valid
+     * @param bool   $deprecated
      */
-    public function testGetter(): void
+    public function testPhp(string $version, string $sanitized, bool $valid, bool $deprecated): void
     {
-        $this->assertIsString(VersionValidator::getPhpVersion());
-        $this->assertIsString(VersionValidator::getNodeVersion());
-        $this->assertIsString(VersionValidator::getNpmVersion());
-        $this->assertIsString(VersionValidator::getPhpConstraint());
-        $this->assertIsString(VersionValidator::getPhpRecommended());
-        $this->assertIsString(VersionValidator::getNodeConstraint());
-        $this->assertIsString(VersionValidator::getNpmConstraint());
-    }
+        // Mock `phpversion` function
+        $class = new \ReflectionClass(VersionValidator::class);
+        $namespace = $class->getNamespaceName();
+        $mock = $this->getFunctionMock($namespace, 'phpversion');
+        $mock->expects($this->any())->willReturn($version);
 
-    public function testValidatePHP(): void
-    {
-        $this->assertTrue(VersionCheckSuccessStub::validatePhpVersion());
-    }
+        // Assert GetPHPVersion
+        $this->assertSame($sanitized, VersionValidator::getPhpVersion());
 
-    public function testFailledPHPValidation(): void
-    {
-        $this->expectException(VersionCompareException::class);
-        VersionCheckFaillureStub::validatePhpVersion();
-    }
+        // Assert validatePhpVersion
+        if ($valid) {
+            $this->assertTrue(VersionValidator::validatePhpVersion());
+        } else {
+            $this->expectException(VersionCompareException::class);
+            VersionValidator::validatePhpVersion();
+        }
 
-    public function testValidatePHPDeprecation(): void
-    {
-        $this->assertTrue(VersionCheckSuccessStub::validatePhpDeprecation());
-    }
-
-    public function testFailledPHPDeprecationValidation(): void
-    {
-        $this->expectException(VersionCompareException::class);
-        VersionCheckFaillureStub::validatePhpDeprecation();
-    }
-
-    public function testValidateNode(): void
-    {
-        $this->assertTrue(VersionCheckSuccessStub::validateNodeVersion());
-    }
-
-    public function testFailledNodeValidation(): void
-    {
-        $this->expectException(VersionCompareException::class);
-        VersionCheckFaillureStub::validateNodeVersion();
-    }
-
-    public function testValidateNpm(): void
-    {
-        $this->assertTrue(VersionCheckSuccessStub::validateNpmVersion());
-    }
-
-    public function testFailledNpmValidation(): void
-    {
-        $this->expectException(VersionCompareException::class);
-        VersionCheckFaillureStub::validateNpmVersion();
+        // Assert validatePhpDeprecation
+        if (!$deprecated) {
+            $this->assertTrue(VersionValidator::validatePhpDeprecation());
+        } else {
+            $this->expectException(VersionCompareException::class);
+            VersionValidator::validatePhpDeprecation();
+        }
     }
 
     /**
-     * @depends testValidatePHP
-     * Test for 'Invalid version string' issue
+     * Assert Node related methods.
+     *
+     * @dataProvider nodeVersionProvider
+     * @runInSeparateProcess
+     *
+     * @param string $version
+     * @param string $sanitized
+     * @param bool   $valid
      */
-    public function testValidatePHPForInvalidVersionString($version, $expected): void
+    public function testNode(string $version, string $sanitized, bool $valid): void
     {
-        $this->assertTrue(VersionCheckInvalidStub::validatePhpVersion());
-    }
-}
+        // Mock `exec` function
+        $class = new \ReflectionClass(VersionValidator::class);
+        $namespace = $class->getNamespaceName();
+        $mock = $this->getFunctionMock($namespace, 'exec');
+        $mock->expects($this->any())->willReturn($version);
 
-/**
- * Return hardcoded versions for testing.
- */
-class VersionCheckSuccessStub extends VersionValidator
-{
-    public static function getPhpVersion(): string
-    {
-        return '7.4.13';
-    }
+        // Assert getNodeVersion
+        $this->assertSame($sanitized, VersionValidator::getNodeVersion());
 
-    public static function getNodeVersion(): string
-    {
-        return 'v12.18.3';
-    }
-
-    public static function getNpmVersion(): string
-    {
-        return '6.14.10';
+        // Assert validateNodeVersion
+        if ($valid) {
+            $this->assertTrue(VersionValidator::validateNodeVersion());
+        } else {
+            $this->expectException(VersionCompareException::class);
+            VersionValidator::validateNodeVersion();
+        }
     }
 
-    public static function getPhpConstraint(): string
+    /**
+     * Assert Npm related methods.
+     *
+     * @dataProvider npmVersionProvider
+     * @runInSeparateProcess
+     *
+     * @param string $version
+     * @param string $sanitized
+     * @param bool   $valid
+     */
+    public function testNpm(string $version, string $sanitized, bool $valid): void
     {
-        return '^7.2';
+        // Mock `exec` function
+        $class = new \ReflectionClass(VersionValidator::class);
+        $namespace = $class->getNamespaceName();
+        $mock = $this->getFunctionMock($namespace, 'exec');
+        $mock->expects($this->any())->willReturn($version);
+
+        // Assert getNpmVersion
+        $this->assertSame($sanitized, VersionValidator::getNpmVersion());
+
+        // Assert validateNpmVersion
+        if ($valid) {
+            $this->assertTrue(VersionValidator::validateNpmVersion());
+        } else {
+            $this->expectException(VersionCompareException::class);
+            VersionValidator::validateNpmVersion();
+        }
     }
 
-    public static function getPhpRecommended(): string
+    /**
+     * PHP version provider.
+     *
+     * @return array [version, sanitized, valid, deprecated]
+     */
+    public function phpVersionProvider(): array
     {
-        return '^7.4';
+        return [
+            ['7.1.4', '7.1.4', false, true],
+            ['7.2.1', '7.2.1', true, true],
+            ['7.2', '7.2', true, true],
+            ['7.3.14', '7.3.14', true, true],
+            ['7.4.13', '7.4.13', true, false],
+            ['7.2.34-18+ubuntu20.04.1+deb.sury.org+1', '7.2.34', true, true],
+        ];
     }
 
-    public static function getNodeConstraint(): string
+    /**
+     * Node version provider.
+     *
+     * @return array [version, sanitized, valid]
+     */
+    public function nodeVersionProvider(): array
     {
-        return '^12.17.0 || >=14.0.0';
+        return [
+            ['v12.18.1', 'v12.18.1', true],
+            ['v13.12.3', 'v13.12.3', false],
+            ['v14.0.0 ', 'v14.0.0', true], // Test trim here
+        ];
     }
 
-    public static function getNpmConstraint(): string
+    /**
+     * Node version provider.
+     *
+     * @return array [version, sanitized, valid]
+     */
+    public function npmVersionProvider(): array
     {
-        return '>=6.14.4';
-    }
-}
-
-/**
- * Return hardcoded versions for testing faillure.
- */
-class VersionCheckFaillureStub extends VersionValidator
-{
-    public static function getPhpVersion(): string
-    {
-        return '7.1.3';
-    }
-
-    public static function getNodeVersion(): string
-    {
-        return 'v11.13.1';
-    }
-
-    public static function getNpmVersion(): string
-    {
-        return '5.12.14';
-    }
-
-    public static function getPhpConstraint(): string
-    {
-        return '^7.2';
-    }
-
-    public static function getPhpRecommended(): string
-    {
-        return '^7.4';
-    }
-
-    public static function getNodeConstraint(): string
-    {
-        return '^12.17.0 || >=14.0.0';
-    }
-
-    public static function getNpmConstraint(): string
-    {
-        return '>=6.14.4';
-    }
-}
-
-/**
- * Hardcoded value for 'Invalid version string' issue.
- */
-class VersionCheckInvalidStub extends VersionValidator
-{
-    public static function getPhpVersion(): string
-    {
-        return '7.2.34-18+ubuntu20.04.1+deb.sury.org+1';
+        return [
+            [' 6.14.10 ', '6.14.10', true], // Trim
+            ['6.14.4', '6.14.4', true],
+            ['5.12.14', '5.12.14', false],
+        ];
     }
 }
