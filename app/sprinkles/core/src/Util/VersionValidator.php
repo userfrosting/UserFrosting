@@ -187,6 +187,7 @@ class VersionValidator
      * Handle non semver compliant version of PHP returned by some OS.
      *
      * @see https://github.com/composer/semver/issues/125
+     * 
      * @param string $version
      *
      * @return string
