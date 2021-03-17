@@ -13,7 +13,8 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
-use UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck;
+use UserFrosting\Sprinkle\Core\Exceptions\VersionCompareException;
+use UserFrosting\Sprinkle\Core\Util\VersionValidator;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -24,7 +25,6 @@ use UserFrosting\System\Bakery\BaseCommand;
 class DebugCommand extends BaseCommand
 {
     use DatabaseTest;
-    use NodeVersionCheck;
 
     /**
      * {@inheritdoc}
@@ -45,7 +45,24 @@ class DebugCommand extends BaseCommand
         $this->io->title('UserFrosting');
 
         // Need to touch the config service first to load dotenv values
-        $config = $this->ci->config;
+        $this->ci->config;
+
+        // Validate PHP, Node and npm version
+        try {
+            VersionValidator::validatePhpVersion();
+            VersionValidator::validateNodeVersion();
+            VersionValidator::validateNpmVersion();
+        } catch (VersionCompareException $e) {
+            $this->io->error($e->getMessage());
+            exit(1);
+        }
+
+        // Validate deprecated versions
+        try {
+            VersionValidator::validatePhpDeprecation();
+        } catch (VersionCompareException $e) {
+            $this->io->warning($e->getMessage());
+        }
 
         // Perform tasks & display info
         $this->io->definitionList(
@@ -53,9 +70,9 @@ class DebugCommand extends BaseCommand
             ['OS Name'              => php_uname('s')],
             ['Project Root'         => \UserFrosting\ROOT_DIR],
             ['Environment mode'     => env('UF_MODE', 'default')],
-            ['PHP Version'          => $this->checkPhpVersion()],
-            ['Node Version'         => $this->checkNodeVersion()],
-            ['NPM Version'          => $this->checkNpmVersion()]
+            ['PHP Version'          => VersionValidator::getPhpVersion()],
+            ['Node Version'         => VersionValidator::getNodeVersion()],
+            ['NPM Version'          => VersionValidator::getNpmVersion()]
         );
 
         // Now we list Sprinkles
@@ -72,29 +89,6 @@ class DebugCommand extends BaseCommand
 
         // Command return success
         return 0;
-    }
-
-    /**
-     * Check the minimum version of php.
-     * This is done by composer itself, but we do it again for good mesure.
-     *
-     * @return string The current PHP Version
-     */
-    protected function checkPhpVersion(): string
-    {
-        $phpVersion = (string) phpversion();
-
-        if (version_compare($phpVersion, \UserFrosting\PHP_MIN_VERSION, '<')) {
-            $this->io->error('UserFrosting requires php version ' . \UserFrosting\PHP_MIN_VERSION . " or above. You'll need to update you PHP version before you can continue.");
-            exit(1);
-        }
-
-        // Check for deprecated versions
-        if (version_compare($phpVersion, \UserFrosting\PHP_RECOMMENDED_VERSION, '<')) {
-            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommend version ' . \UserFrosting\PHP_RECOMMENDED_VERSION . ' or above as ' . $phpVersion . ' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
-        }
-
-        return $phpVersion;
     }
 
     /**

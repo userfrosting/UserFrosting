@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Implement findInt ([#1117]).
 - Replace getenv() with env() ([#1121]). 
 - Added more SMTP options in env and setup:smtl bakery command ([#1077]).
+- Replaced `UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck` with new `UserFrosting\Sprinkle\Core\Util\VersionValidator` class.
 - Changed `.php_cs` to `.php_cs.dist`.
 - Changed `phpunit.xml` to `phpunit.xml.dist`.
 

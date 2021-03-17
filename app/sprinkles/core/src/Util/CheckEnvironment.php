@@ -14,6 +14,7 @@ use Illuminate\Cache\CacheManager;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
+use UserFrosting\Sprinkle\Core\Exceptions\VersionCompareException;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
@@ -102,8 +103,10 @@ class CheckEnvironment
 
     /**
      * Run through all pre-flight checks.
+     *
+     * @return bool True if problem(s) found.
      */
-    public function checkAll()
+    public function checkAll(): bool
     {
         $problemsFound = false;
 
@@ -142,8 +145,10 @@ class CheckEnvironment
 
     /**
      * For Apache environments, check that required Apache modules are installed.
+     *
+     * @return bool True if problem(s) found.
      */
-    public function checkApache()
+    public function checkApache(): bool
     {
         $problemsFound = false;
 
@@ -202,10 +207,11 @@ class CheckEnvironment
 
     /**
      * Check that all image* functions used by Captcha exist.
-     *
      * Some versions of GD are missing one or more of these functions, thus why we check for them explicitly.
+     *
+     * @return bool True if problem(s) found.
      */
-    public function checkImageFunctions()
+    public function checkImageFunctions(): bool
     {
         $problemsFound = false;
 
@@ -242,8 +248,10 @@ class CheckEnvironment
 
     /**
      * Check that PDO is installed and enabled.
+     *
+     * @return bool True if problem(s) found.
      */
-    public function checkPdo()
+    public function checkPdo(): bool
     {
         $problemsFound = false;
 
@@ -267,8 +275,10 @@ class CheckEnvironment
 
     /**
      * Check that log, cache, and session directories exist.
+     *
+     * @return bool True if problem(s) found.
      */
-    public function checkDirectories()
+    public function checkDirectories(): bool
     {
         $problemsFound = false;
 
@@ -299,9 +309,12 @@ class CheckEnvironment
     }
 
     /**
-     * Check that log, cache, and session directories are writable, and that other directories are set appropriately for the environment.
+     * Check that log, cache, and session directories are writable,
+     * and that other directories are set appropriately for the environment.
+     *
+     * @return bool True if problem(s) found.
      */
-    public function checkPermissions()
+    public function checkPermissions(): bool
     {
         $problemsFound = false;
 
@@ -351,28 +364,31 @@ class CheckEnvironment
 
     /**
      * Check that PHP meets the minimum required version.
+     *
+     * @return bool True if problem(s) found.
      */
-    public function checkPhp()
+    public function checkPhp(): bool
     {
-        $problemsFound = false;
-
-        // Check PHP version
-        if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
-            $problemsFound = true;
+        try {
+            VersionValidator::validatePhpVersion();
+        } catch (VersionCompareException $e) {
             $this->resultsFailed['phpVersion'] = [
-                'title'   => "<i class='fas fa-code fa-fw'></i> You need to upgrade your PHP installation.",
-                'message' => "I'm sorry, UserFrosting requires version " . \UserFrosting\PHP_MIN_VERSION . ' or greater.  Please upgrade your version of PHP, or contact your web hosting service and ask them to upgrade it for you.',
+                'title'   => "<i class='fas fa-code fa-fw'></i> Your PHP version does not satisfy UserFrosting required contraint.",
+                'message' => $e->getMessage(),
                 'success' => false,
             ];
-        } else {
-            $this->resultsSuccess['phpVersion'] = [
-                'title'   => "<i class='fas fa-code fa-fw'></i> PHP version checks out!",
-                'message' => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION . 'or higher.  Great!',
-                'success' => true,
-            ];
+
+            return true;
         }
 
-        return $problemsFound;
+        // No problem found !
+        $this->resultsSuccess['phpVersion'] = [
+            'title'   => "<i class='fas fa-code fa-fw'></i> PHP version checks out!",
+            'message' => 'Your PHP version satisfy UserFrosting required contraint. Great!',
+            'success' => true,
+        ];
+
+        return false;
     }
 
     /**
@@ -380,7 +396,7 @@ class CheckEnvironment
      *
      * @return bool
      */
-    public function isProduction()
+    public function isProduction(): bool
     {
         return env('UF_MODE') == 'production';
     }
@@ -390,7 +406,7 @@ class CheckEnvironment
      *
      * @return bool True if we should skip the check, false will proceed.
      */
-    public function skipPermissionsCheck()
+    public function skipPermissionsCheck(): bool
     {
         return env('SKIP_PERMISSION_CHECK', false);
     }

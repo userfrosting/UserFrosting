@@ -13,7 +13,8 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck;
+use UserFrosting\Sprinkle\Core\Exceptions\VersionCompareException;
+use UserFrosting\Sprinkle\Core\Util\VersionValidator;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -24,8 +25,6 @@ use UserFrosting\System\Bakery\BaseCommand;
  */
 class BuildAssets extends BaseCommand
 {
-    use NodeVersionCheck;
-
     /**
      * @var string Path to the build/ directory
      */
@@ -52,8 +51,13 @@ class BuildAssets extends BaseCommand
         $this->io->title("UserFrosting's Assets Builder");
 
         // Validate Node and npm version
-        $this->checkNodeVersion(false);
-        $this->checkNpmVersion(false);
+        try {
+            VersionValidator::validateNodeVersion();
+            VersionValidator::validateNpmVersion();
+        } catch (VersionCompareException $e) {
+            $this->io->error($e->getMessage());
+            exit(1);
+        }
 
         // Set $buildPath. We'll use the aboslute path for this task
         $this->buildPath = \UserFrosting\ROOT_DIR . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME;
