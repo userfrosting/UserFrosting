@@ -48,16 +48,32 @@ class VersionValidatorTest extends TestCase
         if ($valid) {
             $this->assertTrue(VersionValidator::validatePhpVersion());
         } else {
-            $this->expectException(VersionCompareException::class);
-            VersionValidator::validatePhpVersion();
+            try {
+                VersionValidator::validatePhpVersion();
+            } catch (VersionCompareException $e) {
+                $this->assertSame(VersionValidator::getPhpConstraint(), $e->getContraint());
+                $this->assertSame($sanitized, $e->getVersion());
+
+                return;
+            }
+
+            $this->fail();
         }
 
         // Assert validatePhpDeprecation
         if (!$deprecated) {
             $this->assertTrue(VersionValidator::validatePhpDeprecation());
         } else {
-            $this->expectException(VersionCompareException::class);
-            VersionValidator::validatePhpDeprecation();
+            try {
+                VersionValidator::validatePhpDeprecation();
+            } catch (VersionCompareException $e) {
+                $this->assertSame(VersionValidator::getPhpRecommended(), $e->getContraint());
+                $this->assertSame($sanitized, $e->getVersion());
+
+                return;
+            }
+
+            $this->fail();
         }
     }
 
@@ -86,8 +102,16 @@ class VersionValidatorTest extends TestCase
         if ($valid) {
             $this->assertTrue(VersionValidator::validateNodeVersion());
         } else {
-            $this->expectException(VersionCompareException::class);
-            VersionValidator::validateNodeVersion();
+            try {
+                VersionValidator::validateNodeVersion();
+            } catch (VersionCompareException $e) {
+                $this->assertSame(VersionValidator::getNodeConstraint(), $e->getContraint());
+                $this->assertSame($sanitized, $e->getVersion());
+
+                return;
+            }
+
+            $this->fail();
         }
     }
 
@@ -116,8 +140,16 @@ class VersionValidatorTest extends TestCase
         if ($valid) {
             $this->assertTrue(VersionValidator::validateNpmVersion());
         } else {
-            $this->expectException(VersionCompareException::class);
-            VersionValidator::validateNpmVersion();
+            try {
+                VersionValidator::validateNpmVersion();
+            } catch (VersionCompareException $e) {
+                $this->assertSame(VersionValidator::getNpmConstraint(), $e->getContraint());
+                $this->assertSame($sanitized, $e->getVersion());
+
+                return;
+            }
+
+            $this->fail();
         }
     }
 
