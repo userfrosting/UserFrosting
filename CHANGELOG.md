@@ -1056,3 +1056,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.4.3]: https://github.com/userfrosting/UserFrosting/compare/v4.4.2...v4.4.3
 [v4.4.4]: https://github.com/userfrosting/UserFrosting/compare/v4.4.3...v4.4.4
 [v4.4.5]: https://github.com/userfrosting/UserFrosting/compare/v4.4.4...v4.4.5
+[v4.5.0]: https://github.com/userfrosting/UserFrosting/compare/v4.4.5...v4.5.0
