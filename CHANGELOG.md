@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Composer 2 support ([#1117]).
+- [Lando](https://lando.dev) support.
 
 ### Changed
 - Implement findInt ([#1117]).
