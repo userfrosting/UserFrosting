@@ -5,6 +5,7 @@
     "@userfrosting/gulp-bundle-assets": "^4.0.1",
     "@userfrosting/merge-package-dependencies": "^2.1.0",
     "@userfrosting/vinyl-fs-vpath": "^2.0.0",
+    "@yarnpkg/shell": "^2.4.1",
     "bower": "^1.8.8",
     "del": "^6.0.0",
     "dotenv": "^8.2.0",
@@ -22,10 +23,10 @@
     "strip-ansi": "^6.0.0"
   },
   "scripts": {
-    "uf-bundle": "node_modules/.bin/gulp build",
-    "uf-assets-install": "node_modules/.bin/gulp assetsInstall",
-    "uf-frontend": "node_modules/.bin/gulp frontend",
-    "uf-clean": "node_modules/.bin/gulp clean"
+    "uf-bundle": "shell './node_modules/.bin/gulp build'",
+    "uf-assets-install": "shell './node_modules/.bin/gulp assetsInstall'",
+    "uf-frontend": "shell './node_modules/.bin/gulp frontend'",
+    "uf-clean": "shell './node_modules/.bin/gulp clean'"
   },
   "engines": {
     "node": "^12.17.0 || >=14.0.0",
