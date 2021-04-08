@@ -22,6 +22,12 @@ services:
     overrides:
       environment:
         PHP_IDE_CONFIG: "serverName=userfrosting.lndo.site"
+        DB_DRIVER: "mysql"
+        DB_HOST: "database"
+        DB_PORT: "3306"
+        DB_NAME: "lamp"
+        DB_USER: "lamp"
+        DB_PASSWORD: "lamp"
     ssl: true
 
   # Redis cache
