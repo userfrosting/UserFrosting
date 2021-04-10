@@ -14,6 +14,7 @@ use UserFrosting\Tests\TestCase;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
+use UserFrosting\Sprinkle\Core\Database\Concerns\HasAuxModel;
 
 class DatabaseTests extends TestCase
 {
@@ -44,6 +45,14 @@ class DatabaseTests extends TestCase
         $this->schema($this->schemaName)->create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
+        });
+
+        $this->schema($this->schemaName)->create('users_aux', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
+
+            $table->foreign('id')->references('id')->on('users');
         });
 
         // Users have multiple email addresses
@@ -129,6 +138,78 @@ class DatabaseTests extends TestCase
         Relation::morphMap([], false);
 
         parent::tearDown();
+    }
+
+    /**
+     * testExtendedUserAttributes (HasAuxModel trait)
+     */
+    public function testExtendedUserAttributes()
+    {
+        $user = EloquentTestExtendedUser::create([
+          'name' => 'David',
+          'city' => 'Middlesex',
+          'country' => 'England'
+        ]);
+
+        // Test immediately after creation
+        $this->assertEquals([
+            'id'       => 1,
+            'name'     => 'David',
+            'city'     => 'Middlesex',
+            'country'  => 'England',
+        ], $user->toArray());
+
+        // Test after modification
+        $user->name = 'Joe';
+
+        $this->assertEquals([
+            'id'       => 1,
+            'name'     => 'Joe',
+            'city'     => 'Middlesex',
+            'country'  => 'England',
+        ], $user->toArray());
+
+        // Test after saving
+        $user->save();
+        $this->assertEquals([
+            'id'       => 1,
+            'name'     => 'Joe',
+            'city'     => 'Middlesex',
+            'country'  => 'England',
+        ], $user->toArray());
+
+        // Test after fresh load
+        $user->fresh();
+        $this->assertEquals([
+            'id'       => 1,
+            'name'     => 'Joe',
+            'city'     => 'Middlesex',
+            'country'  => 'England',
+        ], $user->toArray());
+
+        // Test after refresh and save
+        $user->refresh();
+        $this->assertEquals([
+            'id'       => 1,
+            'name'     => 'Joe',
+            'city'     => 'Middlesex',
+            'country'  => 'England',
+        ], $user->toArray());
+
+        $user->name = 'Richard';
+        $user->city = 'Uppersex';
+        $user->save();
+
+        $this->assertEquals([
+            'id'       => 1,
+            'name'     => 'Richard',
+            'city'     => 'Uppersex',
+            'country'  => 'England',
+        ], $user->toArray());
+
+        // Additional unit/integration tests needed
+        // Especially need to prove that aux model queries are run
+        // efficiently when loading a collection of extended models.
     }
 
     /**
@@ -1421,4 +1502,23 @@ class EloquentTestJob extends EloquentTestModel
     {
         return $this->belongsTo(EloquentTestRole::class, 'role_id');
     }
+}
+
+class EloquentTestExtendedUserAux extends EloquentTestModel
+{
+    protected $table = 'users_aux';
+}
+
+class EloquentTestExtendedUser extends EloquentTestUser
+{
+    use HasAuxModel;
+
+    // Make extended attributes fillable
+    protected $fillable = [
+        'name',
+        'city',
+        'country',
+    ];
+
+    protected $auxType = EloquentTestExtendedUserAux::class;
 }
