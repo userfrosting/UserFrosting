@@ -40,7 +40,7 @@ class CacheHelper
     /**
      * Function that delete the Twig cache directory content.
      *
-     * @return bool true/false if operation is successfull
+     * @return bool true/false if operation is successful
      */
     public function clearCache()
     {

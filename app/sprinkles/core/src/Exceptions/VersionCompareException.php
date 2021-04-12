@@ -13,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Exceptions;
 use LogicException;
 
 /**
- * Version Compare Exception. Used when a version contraint is not matched.
+ * Version Compare Exception. Used when a version constraint is not matched.
  */
 class VersionCompareException extends LogicException
 {
@@ -21,14 +21,14 @@ class VersionCompareException extends LogicException
     protected $version;
 
     /** @var string */
-    protected $contraint;
+    protected $constraint;
 
     /**
      * @return self
      */
-    public function setContraint(string $contraint)
+    public function setConstraint(string $constraint)
     {
-        $this->contraint = $contraint;
+        $this->constraint = $constraint;
 
         return $this;
     }
@@ -48,8 +48,8 @@ class VersionCompareException extends LogicException
         return $this;
     }
 
-    public function getContraint(): string
+    public function getConstraint(): string
     {
-        return $this->contraint;
+        return $this->constraint;
     }
 }

@@ -43,8 +43,8 @@ class UserModelTest extends TestCase
 
     /**
      * Test user hard deletion with user relations.
-     * This is not a totaly acurate test, as each relations are added manually
-     * and new relations might not be added automatically to accuratly test
+     * This is not a totally accurate test, as each relations are added manually
+     * and new relations might not be added automatically to accurately test
      */
     public function testUserHardDeleteWithUserRelations()
     {

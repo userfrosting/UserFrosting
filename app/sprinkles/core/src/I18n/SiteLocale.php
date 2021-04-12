@@ -123,9 +123,9 @@ class SiteLocale
     }
 
     /**
-     * Returns the locale intentifier (ie. en_US) to use.
+     * Returns the locale identifier (ie. en_US) to use.
      *
-     * @return string Locale intentifier
+     * @return string Locale identifier
      *
      * @todo This should accept the request service as argument, or null, in which case the `getBrowserLocale` method would be skipped
      */

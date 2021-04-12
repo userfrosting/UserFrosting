@@ -51,7 +51,7 @@ class UserController extends SimpleController
      * @param Response $response
      * @param string[] $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function create(Request $request, Response $response, array $args)
     {
@@ -209,7 +209,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function createPasswordReset(Request $request, Response $response, array $args)
     {
@@ -283,7 +283,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException   If user is not found
-     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws ForbiddenException  If user is not authorized to access page
      * @throws BadRequestException
      */
     public function delete(Request $request, Response $response, array $args)
@@ -355,7 +355,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getActivities(Request $request, Response $response, array $args)
     {
@@ -408,7 +408,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getInfo(Request $request, Response $response, array $args)
     {
@@ -460,7 +460,7 @@ class UserController extends SimpleController
      * @param Response $response
      * @param string[] $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getList(Request $request, Response $response, array $args)
     {
@@ -500,7 +500,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException   If user is not found
-     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws ForbiddenException  If user is not authorized to access page
      * @throws BadRequestException
      */
     public function getModalConfirmDelete(Request $request, Response $response, array $args)
@@ -562,7 +562,7 @@ class UserController extends SimpleController
      * @param Response $response
      * @param string[] $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getModalCreate(Request $request, Response $response, array $args)
     {
@@ -660,7 +660,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getModalEdit(Request $request, Response $response, array $args)
     {
@@ -761,7 +761,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getModalEditPassword(Request $request, Response $response, array $args)
     {
@@ -821,7 +821,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getModalEditRoles(Request $request, Response $response, array $args)
     {
@@ -866,7 +866,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getPermissions(Request $request, Response $response, array $args)
     {
@@ -916,7 +916,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getRoles(Request $request, Response $response, array $args)
     {
@@ -971,7 +971,7 @@ class UserController extends SimpleController
      * @param Response $response
      * @param string[] $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function pageInfo(Request $request, Response $response, array $args)
     {
@@ -1113,7 +1113,7 @@ class UserController extends SimpleController
      * @param Response $response
      * @param string[] $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function pageList(Request $request, Response $response, array $args)
     {
@@ -1147,7 +1147,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException  If user is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function updateInfo(Request $request, Response $response, array $args)
     {
@@ -1280,7 +1280,7 @@ class UserController extends SimpleController
      * @param string[] $args
      *
      * @throws NotFoundException   If user is not found
-     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws ForbiddenException  If user is not authorized to access page
      * @throws BadRequestException
      */
     public function updateField(Request $request, Response $response, array $args)

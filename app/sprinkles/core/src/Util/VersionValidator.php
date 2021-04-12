@@ -21,7 +21,7 @@ class VersionValidator
     /**
      * Check the minimum version of php.
      *
-     * @throws VersionCompareException If contraint version is not matched.
+     * @throws VersionCompareException If constraint version is not matched.
      *
      * @return true Version is valid
      */
@@ -33,7 +33,7 @@ class VersionValidator
         if (!Semver::satisfies($phpVersion, $constraint)) {
             $message = 'UserFrosting requires a PHP version that satisfies "' . $constraint . '", but found ' . $phpVersion . ". You'll need to update you PHP version before you can continue.";
             $exception = new VersionCompareException($message);
-            $exception->setContraint($constraint)->setVersion($phpVersion);
+            $exception->setConstraint($constraint)->setVersion($phpVersion);
 
             throw $exception;
         }
@@ -43,9 +43,9 @@ class VersionValidator
 
     /**
      * Check the minimum version of php.
-     * This should be done by composer itself, but we do it again for good mesure.
+     * This should be done by composer itself, but we do it again for good measure.
      *
-     * @throws VersionCompareException If contraint version is not matched.
+     * @throws VersionCompareException If constraint version is not matched.
      *
      * @return true Version is valid
      */
@@ -57,7 +57,7 @@ class VersionValidator
         if (!Semver::satisfies($phpVersion, $constraint)) {
             $message = 'UserFrosting recommend a PHP version that satisfies "' . $constraint . '". While your PHP version (' . $phpVersion . ') is still supported by UserFrosting, we recommend upgrading as your current version will soon be unsupported. See http://php.net/supported-versions.php for more info.';
             $exception = new VersionCompareException($message);
-            $exception->setContraint($constraint)->setVersion($phpVersion);
+            $exception->setConstraint($constraint)->setVersion($phpVersion);
 
             throw $exception;
         }
@@ -68,7 +68,7 @@ class VersionValidator
     /**
      * Check the minimum version requirement of Node installed.
      *
-     * @throws VersionCompareException If contraint version is not matched.
+     * @throws VersionCompareException If constraint version is not matched.
      *
      * @return true Version is valid
      */
@@ -80,7 +80,7 @@ class VersionValidator
         if (!Semver::satisfies($nodeVersion, $constraint)) {
             $message = 'UserFrosting requires a Node version that satisfies "' . $constraint . '", but found ' . $nodeVersion . '. Check the documentation for more details.';
             $exception = new VersionCompareException($message);
-            $exception->setContraint($constraint)->setVersion($nodeVersion);
+            $exception->setConstraint($constraint)->setVersion($nodeVersion);
 
             throw $exception;
         }
@@ -91,7 +91,7 @@ class VersionValidator
     /**
      * Check the minimum version requirement for Npm.
      *
-     * @throws VersionCompareException If contraint version is not matched.
+     * @throws VersionCompareException If constraint version is not matched.
      *
      * @return true Version is valid
      */
@@ -103,7 +103,7 @@ class VersionValidator
         if (!Semver::satisfies($npmVersion, $constraint)) {
             $message = 'UserFrosting requires a NPM version that satisfies "' . $constraint . '", but found ' . $npmVersion . '. Check the documentation for more details.';
             $exception = new VersionCompareException($message);
-            $exception->setContraint($constraint)->setVersion($npmVersion);
+            $exception->setConstraint($constraint)->setVersion($npmVersion);
 
             throw $exception;
         }

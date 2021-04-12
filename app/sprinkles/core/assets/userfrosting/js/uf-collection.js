@@ -320,9 +320,9 @@
     $.fn[pluginName] = function(methodOrOptions) {
         // Grab plugin instance
         var instance = $(this).data(pluginName);
-        // If undefined or object, initalise plugin.
+        // If undefined or object, initialize plugin.
         if (methodOrOptions === undefined || typeof methodOrOptions === 'object') {
-            // Only initalise if not previously done.
+            // Only initialize if not previously done.
             if (!instance) {
                 $(this).data(pluginName, new Plugin(this, methodOrOptions));
             }

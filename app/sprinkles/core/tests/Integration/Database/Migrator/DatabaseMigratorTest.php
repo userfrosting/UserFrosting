@@ -24,7 +24,7 @@ use UserFrosting\Tests\TestCase;
  *    Tests for the Migrator Class
  *
  *    Theses tests make sure the Migrator works correctly, without validating
- *    agaist a simulated database. Those tests are performed by `DatabaseMigratorIntegrationTest`
+ *    against a simulated database. Those tests are performed by `DatabaseMigratorIntegrationTest`
  *
  *    @author Louis Charette
  */
@@ -76,7 +76,7 @@ class DatabaseMigratorTest extends TestCase
         $capsule = m::mock(Capsule::class);
         $this->connection = m::mock(Connection::class);
 
-        // Set global expections for $capule and $connection
+        // Set global expectations for $capsule and $connection
         $capsule->shouldReceive('getConnection')->andReturn($this->connection);
         $this->connection->shouldReceive('getSchemaBuilder')->andReturn($this->schema);
 
@@ -85,11 +85,11 @@ class DatabaseMigratorTest extends TestCase
     }
 
     /**
-     *    Basic test to make sure the base method syntaxt is ok
+     *    Basic test to make sure the base method syntax is ok
      */
     public function testMigratorUpWithNoMigrations()
     {
-        // Locator will be asked to return the avaialble migrations
+        // Locator will be asked to return the available migrations
         $this->locator->shouldReceive('getMigrations')->once()->andReturn([]);
 
         // Repository will be asked to return the ran migrations
@@ -100,7 +100,7 @@ class DatabaseMigratorTest extends TestCase
     }
 
     /**
-     *    Basic test where all avaialble migrations are pending and fulfillable
+     *    Basic test where all available migrations are pending and fulfillable
      */
     public function testMigratorUpWithOnlyPendingMigrations()
     {
@@ -135,7 +135,7 @@ class DatabaseMigratorTest extends TestCase
     }
 
     /**
-     *    Test where one of the avaialble migrations is already installed
+     *    Test where one of the available migrations is already installed
      */
     public function testMigratorUpWithOneInstalledMigrations()
     {
@@ -164,7 +164,7 @@ class DatabaseMigratorTest extends TestCase
         // Run migrations up
         $migrations = $this->migrator->run();
 
-        // The migration already ran shoudn't be in the pending ones
+        // The migration already ran shouldn't be in the pending ones
         $this->assertEquals([
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable',
@@ -172,7 +172,7 @@ class DatabaseMigratorTest extends TestCase
     }
 
     /**
-     *    Test where all avaialble migrations have been ran
+     *    Test where all available migrations have been ran
      */
     public function testMigratorUpWithNoPendingMigrations()
     {
@@ -197,7 +197,7 @@ class DatabaseMigratorTest extends TestCase
         // Run migrations up
         $migrations = $this->migrator->run();
 
-        // The migration already ran shoudn't be in the pending ones
+        // The migration already ran shouldn't be in the pending ones
         $this->assertEquals([], $migrations);
     }
 
@@ -217,7 +217,7 @@ class DatabaseMigratorTest extends TestCase
         // Run migrations up
         $migrations = $this->migrator->rollback();
 
-        // The migration already ran shoudn't be in the pending ones
+        // The migration already ran shouldn't be in the pending ones
         $this->assertEquals([], $migrations);
     }
 
@@ -252,7 +252,7 @@ class DatabaseMigratorTest extends TestCase
         // Run migrations up
         $migrations = $this->migrator->rollback();
 
-        // The migration already ran shoudn't be in the pending ones
+        // The migration already ran shouldn't be in the pending ones
         $this->assertEquals($testMigrations, $migrations);
     }
 
@@ -287,14 +287,14 @@ class DatabaseMigratorTest extends TestCase
         // Rollback migrations
         $migrations = $this->migrator->rollback();
 
-        // The migration not available from the locator shouldn't have been run dowm
+        // The migration not available from the locator shouldn't have been run
         $this->assertEquals([
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
         ], $migrations);
     }
 
     /**
-     * Test a specific migration with no dependencies can be rollbacked
+     * Test a specific migration with no dependencies can be rolled back
      */
     public function testMigratorRollbackSpecific()
     {
@@ -330,12 +330,12 @@ class DatabaseMigratorTest extends TestCase
         // Rollback only the Flights table. Should work as no other depends on it
         $rolledback = $this->migrator->rollbackMigration($migration);
 
-        // The migration already ran shoudn't be in the pending ones
+        // The migration already ran shouldn't be in the pending ones
         $this->assertEquals([$migration], $rolledback);
     }
 
     /**
-     * Test a specific migration with some dependencies can be rollbacked
+     * Test a specific migration with some dependencies can be rolled back
      */
     public function testMigratorRollbackSpecificWithDependencies()
     {
@@ -401,7 +401,7 @@ class DatabaseMigratorTest extends TestCase
         $this->connection->shouldReceive('getSchemaGrammar')->andReturn($grammar);
         $grammar->shouldReceive('supportsSchemaTransactions')->andReturn(false);
 
-        // Reset mgirations
+        // Reset migrations
         $migrations = $this->migrator->reset();
 
         // All the migrations should have been rolledback

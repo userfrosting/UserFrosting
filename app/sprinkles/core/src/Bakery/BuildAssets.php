@@ -59,7 +59,7 @@ class BuildAssets extends BaseCommand
             exit(1);
         }
 
-        // Set $buildPath. We'll use the aboslute path for this task
+        // Set $buildPath. We'll use the absolute path for this task
         $this->buildPath = \UserFrosting\ROOT_DIR . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME;
 
         // Delete cached data is requested

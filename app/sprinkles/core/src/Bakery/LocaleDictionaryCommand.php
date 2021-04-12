@@ -34,7 +34,7 @@ class LocaleDictionaryCommand extends BaseCommand
     protected function configure()
     {
         $this->setName('locale:dictionary')
-             ->setHelp('This command shows the compiled dictionnary for the selected locale.')
+             ->setHelp('This command shows the compiled dictionary for the selected locale.')
              ->addOption('locale', 'l', InputOption::VALUE_REQUIRED, 'The selected locale.')
              ->addOption('width', 'w', InputOption::VALUE_REQUIRED, 'Set the length for preview column text.', 100)
              ->setDescription('Display locale dictionary');

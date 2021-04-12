@@ -27,7 +27,7 @@ class MigrationRollbackDependencyAnalyser extends MigrationDependencyAnalyser
      * represent the same thing as "up" dependencies. fulfillable can be
      * rolledback, unfulfillable cannot.
      *
-     * @param string $migrationName The migration classname
+     * @param string $migrationName The migration class name
      *
      * @return bool True/False if the migration is fulfillable
      */

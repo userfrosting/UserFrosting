@@ -807,7 +807,7 @@ class RoleControllerTest extends TestCase
      */
     public function testupdateFieldWithFailedValidation(RoleController $controller)
     {
-        // Create a string wich will be too long for validation
+        // Create a string which will be too long for validation
         $faker = Faker::getGenerator();
         $value = $faker->text(500);
 
@@ -843,7 +843,7 @@ class RoleControllerTest extends TestCase
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
-        // Check the default role has how many permisions
+        // Check the default role has how many permissions
         $role = Role::where('slug', 'foo')->first();
         $this->assertEmpty($role->permissions);
 
@@ -853,7 +853,7 @@ class RoleControllerTest extends TestCase
         $this->assertJson((string) $result->getBody());
         $this->assertSame('[]', (string) $result->getBody());
 
-        // Make sure role permisions was updated
+        // Make sure role permissions was updated
         $role = Role::where('slug', 'foo')->first();
         $this->assertCount(1, $role->permissions);
 

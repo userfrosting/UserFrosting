@@ -91,7 +91,7 @@ class MigrationLocatorTest extends TestCase
             new Resource($resourceStream, $resourceAccountLocation, 'two/CreateFlightsTable.php'),
             new Resource($resourceStream, $resourceAccountLocation, 'CreateMainTable.php'),
 
-            // Theses shoudn't be returned by the migrator
+            // Theses shouldn't be returned by the migrator
             new Resource($resourceStream, $resourceAccountLocation, 'README.md'),
             new Resource($resourceStream, $resourceAccountLocation, 'php.md'),
             new Resource($resourceStream, $resourceAccountLocation, 'foo.foophp'),
@@ -122,7 +122,7 @@ class MigrationLocatorTest extends TestCase
     }
 
     /**
-     *    Test MigratonLocator against the real thing, no Mockery
+     *    Test MigrationLocator against the real thing, no Mockery
      */
     public function testActualInstance()
     {

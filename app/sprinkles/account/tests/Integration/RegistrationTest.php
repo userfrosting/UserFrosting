@@ -89,7 +89,7 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->expectException(HttpException::class);
-        $this->expectExceptionMessage("Account can't be registrated as 'first_name' is required to create a new user.");
+        $this->expectExceptionMessage("Account can't be registered as 'first_name' is required to create a new user.");
         $registration->validate();
     }
 

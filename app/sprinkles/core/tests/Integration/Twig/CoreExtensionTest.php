@@ -17,7 +17,7 @@ use UserFrosting\Tests\TestCase;
 
 /**
  * CoreExtensionTest class.
- * Tests Core twig extentions
+ * Tests Core twig extensions
  */
 class CoreExtensionTest extends TestCase
 {

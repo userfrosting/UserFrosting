@@ -359,7 +359,7 @@ class Authenticator
             // so we store the fact that the user was logged in via RememberMe (instead of login form)
             $this->viaRemember = true;
         } else {
-            // If $rememberMe->login() was not successfull, check if the token was invalid as well.  This means the cookie was stolen.
+            // If $rememberMe->login() was not successful, check if the token was invalid as well.  This means the cookie was stolen.
             if ($loginResult->hasPossibleManipulation()) {
                 throw new AuthCompromisedException();
             }

@@ -13,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Util;
 /**
  * UserFrosting class mapper.
  *
- * This creates an abstraction layer for overrideable classes.
+ * This creates an abstraction layer for overridable classes.
  * For example, if we want to replace usages of the User class with MyUser, this abstraction layer handles that.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
