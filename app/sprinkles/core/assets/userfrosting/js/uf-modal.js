@@ -38,7 +38,7 @@
         return this;
     };
 
-    /** #### INITIALISER #### */
+    /** #### INITIALIZER #### */
     Plugin.prototype._init = function ( target )
     {
         var base = this;
@@ -171,7 +171,7 @@
             return instance[ methodOrOptions ]( Array.prototype.slice.call( arguments, 1 ) );
 
 
-        // CASE: argument is options object or empty = initialise
+        // CASE: argument is options object or empty = initialize
         } else if ( typeof methodOrOptions === 'object' || ! methodOrOptions ) {
 
             instance = new Plugin( $(this), methodOrOptions );    // ok to overwrite if this is a re-init
@@ -180,7 +180,7 @@
 
         // CASE: method called before init
         } else if ( !instance ) {
-            console.warn( 'Plugin must be initialised before using method: ' + methodOrOptions );
+            console.warn( 'Plugin must be initialized before using method: ' + methodOrOptions );
 
         // CASE: invalid method
         } else if ( methodOrOptions.indexOf('_') == 0 ) {

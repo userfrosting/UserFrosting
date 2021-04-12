@@ -81,7 +81,7 @@ class DebugCommand extends BaseCommand
         // Show the DB config
         $this->showConfig();
 
-        // Check database connexion
+        // Check database connection
         $this->checkDatabase();
 
         // If all went well and there's no fatal errors, we are ready to bake
@@ -121,7 +121,7 @@ class DebugCommand extends BaseCommand
     }
 
     /**
-     * Check the database connexion and setup the `.env` file if we can't
+     * Check the database connection and setup the `.env` file if we can't
      * connect and there's no one found.
      */
     protected function checkDatabase(): void

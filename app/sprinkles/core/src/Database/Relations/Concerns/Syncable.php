@@ -46,7 +46,7 @@ trait Syncable
         $updateRows = [];
         $newRows = [];
         foreach ($data as $row) {
-            // We determine "updateable" rows as those whose $relatedKeyName (usually 'id') is set, not empty, and
+            // We determine "updatable" rows as those whose $relatedKeyName (usually 'id') is set, not empty, and
             // match a related row in the database.
             if (isset($row[$relatedKeyName]) && !empty($row[$relatedKeyName]) && in_array($row[$relatedKeyName], $current)) {
                 $id = $row[$relatedKeyName];

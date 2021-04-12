@@ -272,7 +272,7 @@ class CreateAdminUser extends BaseCommand
     /**
      * Validate the last name entered is valid.
      *
-     * @param string $lastName The lastname
+     * @param string $lastName The last name
      *
      * @return bool Input is valid or not
      */

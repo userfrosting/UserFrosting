@@ -19,8 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Composer 2 support ([#1117]).
 - [Lando](https://lando.dev) support.
 - Added more SMTP options in env and setup:smtp bakery command ([#1077]),
-- Added new `MAIL_MAILER` environement variable to set mailer type.
-- Added "Native mail" to `setup:mail` balery command.
+- Added new `MAIL_MAILER` environment variable to set mailer type.
+- Added "Native mail" to `setup:mail` bakery command.
 
 ### Changed
 - Implement findInt ([#1117]).
@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed deprecated Handlebar `ifCond` (Deprecated in 4.1).
 - Removed migration seed.
 - Removed support for migration with non static `$dependencies` properties.
-- Removed support for deprecared `determineRedirectOnLogin` service (deprecated in 4.1.10).
+- Removed support for deprecated `determineRedirectOnLogin` service (deprecated in 4.1.10).
 
 ## [v4.4.5]
 
@@ -131,7 +131,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improve ordering by activity date ([#1061] & [#1062]; Thanks @ktecho!)
 - Updated Vagrant config and documentation
 - Fixed a bug where `withTrashed` in `findUnique` was not available when `SoftDeletes` trait is not included in a model.
-- CSRF global middleware is not loaded anymore if in a CLI envrionement. This will avoid sessions to be created for bakery and tests by default.
+- CSRF global middleware is not loaded anymore if in a CLI environment. This will avoid sessions to be created for bakery and tests by default.
 - Browserified node modules not being correctly loaded.
 - Browserified node modules potentially colliding with real entrypoints.
 

@@ -156,7 +156,7 @@ class Migrator
      * Run "up" a migration class.
      *
      * @param string $migrationClassName The migration class name
-     * @param int    $batch              The current bacth number
+     * @param int    $batch              The current batch number
      * @param bool   $pretend            If this operation should be pretended / faked
      */
     protected function runUp($migrationClassName, $batch, $pretend)
@@ -171,7 +171,7 @@ class Migrator
             return $this->pretendToRun($migration, 'up');
         }
 
-        // Run the actuall migration
+        // Run the actual migration
         $this->runMigration($migration, 'up');
 
         // Once we have run a migrations class, we will log that it was run in this
@@ -250,7 +250,7 @@ class Migrator
     /**
      * Rollback the given migrations.
      *
-     * @param array $migrations An array of migrations to rollback formated as an eloquent collection
+     * @param array $migrations An array of migrations to rollback formatted as an eloquent collection
      * @param array $options    The options for the current operation
      *
      * @return array The list of rolledback migration classes
@@ -270,14 +270,14 @@ class Migrator
 
         // Next we will run through all of the migrations and call the "down" method
         // which will reverse each migration in order. This getLast method on the
-        // repository already returns these migration's classenames in reverse order.
+        // repository already returns these migration's class names in reverse order.
         foreach ($migrations as $migration) {
 
             // We have to make sure the class exist first
             if (!$availableMigrations->contains($migration)) {
                 // NOTE This next was commented because if a class doesn't exist,
-                // you'll get stuck and prevent futher classes to be rolledback
-                // until this class is put back in the system. Might wan't to
+                // you'll get stuck and prevent further classes to be rolledback
+                // until this class is put back in the system. Might want to
                 // display a warning instead of silently skipping it. See related "todo" in "reset" method
                 //throw new \Exception("Can't rollback migrations `$migration`. The migration class doesn't exist");
                 $this->note("<info>WARNING:</info> Can't rollback migrations `$migration`. The migration class doesn't exist");
@@ -336,7 +336,7 @@ class Migrator
         // this database. This will allow us to get the database back into its
         // "empty" state and ready to be migrated "up" again.
         //
-        // !TODO :: Should compare to the install list to make sure no outstanding migration (ran, but with no migraiton class anymore) still exist in the db
+        // !TODO :: Should compare to the install list to make sure no outstanding migration (ran, but with no migration class anymore) still exist in the db
         $migrations = array_reverse($this->getRanMigrations());
 
         if (count($migrations) === 0) {

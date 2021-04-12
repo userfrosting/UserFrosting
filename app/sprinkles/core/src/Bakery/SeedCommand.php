@@ -61,7 +61,7 @@ class SeedCommand extends BaseCommand
         // Seeds list
         $seeds = [];
 
-        // Start by gettings seeds
+        // Start by getting seeds
         foreach ($classes as $className) {
 
             // Get seed class and

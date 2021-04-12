@@ -34,7 +34,7 @@ class PermissionController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      * @throws NotFoundException  If permission is not found
      */
     public function getInfo(Request $request, Response $response, $args)
@@ -82,7 +82,7 @@ class PermissionController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getList(Request $request, Response $response, $args)
     {
@@ -122,7 +122,7 @@ class PermissionController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getUsers(Request $request, Response $response, $args)
     {
@@ -157,7 +157,7 @@ class PermissionController extends SimpleController
      *
      * This checks that the currently logged-in user has permission to view permissions.
      * Note that permissions cannot be modified through the interface.  This is because
-     * permissions are tighly coupled to the code and should only be modified by developers.
+     * permissions are tightly coupled to the code and should only be modified by developers.
      * This page requires authentication.
      *
      * Request type: GET
@@ -166,7 +166,7 @@ class PermissionController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      * @throws NotFoundException  If permission is not found
      */
     public function pageInfo(Request $request, Response $response, $args)
@@ -212,7 +212,7 @@ class PermissionController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function pageList(Request $request, Response $response, $args)
     {

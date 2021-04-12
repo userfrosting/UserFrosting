@@ -84,10 +84,10 @@ class MigrationDependencyAnalyser
      * dependencies. This is very important as the order the migrations needs
      * to be run is defined by this recursion. By waiting for the dependency
      * to be marked as fulfillable to mark the parent as fulfillable, the
-     * parent class will be automatocally placed after it's dependencies
-     * in the `fullfillable` property.
+     * parent class will be automatically placed after it's dependencies
+     * in the `fulfillable` property.
      *
-     * @param string $migrationName The migration classname
+     * @param string $migrationName The migration class name
      *
      * @return bool True/False if the migration is fulfillable
      */
@@ -123,7 +123,7 @@ class MigrationDependencyAnalyser
             }
 
             // Check is the dependency is pending installation. If so, check for it's dependencies.
-            // If the dependency is not fullfillable, then this one isn't either
+            // If the dependency is not fulfillable, then this one isn't either
             if (!$this->pending->contains($dependency) || !$this->validateClassDependencies($dependency)) {
                 return $this->markAsUnfulfillable($migrationName, $dependency);
             }
@@ -164,7 +164,7 @@ class MigrationDependencyAnalyser
     /**
      * Mark a dependency as fulfillable. Removes it from the pending list and add it to the fulfillable list.
      *
-     * @param string $migration The migration classname
+     * @param string $migration The migration class name
      *
      * @return bool True, it's fulfillable
      */
@@ -178,10 +178,10 @@ class MigrationDependencyAnalyser
     /**
      * Mark a dependency as unfulfillable. Removes it from the pending list and add it to the unfulfillable list.
      *
-     * @param string       $migration  The migration classname
-     * @param string|array $dependency The problematic dependecy
+     * @param string       $migration  The migration class name
+     * @param string|array $dependency The problematic dependency
      *
-     * @return bool False, it's not fullfillable
+     * @return bool False, it's not fulfillable
      */
     protected function markAsUnfulfillable(string $migration, $dependency): bool
     {

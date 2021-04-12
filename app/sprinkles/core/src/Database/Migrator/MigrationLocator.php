@@ -65,7 +65,7 @@ class MigrationLocator implements MigrationLocatorInterface
     }
 
     /**
-     * Return an array of migration details inclusing the classname and the sprinkle name.
+     * Return an array of migration details including the class name and the sprinkle name.
      *
      * @param ResourceInstance $file The migration file
      *
@@ -77,7 +77,7 @@ class MigrationLocator implements MigrationLocatorInterface
         $sprinkleName = $file->getLocation()->getName();
         $sprinkleName = Str::studly($sprinkleName);
 
-        // Getting base path, name and classname
+        // Getting base path, name and class name
         $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
         $name = $basePath . $file->getFilename();
         $className = str_replace('/', '\\', $basePath) . $file->getFilename();

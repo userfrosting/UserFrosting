@@ -183,7 +183,7 @@ class UserSprunje extends Sprunje
     }
 
     /**
-     * Sort active, unactivated, disabled.
+     * Sort active, inactivated, disabled.
      *
      * @param Builder $query
      * @param string  $direction

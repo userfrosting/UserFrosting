@@ -680,7 +680,7 @@ class AccountController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function pageSettings(Request $request, Response $response, $args)
     {

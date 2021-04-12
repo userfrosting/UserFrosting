@@ -693,9 +693,9 @@ class WhoopsRenderer extends ErrorRenderer
 
     /**
      * Checks all values within the given superGlobal array.
-     * Blacklisted values will be replaced by a equal length string cointaining only '*' characters.
+     * Blacklisted values will be replaced by a equal length string containing only '*' characters.
      *
-     * We intentionally dont rely on $GLOBALS as it depends on 'auto_globals_jit' php.ini setting.
+     * We intentionally don't rely on $GLOBALS as it depends on 'auto_globals_jit' php.ini setting.
      *
      * @param array  $superGlobal     One of the superglobal arrays
      * @param string $superGlobalName the name of the superglobal array, e.g. '_GET'

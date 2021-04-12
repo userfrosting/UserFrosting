@@ -373,7 +373,7 @@ class CheckEnvironment
             VersionValidator::validatePhpVersion();
         } catch (VersionCompareException $e) {
             $this->resultsFailed['phpVersion'] = [
-                'title'   => "<i class='fas fa-code fa-fw'></i> Your PHP version does not satisfy UserFrosting required contraint.",
+                'title'   => "<i class='fas fa-code fa-fw'></i> Your PHP version does not satisfy UserFrosting required constraint.",
                 'message' => $e->getMessage(),
                 'success' => false,
             ];
@@ -384,7 +384,7 @@ class CheckEnvironment
         // No problem found !
         $this->resultsSuccess['phpVersion'] = [
             'title'   => "<i class='fas fa-code fa-fw'></i> PHP version checks out!",
-            'message' => 'Your PHP version satisfy UserFrosting required contraint. Great!',
+            'message' => 'Your PHP version satisfy UserFrosting required constraint. Great!',
             'success' => true,
         ];
 

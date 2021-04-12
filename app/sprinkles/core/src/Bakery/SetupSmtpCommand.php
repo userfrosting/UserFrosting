@@ -158,7 +158,7 @@ class SetupSmtpCommand extends BaseCommand
             return $this->askForSmtp($input);
         }
 
-        // Display nice explanation and ask wich method to use
+        // Display nice explanation and ask which method to use
         $this->io->write("In order to send registration emails, UserFrosting requires an outgoing mail server. When using UserFrosting in a production environment, a SMTP server should be used. A Gmail account or native mail command can be used if you're only playing with UserFrosting or on a local dev environment. You can also choose to not setup an outgoing mail server at the moment, but account registration won't work. You can always re-run this setup or edit `{$this->envPath}` if you have problems sending email later.");
 
         $choice = $this->io->choice('Select setup method', [self::Setup_SMTP, self::Setup_Gmail, self::Setup_Native, self::Setup_None], self::Setup_SMTP);

@@ -104,7 +104,7 @@ class MigrateResetCommand extends MigrateCommand
         // If all went well, there's no fatal errors and we have migrated
         // something, show some success
         if (empty($resetted)) {
-            $this->io->warning('Nothing was reseted !');
+            $this->io->warning('Nothing was reset !');
         } else {
             $this->io->success('Reset successful !');
         }
@@ -127,7 +127,7 @@ class MigrateResetCommand extends MigrateCommand
             exit(1);
         }
 
-        // Get shema Builder
+        // Get schema Builder
         $connection = $this->ci->db->connection($database);
         $schema = $connection->getSchemaBuilder();
 

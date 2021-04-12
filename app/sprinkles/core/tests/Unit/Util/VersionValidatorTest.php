@@ -51,7 +51,7 @@ class VersionValidatorTest extends TestCase
             try {
                 VersionValidator::validatePhpVersion();
             } catch (VersionCompareException $e) {
-                $this->assertSame(VersionValidator::getPhpConstraint(), $e->getContraint());
+                $this->assertSame(VersionValidator::getPhpConstraint(), $e->getConstraint());
                 $this->assertSame($sanitized, $e->getVersion());
 
                 return;
@@ -67,7 +67,7 @@ class VersionValidatorTest extends TestCase
             try {
                 VersionValidator::validatePhpDeprecation();
             } catch (VersionCompareException $e) {
-                $this->assertSame(VersionValidator::getPhpRecommended(), $e->getContraint());
+                $this->assertSame(VersionValidator::getPhpRecommended(), $e->getConstraint());
                 $this->assertSame($sanitized, $e->getVersion());
 
                 return;
@@ -105,7 +105,7 @@ class VersionValidatorTest extends TestCase
             try {
                 VersionValidator::validateNodeVersion();
             } catch (VersionCompareException $e) {
-                $this->assertSame(VersionValidator::getNodeConstraint(), $e->getContraint());
+                $this->assertSame(VersionValidator::getNodeConstraint(), $e->getConstraint());
                 $this->assertSame($sanitized, $e->getVersion());
 
                 return;
@@ -143,7 +143,7 @@ class VersionValidatorTest extends TestCase
             try {
                 VersionValidator::validateNpmVersion();
             } catch (VersionCompareException $e) {
-                $this->assertSame(VersionValidator::getNpmConstraint(), $e->getContraint());
+                $this->assertSame(VersionValidator::getNpmConstraint(), $e->getConstraint());
                 $this->assertSame($sanitized, $e->getVersion());
 
                 return;

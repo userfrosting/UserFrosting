@@ -13,14 +13,14 @@ namespace UserFrosting\Sprinkle\Core\Bakery\Helper;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * Database Test Trait. Include method to test the db connexion
+ * Database Test Trait. Include method to test the db connection
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 trait DatabaseTest
 {
     /**
-     * Function to test the db connexion.
+     * Function to test the db connection.
      *
      * @return bool True if success
      */
@@ -32,7 +32,7 @@ trait DatabaseTest
         // Get config
         $config = $this->ci->config;
 
-        // Check params are valids
+        // Check params are valid
         $dbParams = $config['db.default'];
         if (!$dbParams) {
             throw new \Exception("'default' database connection not found.  Please double-check your configuration.");
