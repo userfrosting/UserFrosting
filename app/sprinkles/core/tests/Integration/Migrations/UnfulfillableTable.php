@@ -14,7 +14,7 @@ use Illuminate\Database\Schema\Blueprint;
 use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
- *    This migration is not fulfulable because it's dependencie are not met !
+ *    This migration is not fulfillable because it's dependencies are not met !
  */
 class UnfulfillableTable extends Migration
 {

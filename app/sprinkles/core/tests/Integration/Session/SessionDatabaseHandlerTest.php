@@ -36,7 +36,7 @@ class SessionDatabaseHandlerTest extends TestCase
     }
 
     /**
-     * Test session table connection & existance
+     * Test session table connection & existence
      */
     public function testSessionTable()
     {
@@ -44,7 +44,7 @@ class SessionDatabaseHandlerTest extends TestCase
         $config = $this->ci->config;
         $table = $config['session.database.table'];
 
-        // Check connexion is ok and returns what's expected from DatabaseSessionHandler
+        // Check connection is ok and returns what's expected from DatabaseSessionHandler
         $this->assertInstanceOf(\Illuminate\Database\ConnectionInterface::class, $connection);
         $this->assertInstanceOf(\Illuminate\Database\Query\Builder::class, $connection->table($table));
 

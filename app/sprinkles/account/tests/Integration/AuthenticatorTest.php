@@ -216,7 +216,7 @@ class AuthenticatorTest extends TestCase
         $this->assertNull($this->ci->session[$key]);
         $this->assertNotSame($testUser->id, $this->ci->session[$key]);
 
-        // Go througt the loginRememberedUser process
+        // Go through the loginRememberedUser process
         // First, we'll simulate a page refresh by creating a new authenticator
         $authenticator = $this->getAuthenticator();
         $user = $authenticator->user();
@@ -344,7 +344,7 @@ class AuthenticatorTest extends TestCase
         // Force email verification to false
         $this->ci->config['site.registration.require_email_verification'] = false;
 
-        // Forcing config requires to recreate the authentificator
+        // Forcing config requires to recreate the authenticator
         $authenticator = $this->getAuthenticator();
 
         $password = 'FooBar';
