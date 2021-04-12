@@ -41,6 +41,11 @@ class SetupSmtpCommand extends BaseCommand
     const Setup_Gmail = 'Gmail';
 
     /**
+     * @var string Native mail setup string
+     */
+    const Setup_Native = 'Native Mail';
+
+    /**
      * @var string No email setup string
      */
     const Setup_None = 'No email support';
@@ -50,7 +55,8 @@ class SetupSmtpCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName('setup:smtp')
+        $this->setName('setup:mail')
+             ->setAliases(['setup:smtp'])
              ->setDescription('UserFrosting SMTP Configuration Wizard')
              ->setHelp('Helper command to setup outgoing email configuration. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.')
              ->addOption('force', null, InputOption::VALUE_NONE, 'Force setup if SMTP appears to be already configured')
@@ -73,7 +79,7 @@ class SetupSmtpCommand extends BaseCommand
         $config = $this->ci->config;
 
         // Display header,
-        $this->io->title("UserFrosting's SMTP Setup Wizard");
+        $this->io->title("UserFrosting's Mail Setup Wizard");
 
         // Get an instance of the DotenvEditor
         $dotenvEditor = new DotenvEditor(\UserFrosting\APP_DIR, false);
@@ -82,13 +88,14 @@ class SetupSmtpCommand extends BaseCommand
 
         // Check if db is already setup
         if (!$input->getOption('force') && $this->isSmtpConfigured($dotenvEditor)) {
-            $this->io->note('SMTP already setup. Use the `php bakery setup:smtp --force` command to run SMTP setup again.');
+            $this->io->note('Mail is already setup. Use the `php bakery setup:mail --force` command to run setup again.');
 
             return;
         }
 
         // Get keys
         $keys = [
+            'MAIL_MAILER'   => ($dotenvEditor->keyExists('MAIL_MAILER')) ? $dotenvEditor->getValue('MAIL_MAILER') : '',
             'SMTP_HOST'     => ($dotenvEditor->keyExists('SMTP_HOST')) ? $dotenvEditor->getValue('SMTP_HOST') : '',
             'SMTP_USER'     => ($dotenvEditor->keyExists('SMTP_USER')) ? $dotenvEditor->getValue('SMTP_USER') : '',
             'SMTP_PASSWORD' => ($dotenvEditor->keyExists('SMTP_PASSWORD')) ? $dotenvEditor->getValue('SMTP_PASSWORD') : '',
@@ -99,23 +106,25 @@ class SetupSmtpCommand extends BaseCommand
 
         // There may be some custom config or global env values defined on the server.
         // We'll check for that and ask for confirmation in this case.
-        if ($config['mail.host'] != $keys['SMTP_HOST'] ||
+        if ($config['mail.mailer'] != $keys['MAIL_MAILER'] ||
+            $config['mail.host'] != $keys['SMTP_HOST'] ||
             $config['mail.username'] != $keys['SMTP_USER'] ||
             $config['mail.password'] != $keys['SMTP_PASSWORD'] ||
             $config['mail.port'] != $keys['SMTP_PORT'] ||
             $config['mail.auth'] != $keys['SMTP_AUTH'] ||
-            $config['mail.secure'] != $keys['SMTP_SECURE']) {
-            $this->io->warning("Current SMTP configuration differ from the configuration defined in `{$this->envPath}`. Global system environment variables might be defined.");
+            $config['mail.secure'] != $keys['SMTP_SECURE']
+        ) {
+            $this->io->warning("Current mail configuration from config service differ from the configuration defined in `{$this->envPath}`. Global system environment variables might be defined, and it might not be required to setup mail again.");
 
-            if (!$this->io->confirm('Continue?', false)) {
+            if (!$this->io->confirm('Continue with mail setup?', false)) {
                 return;
             }
         }
 
-        $this->io->note("SMTP credentials will be saved in `{$this->envPath}`");
+        $this->io->note("Mail configuration and SMTP credentials will be saved in `{$this->envPath}`");
 
         // Ask for SMTP info
-        $smtpParams = $this->askForSmtpMethod($input);
+        $smtpParams = $this->askForMailMethod($input);
 
         // Time to save
         $this->io->section('Saving data');
@@ -126,7 +135,7 @@ class SetupSmtpCommand extends BaseCommand
         $dotenvEditor->save();
 
         // Success
-        $this->io->success("SMTP credentials saved to `{$this->envPath}`");
+        $this->io->success("Mail configuration saved to `{$this->envPath}`.\nYou can test outgoing mail using `test:mail` command.");
     }
 
     /**
@@ -136,18 +145,23 @@ class SetupSmtpCommand extends BaseCommand
      *
      * @return array The SMTP connection info
      */
-    protected function askForSmtpMethod(InputInterface $input)
+    protected function askForMailMethod(InputInterface $input)
     {
         // If the user defined any of the command input argument, skip right to SMTP method
-        if ($input->getOption('smtp_host') || $input->getOption('smtp_user') || $input->getOption('smtp_password')
-            || $input->getOption('smtp_port') || $input->getOption('smtp_auth') || $input->getOption('smtp_secure')) {
+        if ($input->getOption('smtp_host') ||
+            $input->getOption('smtp_user') ||
+            $input->getOption('smtp_password') ||
+            $input->getOption('smtp_port') ||
+            $input->getOption('smtp_auth') ||
+            $input->getOption('smtp_secure')
+        ) {
             return $this->askForSmtp($input);
         }
 
         // Display nice explanation and ask wich method to use
-        $this->io->write("In order to send registration emails, UserFrosting requires an outgoing mail server. When using UserFrosting in a production environment, a SMTP server should be used. A Gmail account can be used if you're only playing with UserFrosting or on a local dev environment. You can also choose to not setup an outgoing mail server at the moment, but account registration won't work. You can always re-run this setup or edit `{$this->envPath}` if you have problems sending email later.");
+        $this->io->write("In order to send registration emails, UserFrosting requires an outgoing mail server. When using UserFrosting in a production environment, a SMTP server should be used. A Gmail account or native mail command can be used if you're only playing with UserFrosting or on a local dev environment. You can also choose to not setup an outgoing mail server at the moment, but account registration won't work. You can always re-run this setup or edit `{$this->envPath}` if you have problems sending email later.");
 
-        $choice = $this->io->choice('Select setup method', [self::Setup_SMTP, self::Setup_Gmail, self::Setup_None], self::Setup_SMTP);
+        $choice = $this->io->choice('Select setup method', [self::Setup_SMTP, self::Setup_Gmail, self::Setup_Native, self::Setup_None], self::Setup_SMTP);
 
         switch ($choice) {
             case self::Setup_SMTP:
@@ -155,6 +169,9 @@ class SetupSmtpCommand extends BaseCommand
             break;
             case self::Setup_Gmail:
                 return $this->askForGmail($input);
+            break;
+            case self::Setup_Native:
+                return $this->askForNative($input);
             break;
             case self::Setup_None:
             default:
@@ -189,6 +206,7 @@ class SetupSmtpCommand extends BaseCommand
         }
 
         return [
+            'MAIL_MAILER'   => 'smtp',
             'SMTP_HOST'     => $smtpHost,
             'SMTP_USER'     => $smtpUser,
             'SMTP_PASSWORD' => $smtpPassword,
@@ -214,10 +232,38 @@ class SetupSmtpCommand extends BaseCommand
         });
 
         return [
+            'MAIL_MAILER'   => 'smtp',
             'SMTP_HOST'     => 'smtp.gmail.com',
             'SMTP_USER'     => $smtpUser,
             'SMTP_PASSWORD' => $smtpPassword,
         ];
+    }
+
+    /**
+     * Process the "native mail" setup option.
+     *
+     * @param InputInterface $input
+     *
+     * @return array The SMTP connection info
+     */
+    protected function askForNative(InputInterface $input)
+    {
+        // Display big warning and confirmation
+        $this->io->warning('Native mail function should only be used locally, inside containers or for development purposes.');
+
+        if ($this->io->confirm('Continue ?', false)) {
+            return [
+                'MAIL_MAILER'   => 'mail',
+                'SMTP_HOST'     => '',
+                'SMTP_USER'     => '',
+                'SMTP_PASSWORD' => '',
+                'SMTP_PORT'     => '',
+                'SMTP_AUTH'     => '',
+                'SMTP_SECURE'   => '',
+            ];
+        } else {
+            $this->askForMailMethod($input);
+        }
     }
 
     /**
@@ -234,6 +280,7 @@ class SetupSmtpCommand extends BaseCommand
 
         if ($this->io->confirm('Continue ?', false)) {
             return [
+                'MAIL_MAILER'   => 'smtp',
                 'SMTP_HOST'     => '',
                 'SMTP_USER'     => '',
                 'SMTP_PASSWORD' => '',
@@ -242,7 +289,7 @@ class SetupSmtpCommand extends BaseCommand
                 'SMTP_SECURE'   => '',
             ];
         } else {
-            $this->askForSmtpMethod($input);
+            $this->askForMailMethod($input);
         }
     }
 
@@ -255,8 +302,14 @@ class SetupSmtpCommand extends BaseCommand
      */
     protected function isSmtpConfigured(DotenvEditor $dotenvEditor)
     {
-        if ($dotenvEditor->keyExists('SMTP_HOST') && $dotenvEditor->keyExists('SMTP_USER') && $dotenvEditor->keyExists('SMTP_PASSWORD')
-            && $dotenvEditor->keyExists('SMTP_PORT') && $dotenvEditor->keyExists('SMTP_AUTH') && $dotenvEditor->keyExists('SMTP_SECURE')) {
+        if ($dotenvEditor->keyExists('MAIL_MAILER') || (
+            $dotenvEditor->keyExists('SMTP_HOST') &&
+            $dotenvEditor->keyExists('SMTP_USER') &&
+            $dotenvEditor->keyExists('SMTP_PASSWORD') &&
+            $dotenvEditor->keyExists('SMTP_PORT') &&
+            $dotenvEditor->keyExists('SMTP_AUTH') &&
+            $dotenvEditor->keyExists('SMTP_SECURE'))
+        ) {
             return true;
         } else {
             return false;

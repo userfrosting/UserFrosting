@@ -18,13 +18,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Composer 2 support ([#1117]).
 - [Lando](https://lando.dev) support.
+- Added more SMTP options in env and setup:smtp bakery command ([#1077]),
+- Added new `MAIL_MAILER` environement variable to set mailer type.
+- Added "Native mail" to `setup:mail` balery command.
 
 ### Changed
 - Implement findInt ([#1117]).
 - Replace getenv() with env() ([#1121]). 
-- Added more SMTP options in env and setup:smtp bakery command ([#1077]),
-- Added new `MAIL_MAILER` environement variable to set mailer type.
 - Replaced `UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck` with new `UserFrosting\Sprinkle\Core\Util\VersionValidator` class.
+- Bakery command `setup:smtp` renamed to `setup:mail`. The old command is still available as an alias for backward compatibility. 
 - Changed `.php_cs` to `.php_cs.dist`.
 - Changed `phpunit.xml` to `phpunit.xml.dist`.
 
