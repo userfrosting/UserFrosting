@@ -308,8 +308,8 @@ class SetupSmtpCommand extends BaseCommand
             $dotenvEditor->keyExists('SMTP_PASSWORD') &&
             $dotenvEditor->keyExists('SMTP_PORT') &&
             $dotenvEditor->keyExists('SMTP_AUTH') &&
-            $dotenvEditor->keyExists('SMTP_SECURE'))
-        ) {
+            $dotenvEditor->keyExists('SMTP_SECURE')
+        )) {
             return true;
         } else {
             return false;
