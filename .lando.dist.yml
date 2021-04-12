@@ -35,12 +35,13 @@ services:
   cache:
     type: redis
 
-  # Add phpMyAdmin database web client
+  # phpMyAdmin
   pma:
     type: phpmyadmin
     hosts:
       - database
   
+  # MailHog
   mh:
     type: mailhog:v1.0.0
     portforward: false
