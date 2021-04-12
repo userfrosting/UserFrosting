@@ -22,6 +22,7 @@ services:
     overrides:
       environment:
         PHP_IDE_CONFIG: "serverName=userfrosting.lndo.site"
+        MAIL_MAILER: "mail"
         DB_DRIVER: "mysql"
         DB_HOST: "database"
         DB_PORT: "3306"

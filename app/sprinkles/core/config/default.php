@@ -230,7 +230,7 @@ return [
     * See https://learn.userfrosting.com/mail/the-mailer-service
     */
     'mail'    => [
-        'mailer'          => 'smtp', // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
+        'mailer'          => env('MAIL_MAILER', 'smtp'), // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
         'host'            => env('SMTP_HOST'),
         'port'            => env('SMTP_PORT', 587),
         'auth'            => env('SMTP_AUTH', true),
