@@ -88,18 +88,18 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles
      */
     protected function addWithCollisionRule(&$bundle, $bundleName, $collisionRule, &$bundleStore)
     {
-        $standardisedBundle = $this->standardiseBundle($bundle);
+        $standardizedBundle = $this->standardiseBundle($bundle);
         if (!array_key_exists($bundleName, $bundleStore)) {
-            $bundleStore[$bundleName] = $standardisedBundle;
+            $bundleStore[$bundleName] = $standardizedBundle;
         } else {
             switch ($collisionRule) {
                 case 'replace':
                     // Replaces the existing bundle.
-                    $bundleStore[$bundleName] = $standardisedBundle;
+                    $bundleStore[$bundleName] = $standardizedBundle;
                 break;
                 case 'merge':
                     // Merge with existing bundle.
-                    foreach ($standardisedBundle as $assetPath) {
+                    foreach ($standardizedBundle as $assetPath) {
                         if (!in_array($assetPath, $bundleStore[$bundleName])) {
                             $bundleStore[$bundleName][] = $assetPath;
                         }

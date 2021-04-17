@@ -17,19 +17,19 @@
         {
             "name": "Jordan Mele",
             "email": "SiliconSoldier@outlook.com.au",
-            "homepage": "https://blog.djmm.me"
+            "homepage": "https://djmm.me"
         }
     ],
     "config": {
         "vendor-dir": "app/vendor"
     },
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "ext-gd": "*",
         "composer/installers": "^1.4.0",
         "userfrosting/uniformresourcelocator": "~4.4.0",
         "symfony/console": "^4.3",
-        "wikimedia/composer-merge-plugin": "^1.4.0"
+        "wikimedia/composer-merge-plugin": "^2.1.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.13",

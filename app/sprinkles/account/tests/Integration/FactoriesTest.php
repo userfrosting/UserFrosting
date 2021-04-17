@@ -12,6 +12,7 @@ namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
 use UserFrosting\Tests\TestCase;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 
@@ -35,7 +36,7 @@ class FactoriesTest extends TestCase
 
         $fm = $this->ci->factory;
 
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
+        $user = $fm->create(User::class);
         $this->assertInstanceOf(UserInterface::class, $user);
     }
 }

@@ -9,11 +9,12 @@
  */
 
 use League\FactoryMuffin\Faker\Facade as Faker;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
 
 /*
  * General factory for the Group Model
  */
-$fm->define('UserFrosting\Sprinkle\Account\Database\Models\Group')->setDefinitions([
+$fm->define(Group::class)->setDefinitions([
     'name'          => Faker::word(),
     'description'   => Faker::paragraph(),
     'slug'          => function ($object, $saved) {

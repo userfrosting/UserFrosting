@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Tests\Integration\Error\Handler;
 
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -23,16 +24,27 @@ class ExceptionHandlerTest extends TestCase
      */
     public function testConstructor()
     {
-        $handler = new ExceptionHandler($this->ci, $this->getRequest(), $this->getResponse(), $this->getException(), false);
+        $handler = new ExceptionHandler($this->getCi(), $this->getRequest(), $this->getResponse(), $this->getException(), false);
         $this->assertInstanceOf(ExceptionHandler::class, $handler);
+    }
 
-        return $handler;
+    /**
+     * @return ContainerInterface
+     */
+    protected function getCi()
+    {
+        $ci = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $ci->config = ['site.debug.ajax' => false];
+
+        return $ci;
     }
 
     /**
      * @return ServerRequestInterface
      */
-    private function getRequest()
+    protected function getRequest()
     {
         return $this->getMockBuilder(ServerRequestInterface::class)
             ->disableOriginalConstructor()
@@ -42,7 +54,7 @@ class ExceptionHandlerTest extends TestCase
     /**
      * @return ResponseInterface
      */
-    private function getResponse()
+    protected function getResponse()
     {
         return $this->getMockBuilder(ResponseInterface::class)
             ->disableOriginalConstructor()
@@ -52,7 +64,7 @@ class ExceptionHandlerTest extends TestCase
     /**
      * @return RuntimeException
      */
-    private function getException()
+    protected function getException()
     {
         return new RuntimeException('This is my exception');
     }

@@ -106,7 +106,7 @@ class Test extends BaseCommand
     /**
      * Return the sprinkle test class
      *
-     * @param  string $testscope Testscope received from command line
+     * @param  string $testscope Test scope received from command line
      * @return string
      */
     protected function parseSprinkleTestScope($testscope)

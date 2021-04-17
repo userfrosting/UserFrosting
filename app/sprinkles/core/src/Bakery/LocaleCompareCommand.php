@@ -72,14 +72,14 @@ class LocaleCompareCommand extends BaseCommand
     }
 
     /**
-     * Display dictionary comparaison table.
+     * Display dictionary comparison table.
      *
      * @param DictionaryInterface $leftDictionary
      * @param DictionaryInterface $rightDictionary
      */
     protected function compareDictionaries(DictionaryInterface $leftDictionary, DictionaryInterface $rightDictionary): void
     {
-        $this->io->section("Comparaison between {$rightDictionary->getLocale()->getName()} and {$leftDictionary->getLocale()->getName()}");
+        $this->io->section("Comparison between {$rightDictionary->getLocale()->getName()} and {$leftDictionary->getLocale()->getName()}");
 
         $diff = Compare::dictionaries($leftDictionary, $rightDictionary);
 
@@ -104,7 +104,7 @@ class LocaleCompareCommand extends BaseCommand
     }
 
     /**
-     * Display dictionary keys comparaison table.
+     * Display dictionary keys comparison table.
      *
      * @param DictionaryInterface $leftDictionary
      * @param DictionaryInterface $rightDictionary
@@ -135,7 +135,7 @@ class LocaleCompareCommand extends BaseCommand
     }
 
     /**
-     * Display dictionary values comparaison table.
+     * Display dictionary values comparison table.
      *
      * @param DictionaryInterface $leftDictionary
      * @param DictionaryInterface $rightDictionary

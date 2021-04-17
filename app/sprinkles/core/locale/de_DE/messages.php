@@ -118,6 +118,6 @@ return [
 
     // Misc.
     'BUILT_WITH_UF'                     => 'Errichtet mit <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY'                 => 'Theme von <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> Alle Rechte vorbehalten',
+    'ADMINLTE_THEME_BY'                 => 'Theme von <strong><a href="https://adminlte.io">AdminLTE</a>.</strong> Alle Rechte vorbehalten',
     'WELCOME_TO'                        => 'Willkommen auf {{title}}!',
 ];

@@ -418,7 +418,7 @@ class AccountController extends SimpleController
             throw $e;
         }
 
-        $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
+        $ms->addMessageTranslated('success', 'WELCOME', $currentUser->toArray());
 
         // Set redirect, if relevant
         $redirectOnLogin = $this->ci->get('redirect.onLogin');
@@ -680,7 +680,7 @@ class AccountController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function pageSettings(Request $request, Response $response, $args)
     {
@@ -920,7 +920,7 @@ class AccountController extends SimpleController
         }
 
         // Security measure: do not allow registering new users until the master account has been created.
-        if (!$classMapper->getClassMapping('user')::find($config['reserved_user_ids.master'])) {
+        if (!$classMapper->getClassMapping('user')::findInt($config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.MASTER_NOT_EXISTS');
 
             return $response->withJson([], 403);
@@ -1191,7 +1191,7 @@ class AccountController extends SimpleController
         $user = $passwordReset->user;
         $authenticator->login($user);
 
-        $ms->addMessageTranslated('success', 'WELCOME', $user->export());
+        $ms->addMessageTranslated('success', 'WELCOME', $user->toArray());
 
         return $response->withJson([], 200);
     }

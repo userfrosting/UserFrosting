@@ -10,6 +10,9 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration;
 
+use UserFrosting\Sprinkle\Account\Database\Models\Permission;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserPermissionSprunje;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Tests\TestCase;
@@ -51,9 +54,9 @@ class SprunjeTests extends TestCase
         $fm = $this->ci->factory;
 
         // Generate some test models
-        $users = $fm->seed(3, 'UserFrosting\Sprinkle\Account\Database\Models\User');
-        $roles = $fm->seed(3, 'UserFrosting\Sprinkle\Account\Database\Models\Role');
-        $permissions = $fm->seed(3, 'UserFrosting\Sprinkle\Account\Database\Models\Permission');
+        $users = $fm->seed(3, User::class);
+        $roles = $fm->seed(3, Role::class);
+        $permissions = $fm->seed(3, Permission::class);
 
         // Create some relationships
         $roles[0]->permissions()->attach($permissions[1]);
@@ -68,7 +71,7 @@ class SprunjeTests extends TestCase
         $users[1]->roles()->attach($roles[1]);
         $users[2]->roles()->attach($roles[1]);
 
-        $this->classMapper->setClassMapping('user', 'UserFrosting\Sprinkle\Account\Database\Models\User');
+        $this->classMapper->setClassMapping('user', User::class);
 
         // Test user 0
         $sprunje = new UserPermissionSprunje($this->classMapper, [

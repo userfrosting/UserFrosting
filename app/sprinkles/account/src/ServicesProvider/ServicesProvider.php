@@ -49,7 +49,7 @@ class ServicesProvider
          */
         $container->extend('assets', function ($assets, $c) {
 
-            // Force load the current user to add it's theme assets ressources
+            // Force load the current user to add it's theme assets resources
             $currentUser = $c->currentUser;
 
             return $assets;
@@ -263,7 +263,7 @@ class ServicesProvider
                  * @return bool true if the user is in the group, false otherwise.
                  */
                 'in_group' => function ($user_id, $group_id) {
-                    $user = User::find($user_id);
+                    $user = User::findInt($user_id);
 
                     return $user->group_id == $group_id;
                 },
@@ -317,7 +317,7 @@ class ServicesProvider
             $authenticator = $c->authenticator;
             $currentUser = $authenticator->user();
 
-            // Add user theme sprinkles ressources
+            // Add user theme sprinkles resources
             if ($authenticator->check() && $currentUser->theme) {
                 $c->sprinkleManager->addSprinkleResources($currentUser->theme);
             }
@@ -374,13 +374,6 @@ class ServicesProvider
              * @return \Psr\Http\Message\ResponseInterface
              */
             return function (Request $request, Response $response, array $args) use ($c) {
-                // Backwards compatibility for the deprecated determineRedirectOnLogin service
-                if ($c->has('determineRedirectOnLogin')) {
-                    $determineRedirectOnLogin = $c->determineRedirectOnLogin;
-
-                    return $determineRedirectOnLogin($response)->withStatus(200);
-                }
-
                 /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
                 $authorizer = $c->authorizer;
 

@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\RoleController;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
@@ -278,19 +279,19 @@ class RoleControllerGuestTest extends TestCase
     /**
      * @return RoleController
      */
-    private function getController()
+    protected function getController()
     {
         return new RoleController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         // Guest user, won't have any access
         $testUser = $this->createTestUser(false, true);
 
         // Create test role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role', [
+        $role = $fm->create(Role::class, [
             'slug' => 'foo',
             'name' => 'bar',
         ]);

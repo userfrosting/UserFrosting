@@ -13,7 +13,7 @@ return [
     'test' => [
         '@TRANSLATION' => 'Test',
         'bbb'          => 'BBB',
-        'ccc'          => 'CCC', // Overwriten by ""
-        'ddd'          => 'ddd', //Overwriten by "DDD"
+        'ccc'          => 'CCC', // Overwritten by ""
+        'ddd'          => 'ddd', // Overwritten by "DDD"
     ],
 ];

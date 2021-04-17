@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\GroupController;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
@@ -133,7 +134,7 @@ class GroupControllerGuestTest extends TestCase
 
         // Create test group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Get controller
         $controller = $this->getController();
@@ -156,7 +157,7 @@ class GroupControllerGuestTest extends TestCase
 
         // Create test group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Get controller
         $controller = $this->getController();
@@ -179,7 +180,7 @@ class GroupControllerGuestTest extends TestCase
 
         // Create test group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Give user partial permissions
         $this->giveUserTestPermission($testUser, 'uri_group'); // Can view, but can't edit or delete
@@ -245,7 +246,7 @@ class GroupControllerGuestTest extends TestCase
 
         // Create test group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Get controller
         $controller = $this->getController();
@@ -268,7 +269,7 @@ class GroupControllerGuestTest extends TestCase
 
         // Create test group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Get controller
         $controller = $this->getController();
@@ -314,7 +315,7 @@ class GroupControllerGuestTest extends TestCase
 
         // Create test group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Get controller
         $controller = $this->getController();
@@ -341,7 +342,7 @@ class GroupControllerGuestTest extends TestCase
 
         // Create a group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Get controller
         $controller = $this->getController();
@@ -383,19 +384,19 @@ class GroupControllerGuestTest extends TestCase
     /**
      * @return GroupController
      */
-    private function getController()
+    protected function getController()
     {
         return new GroupController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         // Guest user, won't have any access
         $testUser = $this->createTestUser(false, true);
 
         // Create test role
         $fm = $this->ci->factory;
-        $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+        $fm->create(Group::class, [
             'slug' => 'foo',
             'name' => 'bar',
         ]);

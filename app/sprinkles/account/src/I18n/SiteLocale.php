@@ -32,7 +32,7 @@ class SiteLocale extends CoreSiteLocale
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface */
         $currentUser = $this->ci->currentUser;
 
-        // If user is note loged in, get original translator
+        // If user is note logged in, get original translator
         try {
             if (!$authenticator->check()) {
                 return parent::getLocaleIndentifier();

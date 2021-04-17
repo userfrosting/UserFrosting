@@ -22,6 +22,8 @@ class SiteLocale
 {
     /**
      * @var ContainerInterface
+     *
+     * @todo Change this to only the config service
      */
     protected $ci;
 
@@ -121,9 +123,11 @@ class SiteLocale
     }
 
     /**
-     * Returns the locale intentifier (ie. en_US) to use.
+     * Returns the locale identifier (ie. en_US) to use.
      *
-     * @return string Locale intentifier
+     * @return string Locale identifier
+     *
+     * @todo This should accept the request service as argument, or null, in which case the `getBrowserLocale` method would be skipped
      */
     public function getLocaleIndentifier(): string
     {
@@ -142,6 +146,8 @@ class SiteLocale
      * Return the browser locale.
      *
      * @return string|null Returns null if no valid locale can be found
+     *
+     * @todo This should accept the request service as argument.
      */
     protected function getBrowserLocale(): ?string
     {
@@ -169,7 +175,10 @@ class SiteLocale
                     $identifier = trim(str_replace('-', '_', $parts[0]));
 
                     // Ensure locale available
-                    if (in_array(strtolower($identifier), array_map('strtolower', $availableLocales))) {
+                    $localeIndex = array_search(strtolower($identifier), array_map('strtolower', $availableLocales));
+
+                    if ($localeIndex !== false) {
+                        $matchedLocale = $availableLocales[$localeIndex];
 
                         // Determine preference level (q=0.x), and add to $foundLocales
                         // If no preference level, set as 1
@@ -181,7 +190,7 @@ class SiteLocale
                         }
 
                         // Add to list, and format for UF's i18n.
-                        $foundLocales[$identifier] = $preference;
+                        $foundLocales[$matchedLocale] = $preference;
                     }
                 }
             }

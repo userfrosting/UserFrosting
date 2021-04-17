@@ -89,7 +89,7 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->expectException(HttpException::class);
-        $this->expectExceptionMessage("Account can't be registrated as 'first_name' is required to create a new user.");
+        $this->expectExceptionMessage("Account can't be registered as 'first_name' is required to create a new user.");
         $registration->validate();
     }
 
@@ -135,7 +135,7 @@ class RegistrationTest extends TestCase
         $registration = new Registration($this->ci, $this->fakeUserData);
 
         $this->expectException(HttpException::class);
-        $this->expectExceptionMessage("Username is already in use.");
+        $this->expectExceptionMessage('Username is already in use.');
         $registration->validate();
     }
 
@@ -154,7 +154,7 @@ class RegistrationTest extends TestCase
 
         //Set expectations
         $this->expectException(HttpException::class);
-        $this->expectExceptionMessage("Email is already in use.");
+        $this->expectExceptionMessage('Email is already in use.');
 
         // Act
         $registration->validate();

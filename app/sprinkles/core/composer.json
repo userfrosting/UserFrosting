@@ -17,7 +17,7 @@
         {
             "name": "Jordan Mele",
             "email": "SiliconSoldier@outlook.com.au",
-            "homepage": "https://blog.djmm.me"
+            "homepage": "https://djmm.me"
         },
         {
             "name": "Mike Jacobs"
@@ -27,6 +27,7 @@
         }
     ],
     "require": {
+        "composer/semver": "^3.2.4",
         "doctrine/dbal": "^2.5",
         "filp/whoops": "^2.3.1",
         "illuminate/cache": "5.8.*",
@@ -52,6 +53,9 @@
         "userfrosting/session": "~4.4.0",
         "userfrosting/support": "~4.4.0",
         "vlucas/phpdotenv": "^3.4.0"
+    },
+    "require-dev": {
+        "php-mock/php-mock-phpunit": "^2.6"
     },
     "autoload": {
         "files" : [
