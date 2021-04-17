@@ -96,7 +96,7 @@ export async function assetsInstall() {
         log.info("Compiling compatible node modules into UMD bundles with browserify");
         deleteSync(vendorAssetsDir + "browser_modules/", { force: true });
         await browserifyDependencies({
-            dependencies: Object.keys(pkg.dependencies ?? []),
+            dependencies: Object.keys(pkg.dependencies || []),
             inputDir: vendorAssetsDir + "node_modules/",
             outputDir: vendorAssetsDir + "browser_modules/",
             silentFailures: true,
