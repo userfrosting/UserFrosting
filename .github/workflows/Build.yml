@@ -356,10 +356,10 @@ jobs:
         with:
           node-version: 14.x
 
-      - name: Install TypeScript
-        working-directory: build
+      - name: Install Dependencies
+        working-directory: ./build
         run: npm i
 
       - name: Type Validation
-        working-directory: build
+        working-directory: ./build
         run: node_modules/bin/tsc -p ./tsconfig.json
