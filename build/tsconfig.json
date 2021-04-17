@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "module": "es2020",
+        "moduleResolution": "node",
+        "target": "es2020",
+        "noEmit": true,
+        "allowSyntheticDefaultImports": true
+    }
+}

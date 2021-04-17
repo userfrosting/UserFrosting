@@ -1,11 +1,10 @@
-// @ts-check
 import { sync as deleteSync } from "del";
 import { vendorAssetsDir, publicAssetsDir } from "./util.js";
 import { GulpLogLogger } from "@userfrosting/ts-log-adapter-gulplog";
 
 /**
  * Clean vendor and public asset folders.
- * @param {(err?) => {}} done Used to mark task completion.
+ * @param {(err?: unknown) => {}} done Used to mark task completion.
  */
 export function clean(done) {
     const log = new GulpLogLogger(clean.name);

@@ -1,7 +1,6 @@
-// @ts-check
 import { legacyVendorAssetsGlob, sprinkles, sprinklesDir, vendorAssetsDir } from "./util.js";
 import { bower as mergeBowerDeps, npm as mergeNpmDeps } from "@userfrosting/merge-package-dependencies";
-import browserifyDependencies from "@userfrosting/browserify-dependencies";
+import { browserifyDependencies } from "@userfrosting/browserify-dependencies";
 import { sync as deleteSync } from "del";
 import childProcess, { exec as _exec } from "child_process";
 import { existsSync } from "fs";
@@ -70,6 +69,7 @@ export async function assetsInstall() {
             private: true
         };
         log.info("Collating dependencies...");
+        /** @type {{ private: boolean, dependencies?: { [x: string]: string } }} */
         const pkg = mergeNpmDeps(npmTemplate, npmPaths, vendorAssetsDir, true);
         log.info("Dependency collation complete.");
 
@@ -96,7 +96,7 @@ export async function assetsInstall() {
         log.info("Compiling compatible node modules into UMD bundles with browserify");
         deleteSync(vendorAssetsDir + "browser_modules/", { force: true });
         await browserifyDependencies({
-            dependencies: Object.keys(pkg.dependencies),
+            dependencies: Object.keys(pkg.dependencies ?? []),
             inputDir: vendorAssetsDir + "node_modules/",
             outputDir: vendorAssetsDir + "browser_modules/",
             silentFailures: true,

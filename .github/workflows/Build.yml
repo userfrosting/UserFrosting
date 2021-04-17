@@ -314,7 +314,7 @@ jobs:
       fail-fast: false
       matrix:
         php_versions: ['7.4']
-        node_versions: ['12.17.0', '14', '15'] 
+        node_versions: ['12.x', '14.x', '15.x'] 
         os: [ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
@@ -343,3 +343,23 @@ jobs:
     
     - name: Execute build
       run: php bakery build-assets
+
+  Asset-Build-Inspect:
+
+    name: Assets Build Inspection
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+
+      - name: Install TypeScript
+        working-directory: build
+        run: npm i
+
+      - name: Type Validation
+        working-directory: build
+        run: node_modules/bin/tsc -p ./tsconfig.json

@@ -1,4 +1,3 @@
-// @ts-check
 import gulp from "gulp";
 import minifyCss from "gulp-clean-css";
 import concatJs from "gulp-concat";
@@ -36,6 +35,7 @@ export function build() {
     sources.push("!**.php");
 
     // Create bundle stream factories object
+    /** @type {import("@userfrosting/gulp-bundle-assets").Bundlers} */
     const bundleBuilder = {
         Scripts: (src, name) => {
             return src
@@ -150,7 +150,7 @@ export function build() {
 
 /**
  * Used to filter to just styles and scripts.
- * @param {import("vinyl").NullFile} fs
+ * @param {import("vinyl")} fs
  */
 function stylesAndScriptsFilter(fs) {
     return scriptsFilter(fs) || stylesFilter(fs);
@@ -158,7 +158,7 @@ function stylesAndScriptsFilter(fs) {
 
 /**
  * Used to filter to just styles.
- * @param {import("vinyl").NullFile} fs
+ * @param {import("vinyl")} fs
  */
 function stylesFilter(fs) {
     return fs.extname === ".css";
@@ -166,7 +166,7 @@ function stylesFilter(fs) {
 
 /**
  * Used to filter to just scripts.
- * @param {import("vinyl").NullFile} fs
+ * @param {import("vinyl")} fs
  */
 function scriptsFilter(fs) {
     return fs.extname === ".js";

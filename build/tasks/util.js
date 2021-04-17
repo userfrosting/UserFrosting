@@ -1,4 +1,3 @@
-// @ts-check
 import gulplog from "gulplog";
 import { readFileSync } from "fs";
 
@@ -13,6 +12,7 @@ export const vendorAssetsDir = `${rootDir}/app/assets/`;
 export const logFile = `${rootDir}/app/logs/build.log`;
 
 // Load sprinkles
+/** @type {string[]} */
 let sprinkles;
 try {
     sprinkles = JSON.parse(readFileSync(sprinklesSchemaPath).toString()).base;
