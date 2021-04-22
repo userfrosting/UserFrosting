@@ -81,7 +81,7 @@ class MigrateCleanCommand extends MigrateCommand
     /**
      * Delete stale migrations from the database.
      *
-     * @param Collection $stale    Collection of stale migartion classes.
+     * @param Collection $stale    Collection of stale migration classes.
      * @param Migrator   $migrator Migrator object
      */
     protected function cleanStaleRecords(Collection $stale, Migrator $migrator)

@@ -47,7 +47,7 @@ class RoleController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function create(Request $request, Response $response, $args)
     {
@@ -144,7 +144,7 @@ class RoleController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException   If role is not found
-     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws ForbiddenException  If user is not authorized to access page
      * @throws BadRequestException
      */
     public function delete(Request $request, Response $response, $args)
@@ -227,7 +227,7 @@ class RoleController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      * @throws NotFoundException  If role is not found
      */
     public function getInfo(Request $request, Response $response, $args)
@@ -275,7 +275,7 @@ class RoleController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getList(Request $request, Response $response, $args)
     {
@@ -311,7 +311,7 @@ class RoleController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException   If role is not found
-     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws ForbiddenException  If user is not authorized to access page
      * @throws BadRequestException
      */
     public function getModalConfirmDelete(Request $request, Response $response, $args)
@@ -382,7 +382,7 @@ class RoleController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getModalCreate(Request $request, Response $response, $args)
     {
@@ -446,7 +446,7 @@ class RoleController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException  If role is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getModalEdit(Request $request, Response $response, $args)
     {
@@ -518,7 +518,7 @@ class RoleController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException  If role is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getModalEditPermissions(Request $request, Response $response, $args)
     {
@@ -564,7 +564,7 @@ class RoleController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException  If role is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getPermissions(Request $request, Response $response, $args)
     {
@@ -617,7 +617,7 @@ class RoleController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException  If role is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getUsers(Request $request, Response $response, $args)
     {
@@ -672,7 +672,7 @@ class RoleController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function pageInfo(Request $request, Response $response, $args)
     {
@@ -752,7 +752,7 @@ class RoleController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function pageList(Request $request, Response $response, $args)
     {
@@ -788,7 +788,7 @@ class RoleController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException  If role is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function updateInfo(Request $request, Response $response, $args)
     {
@@ -910,7 +910,7 @@ class RoleController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException   If role is not found
-     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws ForbiddenException  If user is not authorized to access page
      * @throws BadRequestException
      */
     public function updateField(Request $request, Response $response, $args)

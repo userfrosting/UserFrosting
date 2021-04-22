@@ -5,6 +5,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.5.0]
+
+### Changed Requirements
+- Drop PHP 7.1 support. PHP 7.4 is now recommended.
+- Raised NodeJS version requirement from `>=10.12.0` to `^12.17.0 || >=14.0.0` ([#1138]).
+- Raised NPM version requirement from `>=6.0.0` to `>=6.14.4` ([#1138]).
+
+### Changed Composer Dependencies
+- Updated `wikimedia/composer-merge-plugin` from `^1.4.0` to `^2.1.0` ([#1117]).
+
+### Added
+- Composer 2 support ([#1117]).
+- [Lando](https://lando.dev) support.
+- Added more SMTP options in env and setup:smtp bakery command ([#1077]),
+- Added new `MAIL_MAILER` environment variable to set mailer type.
+- Added "Native mail" to `setup:mail` bakery command.
+
+### Changed
+- Implement findInt ([#1117]).
+- Replace `getenv()` with `env()` ([#1121]). 
+- Replaced `UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck` with new `UserFrosting\Sprinkle\Core\Util\VersionValidator` class.
+- Bakery command `setup:smtp` renamed to `setup:mail`. The old command is still available as an alias for backward compatibility. 
+- Changed `.php_cs` to `.php_cs.dist`.
+- Changed `phpunit.xml` to `phpunit.xml.dist`.
+
+### Fixed
+- Replaced AdminLTE credit in default footer (old link was dead).
+- Issue with path slashes on Windows ([#1133]).
+
+### Removed
+- Removed deprecated `UserFrosting\System\Bakery\Migration` (deprecated in 4.2.0).
+- Removed deprecated `UserFrosting\Tests\DatabaseTransactions` (deprecated in 4.2.0).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Tests\ControllerTestCase` (deprecated in 4.2.2).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Model\UFModel` (deprecated in 4.1).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Sprunje\Sprunje::getResults` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Account\Database\Models\User::exists` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Models\Model::export` (deprecated in 4.1.8).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Models\Model::queryBuilder` (deprecated in 4.1.8).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique::withLimit` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique::withOffset` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Error\RendererWhoopsRenderer::getResourcesPath`.
+- Removed deprecated `UserFrosting\Sprinkle\Core\Error\RendererWhoopsRenderer::setResourcesPath`.
+- Removed deprecated Handlebar `ifCond` (Deprecated in 4.1).
+- Removed migration seed.
+- Removed support for migration with non static `$dependencies` properties.
+- Removed support for deprecated `determineRedirectOnLogin` service (deprecated in 4.1.10).
+
 ## [v4.4.5]
 
 ### Changed
@@ -85,7 +132,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improve ordering by activity date ([#1061] & [#1062]; Thanks @ktecho!)
 - Updated Vagrant config and documentation
 - Fixed a bug where `withTrashed` in `findUnique` was not available when `SoftDeletes` trait is not included in a model.
-- CSRF global middleware is not loaded anymore if in a CLI envrionement. This will avoid sessions to be created for bakery and tests by default.
+- CSRF global middleware is not loaded anymore if in a CLI environment. This will avoid sessions to be created for bakery and tests by default.
 - Browserified node modules not being correctly loaded.
 - Browserified node modules potentially colliding with real entrypoints.
 
@@ -994,6 +1041,12 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1114]: https://github.com/userfrosting/UserFrosting/pull/1114
 [#1126]: https://github.com/userfrosting/UserFrosting/pull/1126
 [#1128]: https://github.com/userfrosting/UserFrosting/pull/1128
+[#1117]: https://github.com/userfrosting/UserFrosting/issues/1117
+[#1138]: https://github.com/userfrosting/UserFrosting/pull/1138
+[#1124]: https://github.com/userfrosting/UserFrosting/pull/1124
+[#1121]: https://github.com/userfrosting/UserFrosting/pull/1121
+[#1077]: https://github.com/userfrosting/UserFrosting/pull/1077
+[#1133]: https://github.com/userfrosting/UserFrosting/issues/1133
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
@@ -1009,3 +1062,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.4.3]: https://github.com/userfrosting/UserFrosting/compare/v4.4.2...v4.4.3
 [v4.4.4]: https://github.com/userfrosting/UserFrosting/compare/v4.4.3...v4.4.4
 [v4.4.5]: https://github.com/userfrosting/UserFrosting/compare/v4.4.4...v4.4.5
+[v4.5.0]: https://github.com/userfrosting/UserFrosting/compare/v4.4.5...v4.5.0

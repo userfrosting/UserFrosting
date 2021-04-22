@@ -72,7 +72,7 @@ class ClearCacheCommand extends BaseCommand
     /**
      * Clear the Twig cache using the Twig CacheHelper class.
      *
-     * @return bool true/false if operation is successfull
+     * @return bool true/false if operation is successful
      */
     protected function clearTwigCache()
     {
@@ -84,7 +84,7 @@ class ClearCacheCommand extends BaseCommand
     /**
      * Clear the Router cache data file.
      *
-     * @return bool true/false if operation is successfull
+     * @return bool true/false if operation is successful
      */
     protected function clearRouterCache()
     {

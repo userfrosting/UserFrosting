@@ -91,7 +91,7 @@ class MigrateRollbackCommand extends MigrateCommand
         // If all went well, there's no fatal errors and we have migrated
         // something, show some success
         if (empty($migrated)) {
-            $this->io->warning('Nothing was rollbacked !');
+            $this->io->warning('Nothing was rolled back !');
         } else {
             $this->io->success('Rollback successful !');
         }

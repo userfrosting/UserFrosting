@@ -62,7 +62,7 @@ abstract class BaseCommand extends Command
     {
         // Need to touch the config service first to load dotenv values
         $config = $this->ci->config;
-        $mode = getenv('UF_MODE') ?: '';
+        $mode = env('UF_MODE', '');
 
         return $mode === 'production';
     }

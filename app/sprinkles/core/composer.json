@@ -17,7 +17,7 @@
         {
             "name": "Jordan Mele",
             "email": "SiliconSoldier@outlook.com.au",
-            "homepage": "https://blog.djmm.me"
+            "homepage": "https://djmm.me"
         },
         {
             "name": "Mike Jacobs"
@@ -27,6 +27,7 @@
         }
     ],
     "require": {
+        "composer/semver": "^3.2.4",
         "doctrine/dbal": "^2.5",
         "filp/whoops": "^2.3.1",
         "illuminate/cache": "5.8.*",
@@ -44,14 +45,17 @@
         "slim/twig-view": "^2.5",
         "symfony/http-foundation": "*",
         "twig/twig": "^2.11",
-        "userfrosting/assets": "^6.1.0",
-        "userfrosting/config": "~4.4.0",
-        "userfrosting/cache": "~4.4.0",
-        "userfrosting/fortress": "~4.4.0",
-        "userfrosting/i18n": "~4.4.0",
-        "userfrosting/session": "~4.4.0",
-        "userfrosting/support": "~4.4.0",
+        "userfrosting/assets": "^6.2.0",
+        "userfrosting/config": "~4.5.0",
+        "userfrosting/cache": "~4.5.0",
+        "userfrosting/fortress": "~4.5.0",
+        "userfrosting/i18n": "~4.5.0",
+        "userfrosting/session": "~4.5.0",
+        "userfrosting/support": "~4.5.0",
         "vlucas/phpdotenv": "^3.4.0"
+    },
+    "require-dev": {
+        "php-mock/php-mock-phpunit": "^2.6"
     },
     "autoload": {
         "files" : [

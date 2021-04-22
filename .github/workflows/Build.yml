@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['7.1', '7.2', '7.3', '7.4']
+        php_versions: ['7.2', '7.3', '7.4']
 
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - MySQL
@@ -38,11 +38,11 @@ jobs:
         php-version: ${{ matrix.php_versions }}
         extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
         coverage: xdebug
-        tools: pecl, composer:v1
+        tools: pecl, composer
 
     - uses: actions/setup-node@v2
       with:
-        node-version: 10
+        node-version: 14
     
     - name: Setup Redis-server
       uses: supercharge/redis-github-action@1.1.0
@@ -83,7 +83,7 @@ jobs:
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
     
     - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
     
     - name: Bakery Debug
       run: php bakery debug
@@ -109,7 +109,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          php_versions: ['7.1', '7.2', '7.3', '7.4']
+          php_versions: ['7.2', '7.3', '7.4']
 
       runs-on: ubuntu-latest
       name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
@@ -129,11 +129,11 @@ jobs:
           php-version: ${{ matrix.php_versions }}
           extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
           coverage: xdebug
-          tools: pecl, composer:v1
+          tools: pecl, composer
 
       - uses: actions/setup-node@v2
         with:
-          node-version: 10
+          node-version: 14
       
       - name: Setup Redis-server
         uses: supercharge/redis-github-action@1.1.0
@@ -147,7 +147,7 @@ jobs:
         run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
       
       - name: Install Dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
       
       - name: Create SQLite Database
         run: |
@@ -178,7 +178,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          php_versions: ['7.1', '7.2', '7.3', '7.4']
+          php_versions: ['7.2', '7.3', '7.4']
 
       runs-on: ubuntu-latest
       name: PHPUnit - PHP ${{ matrix.php_versions }} - PostgreSQL
@@ -202,7 +202,7 @@ jobs:
           php-version: ${{ matrix.php_versions }}
           extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite, pdo_pgsql
           coverage: xdebug
-          tools: pecl, composer:v1
+          tools: pecl, composer
       
       - name: Setup PostgreSQL
         uses: harmon758/postgresql-action@v1
@@ -213,7 +213,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: 10
+          node-version: 14
       
       - name: Setup Redis-server
         uses: supercharge/redis-github-action@1.1.0
@@ -227,7 +227,7 @@ jobs:
         run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
       
       - name: Install Dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
       
       - name: Bakery Debug
         run: php bakery debug
@@ -253,7 +253,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['7.1', '7.2', '7.3', '7.4']
+        php_versions: ['7.2', '7.3', '7.4']
 
     runs-on: windows-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
@@ -273,17 +273,17 @@ jobs:
         php-version: ${{ matrix.php_versions }}
         extensions: mbstring, dom, fileinfo, gd, pdo, sqlite, pdo_sqlite
         coverage: xdebug
-        tools: pecl, composer:v1
+        tools: pecl, composer
 
     - uses: actions/setup-node@v2
       with:
-        node-version: 10
+        node-version: 14
     
     - name: Copy .env
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
     
     - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
     
     - name: Create SQLite Database
       run: |
@@ -314,7 +314,7 @@ jobs:
       fail-fast: false
       matrix:
         php_versions: ['7.4']
-        node_versions: ['10', '12', '14'] 
+        node_versions: ['12.17.0', '14', '15'] 
         os: [ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
@@ -329,7 +329,7 @@ jobs:
         php-version: ${{ matrix.php_versions }}
         extensions: mbstring, dom, fileinfo, gd
         coverage: xdebug
-        tools: pecl, composer:v1
+        tools: pecl, composer
 
     - uses: actions/setup-node@v2
       with:
@@ -339,7 +339,7 @@ jobs:
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
     
     - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
     
     - name: Execute build
       run: php bakery build-assets

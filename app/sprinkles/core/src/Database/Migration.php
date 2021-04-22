@@ -28,7 +28,7 @@ abstract class Migration implements MigrationInterface
      * List of dependencies for this migration.
      * Should return an array of class required to be run before this migration.
      *
-     * N.B.: Uncomment the next line when the static $dependencie deprecation is removed
+     * N.B.: Uncomment the next line when the static $dependencies deprecation is removed
      */
     //public static $dependencies = [];
 

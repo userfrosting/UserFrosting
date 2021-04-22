@@ -17,7 +17,7 @@ use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
 use UserFrosting\Tests\TestCase;
 
 /**
- * DatabaseMigrationRespository Test
+ * DatabaseMigrationRepository Test
  */
 class MigrationRepositoryTest extends TestCase
 {
@@ -44,7 +44,7 @@ class MigrationRepositoryTest extends TestCase
         // Create repository instance
         $this->repository = new DatabaseMigrationRepository($capsule, 'migrations');
 
-        // Set global expections for $capule and $connection
+        // Set global expectations for $capsule and $connection
         // Repository -> capsule -> connection -> Schema
         // When repository call `getConnection`, it will receive the connection mock
         // When repository call `getSchemaBuilder`, it will receive the schema builder mock
@@ -141,7 +141,7 @@ class MigrationRepositoryTest extends TestCase
 
     public function testCreateRepositoryCreatesProperDatabaseTable()
     {
-        // Setup expectations for SchemaBuilder. When asked to create the repository, the schema should reeceive the create command
+        // Setup expectations for SchemaBuilder. When asked to create the repository, the schema should receive the create command
         $this->repository->getSchemaBuilder()->shouldReceive('create')->once()->with('migrations', m::type('Closure'));
         $this->repository->createRepository();
     }

@@ -12,15 +12,31 @@ namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\ActivityController;
-use UserFrosting\Sprinkle\Core\Tests\ControllerTestCase;
+use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
+use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
+use UserFrosting\Sprinkle\Core\Tests\withController;
 use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Tests\TestCase;
 
 /**
  * Tests ActivityController
  */
-class ActivityControllerTest extends ControllerTestCase
+class ActivityControllerTest extends TestCase
 {
     use withTestUser;
+    use TestDatabase;
+    use RefreshDatabase;
+    use withController;
+
+    /**
+     * Setup test database for controller tests
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->setupTestDatabase();
+        $this->refreshDatabase();
+    }
 
     /**
      * @return ActivityController

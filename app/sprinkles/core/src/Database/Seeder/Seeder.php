@@ -148,7 +148,7 @@ class Seeder
     }
 
     /**
-     * Return an array of seed details inclusing the classname and the sprinkle name.
+     * Return an array of seed details including the class name and the sprinkle name.
      *
      * @param ResourceInstance $file The seed file
      *
@@ -160,7 +160,7 @@ class Seeder
         $sprinkleName = $file->getLocation()->getName();
         $sprinkleName = Str::studly($sprinkleName);
 
-        // Getting base path, name and classname
+        // Getting base path, name and class name
         $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
         $name = $basePath . $file->getFilename();
         $className = str_replace('/', '\\', $basePath) . $file->getFilename();

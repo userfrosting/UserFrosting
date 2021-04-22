@@ -29,8 +29,8 @@ class LocaleInfoCommand extends BaseCommand
     protected function configure()
     {
         $this->setName('locale:info')
-             ->setHelp('This command list all available locale as well as the defaut locale.')
-             ->setDescription('Informations about available locales');
+             ->setHelp('This command list all available locale as well as the default locale.')
+             ->setDescription('Information about available locales');
     }
 
     /**

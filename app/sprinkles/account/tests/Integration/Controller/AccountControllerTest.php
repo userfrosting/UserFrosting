@@ -136,7 +136,7 @@ class AccountControllerTest extends TestCase
         // Recreate controller to use fake config
         $controller = $this->getController();
 
-        // Perfrom common test code
+        // Perform common test code
         $this->performActualRegisterTest($controller);
     }
 
@@ -166,7 +166,7 @@ class AccountControllerTest extends TestCase
         // Recreate controller to use fake config
         $controller = $this->getController();
 
-        // Perfrom common test code
+        // Perform common test code
         $this->performActualRegisterTest($controller);
     }
 
@@ -175,7 +175,7 @@ class AccountControllerTest extends TestCase
      */
     protected function performActualRegisterTest(AccountController $controller)
     {
-        // Genereate a captcha for next request.
+        // Generate a captcha for next request.
         $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
         $captcha->generateRandomCode();
 
@@ -494,7 +494,7 @@ class AccountControllerTest extends TestCase
 
         $result = $controller->login($request, $this->getResponse(), []);
         $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
-        // Can't assert the status code or data, as this can be overwrited by sprinkles
+        // Can't assert the status code or data, as this can be overwritten by sprinkles
 
         // Test message
         $ms = $this->ci->alerts;
@@ -531,7 +531,7 @@ class AccountControllerTest extends TestCase
 
         $result = $controller->login($request, $this->getResponse(), []);
         $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
-        // Can't assert the status code or data, as this can be overwrited by sprinkles
+        // Can't assert the status code or data, as this can be overwritten by sprinkles
 
         // Test message
         $ms = $this->ci->alerts;
@@ -676,7 +676,7 @@ class AccountControllerTest extends TestCase
 
         $result = $controller->login($request, $this->getResponse(), []);
         $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
-        // Can't assert the status code or data, as this can be overwrited by sprinkles
+        // Can't assert the status code or data, as this can be overwritten by sprinkles
 
         // Test message
         $ms = $this->ci->alerts;

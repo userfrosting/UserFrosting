@@ -1,4 +1,4 @@
-# UserFrosting 4.4
+# UserFrosting 4.5
 
 [![Latest Version](https://img.shields.io/github/release/userfrosting/UserFrosting.svg)](https://github.com/userfrosting/UserFrosting/releases)
 ![PHP Version](https://img.shields.io/packagist/php-v/userfrosting/userfrosting.svg?color=brightgreen)
@@ -11,8 +11,8 @@
 | Branch | Version | Build | Coverage | Style |
 | ------ |:-------:|:-----:|:--------:|:-----:|
 | [master] | ![](https://img.shields.io/github/release/userfrosting/userfrosting.svg?color=success&label=Version) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=master)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)][UF-Codecov] | [![][style-master]][style] |
-| [hotfix] | ![](https://img.shields.io/badge/Version-v4.4.x-yellow.svg) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=hotfix)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
-| [develop] | ![](https://img.shields.io/badge/Version-v4.5.x-orange.svg) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=develop)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
+| [hotfix] | ![](https://img.shields.io/badge/Version-v4.5.x-yellow.svg) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=hotfix)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
+| [develop] | ![](https://img.shields.io/badge/Version-v4.6.x-orange.svg) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=develop)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
 
 <!-- Links -->
 [master]: https://github.com/userfrosting/UserFrosting
@@ -38,13 +38,13 @@ UserFrosting is a secure, modern user management system written in PHP and built
 ## Features
 
 ### User login screen
-![User login script](screenshots/login.png)
+![User login script](.github/screenshots/login.png)
 
 ### User management page
-![PHP user management script](screenshots/users.png)
+![PHP user management script](.github/screenshots/users.png)
 
 ### Permissions management page
-![UserFrosting permissions management](screenshots/permissions.png)
+![UserFrosting permissions management](.github/screenshots/permissions.png)
 
 ## [Demo](https://demo.userfrosting.com)
 
@@ -93,7 +93,7 @@ Louis's a civil engineer in Montréal, Québec who also has a passion for coding
 
 ### Jordan Mele
 
-Jordan's an Australian PHP Developer at [4mation](https://www.4mation.com.au) in Surry Hills, NSW. His passion is creating simple yet intuitive software-based solutions for problems that would otherwise be tedious and overcomplicated to address, while keeping the user in control.
+Jordan's an Australian Software Engineer at [Canva](https://canva.com). His passion is creating simple yet intuitive software-based solutions for problems that would otherwise be tedious and/or difficult to solve, while keeping the user in control.
 
 ### Sarah Baghdadi
 
@@ -139,5 +139,5 @@ Backers help us continue to develop UserFrosting by pledging a regular monthly c
 
 Support this project by becoming a sponsor. Sponsors have contributed a total of $500 or more to UserFrosting (either as an ongoing backer or one-time contributions). Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/userfrosting#sponsor)]
 
-[![USOR Games](sponsors/usor.png)](https://usorgames.com)
-[![Next Generation Internet](sponsors/nextgi.png)](https://nextgi.com)
+[![USOR Games](.github/sponsors/usor.png)](https://usorgames.com)
+[![Next Generation Internet](.github/sponsors/nextgi.png)](https://nextgi.com)

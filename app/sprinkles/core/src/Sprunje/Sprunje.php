@@ -575,19 +575,4 @@ abstract class Sprunje
     {
         return $query->count();
     }
-
-    /**
-     * Executes the sprunje query, applying all sorts, filters, and pagination.
-     *
-     * Returns an array containing `count` (the total number of rows, before filtering), `count_filtered` (the total number of rows after filtering),
-     * and `rows` (the filtered result set).
-     *
-     * @deprecated since 4.1.7  Use getArray() instead.
-     *
-     * @return mixed[]
-     */
-    public function getResults()
-    {
-        return $this->getArray();
-    }
 }
