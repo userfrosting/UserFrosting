@@ -12,7 +12,7 @@ namespace UserFrosting\Tests\Integration\Seeder;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
@@ -31,7 +31,7 @@ class SeederTests extends TestCase
     /**
      * Setup our fake ci
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Boot parent TestCase
         parent::setUp();
@@ -44,7 +44,7 @@ class SeederTests extends TestCase
         $serviceProvider->register($this->fakeCi);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -68,7 +68,7 @@ class SeederTests extends TestCase
     public function testgetSeeds(Seeder $seeder)
     {
         $seeds = $seeder->getSeeds();
-        $this->assertInternalType('array', $seeds);
+        $this->assertIsArray($seeds);
         $this->assertCount(3, $seeds);
         $this->assertEquals([
             [
@@ -96,7 +96,7 @@ class SeederTests extends TestCase
     public function testGetSeed(Seeder $seeder)
     {
         $seed = $seeder->getSeed('Seed1');
-        $this->assertInternalType('array', $seed);
+        $this->assertIsArray($seed);
         $this->assertEquals([
             'name'     => 'Seed1',
             'class'    => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',
@@ -107,11 +107,11 @@ class SeederTests extends TestCase
     /**
      * @param Seeder $seeder
      * @depends testSeeder
-     * @expectedException \Exception
      */
     public function testUnfoundGetSeed(Seeder $seeder)
     {
-        $seed = $seeder->getSeed('FakeSeed');
+        $this->expectException(\Exception::class);
+        $seeder->getSeed('FakeSeed');
     }
 
     /**
@@ -127,23 +127,21 @@ class SeederTests extends TestCase
     /**
      * @param Seeder $seeder
      * @depends testSeeder
-     * @expectedException \Exception
      */
     public function testGetSeedClassNotSeedInterface(Seeder $seeder)
     {
-        // This class is not an instance of SeedInterface
-        $seeder->getSeedClass('Seed2');
+        $this->expectException(\Exception::class);
+        $seeder->getSeedClass('Seed2'); // This class is not an instance of SeedInterface
     }
 
     /**
      * @param Seeder $seeder
      * @depends testSeeder
-     * @expectedException \Exception
      */
     public function testGetSeedClassException(Seeder $seeder)
     {
-        // The namespace in this class is wrong
-        $seeder->getSeedClass('Test/Seed');
+        $this->expectException(\Exception::class);
+        $seeder->getSeedClass('Test/Seed'); // The namespace in this class is wrong
     }
 
     /**
@@ -166,7 +164,7 @@ class SeederTests extends TestCase
 class ServicesProviderStub
 {
     /**
-     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
+     * @param ContainerInterface $container A DI container implementing ArrayAccess and psr-container.
      */
     public function register(ContainerInterface $container)
     {

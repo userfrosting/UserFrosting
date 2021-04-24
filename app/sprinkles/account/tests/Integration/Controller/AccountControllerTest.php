@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Account\Tests\Integration\Controller;
 
 use Mockery as m;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception;
 use UserFrosting\Sprinkle\Account\Controller\AccountController;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
@@ -49,7 +50,7 @@ class AccountControllerTest extends TestCase
     /**
      * Setup test database for controller tests
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupTestDatabase();
@@ -62,7 +63,7 @@ class AccountControllerTest extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -113,7 +114,7 @@ class AccountControllerTest extends TestCase
         // Force locale config
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
+            'en_US' => true,
         ];
 
         // Create fake mailer
@@ -135,7 +136,7 @@ class AccountControllerTest extends TestCase
         // Recreate controller to use fake config
         $controller = $this->getController();
 
-        // Perfrom common test code
+        // Perform common test code
         $this->performActualRegisterTest($controller);
     }
 
@@ -154,7 +155,7 @@ class AccountControllerTest extends TestCase
         $this->ci->config['site.registration.require_email_verification'] = false;
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
+            'en_US' => true,
         ];
 
         // Bypass security feature
@@ -165,7 +166,7 @@ class AccountControllerTest extends TestCase
         // Recreate controller to use fake config
         $controller = $this->getController();
 
-        // Perfrom common test code
+        // Perform common test code
         $this->performActualRegisterTest($controller);
     }
 
@@ -174,7 +175,7 @@ class AccountControllerTest extends TestCase
      */
     protected function performActualRegisterTest(AccountController $controller)
     {
-        // Genereate a captcha for next request.
+        // Generate a captcha for next request.
         $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
         $captcha->generateRandomCode();
 
@@ -493,17 +494,19 @@ class AccountControllerTest extends TestCase
 
         $result = $controller->login($request, $this->getResponse(), []);
         $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
-        // Can't assert the status code or data, as this can be overwrited by sprinkles
+        // Can't assert the status code or data, as this can be overwritten by sprinkles
 
         // Test message
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
+
+        // We have to logout the user to avoid problem
+        $this->logoutCurrentUser($testUser);
     }
 
     /**
      * @depends testControllerConstructor
-     * @depends testlogin
      * @param AccountController $controller
      */
     public function testloginWithEmail(AccountController $controller)
@@ -528,12 +531,15 @@ class AccountControllerTest extends TestCase
 
         $result = $controller->login($request, $this->getResponse(), []);
         $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
-        // Can't assert the status code or data, as this can be overwrited by sprinkles
+        // Can't assert the status code or data, as this can be overwritten by sprinkles
 
         // Test message
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
+
+        // We have to logout the user to avoid problem
+        $this->logoutCurrentUser($testUser);
     }
 
     /**
@@ -611,6 +617,74 @@ class AccountControllerTest extends TestCase
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     */
+    public function testloginThrottlerCountsFailedLogins()
+    {
+        // Create fake throttler
+        $throttler = m::mock(Throttler::class);
+        $throttler->shouldReceive('getDelay')->once()->with('sign_in_attempt', ['user_identifier' => 'foo'])->andReturn(0);
+        $throttler->shouldReceive('logEvent')->once()->with('sign_in_attempt', ['user_identifier' => 'foo']);
+        $this->ci->throttler = $throttler;
+
+        // Recreate controller to use fake throttler
+        $controller = $this->getController();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'user_name'  => 'foo',
+            'password'   => 'bar',
+            'rememberme' => false,
+        ]);
+
+        $this->expectException(Exception\InvalidCredentialsException::class);
+
+        $controller->login($request, $this->getResponse(), []);
+    }
+
+    /**
+     * @depends testControllerConstructor
+     */
+    public function testloginThrottlerDoesntCountSuccessfulLogins()
+    {
+        // Create a test user
+        $testUser = $this->createTestUser();
+
+        // Faker doesn't hash the password. Let's do that now
+        $unhashed = $testUser->password;
+        $testUser->password = Password::hash($testUser->password);
+        $testUser->save();
+
+        // Create fake throttler
+        $throttler = m::mock(Throttler::class);
+        $throttler->shouldReceive('getDelay')->once()->with('sign_in_attempt', ['user_identifier' => $testUser->email])->andReturn(0);
+        $throttler->shouldNotReceive('logEvent');
+        $this->ci->throttler = $throttler;
+
+        // Recreate controller to use fake throttler and test user
+        $controller = $this->getController();
+
+        // Set POST
+        $request = $this->getRequest()->withParsedBody([
+            'user_name'  => $testUser->email,
+            'password'   => $unhashed,
+            'rememberme' => false,
+        ]);
+
+        $result = $controller->login($request, $this->getResponse(), []);
+        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
+        // Can't assert the status code or data, as this can be overwritten by sprinkles
+
+        // Test message
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $this->assertSame('success', end($messages)['type']);
+
+        // We have to logout the user to avoid problem
+        $this->logoutCurrentUser($testUser);
     }
 
     /**
@@ -875,8 +949,8 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
-            'fr_FR' => 'Français',
+            'en_US' => true,
+            'fr_FR' => true,
         ];
 
         // Recreate controller to use user
@@ -897,7 +971,7 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
+            'en_US' => true,
         ];
 
         // Recreate controller to use config & user
@@ -967,8 +1041,8 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
-            'fr_FR' => 'Français',
+            'en_US' => true,
+            'fr_FR' => true,
         ];
 
         // Recreate controller to use user
@@ -1000,8 +1074,8 @@ class AccountControllerTest extends TestCase
 
         // Force config
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
-            'fr_FR' => 'Français',
+            'en_US' => true,
+            'fr_FR' => true,
         ];
 
         // Recreate controller to use user
@@ -1427,7 +1501,7 @@ class AccountControllerTest extends TestCase
         // Force locale config
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
-            'en_US' => 'English',
+            'en_US' => true,
         ];
 
         // Recreate controller to use fake user
@@ -1590,7 +1664,7 @@ class AccountControllerTest extends TestCase
 
         // Make sure we got a string
         $data = json_decode($body, true);
-        $this->assertInternalType('string', $data['user_name']);
+        $this->assertIsString($data['user_name']);
         $this->assertNotSame('', $data['user_name']);
     }
 
@@ -1679,7 +1753,7 @@ class AccountControllerTest extends TestCase
     /**
      * @return AccountController
      */
-    private function getController()
+    protected function getController()
     {
         return new AccountController($this->ci);
     }

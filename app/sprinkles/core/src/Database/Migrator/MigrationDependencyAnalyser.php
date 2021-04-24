@@ -10,9 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
-use ReflectionClass;
-use UserFrosting\Sprinkle\Core\Facades\Config;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
 /**
@@ -59,14 +56,14 @@ class MigrationDependencyAnalyser
      */
     public function __construct(array $pending = [], array $installed = [])
     {
-        $this->pending = collect($pending);
-        $this->installed = collect($installed);
+        $this->pending = collect($this->normalizeClasses($pending));
+        $this->installed = collect($this->normalizeClasses($installed));
     }
 
     /**
      * Analyse the dependencies.
      */
-    public function analyse()
+    public function analyse(): void
     {
         // Reset fulfillable/unfulfillable lists
         $this->analysed = false;
@@ -87,14 +84,14 @@ class MigrationDependencyAnalyser
      * dependencies. This is very important as the order the migrations needs
      * to be run is defined by this recursion. By waiting for the dependency
      * to be marked as fulfillable to mark the parent as fulfillable, the
-     * parent class will be automatocally placed after it's dependencies
-     * in the `fullfillable` property.
+     * parent class will be automatically placed after it's dependencies
+     * in the `fulfillable` property.
      *
-     * @param string $migrationName The migration classname
+     * @param string $migrationName The migration class name
      *
      * @return bool True/False if the migration is fulfillable
      */
-    protected function validateClassDependencies($migrationName)
+    protected function validateClassDependencies(string $migrationName): bool
     {
         // If it's already marked as fulfillable, it's fulfillable
         // Return true directly (it's already marked)
@@ -126,7 +123,7 @@ class MigrationDependencyAnalyser
             }
 
             // Check is the dependency is pending installation. If so, check for it's dependencies.
-            // If the dependency is not fullfillable, then this one isn't either
+            // If the dependency is not fulfillable, then this one isn't either
             if (!$this->pending->contains($dependency) || !$this->validateClassDependencies($dependency)) {
                 return $this->markAsUnfulfillable($migrationName, $dependency);
             }
@@ -141,7 +138,7 @@ class MigrationDependencyAnalyser
      *
      * @return array
      */
-    public function getFulfillable()
+    public function getFulfillable(): array
     {
         if (!$this->analysed) {
             $this->analyse();
@@ -155,7 +152,7 @@ class MigrationDependencyAnalyser
      *
      * @return array
      */
-    public function getUnfulfillable()
+    public function getUnfulfillable(): array
     {
         if (!$this->analysed) {
             $this->analyse();
@@ -167,11 +164,11 @@ class MigrationDependencyAnalyser
     /**
      * Mark a dependency as fulfillable. Removes it from the pending list and add it to the fulfillable list.
      *
-     * @param string $migration The migration classname
+     * @param string $migration The migration class name
      *
      * @return bool True, it's fulfillable
      */
-    protected function markAsFulfillable($migration)
+    protected function markAsFulfillable(string $migration): bool
     {
         $this->fulfillable->push($migration);
 
@@ -181,12 +178,12 @@ class MigrationDependencyAnalyser
     /**
      * Mark a dependency as unfulfillable. Removes it from the pending list and add it to the unfulfillable list.
      *
-     * @param string       $migration  The migration classname
-     * @param string|array $dependency The problematic dependecy
+     * @param string       $migration  The migration class name
+     * @param string|array $dependency The problematic dependency
      *
-     * @return bool False, it's not fullfillable
+     * @return bool False, it's not fulfillable
      */
-    protected function markAsUnfulfillable($migration, $dependency)
+    protected function markAsUnfulfillable(string $migration, $dependency): bool
     {
         if (is_array($dependency)) {
             $dependency = implode(', ', $dependency);
@@ -198,36 +195,42 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     * Returns the migration dependency list
-     * Also handles the old deprecated behaviour where dependencies where not in a static property.
+     * Returns the migration dependency list.
      *
      * @param string $migration The migration class
      *
      * @return array The dependency list
      */
-    protected function getMigrationDependencies($migration)
+    protected function getMigrationDependencies(string $migration): array
     {
-
         // Make sure class exists
         if (!class_exists($migration)) {
-            throw new BadClassNameException("Unable to find the migration class '$migration'.");
+            throw new BadClassNameException("Unable to find the migration class '$migration'. Run 'php bakery migrate:clean' to remove stale migrations.");
         }
 
-        // If the `dependencies` property exist and is static, use this one.
-        // Otherwise, get a class instance and the non static property
-        // We can remove this one the non static property is removed
-        $reflectionClass = new ReflectionClass($migration);
-        if ($reflectionClass->hasProperty('dependencies') && $reflectionClass->getProperty('dependencies')->isStatic()) {
-            return $migration::$dependencies;
-        } elseif (property_exists($migration, 'dependencies')) {
-            if (Config::get('debug.deprecation')) {
-                Debug::warning("`$migration` uses a non static `dependencies` property. Please change the `dependencies` property to a static property.");
-            }
-            $instance = new $migration();
-
-            return $instance->dependencies;
+        // If the `dependencies` property exist, use it
+        if (property_exists($migration, 'dependencies')) {
+            return $this->normalizeClasses($migration::$dependencies);
         } else {
             return [];
         }
+    }
+
+    /**
+     * Normalize class so all class starts with '/'.
+     *
+     * @param string[] $classes
+     *
+     * @return string[]
+     */
+    protected function normalizeClasses(array $classes): array
+    {
+        return array_map(function (string $class) {
+            if ($class[0] !== '\\') {
+                return '\\' . $class;
+            }
+
+            return $class;
+        }, $classes);
     }
 }

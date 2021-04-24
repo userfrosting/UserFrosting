@@ -13,7 +13,8 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
-use UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck;
+use UserFrosting\Sprinkle\Core\Exceptions\VersionCompareException;
+use UserFrosting\Sprinkle\Core\Util\VersionValidator;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -24,7 +25,6 @@ use UserFrosting\System\Bakery\BaseCommand;
 class DebugCommand extends BaseCommand
 {
     use DatabaseTest;
-    use NodeVersionCheck;
 
     /**
      * {@inheritdoc}
@@ -43,42 +43,52 @@ class DebugCommand extends BaseCommand
     {
         // Display header,
         $this->io->title('UserFrosting');
-        $this->io->writeln('UserFrosing version : ' . \UserFrosting\VERSION);
-        $this->io->writeln('OS Name : ' . php_uname('s'));
-        $this->io->writeln('Project Root : ' . \UserFrosting\ROOT_DIR);
 
         // Need to touch the config service first to load dotenv values
-        $config = $this->ci->config;
-        $this->io->writeln('Environment mode : ' . getenv('UF_MODE'));
+        $this->ci->config;
 
-        // Perform tasks
-        $this->checkPhpVersion();
-        $this->checkNodeVersion();
-        $this->checkNpmVersion();
+        // Validate PHP, Node and npm version
+        try {
+            VersionValidator::validatePhpVersion();
+            VersionValidator::validateNodeVersion();
+            VersionValidator::validateNpmVersion();
+        } catch (VersionCompareException $e) {
+            $this->io->error($e->getMessage());
+            exit(1);
+        }
+
+        // Validate deprecated versions
+        try {
+            VersionValidator::validatePhpDeprecation();
+        } catch (VersionCompareException $e) {
+            $this->io->warning($e->getMessage());
+        }
+
+        // Perform tasks & display info
+        $this->io->definitionList(
+            ['UserFrosting version'  => \UserFrosting\VERSION],
+            ['OS Name'              => php_uname('s')],
+            ['Project Root'         => \UserFrosting\ROOT_DIR],
+            ['Environment mode'     => env('UF_MODE', 'default')],
+            ['PHP Version'          => VersionValidator::getPhpVersion()],
+            ['Node Version'         => VersionValidator::getNodeVersion()],
+            ['NPM Version'          => VersionValidator::getNpmVersion()]
+        );
+
+        // Now we list Sprinkles
         $this->listSprinkles($input, $output);
+
+        // Show the DB config
         $this->showConfig();
+
+        // Check database connection
         $this->checkDatabase();
 
         // If all went well and there's no fatal errors, we are ready to bake
         $this->io->success('Ready to bake !');
-    }
 
-    /**
-     * Check the minimum version of php.
-     * This is done by composer itself, but we do it again for good mesure.
-     */
-    protected function checkPhpVersion()
-    {
-        $this->io->writeln('PHP Version : ' . phpversion());
-        if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
-            $this->io->error('UserFrosting requires php version ' . \UserFrosting\PHP_MIN_VERSION . " or above. You'll need to update you PHP version before you can continue.");
-            exit(1);
-        }
-
-        // Check for deprecated versions
-        if (version_compare(phpversion(), \UserFrosting\PHP_RECOMMENDED_VERSION, '<')) {
-            $this->io->warning('While your PHP version is still supported by UserFrosting, we recommends version ' . \UserFrosting\PHP_RECOMMENDED_VERSION . ' or above as ' . phpversion() . ' will soon be unsupported. See http://php.net/supported-versions.php for more info.');
-        }
+        // Command return success
+        return 0;
     }
 
     /**
@@ -88,7 +98,7 @@ class DebugCommand extends BaseCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    protected function listSprinkles(InputInterface $input, OutputInterface $output)
+    protected function listSprinkles(InputInterface $input, OutputInterface $output): void
     {
         // Check for Sprinkles schema file
         $path = \UserFrosting\SPRINKLES_SCHEMA_FILE;
@@ -111,10 +121,10 @@ class DebugCommand extends BaseCommand
     }
 
     /**
-     * Check the database connexion and setup the `.env` file if we can't
+     * Check the database connection and setup the `.env` file if we can't
      * connect and there's no one found.
      */
-    protected function checkDatabase()
+    protected function checkDatabase(): void
     {
         $this->io->title('Testing database connection...');
 
@@ -133,20 +143,20 @@ class DebugCommand extends BaseCommand
     /**
      * Display database config as for debug purposes.
      */
-    protected function showConfig()
+    protected function showConfig(): void
     {
         // Get config
         $config = $this->ci->config;
 
         // Display database info
         $this->io->title('Database config');
-        $this->io->writeln([
-            'DRIVER : ' . $config['db.default.driver'],
-            'HOST : ' . $config['db.default.host'],
-            'PORT : ' . $config['db.default.port'],
-            'DATABASE : ' . $config['db.default.database'],
-            'USERNAME : ' . $config['db.default.username'],
-            'PASSWORD : ' . ($config['db.default.password'] ? '*********' : ''),
-        ]);
+        $this->io->definitionList(
+            ['DRIVER'   => $config['db.default.driver']],
+            ['HOST'     => $config['db.default.host']],
+            ['PORT'     => $config['db.default.port']],
+            ['DATABASE' => $config['db.default.database']],
+            ['USERNAME' => $config['db.default.username']],
+            ['PASSWORD' => ($config['db.default.password'] ? '*********' : '')]
+        );
     }
 }

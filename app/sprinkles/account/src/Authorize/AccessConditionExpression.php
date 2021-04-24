@@ -98,7 +98,7 @@ class AccessConditionExpression
         // Set the reserved `self` parameters.
         // This replaces any values of `self` specified in the arguments, thus preventing them from being overridden in malicious user input.
         // (For example, from an unfiltered request body).
-        $params['self'] = $this->user->export();
+        $params['self'] = $this->user->toArray();
 
         $this->nodeVisitor->setParams($params);
 

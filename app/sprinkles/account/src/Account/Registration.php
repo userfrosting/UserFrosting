@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Account\Account;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
@@ -156,7 +156,7 @@ class Registration
         // Make sure all required fields are defined
         foreach ($this->requiredProperties as $property) {
             if (!isset($this->userdata[$property])) {
-                $e = new HttpException("Account can't be registrated as '$property' is required to create a new user.");
+                $e = new HttpException("Account can't be registered as '$property' is required to create a new user.");
                 $e->addUserMessage('USERNAME.IN_USE');
 
                 throw $e;

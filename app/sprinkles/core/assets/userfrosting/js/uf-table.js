@@ -122,7 +122,7 @@
                         '.filter-select' : function() { return null; }
                     },
 
-                    // apply disabled classname to the pager arrows when the rows at either extreme is visible
+                    // apply disabled class name to the pager arrows when the rows at either extreme is visible
                     pager_updateArrows: true,
 
                     // starting page of the pager (zero based index)
@@ -437,7 +437,7 @@
         $.extend(table.config.pager.ajaxObject.data, tableState);
 
         // Merge in any additional parameters
-        $.extend(table.config.pager.ajaxObject.data, this.settings.addParams);
+        $.extend(true, table.config.pager.ajaxObject.data, this.settings.addParams);
 
         return url;
     };
@@ -526,7 +526,7 @@
         delete tableState.size;
 
         // Merge in any additional request parameters
-        $.extend(tableState, this.settings.addParams);
+        $.extend(true, tableState, this.settings.addParams);
 
         // Causes download to begin
         window.location = this.settings.dataUrl + '?' + $.param(tableState);
@@ -690,9 +690,9 @@
     $.fn[pluginName] = function(methodOrOptions) {
         // Grab plugin instance
         var instance = $(this).data(pluginName);
-        // If undefined or object, initalise plugin.
+        // If undefined or object, initialize plugin.
         if (methodOrOptions === undefined || typeof methodOrOptions === 'object') {
-            // Only initalise if not previously done.
+            // Only initialize if not previously done.
             if (!instance) {
                 $(this).data(pluginName, new Plugin(this, methodOrOptions));
             }

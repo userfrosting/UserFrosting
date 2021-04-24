@@ -74,7 +74,7 @@ trait withTestUser
     }
 
     /**
-     * Returns a random user id, exclusing th master id
+     * Returns a random user id, excluding the master id
      * @param  int $masterId
      * @return int
      */
@@ -114,7 +114,7 @@ trait withTestUser
      * Add the test permission to a Role, then the role to the user
      * @param  UserInterface $user
      * @param  Permission    $permission
-     * @return Role          The intermidiate role
+     * @return Role          The intermediate role
      */
     protected function giveUserPermission(UserInterface $user, Permission $permission)
     {

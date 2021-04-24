@@ -33,7 +33,8 @@
         "js/form-widgets": {
             "scripts": [
                 "vendor/speakingurl/speakingurl.min.js",
-                "userfrosting/js/uf-collection.js"
+                "userfrosting/js/uf-collection.js",
+                "vendor/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.js"
             ],
             "options": {
                 "result": {
@@ -45,6 +46,7 @@
         },
         "css/main": {
             "styles": [
+                "vendor/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.css",
                 "vendor/@fortawesome/fontawesome-free/css/all.css",
                 "vendor/bootstrap/dist/css/bootstrap.css",
                 "vendor/select2/dist/css/select2.css",

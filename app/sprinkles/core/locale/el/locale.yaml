@@ -1,0 +1,7 @@
+name: Greek
+regional: Ελληνικά
+authors:
+  - nikolaos-spyratos
+plural_rule: 1
+parents:
+  - en_US

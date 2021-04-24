@@ -39,7 +39,7 @@ class GroupControllerTest extends TestCase
     /**
      * Setup test database for controller tests
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupTestDatabase();
@@ -99,7 +99,7 @@ class GroupControllerTest extends TestCase
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertNotEmpty((string) $result->getBody());
-        $this->assertContains('bar', (string) $result->getBody());
+        $this->assertStringContainsString('bar', (string) $result->getBody());
     }
 
     /**
@@ -309,7 +309,7 @@ class GroupControllerTest extends TestCase
     {
         // Create test group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Get controller stuff
         $result = $controller->delete($this->getRequest(), $this->getResponse(), ['slug' => $group->slug]);
@@ -377,7 +377,7 @@ class GroupControllerTest extends TestCase
 
         // Create test group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Associate user to group
         $testUser->group()->associate($group);
@@ -441,7 +441,7 @@ class GroupControllerTest extends TestCase
 
         // Create test group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Associate user to group
         $testUser->group()->associate($group);
@@ -516,7 +516,7 @@ class GroupControllerTest extends TestCase
     {
         // Create a group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+        $group = $fm->create(Group::class, [
             'name' => 'barbar',
             'slug' => 'foofoo',
         ]);
@@ -621,7 +621,7 @@ class GroupControllerTest extends TestCase
     {
         // Create a group
         $fm = $this->ci->factory;
-        $group2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group2 = $fm->create(Group::class);
 
         // Set post data
         $data = [
@@ -651,7 +651,7 @@ class GroupControllerTest extends TestCase
     {
         // Create a group
         $fm = $this->ci->factory;
-        $group2 = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group2 = $fm->create(Group::class);
 
         // Set post data
         $data = [
@@ -675,19 +675,19 @@ class GroupControllerTest extends TestCase
     /**
      * @return GroupController
      */
-    private function getController()
+    protected function getController(): GroupController
     {
         return new GroupController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser(): void
     {
         // Admin user, WILL have access
-        $testUser = $this->createTestUser(true, true);
+        $this->createTestUser(true, true);
 
         // Create test role
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group', [
+        $fm->create(Group::class, [
             'slug' => 'foo',
             'name' => 'bar',
         ]);

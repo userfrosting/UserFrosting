@@ -25,21 +25,21 @@ use UserFrosting\Sprinkle\Core\Facades\Debug;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
- * @property int id
- * @property string user_name
- * @property string first_name
- * @property string last_name
- * @property string email
- * @property string locale
- * @property string theme
- * @property int group_id
- * @property bool flag_verified
- * @property bool flag_enabled
- * @property int last_activity_id
- * @property timestamp created_at
- * @property timestamp updated_at
- * @property string password
- * @property timestamp deleted_at
+ * @property int       $id
+ * @property string    $user_name
+ * @property string    $first_name
+ * @property string    $last_name
+ * @property string    $email
+ * @property string    $locale
+ * @property string    $theme
+ * @property int       $group_id
+ * @property bool      $flag_verified
+ * @property bool      $flag_enabled
+ * @property int       $last_activity_id
+ * @property timestamp $created_at
+ * @property timestamp $updated_at
+ * @property string    $password
+ * @property timestamp $deleted_at
  */
 class User extends Model implements UserInterface
 {
@@ -101,7 +101,7 @@ class User extends Model implements UserInterface
      *
      * @var array
      */
-    protected $events = [
+    protected $dispatchesEvents = [
         'saved'   => Events\DeleteUserCacheEvent::class,
         'deleted' => Events\DeleteUserCacheEvent::class,
     ];
@@ -134,10 +134,10 @@ class User extends Model implements UserInterface
     public function __isset($name)
     {
         if (in_array($name, [
-                'group',
-                'last_sign_in_time',
-                'avatar',
-            ])) {
+            'group',
+            'last_sign_in_time',
+            'avatar',
+        ])) {
             return true;
         } else {
             return parent::__isset($name);
@@ -214,22 +214,6 @@ class User extends Model implements UserInterface
         }
 
         return $result;
-    }
-
-    /**
-     * Determines whether a user exists, including checking soft-deleted records.
-     *
-     * @deprecated since 4.1.7 This method conflicts with and overrides the Builder::exists() method.  Use Model::findUnique instead.
-     *
-     * @param mixed  $value
-     * @param string $identifier
-     * @param bool   $checkDeleted set to true to include soft-deleted records
-     *
-     * @return User|null
-     */
-    public static function exists($value, $identifier = 'user_name', $checkDeleted = true)
-    {
-        return static::findUnique($value, $identifier, $checkDeleted);
     }
 
     /**

@@ -12,7 +12,7 @@ namespace UserFrosting\Sprinkle\Core\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Core\Database\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Concerns\HasRelationships;
 
@@ -70,7 +70,7 @@ abstract class Model extends LaravelModel
     {
         $query = static::whereRaw("LOWER($identifier) = ?", [mb_strtolower($value)]);
 
-        if ($checkDeleted) {
+        if ($checkDeleted && method_exists($query, 'withTrashed')) {
             $query = $query->withTrashed();
         }
 
@@ -140,33 +140,5 @@ abstract class Model extends LaravelModel
             $connection->getQueryGrammar(),
             $connection->getPostProcessor()
         );
-    }
-
-    /**
-     * Get the properties of this object as an associative array.  Alias for toArray().
-     *
-     * @deprecated since 4.1.8 There is no point in having this alias.
-     *
-     * @return array
-     */
-    public function export()
-    {
-        return $this->toArray();
-    }
-
-    /**
-     * For raw array fetching.  Must be static, otherwise PHP gets confused about where to find $table.
-     *
-     * @deprecated since 4.1.8 setFetchMode is no longer available as of Laravel 5.4.
-     * @link https://github.com/laravel/framework/issues/17728
-     *
-     * @return Builder
-     */
-    public static function queryBuilder()
-    {
-        // Set query builder to fetch result sets as associative arrays (instead of creating stdClass objects)
-        DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
-
-        return DB::table(static::$table);
     }
 }

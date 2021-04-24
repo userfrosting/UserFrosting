@@ -1,0 +1,7 @@
+name: Arabic
+regional: العربية
+authors:
+  - Abdullah Seba
+plural_rule: 1
+parents:
+  - en_US

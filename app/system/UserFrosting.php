@@ -32,22 +32,19 @@ class UserFrosting
     protected $app;
 
     /**
-     * @var bool Is the app in CLI mode
-     */
-    protected $isCli;
-
-    /**
      * Create the UserFrosting application instance.
      *
      * @param bool $cli Is the app in CLI mode. Set to false if setting up in an HTTP/web environment, true if setting up for CLI scripts.
      */
-    public function __construct($cli = false)
+    public function __construct(bool $cli = false)
     {
         // First, we create our DI container
         $this->ci = new Container();
 
-        // Assign vars
-        $this->isCli = $cli;
+        // Save CLI status inside the DI container
+        $this->ci['cli'] = function ($container) use ($cli) {
+            return $cli;
+        };
 
         // Set up facade reference to container.
         Facade::setFacadeContainer($this->ci);
@@ -66,7 +63,7 @@ class UserFrosting
      */
     public function fireEvent($eventName, Event $event = null)
     {
-        /** @var EventDispatcher $events */
+        /** @var EventDispatcher */
         $eventDispatcher = $this->ci->eventDispatcher;
 
         return $eventDispatcher->dispatch($eventName, $event);
@@ -77,7 +74,7 @@ class UserFrosting
      *
      * @return App
      */
-    public function getApp()
+    public function getApp(): App
     {
         return $this->app;
     }
@@ -87,7 +84,7 @@ class UserFrosting
      *
      * @return Container
      */
-    public function getContainer()
+    public function getContainer(): Container
     {
         return $this->ci;
     }
@@ -95,7 +92,7 @@ class UserFrosting
     /**
      * Initialize the application.  Set up Sprinkles and the Slim app, define routes, register global middleware, and run Slim.
      */
-    public function run()
+    public function run(): void
     {
         $this->app->run();
     }
@@ -103,19 +100,20 @@ class UserFrosting
     /**
      * Register system services, load all sprinkles, and add their resources and services.
      */
-    protected function setupSprinkles()
+    protected function setupSprinkles(): void
     {
         // Register system services
         $serviceProvider = new ServicesProvider();
         $serviceProvider->register($this->ci);
 
         // Boot the Sprinkle manager, which creates Sprinkle classes and subscribes them to the event dispatcher
+        /** @var \UserFrosting\System\Sprinkle\SprinkleManager */
         $sprinkleManager = $this->ci->sprinkleManager;
 
         try {
             $sprinkleManager->initFromSchema(\UserFrosting\SPRINKLES_SCHEMA_FILE);
         } catch (FileNotFoundException $e) {
-            if (!$this->isCli) {
+            if (!$this->ci->cli) {
                 $this->renderSprinkleErrorPage($e->getMessage());
             } else {
                 $this->renderSprinkleErrorCli($e->getMessage());
@@ -136,7 +134,7 @@ class UserFrosting
     /**
      * Setup UserFrosting App, load sprinkles, load routes, etc.
      */
-    protected function setupApp()
+    protected function setupApp(): void
     {
         // Setup sprinkles
         $this->setupSprinkles();
@@ -160,7 +158,7 @@ class UserFrosting
      *
      * @param string $errorMessage Message to display [Default ""]
      */
-    protected function renderSprinkleErrorPage($errorMessage = '')
+    protected function renderSprinkleErrorPage(string $errorMessage = '')
     {
         ob_clean();
         $title = 'UserFrosting Application Error';
@@ -184,7 +182,7 @@ class UserFrosting
      *
      * @param string $errorMessage Message to display [Default ""]
      */
-    protected function renderSprinkleErrorCli($errorMessage = '')
+    protected function renderSprinkleErrorCli(string $errorMessage = '')
     {
         exit($errorMessage . PHP_EOL);
     }

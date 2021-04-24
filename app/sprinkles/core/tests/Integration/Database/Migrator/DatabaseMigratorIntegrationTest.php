@@ -54,7 +54,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
     /**
      * Setup migration instances used for all tests
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Boot parent TestCase, which will set up the database and connections for us.
         parent::setUp();
@@ -87,18 +87,26 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $this->assertTrue($this->schema->hasTable('users'));
         $this->assertTrue($this->schema->hasTable('password_resets'));
 
-        $this->assertEquals($this->locator->getMigrations(), $ran);
+        $this->assertEquals([
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
+        ], $ran);
     }
 
     public function testRepository()
     {
         $ran = $this->migrator->run();
 
+        $expected = [
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
+        ];
+
         // Theses assertions makes sure the repository and the migration returns the same format
         // N.B.: getLast return the migrations in reverse order (last ran first)
-        $this->assertEquals($this->locator->getMigrations(), $ran);
-        $this->assertEquals(array_reverse($this->locator->getMigrations()), $this->repository->getLast());
-        $this->assertEquals($this->locator->getMigrations(), $this->repository->getMigrationsList());
+        $this->assertEquals($expected, $ran);
+        $this->assertEquals(array_reverse($expected), $this->repository->getLast());
+        $this->assertEquals($expected, $this->repository->getMigrationsList());
     }
 
     public function testMigrationsCanBeRolledBack()
@@ -114,7 +122,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
 
         // Make sure the data returned from migrator is accurate.
         // N.B.: The order returned by the rollback method is ordered by which
-        // migration was rollbacked first (reversed from the order they where ran up)
+        // migration was rolled back first (reversed from the order they where ran up)
         $this->assertEquals(array_reverse($this->locator->getMigrations()), $rolledBack);
     }
 
@@ -168,29 +176,15 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $this->assertTrue($this->schema->hasTable('users'));
         $this->assertTrue($this->schema->hasTable('password_resets'));
 
+        $expected = [
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
+        ];
+
         $rolledBack = $this->migrator->rollback(['pretend' => true]);
         $this->assertTrue($this->schema->hasTable('users'));
         $this->assertTrue($this->schema->hasTable('password_resets'));
-        $this->assertEquals(array_reverse($this->locator->getMigrations()), $rolledBack);
-    }
-
-    public function testChangeRepositoryAndDeprecatedClass()
-    {
-        // Change the repository so we can test with the DeprecatedMigrationLocatorStub
-        $locator = new DeprecatedMigrationLocatorStub($this->ci->locator);
-        $this->migrator->setLocator($locator);
-
-        // Run up. Should also run the seeder
-        $this->migrator->run();
-        $this->assertTrue($this->schema->hasTable('deprecated_table'));
-
-        // Make sure the seeder ran.
-        // Easiest way to do so it asking the seeder to change the table structure
-        $this->assertTrue($this->schema->hasColumn('deprecated_table', 'foo'));
-
-        // Rollback
-        $this->migrator->rollback();
-        $this->assertFalse($this->schema->hasTable('deprecated_table'));
+        $this->assertEquals(array_reverse($expected), $rolledBack);
     }
 
     public function testWithInvalidClass()
@@ -221,7 +215,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
         // Note here the `two` migration has been placed at the bottom even if
         // it was supposed to be migrated first from the order the locator
         // returned them. This is because `two` migration depends on `one` migrations
-        // We only check the last one, we don't care about the order the first two are since they are not dependendent on eachother
+        // We only check the last one, we don't care about the order the first two are since they are not dependent on each other
         $this->assertEquals('\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable', $migrated[2]);
     }
 
@@ -248,7 +242,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
 
     public function testUnfulfillableMigrations()
     {
-        // Change the repository so we can test with the DeprecatedStub
+        // Change the repository so we can test with the unfulfillable Stub
         $locator = new UnfulfillableMigrationLocatorStub($this->ci->locator);
         $this->migrator->setLocator($locator);
 
@@ -368,20 +362,6 @@ class UnfulfillableMigrationLocatorStub extends MigrationLocator
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\UnfulfillableTable',
-        ];
-    }
-}
-
-/**
- *    This stub contain migration which order they need to be run is different
- *    than the order the file are returned because of dependencies management
- */
-class DeprecatedMigrationLocatorStub extends MigrationLocator
-{
-    public function getMigrations()
-    {
-        return [
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\DeprecatedClassTable',
         ];
     }
 }

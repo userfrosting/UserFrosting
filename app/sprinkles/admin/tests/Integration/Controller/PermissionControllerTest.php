@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
+use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\PermissionController;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
@@ -39,7 +40,7 @@ class PermissionControllerTest extends TestCase
     /**
      * Setup test database for controller tests
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupTestDatabase();
@@ -100,7 +101,7 @@ class PermissionControllerTest extends TestCase
         $this->assertSame($result->getStatusCode(), 200);
         $this->assertJson((string) $result->getBody());
         $this->assertNotEmpty((string) $result->getBody());
-        $this->assertContains('bar', (string) $result->getBody());
+        $this->assertStringContainsString('bar', (string) $result->getBody());
     }
 
     /**
@@ -162,19 +163,19 @@ class PermissionControllerTest extends TestCase
     /**
      * @return PermissionController
      */
-    private function getController()
+    protected function getController()
     {
         return new PermissionController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         // Admin user, WILL have access
         $testUser = $this->createTestUser(true, true);
 
         // Create test Permission
         $fm = $this->ci->factory;
-        $permission = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Permission', [
+        $permission = $fm->create(Permission::class, [
             'slug' => 'foo',
             'name' => 'bar',
         ]);

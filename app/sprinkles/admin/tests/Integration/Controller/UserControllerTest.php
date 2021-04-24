@@ -12,6 +12,8 @@ namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use Mockery as m;
 use League\FactoryMuffin\Faker\Facade as Faker;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\UserController;
@@ -42,7 +44,7 @@ class UserControllerTest extends TestCase
     /**
      * Setup test database for controller tests
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->setupTestDatabase();
@@ -60,7 +62,7 @@ class UserControllerTest extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         m::close();
@@ -644,7 +646,7 @@ class UserControllerTest extends TestCase
 
         // Also create a group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Set post data
         $data = [
@@ -796,7 +798,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => 'bar',
+            'first_name' => 'bar',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -853,7 +855,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => 'barbar',
+            'first_name' => 'barbar',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -889,7 +891,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => $value,
+            'first_name' => $value,
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -907,7 +909,7 @@ class UserControllerTest extends TestCase
     {
         // Set post data
         $data = [
-            'value' => '1',
+            'flag_enabled' => '1',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -937,7 +939,7 @@ class UserControllerTest extends TestCase
     {
         // Set post data
         $data = [
-            'value' => '0',
+            'flag_enabled' => '0',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -967,7 +969,7 @@ class UserControllerTest extends TestCase
     {
         // Set post data
         $data = [
-            'value' => '1',
+            'flag_verified' => '1',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -1000,7 +1002,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => '0',
+            'flag_enabled' => '0',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -1018,7 +1020,7 @@ class UserControllerTest extends TestCase
     {
         // Set post data
         $data = [
-            'value' => '1234567890abc',
+            'password' => '1234567890abc',
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -1048,7 +1050,7 @@ class UserControllerTest extends TestCase
     {
         // Create a user
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+        $role = $fm->create(Role::class);
 
         // Expected input :
         // value[0][role_id]: 2
@@ -1056,7 +1058,7 @@ class UserControllerTest extends TestCase
 
         // Set post data
         $data = [
-            'value' => [['role_id' => $role->id]],
+            'roles' => [['role_id' => $role->id]],
         ];
         $request = $this->getRequest()->withParsedBody($data);
 
@@ -1080,12 +1082,12 @@ class UserControllerTest extends TestCase
     /**
      * @return UserController
      */
-    private function getController()
+    protected function getController()
     {
         return new UserController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         // Admin user, WILL have access
         $testUser = $this->createTestUser(true, true);

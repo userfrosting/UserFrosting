@@ -32,7 +32,7 @@ class UserModelTest extends TestCase
     /**
      * Setup the database schema.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -43,8 +43,8 @@ class UserModelTest extends TestCase
 
     /**
      * Test user hard deletion with user relations.
-     * This is not a totaly acurate test, as each relations are added manually
-     * and new relations might not be added automatically to accuratly test
+     * This is not a totally accurate test, as each relations are added manually
+     * and new relations might not be added automatically to accurately test
      */
     public function testUserHardDeleteWithUserRelations()
     {
@@ -76,7 +76,7 @@ class UserModelTest extends TestCase
         $this->assertSame(1, Persistence::where('user_id', $user->id)->count());
 
         //$user->roles - role_users
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+        $role = $fm->create(Role::class);
         $user->roles()->attach($role->id);
         $this->assertSame(1, $user->roles()->count());
 

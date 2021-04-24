@@ -14,8 +14,6 @@
  * @author Alexander Weissman
  */
 return [
-    '@PLURAL_RULE' => 1,
-
     'ABOUT' => 'About',
 
     'CAPTCHA' => [
@@ -117,6 +115,6 @@ return [
 
     // Misc.
     'BUILT_WITH_UF'     => 'Built with <a href="http://www.userfrosting.com">UserFrosting</a>',
-    'ADMINLTE_THEME_BY' => 'Theme by <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved',
+    'ADMINLTE_THEME_BY' => 'Theme by <strong><a href="https://adminlte.io">AdminLTE</a>.</strong> All rights reserved',
     'WELCOME_TO'        => 'Welcome to {{title}}!',
 ];

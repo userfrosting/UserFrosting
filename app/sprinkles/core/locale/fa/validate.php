@@ -20,8 +20,11 @@ return [
         'INTEGER'       => 'مقدار <strong>{{label}}</strong> باید یک عدد اینتجر باشد.',
         'INVALID_EMAIL' => 'آدرس پست الکترونیکی صحیح نیست.',
         'LENGTH_RANGE'  => '{{label}} باید بین {{min}} و {{max}} حرف باشد.',
+        'MAX_LENGTH'    => '{{label}} باید حداکثر {{max}} کاراکتر داشته باشد.',
+        'MIN_LENGTH'    => '{{label}} باید حداقل {{min}} کاراکتر داشته باشد.',
         'NO_LEAD_WS'    => 'مقدار <strong>{{label}}</strong> نباید با فاصله شروع شود.',
         'NO_TRAIL_WS'   => 'مقدار <strong>{{label}}</strong> نباید با فاصله تمام شود.',
+        'RANGE'         => 'مقدار <strong>{{label}}</strong> باید بین {{min}} و {{max}} باشد.',
         'REQUIRED'      => 'لطفا برای <strong>{{label}}</strong> مقداری تعیین کنید.',
         'SPRUNJE'       => [
             'BAD_FILTER' => '<strong>{{name}}</strong> فیلتر صحیحی نیست.',

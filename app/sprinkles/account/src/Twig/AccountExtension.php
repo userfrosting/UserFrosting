@@ -10,7 +10,10 @@
 
 namespace UserFrosting\Sprinkle\Account\Twig;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
+use Twig\TwigFunction;
 use UserFrosting\Support\Repository\Repository as Config;
 
 /**
@@ -18,7 +21,7 @@ use UserFrosting\Support\Repository\Repository as Config;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AccountExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class AccountExtension extends AbstractExtension implements GlobalsInterface
 {
     /**
      * @var ContainerInterface
@@ -48,13 +51,13 @@ class AccountExtension extends \Twig_Extension implements \Twig_Extension_Global
     {
         return [
             // Add Twig function for checking permissions during dynamic menu rendering
-            new \Twig_SimpleFunction('checkAccess', function ($slug, $params = []) {
+            new TwigFunction('checkAccess', function ($slug, $params = []) {
                 $authorizer = $this->services->authorizer;
                 $currentUser = $this->services->currentUser;
 
                 return $authorizer->checkAccess($currentUser, $slug, $params);
             }),
-            new \Twig_SimpleFunction('checkAuthenticated', function () {
+            new TwigFunction('checkAuthenticated', function () {
                 $authenticator = $this->services->authenticator;
 
                 return $authenticator->check();

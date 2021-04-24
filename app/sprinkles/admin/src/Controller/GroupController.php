@@ -47,7 +47,7 @@ class GroupController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function create(Request $request, Response $response, $args)
     {
@@ -107,7 +107,7 @@ class GroupController extends SimpleController
 
         // All checks passed!  log events/activities and create group
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $currentUser) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $currentUser) {
             // Create the group
             $group = $classMapper->createInstance('group', $data);
 
@@ -144,7 +144,7 @@ class GroupController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException   If group is not found
-     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws ForbiddenException  If user is not authorized to access page
      * @throws BadRequestException
      */
     public function delete(Request $request, Response $response, $args)
@@ -228,7 +228,7 @@ class GroupController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      * @throws NotFoundException  If group is not found
      */
     public function getInfo(Request $request, Response $response, $args)
@@ -276,7 +276,7 @@ class GroupController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getList(Request $request, Response $response, $args)
     {
@@ -305,14 +305,14 @@ class GroupController extends SimpleController
     }
 
     /**
-     * Get deletetion confirmation modal.
+     * Get deletion confirmation modal.
      *
      * @param Request  $request
      * @param Response $response
      * @param array    $args
      *
      * @throws NotFoundException   If group is not found
-     * @throws ForbiddenException  If user is not authozied to access page
+     * @throws ForbiddenException  If user is not authorized to access page
      * @throws BadRequestException
      */
     public function getModalConfirmDelete(Request $request, Response $response, $args)
@@ -372,7 +372,7 @@ class GroupController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getModalCreate(Request $request, Response $response, $args)
     {
@@ -382,7 +382,7 @@ class GroupController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\Translator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled page
@@ -435,7 +435,7 @@ class GroupController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException  If group is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getModalEdit(Request $request, Response $response, $args)
     {
@@ -458,7 +458,7 @@ class GroupController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        /** @var \UserFrosting\I18n\Translator $translator */
         $translator = $this->ci->translator;
 
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "slug", "icon", "description" for this group
@@ -502,7 +502,7 @@ class GroupController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException  If group is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function getUsers(Request $request, Response $response, $args)
     {
@@ -557,7 +557,7 @@ class GroupController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function pageInfo(Request $request, Response $response, $args)
     {
@@ -576,8 +576,8 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_group', [
-                'group' => $group,
-            ])) {
+            'group' => $group,
+        ])) {
             throw new ForbiddenException();
         }
 
@@ -637,7 +637,7 @@ class GroupController extends SimpleController
      * @param Response $response
      * @param array    $args
      *
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function pageList(Request $request, Response $response, $args)
     {
@@ -673,7 +673,7 @@ class GroupController extends SimpleController
      * @param array    $args
      *
      * @throws NotFoundException  If group is not found
-     * @throws ForbiddenException If user is not authozied to access page
+     * @throws ForbiddenException If user is not authorized to access page
      */
     public function updateInfo(Request $request, Response $response, $args)
     {

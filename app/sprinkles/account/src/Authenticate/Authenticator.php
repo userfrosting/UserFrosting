@@ -118,7 +118,7 @@ class Authenticator
         $this->rememberMe->getCookie()->setPath($this->config['remember_me.session.path']);
 
         // Set expire time, if specified
-        if ($this->config->has('remember_me.expire_time') && $this->config->has('remember_me.expire_time') != null) {
+        if ($this->config->has('remember_me.expire_time') && $this->config->get('remember_me.expire_time') !== null) {
             $this->rememberMe->getCookie()->setExpireTime($this->config['remember_me.expire_time']);
         }
 
@@ -359,7 +359,7 @@ class Authenticator
             // so we store the fact that the user was logged in via RememberMe (instead of login form)
             $this->viaRemember = true;
         } else {
-            // If $rememberMe->login() was not successfull, check if the token was invalid as well.  This means the cookie was stolen.
+            // If $rememberMe->login() was not successful, check if the token was invalid as well.  This means the cookie was stolen.
             if ($loginResult->hasPossibleManipulation()) {
                 throw new AuthCompromisedException();
             }
@@ -429,7 +429,7 @@ class Authenticator
 
             // Load user from db, cache the result
             $key = $this->config['cache.user.key'] . $userId;
-            $user = $this->cache->remember($key, $this->config['cache.user.delay'], function () use ($userId) {
+            $user = $this->cache->remember($key, $this->config['cache.user.delay'] * 60, function () use ($userId) {
                 return $this->classMapper->getClassMapping('user')::find((int) $userId);
             });
 

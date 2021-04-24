@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Admin\ServicesProvider;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -24,7 +24,7 @@ class ServicesProvider
     /**
      * Register UserFrosting's admin services.
      *
-     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
+     * @param ContainerInterface $container A DI container implementing ArrayAccess and psr-container.
      */
     public function register(ContainerInterface $container)
     {
@@ -65,13 +65,6 @@ class ServicesProvider
              * @return \Psr\Http\Message\ResponseInterface
              */
             return function (Request $request, Response $response, array $args) use ($c) {
-                // Backwards compatibility for the deprecated determineRedirectOnLogin service
-                if ($c->has('determineRedirectOnLogin')) {
-                    $determineRedirectOnLogin = $c->determineRedirectOnLogin;
-
-                    return $determineRedirectOnLogin($response)->withStatus(200);
-                }
-
                 /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
                 $authorizer = $c->authorizer;
 

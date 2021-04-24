@@ -77,7 +77,7 @@ class SetupDbCommand extends BaseCommand
 
         // Get keys
         $keys = [
-            'DB_HOST'     => ($dotenvEditor->keyExists('DB_HOST')) ? $dotenvEditor->getValue('DB_HOST') : '',
+            'DB_HOST'     => ($dotenvEditor->keyExists('DB_HOST')) ? $dotenvEditor->getValue('DB_HOST') : 'localhost',
             'DB_NAME'     => ($dotenvEditor->keyExists('DB_NAME')) ? $dotenvEditor->getValue('DB_NAME') : '',
             'DB_USER'     => ($dotenvEditor->keyExists('DB_USER')) ? $dotenvEditor->getValue('DB_USER') : '',
             'DB_PASSWORD' => ($dotenvEditor->keyExists('DB_PASSWORD')) ? $dotenvEditor->getValue('DB_PASSWORD') : '',
@@ -136,11 +136,11 @@ class SetupDbCommand extends BaseCommand
     }
 
     /**
-     * Ask for database crendentials.
+     * Ask for database credentials.
      *
      * @param InputInterface $args Command arguments
      *
-     * @return array The databse credentials
+     * @return array The database credentials
      */
     protected function askForDatabase(InputInterface $args)
     {
@@ -201,7 +201,7 @@ class SetupDbCommand extends BaseCommand
     }
 
     /**
-     * Test new database connecion.
+     * Test new database connection.
      *
      * @param array $dbParams       Database params
      * @param bool  $displayMessage Display io message
@@ -214,7 +214,7 @@ class SetupDbCommand extends BaseCommand
         $capsule = new Capsule();
         $capsule->addConnection($dbParams);
 
-        // Test the db connexion.
+        // Test the db connection.
         try {
             $conn = $capsule->getConnection();
             $conn->getPdo();

@@ -5,6 +5,175 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.5.0]
+
+### Changed Requirements
+- Drop PHP 7.1 support. PHP 7.4 is now recommended.
+- Raised NodeJS version requirement from `>=10.12.0` to `^12.17.0 || >=14.0.0` ([#1138]).
+- Raised NPM version requirement from `>=6.0.0` to `>=6.14.4` ([#1138]).
+
+### Changed Composer Dependencies
+- Updated `wikimedia/composer-merge-plugin` from `^1.4.0` to `^2.1.0` ([#1117]).
+
+### Added
+- Composer 2 support ([#1117]).
+- [Lando](https://lando.dev) support.
+- Added more SMTP options in env and setup:smtp bakery command ([#1077]),
+- Added new `MAIL_MAILER` environment variable to set mailer type.
+- Added "Native mail" to `setup:mail` bakery command.
+
+### Changed
+- Implement findInt ([#1117]).
+- Replace `getenv()` with `env()` ([#1121]). 
+- Replaced `UserFrosting\Sprinkle\Core\Bakery\Helper\NodeVersionCheck` with new `UserFrosting\Sprinkle\Core\Util\VersionValidator` class.
+- Bakery command `setup:smtp` renamed to `setup:mail`. The old command is still available as an alias for backward compatibility. 
+- Changed `.php_cs` to `.php_cs.dist`.
+- Changed `phpunit.xml` to `phpunit.xml.dist`.
+
+### Fixed
+- Replaced AdminLTE credit in default footer (old link was dead).
+- Issue with path slashes on Windows ([#1133]).
+
+### Removed
+- Removed deprecated `UserFrosting\System\Bakery\Migration` (deprecated in 4.2.0).
+- Removed deprecated `UserFrosting\Tests\DatabaseTransactions` (deprecated in 4.2.0).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Tests\ControllerTestCase` (deprecated in 4.2.2).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Model\UFModel` (deprecated in 4.1).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Sprunje\Sprunje::getResults` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Account\Database\Models\User::exists` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Models\Model::export` (deprecated in 4.1.8).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Models\Model::queryBuilder` (deprecated in 4.1.8).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique::withLimit` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique::withOffset` (deprecated in 4.1.7).
+- Removed deprecated `UserFrosting\Sprinkle\Core\Error\RendererWhoopsRenderer::getResourcesPath`.
+- Removed deprecated `UserFrosting\Sprinkle\Core\Error\RendererWhoopsRenderer::setResourcesPath`.
+- Removed deprecated Handlebar `ifCond` (Deprecated in 4.1).
+- Removed migration seed.
+- Removed support for migration with non static `$dependencies` properties.
+- Removed support for deprecated `determineRedirectOnLogin` service (deprecated in 4.1.10).
+
+## [v4.4.5]
+
+### Changed
+- Replaced Travis with Github Actions
+- Force Composer 1.0 for Docker ([#1126])
+- Update error.html.twig - add container ([#1128])
+- Update some tests
+- Update Vagrant doc & config
+
+## [v4.4.4]
+
+### Fixed
+- Replaced AdminLTE credit in default footer (old link was dead).
+- Lock Travis to Composer V1 to avoid error until Composer V2 support can be fixed.
+- Remove whitespace at top of page templates ([#1107])
+- Deep extend when adding global query params in ufTable ([#1114])
+- Check for null key in Unique::buildTertiaryDictionary ([#1109])
+- Client-side assets containing glob characters causing crashes when building assets.
+- Fixed issue where merging of package dependencies would show as "undefined", resulting in debugging challenges where there are issues.
+
+## [v4.4.3]
+
+### Fixed
+- Changed some private methods to protected in tests for easier extension.
+- Tentative fix for duplication of user_name in user Factories.
+- Factories now uses `::class` reference instead of string.
+- Fix `ExceptionHandlerTest` test to speed things up.
+
+## [v4.4.2]
+
+### Fixed
+- Locale matcher can fail when client provided locale identifier has incorrect casing ([#1087])
+- Sprunje applyTransformations method not returning the $collections object ([#1068])
+- Old assets in `app/assets/browser_modules` not being deleted during install ([#1092])
+- Added `SKIP_PERMISSION_CHECK` env to skip check for local directories that needs to be write protected. This can be used for local production env testing.
+
+## [v4.4.1]
+
+### Fixed
+- Fixed issue where incompatible NPM packages would be browserified, resulting in install failures.
+- Replaced deprecated Twig class.
+- Fixed issue when compiling assets for production ([#1078]).
+- Migration dependencies should work with and without leading `\` ([#1023])
+- Throttler don't count successful logins ([#1073])
+
+## [v4.4.0]
+
+### Changed Requirements
+- PHP 7.3 is now the recommended version, as 7.2 is already security fixes only.
+
+### Changed Composer Dependencies
+- Reset Slim version to ^3.12
+- Updated PHPUnit to 8.5 (Version 7.5 still used for PHP 7.1)
+
+### Added
+- PHP 7.4 Support & Travis environment.
+- New `Locale` service. Provides a list of available locales in diffeent form.
+- New `BaseServicesProvider` abstract class added as base for all ServiceProvider class.
+- Sprinkle Services Provider can now be autoloaded using the `$servicesproviders` property in the sprinkle bootstrapper class.
+- Current locale code can now be accessed from Twig using the `currentLocale` global variable ([#1056]).
+- Locale now have config & metadata file ([#850])
+- Added `locale:compare`, `locale:dictionary` and `locale:info` Bakery commands.
+- New `cli` service. Returns true if current app is a CLI envrionement, false otherwise.
+
+### Changed
+- `Interop\Container\ContainerInterface` has been replaced with `Psr\Container\ContainerInterface`.
+- `\UserFrosting\I18n\MessageTranslator` is now `\UserFrosting\I18n\Translator`.
+- Translator service moved to it's own `UserFrosting\Sprinkle\Core\I18n\TranslatorServicesProvider` class.
+- Travis now uses Xenial instead of Trusty.
+- `site.locales.available` config now accept `(string) identifier => (bool) enabled`. Set identifier to false or null to remove it from the list.
+- Locale plural rules moved from the keys file to the new metadata files.
+
+### Fixed
+- When internationalizing, the lang attribute value of the Twig template is not set to follow changes ([#982])
+- `pt_Br` locale identifier renamed to `pt_BR`.
+- Improved Docker support ([#1057])
+- Improved Bakery debug command output
+- Improve ordering by activity date ([#1061] & [#1062]; Thanks @ktecho!)
+- Updated Vagrant config and documentation
+- Fixed a bug where `withTrashed` in `findUnique` was not available when `SoftDeletes` trait is not included in a model.
+- CSRF global middleware is not loaded anymore if in a CLI environment. This will avoid sessions to be created for bakery and tests by default.
+- Browserified node modules not being correctly loaded.
+- Browserified node modules potentially colliding with real entrypoints.
+
+### Removed
+- `localePathBuilder` service removed. Task now handled by the `locale` and `translator` services.
+
+## [v4.3.3]
+
+### Fixed
+- Fixed wrong version number in define
+- Locked Slim version to 3.12.2 until UF 4.4 can fix `container-interop/container-interop` replacement with `psr/container`
+
+## [v4.3.2]
+
+### Added
+- Add translation for Brazilian Portuguese (locale pt_BR) - Thanks @maxwellkenned ! ([#1036])
+- Add translation for Serbian (sr_RS) - Thanks @zbigcheese ! ([#1035])
+
+### Changed
+- Updates to the French Locales ([#1027])
+- Updates to the German Locales ([#1039])
+- Updates to the Thai Locales ([#1041])
+- Updates to the Greek Locales ([#1042])
+- Updates to the Persian Locales ([#1045])
+
+### Fixed
+- Fix issue with hidden fields in group modal ([#1033])
+- User cache not flushed on model save ([#1050])
+- Fix "the passwords don't match" error when editing a user password ([#1034], [#1038])
+
+### Deprecated
+`UserController:updateField` now expect the new value as `$_PUT[$fieldName]` (where `$fieldName` is the name of the field you want to update, eg. `$_PUT['password']` for editing `password`) instead of `$_PUT['value']`. This will only affect your code if you're **not** using the [user widjet](https://github.com/userfrosting/UserFrosting/blob/master/app/sprinkles/admin/assets/userfrosting/js/widgets/users.js).
+
+## [v4.3.1]
+
+### Changed
+- Update Arabic Locales ([#1028])
+
+### Fixed
+- Fix typos in user creation with initial password ([#1030])
+
 ## [v4.3.0]
 
 ### Changed Requirements
@@ -23,13 +192,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed Frontend Dependencies
 - Updated handlebar from 3.0.x to 4.1.2
-- Updated AdminLTE theme to 2.4.15 ([#994; #1014; #1015])
+- Updated AdminLTE theme to 2.4.15 ([#994]; [#1014]; [#1015])
 - Updated Font Awesome to 5.9 ([#957]; [#870])
 
 ### Added
 - Separated `BakeCommand` class into multiple methods to make it easier for sprinkle to add custom command to the `bake` command.
 - Allow null group assignment for users ([#867]; [#964])
 - Password can now be set manually when creating new user ([#1017]; [#763])
+- Icon picker for user and group form ([#713]; [#1019])
 
 ### Fix
 - `bake` command return error if account sprinkle is not included ([#944])
@@ -51,11 +221,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Config to set Domain of RememberMe Cookie ([#990], [#991]; Thanks @xrobau !)
 - Config settings for password min/max length ([#993])
+- `migrate:clean` bakery command ([#1007])
 
 ### Fixed
 - [PHPMailer] Turn off opportunistic TLS when disabled ([#986], [#987])
 - Migrator now ignore files that don't end in `.php` ([#965], [#998])
 - Respects CSRF_ENABLED environment variable ([#976]; Thanks @Poldovico !)
+- Checkbox bug on password change form ([#1008])
+- On role page, users table action buttons not working ([#1010])
 
 ## [v4.2.2]
 
@@ -747,7 +920,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Implemented DB-driven home pages for groups.  Upon login, a user will be redirected to the `home_page` for their primary group.
 - Implemented templated menus.  Every group has a corresponding menu template in `models/menu-templates`.  Upon login, the menu for a user's primary group is automatically loaded and rendered.
 - Implemented function-level user authorization.  Whenever a function in `secure_functions` is called, the `user_action_permits` table is checked to see whether or not that user has access to the function (the `action` column), conditional on the boolean functions specified in the `permits` column.
-- Organized pages into four categories: account pages, API pages, form pages, and public pages.  Public pages reside in the root directory and can be accessed by anyone.  Account pages are in the `account` directory and are only accessible after logging in.  API pages are in the `api` directory, and consist of all the pages that process or fetch data from the DB and interact with the frontend via AJAX/JSON.  They are accessible by any logged in user, but will only perform a function if the user is authorized.  Form pages are in the `forms` directory, and consist of pages that generate forms (for creating/updating users, groups, etc.)  
+- Organized pages into four categories: account pages, API pages, form pages, and public pages.  Public pages reside in the root directory and can be accessed by anyone.  Account pages are in the `account` directory and are only accessible after logging in.  API pages are in the `api` directory, and consist of all the pages that process or fetch data from the DB and interact with the frontend via AJAX/JSON.  They are accessible by any logged in user, but will only perform a function if the user is authorized.  Form pages are in the `forms` directory, and consist of pages that generate forms (for creating/updating users, groups, etc.)
 - Converted registration page to AJAX.
 - Improved installer with site configuration.
 
@@ -785,6 +958,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
 
 [#653]: https://github.com/userfrosting/UserFrosting/issues/653
+[#713]: https://github.com/userfrosting/UserFrosting/issues/713
 [#718]: https://github.com/userfrosting/UserFrosting/issues/718
 [#763]: https://github.com/userfrosting/UserFrosting/issues/763
 [#793]: https://github.com/userfrosting/UserFrosting/issues/793
@@ -794,6 +968,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#829]: https://github.com/userfrosting/UserFrosting/issues/829
 [#833]: https://github.com/userfrosting/UserFrosting/issues/833
 [#838]: https://github.com/userfrosting/UserFrosting/issues/838
+[#850]: https://github.com/userfrosting/UserFrosting/issues/850
 [#853]: https://github.com/userfrosting/UserFrosting/issues/853
 [#854]: https://github.com/userfrosting/UserFrosting/issues/854
 [#867]: https://github.com/userfrosting/UserFrosting/issues/867
@@ -819,6 +994,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#968]: https://github.com/userfrosting/UserFrosting/issues/968
 [#976]: https://github.com/userfrosting/UserFrosting/issues/976
 [#981]: https://github.com/userfrosting/UserFrosting/issues/981
+[#982]: https://github.com/userfrosting/UserFrosting/issues/982
 [#983]: https://github.com/userfrosting/UserFrosting/issues/983
 [#986]: https://github.com/userfrosting/UserFrosting/issues/986
 [#987]: https://github.com/userfrosting/UserFrosting/issues/987
@@ -827,14 +1003,63 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#993]: https://github.com/userfrosting/UserFrosting/issues/993
 [#994]: https://github.com/userfrosting/UserFrosting/issues/994
 [#998]: https://github.com/userfrosting/UserFrosting/issues/998
+[#1007]: https://github.com/userfrosting/UserFrosting/issues/1007
+[#1008]: https://github.com/userfrosting/UserFrosting/issues/1008
+[#1010]: https://github.com/userfrosting/UserFrosting/issues/1010
 [#1012]: https://github.com/userfrosting/UserFrosting/issues/1012
 [#1014]: https://github.com/userfrosting/UserFrosting/issues/1014
 [#1015]: https://github.com/userfrosting/UserFrosting/issues/1015
 [#1016]: https://github.com/userfrosting/UserFrosting/issues/1016
 [#1017]: https://github.com/userfrosting/UserFrosting/issues/1017
 [#1018]: https://github.com/userfrosting/UserFrosting/issues/1018
+[#1019]: https://github.com/userfrosting/UserFrosting/issues/1019
+[#1023]: https://github.com/userfrosting/UserFrosting/issues/1023
+[#1027]: https://github.com/userfrosting/UserFrosting/issues/1027
+[#1028]: https://github.com/userfrosting/UserFrosting/issues/1028
+[#1030]: https://github.com/userfrosting/UserFrosting/issues/1030
+[#1033]: https://github.com/userfrosting/UserFrosting/issues/1033
+[#1034]: https://github.com/userfrosting/UserFrosting/issues/1034
+[#1035]: https://github.com/userfrosting/UserFrosting/issues/1035
+[#1036]: https://github.com/userfrosting/UserFrosting/issues/1036
+[#1038]: https://github.com/userfrosting/UserFrosting/issues/1038
+[#1039]: https://github.com/userfrosting/UserFrosting/issues/1039
+[#1041]: https://github.com/userfrosting/UserFrosting/issues/1041
+[#1042]: https://github.com/userfrosting/UserFrosting/issues/1042
+[#1045]: https://github.com/userfrosting/UserFrosting/issues/1045
+[#1050]: https://github.com/userfrosting/UserFrosting/issues/1050
+[#1056]: https://github.com/userfrosting/UserFrosting/issues/1056
+[#1057]: https://github.com/userfrosting/UserFrosting/issues/1057
+[#1061]: https://github.com/userfrosting/UserFrosting/issues/1061
+[#1062]: https://github.com/userfrosting/UserFrosting/issues/1062
+[#1068]: https://github.com/userfrosting/UserFrosting/issues/1068
+[#1073]: https://github.com/userfrosting/UserFrosting/issues/1073
+[#1078]: https://github.com/userfrosting/UserFrosting/issues/1078
+[#1087]: https://github.com/userfrosting/UserFrosting/issues/1087
+[#1092]: https://github.com/userfrosting/UserFrosting/issues/1092
+[#1107]: https://github.com/userfrosting/UserFrosting/pull/1107
+[#1109]: https://github.com/userfrosting/UserFrosting/pull/1109
+[#1114]: https://github.com/userfrosting/UserFrosting/pull/1114
+[#1126]: https://github.com/userfrosting/UserFrosting/pull/1126
+[#1128]: https://github.com/userfrosting/UserFrosting/pull/1128
+[#1117]: https://github.com/userfrosting/UserFrosting/issues/1117
+[#1138]: https://github.com/userfrosting/UserFrosting/pull/1138
+[#1124]: https://github.com/userfrosting/UserFrosting/pull/1124
+[#1121]: https://github.com/userfrosting/UserFrosting/pull/1121
+[#1077]: https://github.com/userfrosting/UserFrosting/pull/1077
+[#1133]: https://github.com/userfrosting/UserFrosting/issues/1133
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
 [v4.2.2]: https://github.com/userfrosting/UserFrosting/compare/v.4.2.1...v4.2.2
 [v4.2.3]: https://github.com/userfrosting/UserFrosting/compare/v4.2.2...v4.2.3
+[v4.3.0]: https://github.com/userfrosting/UserFrosting/compare/v4.2.3...v4.3.0
+[v4.3.1]: https://github.com/userfrosting/UserFrosting/compare/v4.3.0...v4.3.1
+[v4.3.2]: https://github.com/userfrosting/UserFrosting/compare/v4.3.1...v4.3.2
+[v4.3.3]: https://github.com/userfrosting/UserFrosting/compare/v4.3.2...v4.3.3
+[v4.4.0]: https://github.com/userfrosting/UserFrosting/compare/v4.3.3...v4.4.0
+[v4.4.1]: https://github.com/userfrosting/UserFrosting/compare/v4.4.0...v4.4.1
+[v4.4.2]: https://github.com/userfrosting/UserFrosting/compare/v4.4.1...v4.4.2
+[v4.4.3]: https://github.com/userfrosting/UserFrosting/compare/v4.4.2...v4.4.3
+[v4.4.4]: https://github.com/userfrosting/UserFrosting/compare/v4.4.3...v4.4.4
+[v4.4.5]: https://github.com/userfrosting/UserFrosting/compare/v4.4.4...v4.4.5
+[v4.5.0]: https://github.com/userfrosting/UserFrosting/compare/v4.4.5...v4.5.0

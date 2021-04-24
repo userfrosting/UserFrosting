@@ -41,7 +41,7 @@ class SetupEnvCommand extends BaseCommand
     {
         $this->setName('setup:env')
              ->setDescription('UserFrosting Environment Configuration Wizard')
-             ->setHelp('Helper command to setup environement mode. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.')
+             ->setHelp('Helper command to setup environment mode. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.')
              ->addOption('mode', null, InputOption::VALUE_OPTIONAL, 'The environment to use');
     }
 
@@ -53,7 +53,7 @@ class SetupEnvCommand extends BaseCommand
         // Display header,
         $this->io->title("UserFrosting's Environment Setup Wizard");
         $this->io->note("Environment mode will be saved in `{$this->envPath}`");
-        $this->io->write('Select desired envrionement mode. Production should only be used when deploying a live app.');
+        $this->io->write('Select desired environment mode. Production should only be used when deploying a live app.');
 
         // Get an instance of the DotenvEditor
         $dotenvEditor = new DotenvEditor(\UserFrosting\APP_DIR, false);

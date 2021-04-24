@@ -14,7 +14,7 @@ use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Tests\TestCase;
 
 /**
- * CheckEnvironement Test
+ * CheckEnvironment Test
  */
 class CheckEnvironmentTest extends TestCase
 {

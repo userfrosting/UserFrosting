@@ -11,9 +11,9 @@
 namespace UserFrosting\Sprinkle\Account\ServicesProvider;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Interop\Container\ContainerInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
@@ -39,7 +39,7 @@ class ServicesProvider
     /**
      * Register UserFrosting's account services.
      *
-     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
+     * @param ContainerInterface $container A DI container implementing ArrayAccess and psr-container.
      */
     public function register(ContainerInterface $container)
     {
@@ -50,7 +50,7 @@ class ServicesProvider
          */
         $container->extend('assets', function ($assets, $c) {
 
-            // Force load the current user to add it's theme assets ressources
+            // Force load the current user to add it's theme assets resources
             $currentUser = $c->currentUser;
 
             return $assets;
@@ -92,30 +92,6 @@ class ServicesProvider
             $handler->registerHandler('\UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedException', '\UserFrosting\Sprinkle\Account\Error\Handler\AuthCompromisedExceptionHandler');
 
             return $handler;
-        });
-
-        /*
-         * Extends the 'localePathBuilder' service, adding any locale files from the user theme.
-         *
-         * @return \UserFrosting\I18n\LocalePathBuilder
-         */
-        $container->extend('localePathBuilder', function ($pathBuilder, $c) {
-            // Add paths for user theme, if a user is logged in
-            // We catch any authorization-related exceptions, so that error pages can be rendered.
-            try {
-                /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-                $authenticator = $c->authenticator;
-                $currentUser = $c->currentUser;
-            } catch (\Exception $e) {
-                return $pathBuilder;
-            }
-
-            // Add user locale
-            if ($authenticator->check()) {
-                $pathBuilder->addLocales($currentUser->locale);
-            }
-
-            return $pathBuilder;
         });
 
         /*
@@ -303,7 +279,7 @@ class ServicesProvider
                  * @return bool true if the user is in the group, false otherwise.
                  */
                 'in_group' => function ($user_id, $group_id) {
-                    $user = User::find($user_id);
+                    $user = User::findInt($user_id);
 
                     return $user->group_id == $group_id;
                 },
@@ -357,7 +333,7 @@ class ServicesProvider
             $authenticator = $c->authenticator;
             $currentUser = $authenticator->user();
 
-            // Add user theme sprinkles ressources
+            // Add user theme sprinkles resources
             if ($authenticator->check() && $currentUser->theme) {
                 $c->sprinkleManager->addSprinkleResources($currentUser->theme);
             }
@@ -414,13 +390,6 @@ class ServicesProvider
              * @return \Psr\Http\Message\ResponseInterface
              */
             return function (Request $request, Response $response, array $args) use ($c) {
-                // Backwards compatibility for the deprecated determineRedirectOnLogin service
-                if ($c->has('determineRedirectOnLogin')) {
-                    $determineRedirectOnLogin = $c->determineRedirectOnLogin;
-
-                    return $determineRedirectOnLogin($response)->withStatus(200);
-                }
-
                 /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
                 $authorizer = $c->authorizer;
 

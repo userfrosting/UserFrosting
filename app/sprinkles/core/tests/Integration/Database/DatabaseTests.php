@@ -10,10 +10,11 @@
 
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Database;
 
-use UserFrosting\Tests\TestCase;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
+use UserFrosting\Support\Exception\BadRequestException;
+use UserFrosting\Tests\TestCase;
 
 class DatabaseTests extends TestCase
 {
@@ -25,7 +26,7 @@ class DatabaseTests extends TestCase
     /**
      * Setup the database schema.
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Boot parent TestCase, which will set up the database and connections for us.
         parent::setUp();
@@ -112,7 +113,7 @@ class DatabaseTests extends TestCase
     /**
      * Tear down the database schema.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->schema($this->schemaName)->drop('users');
         $this->schema($this->schemaName)->drop('emails');
@@ -887,6 +888,37 @@ class DatabaseTests extends TestCase
     }
 
     /**
+     * testFindInt
+     */
+    public function testFindInt()
+    {
+        $this->generateTasks();
+        $task = EloquentTestTask::findInt(1);
+
+        $this->assertEquals($task, EloquentTestTask::find(1));
+    }
+
+    /**
+     * testFindIntThrowsExceptionOnNull
+     */
+    public function testFindIntThrowsExceptionOnNull()
+    {
+        $this->generateTasks();
+        $this->expectException(BadRequestException::class);
+        EloquentTestTask::findInt(null);
+    }
+
+    /**
+     * testFindIntThrowsExceptionOnNonInteger
+     */
+    public function testFindIntThrowsExceptionOnNonInteger()
+    {
+        $this->generateTasks();
+        $this->expectException(BadRequestException::class);
+        EloquentTestTask::findInt('hi');
+    }
+
+    /**
      * Helpers...
      */
 
@@ -1073,10 +1105,10 @@ class DatabaseTests extends TestCase
     {
         return [
             EloquentTestAssignment::create([
-            'task_id'         => 2,
-            'location_id'     => 1,
-            'assignable_id'   => 1,
-            'assignable_type' => EloquentTestUser::class,
+                'task_id'         => 2,
+                'location_id'     => 1,
+                'assignable_id'   => 1,
+                'assignable_type' => EloquentTestUser::class,
             ]),
             EloquentTestAssignment::create([
                 'task_id'         => 2,

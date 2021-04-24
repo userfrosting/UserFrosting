@@ -17,15 +17,18 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Session\DatabaseSessionHandler;
 use Illuminate\Session\FileSessionHandler;
-use Interop\Container\ContainerInterface;
+use Illuminate\Session\NullSessionHandler;
 use League\FactoryMuffin\FactoryMuffin;
 use League\FactoryMuffin\Faker\Facade as Faker;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
+use Twig\Extension\DebugExtension;
 use UserFrosting\Assets\AssetBundles\GulpBundleAssetsCompiledBundles as CompiledAssetBundles;
 use UserFrosting\Assets\AssetLoader;
 use UserFrosting\Assets\Assets;
@@ -33,8 +36,6 @@ use UserFrosting\Cache\MemcachedStore;
 use UserFrosting\Cache\RedisStore;
 use UserFrosting\Cache\TaggableFileStore;
 use UserFrosting\Config\ConfigPathBuilder;
-use UserFrosting\I18n\LocalePathBuilder;
-use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Alert\CacheAlertStream;
 use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
@@ -49,8 +50,6 @@ use UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Router;
-use UserFrosting\Sprinkle\Core\Session\DatabaseSessionHandler;
-use UserFrosting\Sprinkle\Core\Session\NullSessionHandler;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
@@ -73,7 +72,7 @@ class ServicesProvider
     /**
      * Register UserFrosting's core services.
      *
-     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
+     * @param ContainerInterface $container A DI container implementing ArrayAccess and psr-container.
      */
     public function register(ContainerInterface $container)
     {
@@ -126,9 +125,9 @@ class ServicesProvider
             if ($config['assets.use_raw']) {
 
                 // Register sprinkle assets stream, plus vendor assets in shared streams
-                $locator->registerStream('assets', 'vendor', \UserFrosting\BOWER_ASSET_DIR, true);
                 $locator->registerStream('assets', 'vendor', \UserFrosting\NPM_ASSET_DIR, true);
                 $locator->registerStream('assets', 'vendor', \UserFrosting\BROWSERIFIED_ASSET_DIR, true);
+                $locator->registerStream('assets', 'vendor', \UserFrosting\BOWER_ASSET_DIR, true);
                 $locator->registerStream('assets', '', \UserFrosting\ASSET_DIR_NAME);
 
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
@@ -241,6 +240,8 @@ class ServicesProvider
             }
 
             // Get configuration mode from environment
+            // TODO : Change to env. It doesn't looks likes it work with dotenv load above.
+            // $mode = env('UF_MODE', '');
             $mode = getenv('UF_MODE') ?: '';
 
             // Construct and load config repository
@@ -420,65 +421,6 @@ class ServicesProvider
          */
         $container['filesystem'] = function ($c) {
             return new FilesystemManager($c->config);
-        };
-
-        /*
-         * Builds search paths for locales in all Sprinkles.
-         *
-         * @throws \UnexpectedValueException
-         * @return \UserFrosting\I18n\LocalePathBuilder
-         */
-        $container['localePathBuilder'] = function ($c) {
-            $config = $c->config;
-            $request = $c->request;
-
-            // Make sure the locale config is a valid string
-            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == '') {
-                throw new \UnexpectedValueException('The locale config is not a valid string.');
-            }
-
-            // Get default locales as specified in configurations.
-            $locales = explode(',', $config['site.locales.default']);
-
-            // Get available locales (removing null values)
-            $availableLocales = array_filter($config['site.locales.available']);
-
-            // Add supported browser preferred locales.
-            if ($request->hasHeader('Accept-Language')) {
-                $allowedLocales = [];
-                foreach (explode(',', $request->getHeaderLine('Accept-Language')) as $index => $browserLocale) {
-                    // Split to access q
-                    $parts = explode(';', $browserLocale) ?: [];
-
-                    // Ensure locale valid
-                    if (array_key_exists(0, $parts)) {
-                        // Format for UF's i18n
-                        $parts[0] = str_replace('-', '_', $parts[0]);
-                        // Ensure locale available
-                        if (array_key_exists($parts[0], $availableLocales)) {
-                            // Determine preference level, and add to $allowedLocales
-                            if (array_key_exists(1, $parts)) {
-                                $parts[1] = str_replace('q=', '', $parts[1]);
-                                // Sanitize with int cast (bad values go to 0)
-                                $parts[1] = (int) $parts[1];
-                            } else {
-                                $parts[1] = 1;
-                            }
-                            // Add to list, and format for UF's i18n.
-                            $allowedLocales[$parts[0]] = $parts[1];
-                        }
-                    }
-                }
-
-                // Sort, extract keys, and merge with $locales
-                asort($allowedLocales, SORT_NUMERIC);
-                $locales = array_merge($locales, array_keys($allowedLocales));
-
-                // Remove duplicates, while maintaining fallback order
-                $locales = array_reverse(array_unique(array_reverse($locales), SORT_STRING));
-            }
-
-            return new LocalePathBuilder($c->locator, 'locale://', $locales);
         };
 
         /*
@@ -669,22 +611,6 @@ class ServicesProvider
         };
 
         /*
-         * Translation service, for translating message tokens.
-         *
-         * @return \UserFrosting\I18n\MessageTranslator
-         */
-        $container['translator'] = function ($c) {
-            // Load the translations
-            $paths = $c->localePathBuilder->buildPaths();
-            $loader = new ArrayFileLoader($paths);
-
-            // Create the $translator object
-            $translator = new MessageTranslator($loader->load());
-
-            return $translator;
-        };
-
-        /*
          * Set up Twig as the view, adding template paths for all sprinkles and the Slim Twig extension.
          *
          * Also adds the UserFrosting core Twig extension, which provides additional functions, filters, global variables, etc.
@@ -713,7 +639,7 @@ class ServicesProvider
 
             if ($c->config['debug.twig']) {
                 $twig->enableDebug();
-                $view->addExtension(new \Twig_Extension_Debug());
+                $view->addExtension(new DebugExtension());
             }
 
             // Register the Slim extension with Twig

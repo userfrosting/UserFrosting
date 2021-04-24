@@ -11,7 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Illuminate\Filesystem\Filesystem;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Provides helper function to delete the Twig cache directory.
@@ -22,6 +22,8 @@ class CacheHelper
 {
     /**
      * @var ContainerInterface The global container object, which holds all your services.
+     *
+     * @todo Change this, only the locator service is required
      */
     protected $ci;
 
@@ -38,7 +40,7 @@ class CacheHelper
     /**
      * Function that delete the Twig cache directory content.
      *
-     * @return bool true/false if operation is successfull
+     * @return bool true/false if operation is successful
      */
     public function clearCache()
     {

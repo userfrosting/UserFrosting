@@ -24,7 +24,7 @@ class TestCase extends BaseTestCase
     /**
      * The global container object, which holds all your services.
      *
-     * @var \Interop\Container\ContainerInterface
+     * @var \Psr\Container\ContainerInterface
      */
     protected $ci;
 
@@ -52,34 +52,17 @@ class TestCase extends BaseTestCase
     /**
      * Setup the test environment.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!$this->ci) {
             $this->refreshApplication();
         }
-
-        $this->setUpTraits();
 
         foreach ($this->afterApplicationCreatedCallbacks as $callback) {
             call_user_func($callback);
         }
 
         $this->setUpHasRun = true;
-    }
-
-    /**
-     * Boot the testing helper traits.
-     *
-     * @deprecated
-     */
-    protected function setUpTraits()
-    {
-        $uses = array_flip(class_uses_recursive(static::class));
-
-        if (isset($uses[DatabaseTransactions::class])) {
-            Debug::warning("`UserFrosting\Tests\DatabaseTransactions` has been deprecated and will be removed in future versions.  Please use `UserFrosting\Sprinkle\Core\Tests\DatabaseTransactions` class instead.");
-            $this->beginDatabaseTransaction();
-        }
     }
 
     /**
@@ -103,20 +86,15 @@ class TestCase extends BaseTestCase
     /**
      * Clean up the testing environment before the next test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->ci) {
             foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {
                 call_user_func($callback);
             }
 
-            // Force destroy test sessions
-            $this->ci->session->destroy();
-
-            // Close DB connection
+            // Close DB connection. Can cause "Too many connections" error otherwise
             $this->ci->db->getDatabaseManager()->disconnect();
-
-            $this->ci = null;
         }
 
         $this->setUpHasRun = false;

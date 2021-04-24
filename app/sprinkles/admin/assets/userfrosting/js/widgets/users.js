@@ -106,10 +106,9 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
  * Update user field(s)
  */
 function updateUser(userName, fieldName, fieldValue) {
-    var data = {
-        'value': fieldValue
-    };
 
+    var data = {};
+    data[fieldName] = fieldValue;
     data[site.csrf.keys.name] = site.csrf.name;
     data[site.csrf.keys.value] = site.csrf.value;
 
@@ -266,7 +265,6 @@ function bindUserButtons(el, options) {
 
             // On submission, submit either the PUT request, or POST for a password reset, depending on the toggle state
             modal.find("input[name='change_password_mode']").click(function(e) {
-                e.preventDefault();
 
                 var changePasswordMode = $(this).val();
                 toggleChangePasswordMode(modal, userName, changePasswordMode);
