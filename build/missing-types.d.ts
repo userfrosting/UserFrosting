@@ -47,11 +47,6 @@ declare module "gulplog" {
     export default _default;
 }
 
-// Remove once https://github.com/userfrosting/gulp-prune published
-declare module "gulp-prune" {
-    export = (...args?: unknown[]) => unknown;
-}
-
 declare module "gulp-concat-css" {
     export = (...args?: unknown[]) => unknown;
 }
