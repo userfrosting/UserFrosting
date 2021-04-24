@@ -8,6 +8,8 @@
             "ajax": {{ site.debug.ajax ? 'true' : 'false' }}
         },
         "csrf": {{ site.csrf | json_encode(constant('JSON_PRETTY_PRINT')) | raw }},
-        "uf_table": {{ site.uf_table | json_encode(constant('JSON_PRETTY_PRINT')) | raw }}
+        "uf_table": {{ site.uf_table | json_encode(constant('JSON_PRETTY_PRINT')) | raw }},
+
+        "password": {{site.password | json_encode(constant('JSON_PRETTY_PRINT')) | raw}},
     };
 {% endautoescape %}

@@ -127,7 +127,8 @@ return [
     */
     'site' => [
         'login' => [
-            'enable_email' => true, // Set to false to allow login by username only
+            'enable_email'              => true, // Set to false to allow login by username only
+            'enforce_reset_compromised' => true, // Setting this to true will force users to reset their password if it is considered compromised at login.
         ],
         'registration' => [
             'enabled'                    => true, //if this set to false, you probably want to also set require_email_verification to false as well to disable the link on the signup page
@@ -146,6 +147,15 @@ return [
             'length' => [
                 'min' => 8,
                 'max' => 25,
+            ],
+            'security' => [
+                'enforce_no_compromised' => [
+                    // Set to -1 to turn off this feature otherwise an integer which sets the maximum number of times
+                    // that is "acceptable" for a password to have appeared in breaches. The recommended and most secure
+                    // option is 0 - meaning only passwords that have not been exposed through data breaches are allowed.
+                    'breaches' => 0,
+                    'cache'    => 10080, // Duration in minutes to store HIBP API responses in cache.
+                ],
             ],
         ],
     ],

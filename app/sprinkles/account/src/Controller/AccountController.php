@@ -40,6 +40,32 @@ use UserFrosting\Support\Exception\NotFoundException;
 class AccountController extends SimpleController
 {
     /**
+     * Check password use eligibility.
+     *
+     * AuthGuard: false
+     * Route: /account/check-password
+     * Route Name: {none}
+     * Request Type: POST
+     *
+     * @see https://haveibeenpwned.com/API/v2
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     */
+    public function checkPassword(Request $request, Response $response, $args)
+    {
+        // Grab the password from request.
+        $password = $request->getParsedBodyParam('password');
+
+        $passwordSecurity = $this->ci->passwordSecurity;
+
+        $breaches = $passwordSecurity->checkPassword($password);
+
+        return $response->withJson($breaches, 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
      * Check a username for availability.
      *
      * This route is throttled by default, to discourage abusing it for account enumeration.
@@ -342,6 +368,9 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
 
@@ -406,9 +435,6 @@ class AccountController extends SimpleController
         }
 
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
-        /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-        $authenticator = $this->ci->authenticator;
-
         try {
             $currentUser = $authenticator->attempt(($isEmail ? 'email' : 'user_name'), $userIdentifier, $data['password'], $data['rememberme']);
         } catch (\Exception $e) {
@@ -416,6 +442,36 @@ class AccountController extends SimpleController
             $throttler->logEvent('sign_in_attempt', $throttleData);
 
             throw $e;
+        }
+
+        $passwordSecurity = $this->ci->passwordSecurity;
+
+        // Check if the enforce password update setting is configured.
+        if ($passwordSecurity->resetCompromisedEnabled()) {
+            // Check if the password is on the compromised password list.
+            $numberOfBreaches = $passwordSecurity->checkPassword($data['password']);
+            $breachThreshold = $passwordSecurity->breachThreshold();
+
+            if ($breachThreshold > -1 && $numberOfBreaches > $breachThreshold) {
+                $passwordSecurity->setPasswordResetRequired($currentUser);
+
+                // Create activity record
+                $this->ci->userActivityLogger->info("User {$currentUser->user_name} must reset their password before they can login as result of being on the compromised password list.", [
+                    'type'    => 'reset_compromised_password',
+                    'user_id' => $currentUser->id,
+                ]);
+            }
+        }
+
+        // TODO This will not pickup compromise resets right away
+        if ($passwordSecurity->checkPasswordResetRequired($currentUser)) {
+
+            // Destroy the session
+            $this->ci->authenticator->logout();
+
+            $redirect = $this->ci->get('redirect.passwordReset');
+
+            return $redirect($request, $response, $args);
         }
 
         $ms->addMessageTranslated('success', 'WELCOME', $currentUser->toArray());
@@ -620,6 +676,44 @@ class AccountController extends SimpleController
                 ],
             ],
             'token' => isset($params['token']) ? $params['token'] : '',
+        ]);
+    }
+
+    /**
+     * Render the "reset password required" page.
+     *
+     * This creates a simple form to allow users who forgot their password to have a time-limited password reset link emailed to them.
+     * By default, this is a "public page" (does not require authentication).
+     * This page is similar to the forgot-password page. The only difference is that a user is directed to this page by the system when a password reset is required.
+     *
+     * AuthGuard: false
+     * Route: /account/reset-password-required
+     * Route Name: reset-password-required
+     * Request type: GET
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     */
+    public function pagePasswordResetRequired(Request $request, Response $response, $args)
+    {
+        /** @var \UserFrosting\I18n\MessageTranslator $translator */
+        $translator = $this->ci->translator;
+
+        // Load validation rules
+        $schema = new RequestSchema('schema://requests/forgot-password.yaml');
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        return $this->ci->view->render($response, 'pages/password-reset-required.html.twig', [
+            'page' => [
+                'validators' => [
+                    'forgot_password'    => $validator->rules('json', false),
+                ],
+               'messages' => [
+                  'email'  => $translator->translate('PASSWORD.RESET.REQUIRED.EMAIL'),
+                  'reason' => $translator->translate('PASSWORD.RESET.REQUIRED.REASON'),
+                ],
+            ],
         ]);
     }
 

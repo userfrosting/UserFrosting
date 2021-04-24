@@ -111,6 +111,12 @@ return [
         'CURRENT'               => 'Current Password',
         'CURRENT_EXPLAIN'       => 'You must confirm your current password to make changes',
 
+        'SECURITY'  => [
+             'RESET_REQUIRED' => [
+                 'COMPROMISED'      => 'The password security policy does not allow use of passwords that have been exposed by a data breach. Please reset your password to continue.',
+            ],
+        ],
+
         'FORGOTTEN' => 'Forgotten Password',
         'FORGET'    => [
             '@TRANSLATION' => 'I forgot my password',
@@ -134,6 +140,12 @@ return [
             'CHOOSE'            => 'Please choose a new password to continue.',
             'PAGE'              => 'Choose a new password for your account.',
             'SEND'              => 'Set New Password and Sign In',
+            'REQUIRED'          => [
+              '@TRANSLATION' => 'Reset Required',
+              'EMAIL'        => 'Please enter the email address you used to sign up. A link with instructions to reset your password will be emailed to you.',
+              'REASON'       => 'The password security policy does not allow use of passwords that have been exposed by a data breach. You are required to reset your password before you can login.',
+            ],
+
         ],
 
         'UPDATED'           => 'Account password updated',

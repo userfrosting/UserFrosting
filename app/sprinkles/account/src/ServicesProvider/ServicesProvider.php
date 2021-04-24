@@ -19,6 +19,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
 use UserFrosting\Sprinkle\Account\Authenticate\Hasher;
+use UserFrosting\Sprinkle\Account\Authenticate\PasswordSecurity;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Log\UserActivityDatabaseHandler;
@@ -148,6 +149,21 @@ class ServicesProvider
             $authenticator = new Authenticator($classMapper, $session, $config, $cache, $db);
 
             return $authenticator;
+        };
+
+        /*
+         * PasswordSecurity service.
+         *
+         * Handles password security features.
+         *
+         * @return \UserFrosting\Sprinkle\Account\Authenticate\PasswordSecurity
+         */
+        $container['passwordSecurity'] = function ($c) {
+            $cache = $c->cache;
+            $config = $c->config;
+            $classMapper = $c->classMapper;
+
+            return new PasswordSecurity($cache, $config, $classMapper);
         };
 
         /*
@@ -379,11 +395,31 @@ class ServicesProvider
 
                 $currentUser = $c->authenticator->user();
 
-                if ($authorizer->checkAccess($currentUser, 'uri_account_settings')) {
+                if ($currentUser->flag_password_reset_required) {
+                    return $response->withHeader('UF-Redirect', $c->router->pathFor('reset-password-required'));
+                } elseif ($authorizer->checkAccess($currentUser, 'uri_account_settings')) {
                     return $response->withHeader('UF-Redirect', $c->router->pathFor('settings'));
                 } else {
                     return $response->withHeader('UF-Redirect', $c->router->pathFor('index'));
                 }
+            };
+        };
+
+        /*
+         * Returns a callback that handles setting the `UF-Redirect` header to the password-reset-required page.
+         *
+         * @return callable
+         */
+        $container['redirect.passwordReset'] = function ($c) {
+            /*
+             * Returns a callback that handles setting the `UF-Redirect` header to the password-reset-required page.
+             * @param  \Psr\Http\Message\ServerRequestInterface $request
+             * @param  \Psr\Http\Message\ResponseInterface      $response
+             * @param  array                                    $args
+             * @return \Psr\Http\Message\ResponseInterface
+             */
+            return function (Request $request, Response $response, array $args) use ($c) {
+                return $response->withHeader('UF-Redirect', $c->router->pathFor('password-reset-required'));
             };
         };
 

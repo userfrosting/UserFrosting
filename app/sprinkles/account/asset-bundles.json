@@ -2,7 +2,8 @@
     "bundle": {
         "js/pages/account-settings": {
             "scripts": [
-                "userfrosting/js/pages/account-settings.js"
+                "userfrosting/js/pages/account-settings.js",
+                "userfrosting/js/uf-password-security.js"
             ],
             "options": {
                 "result": {
@@ -38,7 +39,8 @@
         },
         "js/pages/set-or-reset-password": {
             "scripts": [
-                "userfrosting/js/pages/set-or-reset-password.js"
+                "userfrosting/js/pages/set-or-reset-password.js",
+                "userfrosting/js/uf-password-security.js"
             ],
             "options": {
                 "result": {
@@ -52,7 +54,8 @@
             "scripts": [
                 "vendor/speakingurl/speakingurl.min.js",
                 "userfrosting/js/uf-captcha.js",
-                "userfrosting/js/pages/register.js"
+                "userfrosting/js/pages/register.js",
+                "userfrosting/js/uf-password-security.js"
             ],
             "options": {
                 "result": {

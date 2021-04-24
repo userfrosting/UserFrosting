@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
+ */
+
 $header = 'UserFrosting (http://www.userfrosting.com)
 
 @link      https://github.com/userfrosting/UserFrosting
@@ -98,8 +106,8 @@ $rules = [
     'whitespace_after_comma_in_array'             => true,
 
     'header_comment' => [
-        'header'       => $header
-    ]
+        'header'       => $header,
+    ],
 ];
 
 $finder = PhpCsFixer\Finder::create()
@@ -113,5 +121,5 @@ return PhpCsFixer\Config::create()
     ->setRules($rules)
     ->setFinder($finder)
     ->setUsingCache(true)
-    ->setCacheFile(__DIR__.'/.php_cs.cache')
+    ->setCacheFile(__DIR__ . '/.php_cs.cache')
     ->setRiskyAllowed(true);
