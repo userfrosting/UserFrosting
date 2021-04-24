@@ -57,7 +57,7 @@ class CacheAlertStream extends AlertStream
     public function messages()
     {
         if ($this->getCache()->has($this->messagesKey)) {
-            return $this->getCache()->get($this->messagesKey) ?: [];
+            return $this->translateMessages($this->getCache()->get($this->messagesKey) ?: []);
         } else {
             return [];
         }

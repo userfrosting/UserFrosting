@@ -97,9 +97,15 @@ abstract class AlertStream
             throw new \RuntimeException('No translator has been set!  Please call MessageStream::setTranslator first.');
         }
 
-        $message = $this->translator->translate($messageId, $placeholders);
+        $messages = $this->messages();
+        $messages[] = [
+            'type'    => $type,
+            'message_id' => $messageId,
+            'placeholders' => $placeholders,
+        ];
+        $this->saveMessages($messages);
 
-        return $this->addMessage($type, $message);
+        return $this;
     }
 
     /**
@@ -111,10 +117,31 @@ abstract class AlertStream
      */
     public function getAndClearMessages()
     {
-        $messages = $this->messages();
+        $messages = $this->translateMessages($this->messages());
         $this->resetMessageStream();
 
         return $messages;
+    }
+
+    /**
+     * Translates messages that have a message id instead of a message.
+     */
+    protected function translateMessages(array $messages)
+    {
+        $translatedMessages = [];
+
+        foreach ($messages as $message) {
+            if (array_key_exists('message_id', $message)) {
+                $translatedMessages[] = [
+                    'type' => $message['type'],
+                    'message' => $this->translator->translate($message['message_id'], $message['placeholders']),
+                ];
+            } else {
+                $translatedMessages[] = $message;
+            }
+        }
+
+        return $translatedMessages;
     }
 
     /**
