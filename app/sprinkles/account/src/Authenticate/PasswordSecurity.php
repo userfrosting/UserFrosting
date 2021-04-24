@@ -59,7 +59,7 @@ class PasswordSecurity
      */
     public function breachThreshold(): int
     {
-        return $this->config['site.password_security.enforce_no_compromised.breaches'];
+        return $this->config['site.password.security.enforce_no_compromised.breaches'] ?? -1;
     }
 
     /**
@@ -79,7 +79,7 @@ class PasswordSecurity
         $passwordHash = strtoupper(sha1($password));
         $hashPrefix = substr($passwordHash, 0, 5);
 
-        $cacheMinutes = $this->config['site.password_security.enforce_no_compromised.cache'];
+        $cacheMinutes = $this->config['site.password.security.enforce_no_compromised.cache'];
 
         // Check to see if it already exists in cache. If not, we query Have I Been Pwned API and then save response to cache.
         $hashArray = $this->cache->remember($hashPrefix, $cacheMinutes, function () use ($hashPrefix) {
@@ -192,7 +192,7 @@ class PasswordSecurity
                 }
             }
 
-            return;
+            return [];
         }
 
         $body = $response->getBody()->getContents();

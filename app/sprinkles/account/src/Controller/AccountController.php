@@ -450,8 +450,9 @@ class AccountController extends SimpleController
         if ($passwordSecurity->resetCompromisedEnabled()) {
             // Check if the password is on the compromised password list.
             $numberOfBreaches = $passwordSecurity->checkPassword($data['password']);
+            $breachThreshold = $passwordSecurity->breachThreshold();
 
-            if ($passwordSecurity->breachThreshold() != -1 && $numberOfBreaches > $passwordSecurity->breachThreshold()) {
+            if ($breachThreshold > -1 && $numberOfBreaches > $breachThreshold) {
                 $passwordSecurity->setPasswordResetRequired($currentUser);
 
                 // Create activity record
@@ -462,6 +463,7 @@ class AccountController extends SimpleController
             }
         }
 
+        // TODO This will not pickup compromise resets right away
         if ($passwordSecurity->checkPasswordResetRequired($currentUser)) {
 
             // Destroy the session
@@ -472,7 +474,7 @@ class AccountController extends SimpleController
             return $redirect($request, $response, $args);
         }
 
-        $ms->addMessageTranslated('success', 'WELCOME', $currentUser->export());
+        $ms->addMessageTranslated('success', 'WELCOME', $currentUser->toArray());
 
         // Set redirect, if relevant
         $redirectOnLogin = $this->ci->get('redirect.onLogin');
