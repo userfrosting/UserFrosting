@@ -1,13 +1,16 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Util;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Core\Http\Concerns\DeterminesContentType;
 
 /**
@@ -33,8 +36,8 @@ class ShutdownHandler
     /**
      * Constructor.
      *
-     * @param ContainerInterface $ci The global container object, which holds all your services.
-     * @param bool $displayErrorInfo
+     * @param ContainerInterface $ci               The global container object, which holds all your services.
+     * @param bool               $displayErrorInfo
      */
     public function __construct(ContainerInterface $ci, $displayErrorInfo)
     {
@@ -44,8 +47,6 @@ class ShutdownHandler
 
     /**
      * Register this class with the shutdown handler.
-     *
-     * @return void
      */
     public function register()
     {
@@ -63,11 +64,11 @@ class ShutdownHandler
             E_PARSE,
             E_CORE_ERROR,
             E_COMPILE_ERROR,
-            E_RECOVERABLE_ERROR
+            E_RECOVERABLE_ERROR,
         ];
 
         // Handle fatal errors and parse errors
-        if ($error !== NULL && in_array($error['type'], $fatalErrorTypes)) {
+        if ($error !== null && in_array($error['type'], $fatalErrorTypes)) {
 
             // Build the appropriate error message (debug or client)
             if ($this->displayErrorInfo) {
@@ -78,7 +79,7 @@ class ShutdownHandler
 
             // For CLI, just print the message and exit.
             if (php_sapi_name() === 'cli') {
-				exit($errorMessage . PHP_EOL);
+                exit($errorMessage . PHP_EOL);
             }
 
             // For all other environments, print a debug response for the requested data type
@@ -100,29 +101,31 @@ class ShutdownHandler
      * Build the error message string.
      *
      * @param array $error
+     *
      * @return string
      */
     protected function buildErrorInfoMessage(array $error)
     {
         $errfile = $error['file'];
         $errline = (string) $error['line'];
-        $errstr  = $error['message'];
+        $errstr = $error['message'];
 
         $errorTypes = [
-            E_ERROR => 'Fatal error',
-            E_PARSE => 'Parse error',
-            E_CORE_ERROR => 'PHP core error',
-            E_COMPILE_ERROR => 'Zend compile error',
-            E_RECOVERABLE_ERROR => 'Catchable fatal error'
+            E_ERROR             => 'Fatal error',
+            E_PARSE             => 'Parse error',
+            E_CORE_ERROR        => 'PHP core error',
+            E_COMPILE_ERROR     => 'Zend compile error',
+            E_RECOVERABLE_ERROR => 'Catchable fatal error',
         ];
 
-        return "<strong>" . $errorTypes[$error['type']] . "</strong>: $errstr in <strong>$errfile</strong> on line <strong>$errline</strong>";
+        return '<strong>' . $errorTypes[$error['type']] . "</strong>: $errstr in <strong>$errfile</strong> on line <strong>$errline</strong>";
     }
 
     /**
      * Build an error response of the appropriate type as determined by the request's Accept header.
      *
      * @param string $message
+     *
      * @return string
      */
     protected function buildErrorPage($message)
@@ -132,6 +135,7 @@ class ShutdownHandler
         switch ($contentType) {
             case 'application/json':
                 $error = ['message' => $message];
+
                 return json_encode($error, JSON_PRETTY_PRINT);
 
             case 'text/html':
@@ -146,7 +150,8 @@ class ShutdownHandler
     /**
      * Build an HTML error page from an error string.
      *
-     * @param string $errorMessage
+     * @param string $message
+     *
      * @return string
      */
     protected function buildHtmlErrorPage($message)
@@ -156,9 +161,9 @@ class ShutdownHandler
 
         return sprintf(
             "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
-            "<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana," .
-            "sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}" .
-            "</style></head><body><h1>%s</h1>%s</body></html>",
+            '<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,' .
+            'sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}' .
+            '</style></head><body><h1>%s</h1>%s</body></html>',
             $title,
             $title,
             $html

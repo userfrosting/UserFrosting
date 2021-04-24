@@ -1,49 +1,45 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core;
 
-use FastRoute\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use InvalidArgumentException;
-use RuntimeException;
-use Psr\Http\Message\ServerRequestInterface;
-use FastRoute\RouteCollector;
-use FastRoute\RouteParser;
-use FastRoute\RouteParser\Std as StdParser;
-use FastRoute\DataGenerator;
-use Slim\Interfaces\RouteGroupInterface;
-use Slim\Interfaces\RouterInterface;
+use Slim\App;
 use Slim\Interfaces\RouteInterface;
+use Slim\Interfaces\RouterInterface;
 
 /**
- * Router
+ * Router.
  *
  * This class extends Slim's router, to permit overriding of routes with the same signature.
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Router extends \Slim\Router implements RouterInterface
 {
-
-    /*
+    /**
      * @var string[] a reverse lookup of route identifiers, indexed by route signature
      */
     protected $identifiers;
 
     /**
-     * Add route
+     * Add route.
      *
-     * @param  string[] $methods Array of HTTP methods
-     * @param  string   $pattern The route pattern
-     * @param  callable $handler The route callable
-     *
-     * @return RouteInterface
+     * @param string[] $methods Array of HTTP methods
+     * @param string   $pattern The route pattern
+     * @param callable $handler The route callable
      *
      * @throws InvalidArgumentException if the route pattern isn't a string
+     *
+     * @return RouteInterface
      */
     public function map($methods, $pattern, $handler)
     {
@@ -57,7 +53,7 @@ class Router extends \Slim\Router implements RouterInterface
         }
 
         // According to RFC methods are defined in uppercase (See RFC 7231)
-        $methods = array_map("strtoupper", $methods);
+        $methods = array_map('strtoupper', $methods);
 
         // Determine route signature
         $signature = implode('-', $methods) . '-' . $pattern;
@@ -80,15 +76,14 @@ class Router extends \Slim\Router implements RouterInterface
     }
 
     /**
-     * Delete the cache file
+     * Delete the cache file.
      *
-     * @access public
-     * @return bool true/false if operation is successfull
+     * @return bool true/false if operation is successful
      */
     public function clearCache()
     {
         // Get Filesystem instance
-        $fs = new FileSystem;
+        $fs = new Filesystem();
 
         // Make sure file exist and delete it
         if ($fs->exists($this->cacheFile)) {
@@ -97,5 +92,25 @@ class Router extends \Slim\Router implements RouterInterface
 
         // It's still considered a success if file doesn't exist
         return true;
+    }
+
+    /**
+     * Load all available routes.
+     *
+     * @param App $slimApp
+     */
+    public function loadRoutes(App $slimApp)
+    {
+        // Since routes aren't encapsulated in a class yet, we need this workaround :(
+        global $app;
+        $app = $slimApp;
+
+        $ci = $app->getContainer();
+
+        // Reverse the list, so the lower priority are required first
+        $routeFiles = array_reverse($ci->locator->listResources('routes://', true, false));
+        foreach ($routeFiles as $routeFile) {
+            require $routeFile;
+        }
     }
 }

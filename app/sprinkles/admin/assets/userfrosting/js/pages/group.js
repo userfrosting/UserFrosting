@@ -9,7 +9,7 @@
 
 $(document).ready(function() {
     // Control buttons
-    bindGroupButtons($("#view-group"));
+    bindGroupButtons($("#view-group"), { delete_redirect: page.delete_redirect });
 
     // Table of users in this group
     $("#widget-group-users").ufTable({
@@ -21,4 +21,7 @@ $(document).ready(function() {
     $("#widget-group-users").on("pagerComplete.ufTable", function () {
         bindUserButtons($(this));
     });
+
+$('.icp').iconpicker();
+
 });

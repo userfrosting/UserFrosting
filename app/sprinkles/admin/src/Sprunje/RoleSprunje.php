@@ -1,18 +1,20 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * RoleSprunje
+ * RoleSprunje.
  *
  * Implements Sprunje for the roles API.
  *
@@ -24,21 +26,21 @@ class RoleSprunje extends Sprunje
 
     protected $sortable = [
         'name',
-        'description'
+        'description',
     ];
 
     protected $filterable = [
         'name',
         'description',
-        'info'
+        'info',
     ];
 
     protected $excludeForAll = [
-        'info'
+        'info',
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function baseQuery()
     {
@@ -49,8 +51,9 @@ class RoleSprunje extends Sprunje
      * Filter LIKE name OR description.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return $this
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterInfo($query, $value)
     {
@@ -62,6 +65,7 @@ class RoleSprunje extends Sprunje
                         ->orLike('description', $value);
             }
         });
+
         return $this;
     }
 }

@@ -1,16 +1,19 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use UserFrosting\Sprinkle\Core\Error\Renderer\HtmlRenderer;
+use Twig\Error\LoaderError;
 use UserFrosting\Sprinkle\Core\Error\Renderer\JsonRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\PlainTextRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\WhoopsRenderer;
@@ -43,12 +46,12 @@ class ExceptionHandler implements ExceptionHandlerInterface
     protected $response;
 
     /**
-     * @var Throwable
+     * @var \Throwable
      */
     protected $exception;
 
     /**
-     * @var ErrorRendererInterface
+     * @var \UserFrosting\Sprinkle\Core\Error\Renderer\ErrorRendererInterface
      */
     protected $renderer = null;
 
@@ -74,9 +77,9 @@ class ExceptionHandler implements ExceptionHandlerInterface
      * Create a new ExceptionHandler object.
      *
      * @param ContainerInterface     $ci
-     * @param ServerRequestInterface $request   The most recent Request object
-     * @param ResponseInterface      $response  The most recent Response object
-     * @param Throwable              $exception The caught Exception object
+     * @param ServerRequestInterface $request             The most recent Request object
+     * @param ResponseInterface      $response            The most recent Response object
+     * @param \Throwable             $exception           The caught Exception object
      * @param bool                   $displayErrorDetails
      */
     public function __construct(
@@ -151,22 +154,20 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
         try {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/$httpCode.html.twig");
-        } catch (\Twig_Error_Loader $e) {
-            $template = $this->ci->view->getEnvironment()->loadTemplate("pages/abstract/error.html.twig");
+        } catch (LoaderError $e) {
+            $template = $this->ci->view->getEnvironment()->loadTemplate('pages/abstract/error.html.twig');
         }
 
         return $this->response
             ->withStatus($httpCode)
             ->withHeader('Content-type', $this->contentType)
             ->write($template->render([
-                'messages' => $messages
+                'messages' => $messages,
             ]));
     }
 
     /**
-     * Write to the error log
-     *
-     * @return void
+     * Write to the error log.
      */
     public function writeToErrorLog()
     {
@@ -178,8 +179,6 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     /**
      * Write user-friendly error messages to the alert message stream.
-     *
-     * @return void
      */
     public function writeAlerts()
     {
@@ -192,11 +191,11 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     /**
      * Determine which renderer to use based on content type
-     * Overloaded $renderer from calling class takes precedence over all
-     *
-     * @return ErrorRendererInterface
+     * Overloaded $renderer from calling class takes precedence over all.
      *
      * @throws \RuntimeException
+     *
+     * @return \UserFrosting\Sprinkle\Core\Error\Renderer\ErrorRendererInterface
      */
     protected function determineRenderer()
     {
@@ -247,6 +246,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
         if ($this->request->getMethod() === 'OPTIONS') {
             return 200;
         }
+
         return 500;
     }
 
@@ -258,15 +258,14 @@ class ExceptionHandler implements ExceptionHandlerInterface
     protected function determineUserMessages()
     {
         return [
-            new UserMessage("ERROR.SERVER")
+            new UserMessage('ERROR.SERVER'),
         ];
     }
 
     /**
-     * Monolog logging for errors
+     * Monolog logging for errors.
      *
-     * @param $message
-     * @return void
+     * @param string $message
      */
     protected function logError($message)
     {

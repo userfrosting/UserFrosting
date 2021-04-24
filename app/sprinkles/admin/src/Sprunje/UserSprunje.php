@@ -1,19 +1,21 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Facades\Translator;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * UserSprunje
+ * UserSprunje.
  *
  * Implements Sprunje for the users API.
  *
@@ -24,27 +26,27 @@ class UserSprunje extends Sprunje
     protected $name = 'users';
 
     protected $listable = [
-        'status'
+        'status',
     ];
 
     protected $sortable = [
         'name',
         'last_activity',
-        'status'
+        'status',
     ];
 
     protected $filterable = [
         'name',
         'last_activity',
-        'status'
+        'status',
     ];
 
     protected $excludeForAll = [
-        'last_activity'
+        'last_activity',
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function baseQuery()
     {
@@ -58,8 +60,9 @@ class UserSprunje extends Sprunje
      * Filter LIKE the last activity description.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return $this
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterLastActivity($query, $value)
     {
@@ -70,6 +73,7 @@ class UserSprunje extends Sprunje
                 $query->orLike('activities.description', $value);
             }
         });
+
         return $this;
     }
 
@@ -77,8 +81,9 @@ class UserSprunje extends Sprunje
      * Filter LIKE the first name, last name, or email.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return $this
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterName($query, $value)
     {
@@ -91,15 +96,17 @@ class UserSprunje extends Sprunje
                         ->orLike('email', $value);
             }
         });
+
         return $this;
     }
 
     /**
-     * Filter by status (active, disabled, unactivated)
+     * Filter by status (active, disabled, unactivated).
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return $this
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterStatus($query, $value)
     {
@@ -118,6 +125,7 @@ class UserSprunje extends Sprunje
                 }
             }
         });
+
         return $this;
     }
 
@@ -131,16 +139,16 @@ class UserSprunje extends Sprunje
         return [
             [
                 'value' => 'active',
-                'text' => Translator::translate('ACTIVE')
+                'text'  => Translator::translate('ACTIVE'),
             ],
             [
                 'value' => 'unactivated',
-                'text' => Translator::translate('UNACTIVATED')
+                'text'  => Translator::translate('UNACTIVATED'),
             ],
             [
                 'value' => 'disabled',
-                'text' => Translator::translate('DISABLED')
-            ]
+                'text'  => Translator::translate('DISABLED'),
+            ],
         ];
     }
 
@@ -148,12 +156,14 @@ class UserSprunje extends Sprunje
      * Sort based on last activity time.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return $this
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortLastActivity($query, $direction)
     {
         $query->orderBy('activities.occurred_at', $direction);
+
         return $this;
     }
 
@@ -161,25 +171,29 @@ class UserSprunje extends Sprunje
      * Sort based on last name.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return $this
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortName($query, $direction)
     {
         $query->orderBy('last_name', $direction);
+
         return $this;
     }
 
     /**
-     * Sort active, unactivated, disabled
+     * Sort active, unactivated, disabled.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return $this
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortStatus($query, $direction)
     {
         $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
+
         return $this;
     }
 }

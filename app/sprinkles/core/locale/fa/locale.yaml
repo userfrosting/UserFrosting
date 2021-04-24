@@ -1,0 +1,7 @@
+name: Persian
+regional: فارسی
+authors:
+  - aminakbari
+plural_rule: 1
+parents:
+  - en_US

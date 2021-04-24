@@ -1,0 +1,7 @@
+name: Russian
+regional: русский
+authors:
+  - rendername
+plural_rule: 1
+parents:
+  - en_US

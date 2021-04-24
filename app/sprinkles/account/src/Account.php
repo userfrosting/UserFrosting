@@ -1,12 +1,16 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Account;
 
+use UserFrosting\Sprinkle\Account\I18n\LocaleServicesProvider;
 use UserFrosting\System\Sprinkle\Sprinkle;
 
 /**
@@ -16,5 +20,10 @@ use UserFrosting\System\Sprinkle\Sprinkle;
  */
 class Account extends Sprinkle
 {
-
+    /**
+     * @var string[] List of services provider to register
+     */
+    protected $servicesproviders = [
+        LocaleServicesProvider::class,
+    ];
 }

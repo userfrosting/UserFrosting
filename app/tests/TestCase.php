@@ -1,15 +1,18 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Tests;
 
-use Slim\App;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use UserFrosting\System\UserFrosting;
+use UserFrosting\Sprinkle\Core\Facades\Debug;
 
 /**
  * Class to handle Test
@@ -19,16 +22,9 @@ use UserFrosting\System\UserFrosting;
 class TestCase extends BaseTestCase
 {
     /**
-     * The Slim application instance.
-     *
-     * @var \Slim\App
-     */
-    protected $app;
-
-    /**
      * The global container object, which holds all your services.
      *
-     * @var \Interop\Container\ContainerInterface
+     * @var \Psr\Container\ContainerInterface
      */
     protected $ci;
 
@@ -55,16 +51,12 @@ class TestCase extends BaseTestCase
 
     /**
      * Setup the test environment.
-     *
-     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
-        if (!$this->app) {
+        if (!$this->ci) {
             $this->refreshApplication();
         }
-
-        $this->setUpTraits();
 
         foreach ($this->afterApplicationCreatedCallbacks as $callback) {
             call_user_func($callback);
@@ -74,27 +66,7 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     * Boot the testing helper traits.
-     *
-     * @return void
-     */
-    protected function setUpTraits()
-    {
-        $uses = array_flip(class_uses_recursive(static::class));
-
-        /*if (isset($uses[DatabaseMigrations::class])) {
-            $this->runDatabaseMigrations();
-        }*/
-
-        if (isset($uses[DatabaseTransactions::class])) {
-            $this->beginDatabaseTransaction();
-        }
-    }
-
-    /**
      * Refresh the application instance.
-     *
-     * @return void
      */
     protected function refreshApplication()
     {
@@ -104,33 +76,25 @@ class TestCase extends BaseTestCase
         // no way to override environment vars that have already been set.
         putenv('UF_MODE=testing');
 
-        // Setup the sprinkles
-        $uf = new UserFrosting();
-
-        // Set argument as false, we are using the CLI
-        $uf->setupSprinkles(false);
+        // Setup the base UF app
+        $uf = new UserFrosting(true);
 
         // Get the container
         $this->ci = $uf->getContainer();
-
-        // Next, we'll instantiate the application.  Note that the application is required for the SprinkleManager to set up routes.
-        $this->app = new App($this->ci);
     }
 
     /**
      * Clean up the testing environment before the next test.
-     *
-     * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
-        if ($this->app) {
+        if ($this->ci) {
             foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {
                 call_user_func($callback);
             }
 
-            $this->app = null;
-            $this->ci = null;
+            // Close DB connection. Can cause "Too many connections" error otherwise
+            $this->ci->db->getDatabaseManager()->disconnect();
         }
 
         $this->setUpHasRun = false;
@@ -142,8 +106,7 @@ class TestCase extends BaseTestCase
     /**
      * Register a callback to be run after the application is created.
      *
-     * @param  callable  $callback
-     * @return void
+     * @param callable $callback
      */
     public function afterApplicationCreated(callable $callback)
     {
@@ -157,10 +120,11 @@ class TestCase extends BaseTestCase
     /**
      * Asserts that collections are equivalent.
      *
-     * @param  array   $expected
-     * @param  array   $actual
-     * @param  string  $message
-     * @throws PHPUnit_Framework_AssertionFailedError
+     * @param  array                                   $expected
+     * @param  array                                   $actual
+     * @param  string                                  $key      [description]
+     * @param  string                                  $message  [description]
+     * @throws \PHPUnit_Framework_AssertionFailedError
      */
     public static function assertCollectionsSame($expected, $actual, $key = 'id', $message = '')
     {
@@ -188,10 +152,26 @@ class TestCase extends BaseTestCase
     }
 
     /**
+     * Call protected/private method of a class.
+     *
+     * @param  object &$object    Instantiated object that we will run method on.
+     * @param  string $methodName Method name to call
+     * @param  array  $parameters Array of parameters to pass into method.
+     * @return mixed  Method return.
+     */
+    public function invokeMethod(&$object, $methodName, array $parameters = [])
+    {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $parameters);
+    }
+
+    /**
      * Register a callback to be run before the application is destroyed.
      *
-     * @param  callable  $callback
-     * @return void
+     * @param callable $callback
      */
     protected function beforeApplicationDestroyed(callable $callback)
     {
@@ -205,8 +185,8 @@ class TestCase extends BaseTestCase
     /**
      * Cast an item to an array if it has a toArray() method.
      *
-     * @param $item Collection|mixed[]|mixed
-     * @return mixed|mixed[]
+     * @param  object $item
+     * @return mixed
      */
     protected static function castToComparable($item)
     {
@@ -215,6 +195,8 @@ class TestCase extends BaseTestCase
 
     /**
      * Remove all relations on a collection of models.
+     *
+     * @param array $models
      */
     protected static function ignoreRelations($models)
     {
@@ -223,10 +205,16 @@ class TestCase extends BaseTestCase
         }
     }
 
+    /**
+     * cloneObjectArray
+     *
+     * @param  array $original
+     * @return array
+     */
     protected function cloneObjectArray($original)
     {
         $cloned = [];
-        
+
         foreach ($original as $k => $v) {
             $cloned[$k] = clone $v;
         }

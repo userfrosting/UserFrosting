@@ -1,40 +1,63 @@
 <?php
 
-    /**
-     * Default production config file for UserFrosting.  You may override/extend this in your site's configuration file to customize deploy settings.
-     *
-     */
+/*
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
+ */
 
-    return [
-        'assets' => [
-            'use_raw' => false
-        ],
-        'cache' => [
-            'twig' => true
+/*
+ * Default production config file for UserFrosting.  You may override/extend this in your site's configuration file to customize deploy settings.
+ */
+return [
+    /*
+     * Use compiled assets
+     */
+    'assets' => [
+        'use_raw' => false,
+    ],
+    /*
+     * Enable Twig cache
+     */
+    'cache' => [
+        'twig' => true,
+    ],
+    /*
+     * Turn off debug logs
+     */
+    'debug' => [
+        'twig' => false,
+        'auth' => false,
+        'smtp' => false,
+    ],
+    /*
+     * Use router cache, disable full error details
+     */
+    'settings' => [
+        'routerCacheFile'     => 'routes.cache',
+        'displayErrorDetails' => false,
+    ],
+    /*
+     * Enable analytics, disable more debugging
+     */
+    'site' => [
+        'analytics' => [
+            'google' => [
+                'enabled' => true,
+            ],
         ],
         'debug' => [
-            'twig' => false,
-            'auth' => false,
-            'smtp' => false
+            'ajax' => false,
+            'info' => false,
         ],
-        // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
-        'settings' => [
-            'routerCacheFile' => \UserFrosting\ROOT_DIR . '/' . \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME . '/' . 'routes.cache',
-            'displayErrorDetails' => false
-        ],
-        'site' => [
-            'analytics' => [
-                'google' => [
-                    'enabled' => true
-                ]
-            ],
-            'debug' => [
-                'ajax' => false,
-                'info' => false
-            ]
-        ],
-        'php' => [
-            'display_errors'  => 'false',
-            'log_errors'      => 'true'
-        ]
-    ];
+    ],
+    /*
+     * Send errors to log
+     */
+    'php' => [
+        'display_errors'  => 'false',
+        'log_errors'      => 'true',
+    ],
+];

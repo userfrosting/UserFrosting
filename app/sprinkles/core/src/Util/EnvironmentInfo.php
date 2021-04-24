@@ -1,16 +1,19 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Util;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * EnvironmentInfo Class
+ * EnvironmentInfo Class.
  *
  * Gets basic information about the application environment.
  *
@@ -19,7 +22,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 class EnvironmentInfo
 {
     /**
-     * @var ContainerInterface The DI container for your application.
+     * @var \Psr\Container\ContainerInterface The DI container for your application.
      */
     public static $ci;
 
@@ -37,14 +40,14 @@ class EnvironmentInfo
 
         try {
             $results['type'] = $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
-        } catch (Exception $e) {
-            $results['type'] = "Unknown";
+        } catch (\Exception $e) {
+            $results['type'] = 'Unknown';
         }
 
         try {
             $results['version'] = $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
-        } catch (Exception $e) {
-            $results['version'] = "";
+        } catch (\Exception $e) {
+            $results['version'] = '';
         }
 
         return $results;

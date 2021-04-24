@@ -1,10 +1,13 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Http\Concerns;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,7 +20,7 @@ use Psr\Http\Message\ServerRequestInterface;
 trait DeterminesContentType
 {
     /**
-     * Known handled content types
+     * Known handled content types.
      *
      * @var array
      */
@@ -26,17 +29,19 @@ trait DeterminesContentType
         'application/xml',
         'text/xml',
         'text/html',
-        'text/plain'
+        'text/plain',
     ];
 
     /**
-     * Determine which content type we know about is wanted using Accept header
+     * Determine which content type we know about is wanted using Accept header.
      *
      * Note: This method is a bare-bones implementation designed specifically for
      * Slim's error handling requirements. Consider a fully-feature solution such
      * as willdurand/negotiation for any other situation.
      *
      * @param ServerRequestInterface $request
+     * @param bool                   $ajaxDebug
+     *
      * @return string
      */
     protected function determineContentType(ServerRequestInterface $request, $ajaxDebug = false)
@@ -53,7 +58,7 @@ trait DeterminesContentType
         if ($count) {
             $current = current($selectedContentTypes);
 
-            /**
+            /*
              * Ensure other supported content types take precedence over text/plain
              * when multiple content types are provided via Accept header.
              */

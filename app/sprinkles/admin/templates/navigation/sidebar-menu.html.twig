@@ -1,12 +1,12 @@
 {% block navigation %}
     {% if checkAccess('uri_dashboard') %}
     <li>
-        <a href="{{site.uri.public}}/dashboard"><i class="fa fa-dashboard fa-fw"></i> <span>{{ translate("DASHBOARD") }}</span></a>
+        <a href="{{site.uri.public}}/dashboard"><i class="fas fa-tachometer-alt fa-fw"></i> <span>{{ translate("DASHBOARD") }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_users') %}
     <li>
-        <a href="{{site.uri.public}}/users"><i class="fa fa-user fa-fw"></i> <span>{{ translate("USER", 2) }}</span></a>
+        <a href="{{site.uri.public}}/users"><i class="fas fa-user fa-fw"></i> <span>{{ translate("USER", 2) }}</span></a>
     </li>
     {% elseif checkAccess('uri_group', {
         'group': current_user.group
@@ -17,22 +17,22 @@
     {% endif %}
     {% if checkAccess('uri_activities') %}
     <li>
-        <a href="{{site.uri.public}}/activities"><i class="fa fa-tasks fa-fw"></i> <span>{{ translate("ACTIVITY", 2) }}</span></a>
+        <a href="{{site.uri.public}}/activities"><i class="fas fa-tasks fa-fw"></i> <span>{{ translate("ACTIVITY", 2) }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_roles') %}
     <li>
-        <a href="{{site.uri.public}}/roles"><i class="fa fa-drivers-license fa-fw"></i> <span>{{ translate("ROLE", 2) }}</span></a>
+        <a href="{{site.uri.public}}/roles"><i class="fas fa-id-card fa-fw"></i> <span>{{ translate("ROLE", 2) }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_permissions') %}
     <li>
-        <a href="{{site.uri.public}}/permissions"><i class="fa fa-key fa-fw"></i> <span>{{ translate("PERMISSION", 2) }}</span></a>
+        <a href="{{site.uri.public}}/permissions"><i class="fas fa-key fa-fw"></i> <span>{{ translate("PERMISSION", 2) }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_groups') %}
     <li>
-        <a href="{{site.uri.public}}/groups"><i class="fa fa-users fa-fw"></i> <span>{{ translate("GROUP", 2) }}</span></a>
+        <a href="{{site.uri.public}}/groups"><i class="fas fa-users fa-fw"></i> <span>{{ translate("GROUP", 2) }}</span></a>
     </li>
     {% endif %}
 {% endblock %}

@@ -175,7 +175,7 @@ a .info-box {
 }
 
 /* Padding for user menu */
-.user-menu .fa {
+.user-menu .fas {
     padding-left: .5em;
     font-size: 11px;
 }
@@ -200,5 +200,12 @@ a .info-box {
     .dropdown-menu-left-responsive {
         right: auto;
         left: 0;
+    }
+}
+
+/* Hide table filter row when printing */
+@media print {
+    .tablesorter-filter-row {
+        display: none !important;
     }
 }

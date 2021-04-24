@@ -1,18 +1,20 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
- * ActivitySprunje
+ * ActivitySprunje.
  *
  * Implements Sprunje for the activities API.
  *
@@ -23,13 +25,13 @@ class ActivitySprunje extends Sprunje
     protected $sortable = [
         'occurred_at',
         'user',
-        'description'
+        'description',
     ];
 
     protected $filterable = [
         'occurred_at',
         'user',
-        'description'
+        'description',
     ];
 
     protected $name = 'activities';
@@ -48,8 +50,9 @@ class ActivitySprunje extends Sprunje
      * Filter LIKE the user info.
      *
      * @param Builder $query
-     * @param mixed $value
-     * @return $this
+     * @param mixed   $value
+     *
+     * @return self
      */
     protected function filterUser($query, $value)
     {
@@ -62,6 +65,7 @@ class ActivitySprunje extends Sprunje
                     ->orLike('users.email', $value);
             }
         });
+
         return $this;
     }
 
@@ -69,12 +73,30 @@ class ActivitySprunje extends Sprunje
      * Sort based on user last name.
      *
      * @param Builder $query
-     * @param string $direction
-     * @return $this
+     * @param string  $direction
+     *
+     * @return self
      */
     protected function sortUser($query, $direction)
     {
         $query->orderBy('users.last_name', $direction);
+
+        return $this;
+    }
+
+    /**
+     * Sort based on activity occurred_at.
+     *
+     * @param Builder $query
+     * @param string  $direction
+     *
+     * @return self
+     */
+    protected function sortOccurredAt($query, $direction)
+    {
+        $query->orderBy('activities.occurred_at', $direction)
+              ->orderby('activities.id', $direction);
+
         return $this;
     }
 }

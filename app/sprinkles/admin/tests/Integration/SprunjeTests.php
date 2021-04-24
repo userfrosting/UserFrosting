@@ -1,34 +1,49 @@
 <?php
 
-namespace UserFrosting\Tests\Integration;
+/*
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
+ */
 
-use Exception;
-use Illuminate\Database\Capsule\Manager as DB;
-use Symfony\Component\Console\Style\SymfonyStyle;
+namespace UserFrosting\Sprinkle\Admin\Tests\Integration;
+
+use UserFrosting\Sprinkle\Account\Database\Models\Permission;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserPermissionSprunje;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
-use UserFrosting\Tests\DatabaseTransactions;
 use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
+use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 
 /**
  * Integration tests for the built-in Sprunje classes.
  */
 class SprunjeTests extends TestCase
 {
-    use DatabaseTransactions;
+    use TestDatabase;
+    use RefreshDatabase;
 
+    /**
+     *    @var ClassMapper
+     */
     protected $classMapper;
 
     /**
      * Setup the database schema.
-     *
-     * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->classMapper = new ClassMapper();
+
+        // Setup test database
+        $this->setupTestDatabase();
+        $this->refreshDatabase();
     }
 
     /**
@@ -39,9 +54,9 @@ class SprunjeTests extends TestCase
         $fm = $this->ci->factory;
 
         // Generate some test models
-        $users = $fm->seed(3, 'UserFrosting\Sprinkle\Account\Database\Models\User');
-        $roles = $fm->seed(3, 'UserFrosting\Sprinkle\Account\Database\Models\Role');
-        $permissions = $fm->seed(3, 'UserFrosting\Sprinkle\Account\Database\Models\Permission');
+        $users = $fm->seed(3, User::class);
+        $roles = $fm->seed(3, Role::class);
+        $permissions = $fm->seed(3, Permission::class);
 
         // Create some relationships
         $roles[0]->permissions()->attach($permissions[1]);
@@ -56,11 +71,11 @@ class SprunjeTests extends TestCase
         $users[1]->roles()->attach($roles[1]);
         $users[2]->roles()->attach($roles[1]);
 
-        $this->classMapper->setClassMapping('user', 'UserFrosting\Sprinkle\Account\Database\Models\User');
+        $this->classMapper->setClassMapping('user', User::class);
 
         // Test user 0
         $sprunje = new UserPermissionSprunje($this->classMapper, [
-            'user_id' => $users[0]->id
+            'user_id' => $users[0]->id,
         ]);
 
         list($count, $countFiltered, $models) = $sprunje->getModels();
@@ -75,7 +90,7 @@ class SprunjeTests extends TestCase
 
         // Test user 1
         $sprunje = new UserPermissionSprunje($this->classMapper, [
-            'user_id' => $users[1]->id
+            'user_id' => $users[1]->id,
         ]);
 
         list($count, $countFiltered, $models) = $sprunje->getModels();
@@ -88,12 +103,12 @@ class SprunjeTests extends TestCase
         static::ignoreRelations($models);
         $this->assertCollectionsSame(collect([
             $permissions[1],
-            $permissions[2]
+            $permissions[2],
         ]), $models);
 
         // Test user 2
         $sprunje = new UserPermissionSprunje($this->classMapper, [
-            'user_id' => $users[2]->id
+            'user_id' => $users[2]->id,
         ]);
 
         list($count, $countFiltered, $models) = $sprunje->getModels();
@@ -105,7 +120,7 @@ class SprunjeTests extends TestCase
         // Ignore pivot and roles_via.  These are covered by the tests for the relationships themselves.
         static::ignoreRelations($models);
         $this->assertCollectionsSame(collect([
-            $permissions[2]
+            $permissions[2],
         ]), $models);
     }
 }

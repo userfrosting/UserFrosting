@@ -1,10 +1,13 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\System;
 
 use RocketTheme\Toolbox\Event\Event;
@@ -15,6 +18,9 @@ use Slim\App;
  */
 class SlimAppEvent extends Event
 {
+    /**
+     * @var App
+     */
     protected $app;
 
     public function __construct(App $app)
@@ -22,6 +28,9 @@ class SlimAppEvent extends Event
         $this->app = $app;
     }
 
+    /**
+     * @return App
+     */
     public function getApp()
     {
         return $this->app;

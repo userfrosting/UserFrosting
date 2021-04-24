@@ -1,24 +1,30 @@
 <?php
-/**
+
+/*
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ * @copyright Copyright (c) 2019 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
+
 namespace UserFrosting\Sprinkle\Core\Twig;
 
-use Interop\Container\ContainerInterface;
-use UserFrosting\Sprinkle\Core\Util\Util;
+use Psr\Container\ContainerInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 use UserFrosting\Assets\AssetsTemplatePlugin;
+use UserFrosting\Sprinkle\Core\Util\Util;
 
 /**
  * Extends Twig functionality for the Core sprinkle.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class CoreExtension extends AbstractExtension implements GlobalsInterface
 {
-
     /**
      * @var ContainerInterface The global container object, which holds all your services.
      */
@@ -35,60 +41,51 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
     }
 
     /**
-     * Get the name of this extension.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return 'userfrosting/core';
-    }
-
-    /**
      * Adds Twig functions `getAlerts` and `translate`.
      *
-     * @return array[\Twig_SimpleFunction]
+     * @return TwigFunction[]
      */
     public function getFunctions()
     {
-        return array(
+        return [
             // Add Twig function for fetching alerts
-            new \Twig_SimpleFunction('getAlerts', function ($clear = true) {
+            new TwigFunction('getAlerts', function ($clear = true) {
+                $alerts = $this->services->alerts;
                 if ($clear) {
-                    return $this->services['alerts']->getAndClearMessages();
+                    return $alerts->getAndClearMessages();
                 } else {
-                    return $this->services['alerts']->messages();
+                    return $alerts->messages();
                 }
             }),
-            new \Twig_SimpleFunction('translate', function ($hook, $params = array()) {
+            new TwigFunction('translate', function ($hook, $params = []) {
                 return $this->services['translator']->translate($hook, $params);
             }, [
-                'is_safe' => ['html']
-            ])
-        );
+                'is_safe' => ['html'],
+            ]),
+        ];
     }
 
     /**
      * Adds Twig filters `unescape`.
      *
-     * @return array[\Twig_SimpleFilter]
+     * @return TwigFilter[]
      */
     public function getFilters()
     {
-        return array(
-            /**
+        return [
+            /*
              * Converts phone numbers to a standard format.
              *
-             * @param   String   $num   A unformatted phone number
-             * @return  String   Returns the formatted phone number
+             * @param   string   $num   A unformatted phone number
+             * @return  string   Returns the formatted phone number
              */
-            new \Twig_SimpleFilter('phone', function ($num) {
+            new TwigFilter('phone', function ($num) {
                 return Util::formatPhoneNumber($num);
             }),
-            new \Twig_SimpleFilter('unescape', function ($string) {
+            new TwigFilter('unescape', function ($string) {
                 return html_entity_decode($string);
-            })
-        );
+            }),
+        ];
     }
 
     /**
@@ -108,18 +105,19 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
             'csrf'   => [
                 'keys' => [
                     'name'  => $csrfNameKey,
-                    'value' => $csrfValueKey
+                    'value' => $csrfValueKey,
                 ],
                 'name'  => $csrfName,
-                'value' => $csrfValue
-            ]
+                'value' => $csrfValue,
+            ],
         ];
 
         $site = array_replace_recursive($this->services->config['site'], $csrf);
 
         return [
-            'site'   => $site,
-            'assets' => new AssetsTemplatePlugin($this->services->assets)
+            'site'          => $site,
+            'assets'        => new AssetsTemplatePlugin($this->services->assets),
+            'currentLocale' => $this->services->locale->getLocaleIndentifier(),
         ];
     }
 }
