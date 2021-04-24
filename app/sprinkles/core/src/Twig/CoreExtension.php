@@ -41,29 +41,20 @@ class CoreExtension extends AbstractExtension implements GlobalsInterface
     }
 
     /**
-     * Get the name of this extension.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return 'userfrosting/core';
-    }
-
-    /**
      * Adds Twig functions `getAlerts` and `translate`.
      *
-     * @return array[TwigFunction]
+     * @return TwigFunction[]
      */
     public function getFunctions()
     {
         return [
             // Add Twig function for fetching alerts
             new TwigFunction('getAlerts', function ($clear = true) {
+                $alerts = $this->services->alerts;
                 if ($clear) {
-                    return $this->services['alerts']->getAndClearMessages();
+                    return $alerts->getAndClearMessages();
                 } else {
-                    return $this->services['alerts']->messages();
+                    return $alerts->messages();
                 }
             }),
             new TwigFunction('translate', function ($hook, $params = []) {
@@ -77,7 +68,7 @@ class CoreExtension extends AbstractExtension implements GlobalsInterface
     /**
      * Adds Twig filters `unescape`.
      *
-     * @return array[TwigFilter]
+     * @return TwigFilter[]
      */
     public function getFilters()
     {

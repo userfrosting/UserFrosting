@@ -2,7 +2,7 @@
 
 UserFrosting includes support for Vagrant. This allows you to run UserFrosting without the need to set up your own local web server with traditional WAMP/MAMP stacks. It also provides a consistent environment between developers for writing and debugging code changes more productively.
 
-UserFrosting uses the [Laravel/Homestead](https://laravel.com/docs/5.6/homestead) Vagrant box. It runs a Linux server with Ubuntu 16.04, PHP 7.1, Nginx, SQLite3, MySQL, and a whole lot more (complete specs below).
+UserFrosting uses the [Laravel/Homestead](https://laravel.com/docs/8.x/homestead) Vagrant box. It runs a Linux server with Ubuntu 16.04, PHP 7.4, Nginx, SQLite, MySQL, and a whole lot more (complete specs below).
 
 ## Get Started
 
@@ -12,7 +12,7 @@ UserFrosting uses the [Laravel/Homestead](https://laravel.com/docs/5.6/homestead
 * Clone Homestead from the root of your cloned fork of the UserFrosting Git repository
 
 ```sh
-git clone https://github.com/laravel/homestead.git vagrant/Homestead
+git clone https://github.com/laravel/homestead.git vagrant/Homestead -b 20.04
 ```
 
 * Run `vagrant up` from the root of your cloned fork of the UserFrosting Git repository
@@ -21,9 +21,34 @@ git clone https://github.com/laravel/homestead.git vagrant/Homestead
 $ vagrant up
 ```
 
-* Access UserFrosting at `http://192.168.10.10/`
+Once finished, you must update your computer's hosts file. This file is typically located at `/etc/hosts` for MacOS/Linux or `C:\Windows\System32\drivers\etc\hosts` for Windows. Open this file and add the following line to it, at the very bottom, and save.
+
+```
+192.168.10.10  userfrosting.test
+```
+
+* Access UserFrosting at `http://userfrosting.test/`
 * Username: **admin**
 * Password: **adminadmin12**
+
+## Troubleshoot 
+
+On MacOS, if you experience error related to `failed to open stream: No such file or directory`, open `vagrant/bootstrap.yaml`, find this :
+
+```
+    - map: .
+      to: /home/vagrant/userfrosting
+```
+
+and replace with : 
+
+```
+    - map: .
+      to: /home/vagrant/userfrosting
+      type: "nfs"
+```
+
+Reload the VM using `vagrant reload --provision`
 
 ## Additional commands:
 * Access your Linux server from the command line:
@@ -55,12 +80,6 @@ $ vagrant destroy
 ## Customizing the UserFrosting configuration
 
 By default, UserFrosting is pre-configured to install with a MySQL database. You can, however, switch to PostegreSQL or SQLite3 by editing the `install-config.yml` file in the vagrant directory. The next time you run `vagrant up` (or `vagrant provision`) it will be installed under the new configuration.
-
-If you prefer to access UserFrosting from the more friendly URL `http://userfrosting.test` then you must update your computer's hosts file. This file is typically located at `/etc/hosts` for Mac/Linux or `C:\Windows\System32\drivers\etc\hosts` for Windows. Open this file and add the following line to it, at the very bottom, and save.
-
-```
-192.168.10.10  userfrosting.test
-```
 
 ## How it all works
 
@@ -98,10 +117,9 @@ $ mysql -uhomestead -psecret UserFrosting < /home/vagrant/userfrosting/userfrost
 
 ### Included Software
 
-* Ubuntu 16.04
+* Ubuntu 20.04
 * Git
-* PHP 7.1
-* HHVM
+* PHP 7.4
 * Nginx
 * MySQL
 * Sqlite3

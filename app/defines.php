@@ -11,12 +11,12 @@
 namespace UserFrosting;
 
 // Some standard defines
-define('UserFrosting\VERSION', '4.4.1');
+define('UserFrosting\VERSION', '4.5.0');
 define('UserFrosting\DS', '/');
-define('UserFrosting\PHP_MIN_VERSION', '7.1');
-define('UserFrosting\PHP_RECOMMENDED_VERSION', '7.3');
-define('UserFrosting\NODE_MIN_VERSION', 'v10.12.0');
-define('UserFrosting\NPM_MIN_VERSION', '6.0.0');
+define('UserFrosting\PHP_MIN_VERSION', '^7.2');
+define('UserFrosting\PHP_RECOMMENDED_VERSION', '^7.4');
+define('UserFrosting\NODE_MIN_VERSION', '^12.17.0 || >=14.0.0');
+define('UserFrosting\NPM_MIN_VERSION', '>=6.14.4');
 
 // Directories and Paths
 

@@ -127,34 +127,6 @@ trait Unique
     }
 
     /**
-     * Set the limit on the number of intermediate models to load.
-     *
-     * @deprecated since 4.1.7
-     *
-     * @param int $value
-     *
-     * @return $this
-     */
-    public function withLimit($value)
-    {
-        return $this->limit($value);
-    }
-
-    /**
-     * Set the offset when loading the intermediate models.
-     *
-     * @deprecated since 4.1.7
-     *
-     * @param int $value
-     *
-     * @return $this
-     */
-    public function withOffset($value)
-    {
-        return $this->offset($value);
-    }
-
-    /**
      * Add a query to load the nested tertiary models for this relationship.
      *
      * @param string   $tertiaryRelated
@@ -500,11 +472,13 @@ trait Unique
         foreach ($models as $model) {
             $tertiaryKeyValue = $model->pivot->{$this->tertiaryKey};
 
-            $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
+            if (!is_null($tertiaryKeyValue)) {
+                $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
 
-            $this->transferPivotsToTertiary($model, $tertiaryModel);
+                $this->transferPivotsToTertiary($model, $tertiaryModel);
 
-            $dictionary[$model->getKey()][] = $tertiaryModel;
+                $dictionary[$model->getKey()][] = $tertiaryModel;
+            }
         }
 
         return $dictionary;

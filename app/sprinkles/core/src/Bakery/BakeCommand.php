@@ -42,7 +42,7 @@ class BakeCommand extends BaseCommand
     {
         $this->setName('bake')
              ->setDescription('UserFrosting installation command')
-             ->setHelp('This command combine the <info>setup:db</info>, <info>setup:smtp</info>, <info>debug</info>, <info>migrate</info>, <info>create-admin</info> and <info>build-assets</info> commands.');
+             ->setHelp('This command combine the <info>setup:db</info>, <info>setup:mail</info>, <info>debug</info>, <info>migrate</info>, <info>create-admin</info> and <info>build-assets</info> commands.');
     }
 
     /**
@@ -70,7 +70,7 @@ class BakeCommand extends BaseCommand
         $command = $this->getApplication()->find('setup:db');
         $command->run($input, $output);
 
-        $command = $this->getApplication()->find('setup:smtp');
+        $command = $this->getApplication()->find('setup:mail');
         $command->run($input, $output);
     }
 

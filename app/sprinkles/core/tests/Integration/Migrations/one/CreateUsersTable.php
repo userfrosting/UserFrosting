@@ -17,10 +17,8 @@ class CreateUsersTable extends Migration
 {
     /**
      * {@inheritdoc}
-     *
-     * N.B.: Not using static here to test old deprecated behavior
      */
-    public $dependencies = [];
+    public static $dependencies = [];
 
     /**
      * Run the migrations.

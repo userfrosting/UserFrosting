@@ -24,7 +24,7 @@ trait LocaleOption
     /**
      * Display locale selection question.
      *
-     * @return string Selected locale indentifier
+     * @return string Selected locale identifier
      */
     protected function askForLocale(string $name, bool $default = true): string
     {

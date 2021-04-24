@@ -61,12 +61,12 @@ return [
      * Disable native sessions in tests
      */
     'session' => [
-        'handler' => getenv('TEST_SESSION_HANDLER') ?: 'array',
+        'handler' => env('TEST_SESSION_HANDLER', 'array'),
     ],
     /*
      * Database to use when using the TestDatabase Trait
      */
     'testing' => [
-        'dbConnection' => getenv('TEST_DB') ?: 'test_integration',
+        'dbConnection' => env('TEST_DB', 'test_integration'),
     ],
 ];

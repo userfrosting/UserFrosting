@@ -78,7 +78,7 @@ class Router extends \Slim\Router implements RouterInterface
     /**
      * Delete the cache file.
      *
-     * @return bool true/false if operation is successfull
+     * @return bool true/false if operation is successful
      */
     public function clearCache()
     {
@@ -95,7 +95,7 @@ class Router extends \Slim\Router implements RouterInterface
     }
 
     /**
-     * Load all avaialbe routes.
+     * Load all available routes.
      *
      * @param App $slimApp
      */

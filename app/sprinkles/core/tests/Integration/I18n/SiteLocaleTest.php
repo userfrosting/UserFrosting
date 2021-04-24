@@ -15,6 +15,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\I18n\Locale;
 use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
 use UserFrosting\Tests\TestCase;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * SiteLocaleTest class.
@@ -86,11 +87,9 @@ class SiteLocaleTest extends TestCase
      */
     public function testgetAvailableOptions(): void
     {
-        // Implement fake locale file location
-
-        /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
-        $locator = $this->ci->locator;
-        $locator->removeStream('locale')->registerStream('locale', '', __DIR__ . '/data', true);
+        // Implement fake locale file location & locator
+        $locator = new ResourceLocator(__DIR__);
+        $locator->registerStream('locale', '', 'data', true);
 
         // Set expectations. Note the sort applied here
         $expected = [
@@ -98,7 +97,9 @@ class SiteLocaleTest extends TestCase
             'fr_FR' => 'Tomato', // Just to be sure the fake locale are loaded ;)
         ];
 
-        $options = $this->ci->locale->getAvailableOptions();
+        /** @var \UserFrosting\Sprinkle\Core\I18n\SiteLocale */
+        $locale = $this->ci->locale;
+        $options = $locale->getAvailableOptions();
 
         $this->assertIsArray($options);
         $this->assertSame($expected, $options);
@@ -168,8 +169,35 @@ class SiteLocaleTest extends TestCase
 
         $this->ci->config['site.locales.default'] = 'fr_FR';
         $this->ci->request = $request;
+
+        /** @var SiteLocale */
         $service = $this->ci->locale;
-        $this->assertSame('en_US', $service->getLocaleIndentifier());
+
+        // Get locale
+        $locale = $service->getLocaleIndentifier();
+
+        // Assertions
+        $this->assertSame('en_US', $locale);
+        $this->assertTrue($service->isAvailable($locale));
+    }
+
+    public function testGetLocaleIndentifierWithBrowserAndComplexLocaleInLowerCase(): void
+    {
+        $request = m::mock(\Psr\Http\Message\ServerRequestInterface::class);
+        $request->shouldReceive('hasHeader')->with('Accept-Language')->once()->andReturn(true);
+        $request->shouldReceive('getHeaderLine')->with('Accept-Language')->once()->andReturn('en-us, en;q=0.9, fr;q=0.8, de;q=0.7, *;q=0.5');
+
+        $this->ci->config['site.locales.default'] = 'fr_FR';
+        $this->ci->request = $request;
+
+        /** @var SiteLocale */
+        $service = $this->ci->locale;
+
+        // Get locale
+        $locale = $service->getLocaleIndentifier();
+
+        $this->assertSame('en_US', $locale);
+        $this->assertTrue($service->isAvailable($locale));
     }
 
     public function testGetLocaleIndentifierWithBrowserAndMultipleLocale(): void

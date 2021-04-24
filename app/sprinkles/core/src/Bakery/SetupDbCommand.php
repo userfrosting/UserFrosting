@@ -136,11 +136,11 @@ class SetupDbCommand extends BaseCommand
     }
 
     /**
-     * Ask for database crendentials.
+     * Ask for database credentials.
      *
      * @param InputInterface $args Command arguments
      *
-     * @return array The databse credentials
+     * @return array The database credentials
      */
     protected function askForDatabase(InputInterface $args)
     {
@@ -201,7 +201,7 @@ class SetupDbCommand extends BaseCommand
     }
 
     /**
-     * Test new database connecion.
+     * Test new database connection.
      *
      * @param array $dbParams       Database params
      * @param bool  $displayMessage Display io message
@@ -214,7 +214,7 @@ class SetupDbCommand extends BaseCommand
         $capsule = new Capsule();
         $capsule->addConnection($dbParams);
 
-        // Test the db connexion.
+        // Test the db connection.
         try {
             $conn = $capsule->getConnection();
             $conn->getPdo();

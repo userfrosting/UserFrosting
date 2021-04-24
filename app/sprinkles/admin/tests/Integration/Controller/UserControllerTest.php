@@ -12,6 +12,8 @@ namespace UserFrosting\Sprinkle\Admin\Tests\Integration\Controller;
 
 use Mockery as m;
 use League\FactoryMuffin\Faker\Facade as Faker;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Admin\Controller\UserController;
@@ -644,7 +646,7 @@ class UserControllerTest extends TestCase
 
         // Also create a group
         $fm = $this->ci->factory;
-        $group = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Group');
+        $group = $fm->create(Group::class);
 
         // Set post data
         $data = [
@@ -809,41 +811,6 @@ class UserControllerTest extends TestCase
         // Make sure user was update
         $editedUser = User::where('user_name', $user->user_name)->first();
         $this->assertSame('bar', $editedUser->first_name);
-        $this->assertNotSame($user->first_name, $editedUser->first_name);
-        $this->assertSame($user->last_name, $editedUser->last_name);
-
-        // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
-        $ms = $this->ci->alerts;
-        $messages = $ms->getAndClearMessages();
-        $this->assertSame('success', end($messages)['type']);
-    }
-
-    /**
-     * @depends testControllerConstructorWithUser
-     * @depends testUpdateField
-     * @param UserController $controller
-     */
-    public function testUpdateFieldWithDeprecatedSupport(UserController $controller)
-    {
-        // Create a user
-        $user = $this->createTestUser();
-
-        // Set post data
-        $data = [
-            'value' => 'deprecated', //<-- Use old `value`
-        ];
-        $request = $this->getRequest()->withParsedBody($data);
-
-        // Get controller stuff
-        $result = $controller->updateField($request, $this->getResponse(), ['user_name' => $user->user_name, 'field' => 'first_name']);
-        $this->assertSame($result->getStatusCode(), 200);
-        $this->assertJson((string) $result->getBody());
-        $this->assertSame('[]', (string) $result->getBody());
-
-        // Make sure user was update
-        $editedUser = User::where('user_name', $user->user_name)->first();
-        $this->assertSame('deprecated', $editedUser->first_name);
         $this->assertNotSame($user->first_name, $editedUser->first_name);
         $this->assertSame($user->last_name, $editedUser->last_name);
 
@@ -1083,7 +1050,7 @@ class UserControllerTest extends TestCase
     {
         // Create a user
         $fm = $this->ci->factory;
-        $role = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\Role');
+        $role = $fm->create(Role::class);
 
         // Expected input :
         // value[0][role_id]: 2
@@ -1115,12 +1082,12 @@ class UserControllerTest extends TestCase
     /**
      * @return UserController
      */
-    private function getController()
+    protected function getController()
     {
         return new UserController($this->ci);
     }
 
-    private function setupUser()
+    protected function setupUser()
     {
         // Admin user, WILL have access
         $testUser = $this->createTestUser(true, true);

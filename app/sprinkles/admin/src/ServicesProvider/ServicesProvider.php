@@ -65,13 +65,6 @@ class ServicesProvider
              * @return \Psr\Http\Message\ResponseInterface
              */
             return function (Request $request, Response $response, array $args) use ($c) {
-                // Backwards compatibility for the deprecated determineRedirectOnLogin service
-                if ($c->has('determineRedirectOnLogin')) {
-                    $determineRedirectOnLogin = $c->determineRedirectOnLogin;
-
-                    return $determineRedirectOnLogin($response)->withStatus(200);
-                }
-
                 /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
                 $authorizer = $c->authorizer;
 

@@ -1,0 +1,69 @@
+# Lando is a development tool, do not use it hosting a production website
+
+name: userfrosting
+recipe: lamp
+config:
+  webroot: ./public
+  php: '7.4'
+  composer_version: '2-latest'
+  database: mariadb
+  xdebug: true
+
+services:
+  appserver:
+    build_as_root:
+      - apt-get update -y
+      - apt-get install -my wget gnupg
+      - a2enmod headers
+      # Patch to bring NodeJS into app server container
+      # https://docs.lando.dev/guides/installing-node-in-your-lando-php-service.html
+      - curl -sL https://deb.nodesource.com/setup_14.x | bash -
+      - apt-get install -y nodejs
+    overrides:
+      environment:
+        PHP_IDE_CONFIG: "serverName=userfrosting.lndo.site"
+        MAIL_MAILER: "mail"
+        DB_DRIVER: "mysql"
+        DB_HOST: "database"
+        DB_PORT: "3306"
+        DB_NAME: "lamp"
+        DB_USER: "lamp"
+        DB_PASSWORD: "lamp"
+    ssl: true
+
+  # Redis cache
+  cache:
+    type: redis
+
+  # phpMyAdmin
+  pma:
+    type: phpmyadmin
+    hosts:
+      - database
+  
+  # MailHog
+  mh:
+    type: mailhog:v1.0.0
+    portforward: false
+    hogfrom:
+      # Set UF mailer config to 'mail' complete integration
+      - appserver
+
+proxy:
+  pma:
+    - pma.userfrosting.lndo.site
+  mh:
+    - mh.userfrosting.lndo.site
+
+tooling:
+  phpunit:
+    service: appserver
+    description: "Run PHP Unit tests"
+    cmd: app/vendor/bin/phpunit
+  redis-cli:
+    service: cache
+    description: "Redis cache CLI"
+  bakery:
+    service: appserver
+    description: "UserFrosting CLI"
+    cmd: php bakery

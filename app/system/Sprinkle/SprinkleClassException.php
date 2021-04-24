@@ -8,17 +8,13 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Tests\Unit;
+namespace UserFrosting\System\Sprinkle;
 
-use UserFrosting\Tests\TestCase;
-
-class ExampleTest extends TestCase
+/**
+ * SprinkleClassException.
+ *
+ * This exception should be thrown when a sprinkle class doesn't extend the right base class.
+ */
+class SprinkleClassException extends \LogicException
 {
-    /**
-     * A basic test example.
-     */
-    public function testBasicTest()
-    {
-        $this->assertTrue(true);
-    }
 }

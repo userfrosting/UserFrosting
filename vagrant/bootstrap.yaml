@@ -18,8 +18,7 @@ folders:
 sites:
     - map: userfrosting.test
       to: /home/vagrant/userfrosting/public
+      php: "7.4"
     - map: phpmyadmin.test
       to: /usr/share/phpmyadmin
-
-databases:
-    - UserFrosting
+      php: "7.4"

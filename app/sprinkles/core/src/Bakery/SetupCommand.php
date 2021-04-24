@@ -29,7 +29,7 @@ class SetupCommand extends BaseCommand
     {
         $this->setName('setup')
              ->setDescription('UserFrosting Configuration Wizard')
-             ->setHelp('This command combine the <info>setup:env</info>, <info>setup:db</info> and <info>setup:smtp</info> commands.');
+             ->setHelp('This command combine the <info>setup:env</info>, <info>setup:db</info> and <info>setup:mail</info> commands.');
     }
 
     /**
@@ -40,7 +40,7 @@ class SetupCommand extends BaseCommand
         $command = $this->getApplication()->find('setup:db');
         $command->run($input, $output);
 
-        $command = $this->getApplication()->find('setup:smtp');
+        $command = $this->getApplication()->find('setup:mail');
         $command->run($input, $output);
 
         $command = $this->getApplication()->find('setup:env');

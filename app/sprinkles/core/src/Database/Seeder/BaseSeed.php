@@ -38,7 +38,7 @@ abstract class BaseSeed implements SeedInterface
     /**
      * Validate if a specific set of migrations have been ran.
      *
-     * @param string|array $migrations List of migraiton or specific migration required
+     * @param string|array $migrations List of migration or specific migration required
      *
      * @throws \Exception If dependent migration is not available
      *

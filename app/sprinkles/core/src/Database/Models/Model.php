@@ -141,32 +141,4 @@ abstract class Model extends LaravelModel
             $connection->getPostProcessor()
         );
     }
-
-    /**
-     * Get the properties of this object as an associative array.  Alias for toArray().
-     *
-     * @deprecated since 4.1.8 There is no point in having this alias.
-     *
-     * @return array
-     */
-    public function export()
-    {
-        return $this->toArray();
-    }
-
-    /**
-     * For raw array fetching.  Must be static, otherwise PHP gets confused about where to find $table.
-     *
-     * @deprecated since 4.1.8 setFetchMode is no longer available as of Laravel 5.4.
-     * @link https://github.com/laravel/framework/issues/17728
-     *
-     * @return Builder
-     */
-    public static function queryBuilder()
-    {
-        // Set query builder to fetch result sets as associative arrays (instead of creating stdClass objects)
-        DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
-
-        return DB::table(static::$table);
-    }
 }

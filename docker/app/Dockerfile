@@ -42,6 +42,8 @@ RUN apt-get install -y \
 # COMPOSER INSTALL
 RUN curl -sSfo /tmp/composer.phar https://getcomposer.org/installer
 RUN php /tmp/composer.phar --install-dir=/usr/local/bin --filename=composer
+# Force Composer Stable Version 1
+RUN composer selfupdate --1
 
 # Install and configure PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \

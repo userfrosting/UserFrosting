@@ -25,7 +25,7 @@ trait withDatabaseSessionHandler
     public function useDatabaseSessionHandler()
     {
         // Skip test if using in-memory database.
-        // However we tell UF to use database session handler and in-memroy
+        // However we tell UF to use database session handler and in-memory
         // database, the session will always be created before the db can be
         // migrate, causing "table not found" errors
         if ($this->usingInMemoryDatabase()) {
