@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v5.0.0]
+- Drop PHP 7.2 * 7.3 support. Gain PHP 8.0 support. PHP 8.0 is now recommended.
+- Upgrade Laravel packages to 8.x from 5.8.
+- Replaced individual UserFrosting repo with monolitic `userfrosting/framework` repo.
+
 ## [v4.5.0]
 
 ### Changed Requirements
@@ -1063,3 +1068,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.4.4]: https://github.com/userfrosting/UserFrosting/compare/v4.4.3...v4.4.4
 [v4.4.5]: https://github.com/userfrosting/UserFrosting/compare/v4.4.4...v4.4.5
 [v4.5.0]: https://github.com/userfrosting/UserFrosting/compare/v4.4.5...v4.5.0
+[v5.0.0]: https://github.com/userfrosting/UserFrosting/compare/v4.5.0...v5.0.0
