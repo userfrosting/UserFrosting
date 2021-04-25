@@ -11,9 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Drop PHP 7.2 * 7.3 support. Gain PHP 8.0 support. PHP 8.0 is now recommended.
 
 ### Dependencies upgrade
-- Replaced individual UserFrosting repo with monolitic `userfrosting/framework` repo.
-- Upgrade all Laravel packages to 8.x from 5.8.
-- Upgrade `vlucas/phpdotenv`to 5.3 from 3.4.
+- Replaced individual UserFrosting Assets, Cache, Config, Fortress, i18n, Session, Support and UniformResouceLocator repos with monolitic `userfrosting/framework` repo.
+- Upgrade all Laravel packages to ^8.x from ^5.8.
+- Upgrade `vlucas/phpdotenv`to ^5.3 from ^3.4.
+- Upgrade `symfony/console` to ^5.1 from ^4.3.
+- Upgrade `phpunit/phpunit` to ^9.5
 
 ### API changes
 - Bakery command `execute` method now requires to return an int (Symfony 4.4 upgrade : https://symfony.com/blog/new-in-symfony-4-4-console-improvements).
