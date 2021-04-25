@@ -13,8 +13,8 @@ namespace UserFrosting;
 // Some standard defines
 define('UserFrosting\VERSION', '5.0.0-dev');
 define('UserFrosting\DS', '/');
-define('UserFrosting\PHP_MIN_VERSION', '^7.4');
-define('UserFrosting\PHP_RECOMMENDED_VERSION', '^8.0');
+define('UserFrosting\PHP_MIN_VERSION', '>=7.4');
+define('UserFrosting\PHP_RECOMMENDED_VERSION', '>=8.0');
 define('UserFrosting\NODE_MIN_VERSION', '^12.17.0 || >=14.0.0');
 define('UserFrosting\NPM_MIN_VERSION', '>=6.14.4');
 
