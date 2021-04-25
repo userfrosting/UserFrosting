@@ -95,6 +95,8 @@ class MigrateCommand extends BaseCommand
         } else {
             $this->io->success('Migration successful !');
         }
+
+        return self::SUCCESS;
     }
 
     /**

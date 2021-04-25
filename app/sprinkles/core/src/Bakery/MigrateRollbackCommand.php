@@ -95,5 +95,7 @@ class MigrateRollbackCommand extends MigrateCommand
         } else {
             $this->io->success('Rollback successful !');
         }
+
+        return self::SUCCESS;
     }
 }

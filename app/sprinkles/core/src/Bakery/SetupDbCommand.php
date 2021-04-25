@@ -133,6 +133,8 @@ class SetupDbCommand extends BaseCommand
 
         // Success
         $this->io->success("Database config successfully saved in `{$this->envPath}`");
+
+        return self::SUCCESS;
     }
 
     /**

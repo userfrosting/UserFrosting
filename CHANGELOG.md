@@ -6,9 +6,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [v5.0.0]
+
+### Changed Requirements
 - Drop PHP 7.2 * 7.3 support. Gain PHP 8.0 support. PHP 8.0 is now recommended.
-- Upgrade Laravel packages to 8.x from 5.8.
+
+### Dependencies upgrade
 - Replaced individual UserFrosting repo with monolitic `userfrosting/framework` repo.
+- Upgrade all Laravel packages to 8.x from 5.8.
+- Upgrade `vlucas/phpdotenv`to 5.3 from 3.4.
+
+### API changes
+- Bakery command `execute` method now requires to return an int (Symfony 4.4 upgrade : https://symfony.com/blog/new-in-symfony-4-4-console-improvements).
 
 ## [v4.5.0]
 

@@ -77,6 +77,8 @@ class MigrateStatusCommand extends BaseCommand
         } else {
             $this->io->note('No pending migrations');
         }
+
+        return self::SUCCESS;
     }
 
     /**

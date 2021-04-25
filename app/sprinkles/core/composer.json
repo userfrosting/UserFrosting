@@ -45,7 +45,7 @@
         "slim/twig-view": "^2.5",
         "symfony/http-foundation": "*",
         "twig/twig": "^2.11",
-        "vlucas/phpdotenv": "^3.4.0"
+        "vlucas/phpdotenv": "^5.3"
     },
     "require-dev": {
         "php-mock/php-mock-phpunit": "^2.6"

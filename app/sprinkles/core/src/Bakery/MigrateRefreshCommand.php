@@ -95,5 +95,7 @@ class MigrateRefreshCommand extends MigrateCommand
         if (!empty($migrated)) {
             $this->io->success('Refresh successful !');
         }
+
+        return self::SUCCESS;
     }
 }

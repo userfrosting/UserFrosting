@@ -76,6 +76,8 @@ class MigrateCleanCommand extends MigrateCommand
         } else {
             $this->io->note('No stale migrations');
         }
+
+        return self::SUCCESS;
     }
 
     /**
