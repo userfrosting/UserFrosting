@@ -136,6 +136,8 @@ class SetupSmtpCommand extends BaseCommand
 
         // Success
         $this->io->success("Mail configuration saved to `{$this->envPath}`.\nYou can test outgoing mail using `test:mail` command.");
+
+        return self::SUCCESS;
     }
 
     /**

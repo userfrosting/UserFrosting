@@ -101,6 +101,8 @@ class Test extends BaseCommand
         // Execute
         $this->io->writeln("> <comment>$command</comment>");
         passthru($command);
+
+        return self::SUCCESS;
     }
 
     /**

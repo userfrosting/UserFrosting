@@ -161,12 +161,12 @@ class VersionValidatorTest extends TestCase
     public function phpVersionProvider(): array
     {
         return [
-            ['7.1.4', '7.1.4', false, true],
-            ['7.2.1', '7.2.1', true, true],
-            ['7.2', '7.2', true, true],
-            ['7.3.14', '7.3.14', true, true],
-            ['7.4.13', '7.4.13', true, false],
-            ['7.2.34-18+ubuntu20.04.1+deb.sury.org+1', '7.2.34', true, true],
+            ['7.3.14', '7.3.14', false, true],
+            ['7.3', '7.3', false, true],
+            ['7.4', '7.4', true, true],
+            ['7.4.13', '7.4.13', true, true],
+            ['8.0.3', '8.0.3', true, false],
+            ['7.4.34-18+ubuntu20.04.1+deb.sury.org+1', '7.4.34', true, true],
         ];
     }
 

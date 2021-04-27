@@ -79,6 +79,8 @@ class RouteListCommand extends BaseCommand
 
         // Display routes
         $this->io->table($this->headers, array_filter($routes));
+
+        return self::SUCCESS;
     }
 
     /**

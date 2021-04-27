@@ -64,6 +64,6 @@ class LocaleInfoCommand extends BaseCommand
         $table->render();
 
         // Everything went fine, return 0 exit code
-        return 0;
+        return self::SUCCESS;
     }
 }

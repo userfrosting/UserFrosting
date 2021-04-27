@@ -78,6 +78,8 @@ class BuildAssets extends BaseCommand
 
         // If all went well and there's no fatal errors, we are successful
         $this->io->success('Assets install looks successful, check output for specifics');
+
+        return self::SUCCESS;
     }
 
     /**

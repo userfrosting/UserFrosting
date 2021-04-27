@@ -10,6 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
+use Illuminate\Support\Arr;
 use Psr\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
@@ -158,7 +159,7 @@ class AuthorizationManager
     {
         $permissionsInfo = [];
         foreach ($permissions as $permission) {
-            $permissionData = array_only($permission->toArray(), ['id', 'slug', 'name', 'conditions', 'description']);
+            $permissionData = Arr::only($permission->toArray(), ['id', 'slug', 'name', 'conditions', 'description']);
             // Remove this until we can find an efficient way to only load these once during debugging
             //$permissionData['roles_via'] = $permission->roles_via->pluck('id')->all();
             $permissionsInfo[] = $permissionData;

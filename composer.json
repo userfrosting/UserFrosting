@@ -23,17 +23,23 @@
     "config": {
         "vendor-dir": "app/vendor"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/userfrosting/framework"
+        }
+    ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-gd": "*",
         "composer/installers": "^1.4.0",
-        "userfrosting/uniformresourcelocator": "~4.5.0",
-        "symfony/console": "^4.3",
+        "userfrosting/framework": "dev-master",
+        "symfony/console": "^5.1",
         "wikimedia/composer-merge-plugin": "^2.1.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.13",
-        "phpunit/phpunit": "^7.5 | ^8.5",
+        "phpunit/phpunit": "^9.5",
         "mockery/mockery": "^1.2",
         "league/factory-muffin": "^3.0",
         "league/factory-muffin-faker": "^2.0"
