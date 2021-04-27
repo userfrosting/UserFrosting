@@ -52,7 +52,7 @@
             ],
             "recurse": true,
             "replace": false,
-            "merge-dev": true,  
+            "merge-dev": true,
             "merge-extra": false
         }
     },
