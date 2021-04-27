@@ -18,12 +18,13 @@ use UserFrosting\Support\Exception\BadRequestException;
  * UserFrosting's custom Eloquent Builder Class.
  *
  * @author Alex Weissman (https://alexanderweissman.com)à
+ *
  * @todo This class overlaped `Illuminate\Database\Eloquent\Builder` trait and was adapted for it. It should be further improved and maybe made a Trait to reflect Laravel Trait.
  */
 class EloquentBuilder extends LaravelEloquentBuilder
 {
     use QueriesRelationships;
-    
+
     /**
      * Find a model by its primary integer-valued key or throw an exception if
      * something other than a nonnegative integer is provided.
