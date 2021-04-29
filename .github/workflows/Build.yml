@@ -55,7 +55,17 @@ jobs:
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
     
-    - name: Set up MySQL 8
+    - name: Set up MySQL (PHP <= 7.3 -> MySQL 5)
+      if: ${{ matrix.php_versions == 7.3 }}
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        mysql version: '5'
+        mysql database: 'userfrosting'
+        mysql user: 'userfrosting'
+        mysql password: 'password'
+
+    - name: Set up MySQL (PHP >= 7.4 -> MySQL 8)
+      if: ${{ matrix.php_versions != 7.3 }}
       uses: mirromutth/mysql-action@v1.1
       with:
         mysql version: '8'
@@ -83,6 +93,9 @@ jobs:
 
     - name: Build Assets
       run: php bakery build-assets
+
+    - name: Configure matchers for PHPUnit
+      run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
     - name: Execute tests
       run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
