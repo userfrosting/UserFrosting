@@ -161,8 +161,9 @@ class VersionValidatorTest extends TestCase
     public function phpVersionProvider(): array
     {
         return [
-            ['7.3.14', '7.3.14', false, true],
-            ['7.3', '7.3', false, true],
+            ['7.2.3', '7.2.3', false, true],
+            ['7.3.14', '7.3.14', true, true],
+            ['7.3', '7.3', true, true],
             ['7.4', '7.4', true, true],
             ['7.4.13', '7.4.13', true, true],
             ['8.0.3', '8.0.3', true, false],
