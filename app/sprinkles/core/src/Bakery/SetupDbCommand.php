@@ -65,7 +65,7 @@ class SetupDbCommand extends BaseCommand
         if (!$input->getOption('force') && $this->testDatabase($config['db.default'], false)) {
             $this->io->note('Database already setup. Use the `php bakery setup:db --force` command to run db setup again.');
 
-            return;
+            return self::SUCCESS;
         }
 
         $this->io->note("Database credentials will be saved in `{$this->envPath}`");
@@ -92,7 +92,7 @@ class SetupDbCommand extends BaseCommand
             $this->io->warning("Current database configuration differ from the configuration defined in `{$this->envPath}`. Global system environment variables might be defined.");
 
             if (!$this->io->confirm('Continue?', false)) {
-                return;
+                return self::SUCCESS;
             }
         }
 

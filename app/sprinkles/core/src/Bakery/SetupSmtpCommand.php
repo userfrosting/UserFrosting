@@ -90,7 +90,7 @@ class SetupSmtpCommand extends BaseCommand
         if (!$input->getOption('force') && $this->isSmtpConfigured($dotenvEditor)) {
             $this->io->note('Mail is already setup. Use the `php bakery setup:mail --force` command to run setup again.');
 
-            return;
+            return self::SUCCESS;
         }
 
         // Get keys
@@ -117,7 +117,7 @@ class SetupSmtpCommand extends BaseCommand
             $this->io->warning("Current mail configuration from config service differ from the configuration defined in `{$this->envPath}`. Global system environment variables might be defined, and it might not be required to setup mail again.");
 
             if (!$this->io->confirm('Continue with mail setup?', false)) {
-                return;
+                return self::SUCCESS;
             }
         }
 
