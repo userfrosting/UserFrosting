@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v4.6.0]
 
 ### Changed Requirements
-- Drop PHP 7.2 * 7.3 support. Gain PHP 8.0 support. PHP 8.0 is now recommended.
+- Drop PHP 7.2 support. Gain PHP 8.0 support. PHP 8.0 is now recommended.
 
 ### Dependencies upgrade
 - Replaced individual UserFrosting Assets, Cache, Config, Fortress, i18n, Session, Support and UniformResouceLocator repos with monolitic `userfrosting/framework` repo.
