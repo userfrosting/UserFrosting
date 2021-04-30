@@ -175,4 +175,13 @@ return [
         'algorithm' => 'sha512',
         'timeout'   => 10800,
     ],
+
+    /*
+    * ----------------------------------------------------------------------
+    * Enable or disable per user theme defined in `$currentUser->theme`
+    * ----------------------------------------------------------------------
+    * @deprecated 4.6.0 Per user theme will be removed in future version
+    * This config disable the feature before it is removed
+    */
+    'per_user_theme' => false,
 ];

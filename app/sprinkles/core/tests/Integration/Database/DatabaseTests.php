@@ -648,7 +648,7 @@ class DatabaseTests extends TestCase
 
         // Test counting related models (withCount)
         $users = EloquentTestUser::withCount('permissions')->get();
-        
+
         // N.B.: Changed behavior in UF 4.6 due to change in Laravel API. Duplicated permission now count as two, instead of 1.
         // See : https://github.com/laravel/framework/issues/30575#issuecomment-554096259
         $this->assertEquals(4, $users[0]->permissions_count); // Used to be 3

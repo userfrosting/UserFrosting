@@ -60,7 +60,7 @@ class RouteListCommand extends BaseCommand
         // If not route, don't go further
         if (count($routes) === 0) {
             $this->io->error("Your application doesn't have any routes.");
-            
+
             return self::FAILURE;
         }
 
