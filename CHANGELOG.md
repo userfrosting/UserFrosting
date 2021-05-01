@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Upgrade `symfony/console` to ^5.1 from ^4.3.
 - Upgrade `phpunit/phpunit` to ^9.5
 
+### New Feature
+Added support for built-in PHP Server.
+
 ### Changes
 - Bakery command `execute` method now requires to return an int (Symfony 4.4 upgrade : https://symfony.com/blog/new-in-symfony-4-4-console-improvements).
 - `UserFrosting\Sprinkle\Core\Database\EloquentBuilder` now uses `Illuminate\Database\Eloquent\Concerns\QueriesRelationships` Trait instead of manually implementing `withSum`, `withAvg`, `withMin`, `withMax` & `withAggregate`. See Laravel documentation for usage change.
