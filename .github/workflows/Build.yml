@@ -94,11 +94,10 @@ jobs:
     - name: Build Assets
       run: php bakery build-assets
 
-    - name: Configure matchers for PHPUnit
-      run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
     - name: Execute tests
-      run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
+      run: | 
+        echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+        app/vendor/bin/phpunit --coverage-clover=coverage.xml
     
     - name: Upload coverage to Codecov
       if: github.event_name != 'schedule'
@@ -112,7 +111,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          php_versions: ['7.4', '8.0']
+          php_versions: ['7.3', '7.4', '8.0']
 
       runs-on: ubuntu-latest
       name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
@@ -167,7 +166,9 @@ jobs:
         run: php bakery build-assets
 
       - name: Execute tests
-        run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
+        run: | 
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+          app/vendor/bin/phpunit --coverage-clover=coverage.xml
       
       - name: Upload coverage to Codecov
         if: github.event_name != 'schedule'
@@ -181,7 +182,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          php_versions: ['7.4', '8.0']
+          php_versions: ['7.3', '7.4', '8.0']
 
       runs-on: ubuntu-latest
       name: PHPUnit - PHP ${{ matrix.php_versions }} - PostgreSQL
@@ -242,7 +243,9 @@ jobs:
         run: php bakery build-assets
 
       - name: Execute tests
-        run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
+        run: | 
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+          app/vendor/bin/phpunit --coverage-clover=coverage.xml
       
       - name: Upload coverage to Codecov
         if: github.event_name != 'schedule'
@@ -256,7 +259,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          php_versions: ['7.4', '8.0']
+          php_versions: ['7.3', '7.4', '8.0']
 
     runs-on: windows-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
@@ -303,7 +306,9 @@ jobs:
       run: php bakery build-assets
 
     - name: Execute tests
-      run: app/vendor/bin/phpunit --coverage-clover=coverage.xml
+      run: | 
+        echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+        app/vendor/bin/phpunit --coverage-clover=coverage.xml
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
@@ -316,7 +321,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['7.4']
+        php_versions: ['8.0']
         node_versions: ['12.17.0', '14', '15'] 
         os: [ubuntu-latest, windows-latest]
 
