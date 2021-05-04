@@ -17,7 +17,7 @@ use UserFrosting\Support\Exception\BadRequestException;
 /**
  * UserFrosting's custom Eloquent Builder Class.
  *
- * @author Alex Weissman (https://alexanderweissman.com)à
+ * @author Alex Weissman (https://alexanderweissman.com)
  *
  * @todo This class overlaped `Illuminate\Database\Eloquent\Builder` trait and was adapted for it. It should be further improved and maybe made a Trait to reflect Laravel Trait.
  */
