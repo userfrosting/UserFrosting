@@ -37,8 +37,8 @@ use UserFrosting\Cache\RedisStore;
 use UserFrosting\Cache\TaggableFileStore;
 use UserFrosting\Config\ConfigPathBuilder;
 use UserFrosting\Session\Session;
-use UserFrosting\Sprinkle\Core\Alert\CacheAlertStream;
-use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
+use UserFrosting\Alert\CacheAlertStream;
+use UserFrosting\Alert\SessionAlertStream;
 use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocator;
@@ -82,7 +82,7 @@ class ServicesProvider
          * Persists error/success messages between requests in the session.
          *
          * @throws \Exception                                    If alert storage handler is not supported
-         * @return \UserFrosting\Sprinkle\Core\Alert\AlertStream
+         * @return \UserFrosting\Alert\AlertStream
          */
         $container['alerts'] = function ($c) {
             $config = $c->config;

@@ -72,7 +72,7 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -237,7 +237,7 @@ class UserController extends SimpleController
         /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Begin transaction - DB will be rolled back if an exception occurs
@@ -334,7 +334,7 @@ class UserController extends SimpleController
             ]);
         });
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'DELETION_SUCCESSFUL', [
@@ -1164,7 +1164,7 @@ class UserController extends SimpleController
         // Get PUT parameters
         $params = $request->getParsedBody();
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -1361,7 +1361,7 @@ class UserController extends SimpleController
         // Get validated and transformed value
         $fieldValue = $data[$fieldName];
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Special checks and transformations for certain fields

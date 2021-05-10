@@ -106,7 +106,7 @@ class RoleControllerTest extends TestCase
         $this->assertSame('foo', $role->name);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
@@ -132,7 +132,7 @@ class RoleControllerTest extends TestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -158,7 +158,7 @@ class RoleControllerTest extends TestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -184,7 +184,7 @@ class RoleControllerTest extends TestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -210,7 +210,7 @@ class RoleControllerTest extends TestCase
         $this->assertNull(Role::where('slug', $role->slug)->first());
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
@@ -538,7 +538,7 @@ class RoleControllerTest extends TestCase
         $this->assertSame($role->description, $editedRole->description);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
@@ -569,7 +569,7 @@ class RoleControllerTest extends TestCase
         $this->assertSame('bar', $editedRole->name);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -600,7 +600,7 @@ class RoleControllerTest extends TestCase
         $this->assertNotNull($editedRole);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -630,7 +630,7 @@ class RoleControllerTest extends TestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -660,7 +660,7 @@ class RoleControllerTest extends TestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -774,7 +774,7 @@ class RoleControllerTest extends TestCase
         $this->assertSame($role->description, $editedRole->description);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
@@ -858,7 +858,7 @@ class RoleControllerTest extends TestCase
         $this->assertCount(1, $role->permissions);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);

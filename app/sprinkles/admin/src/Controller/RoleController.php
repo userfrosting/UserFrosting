@@ -65,7 +65,7 @@ class RoleController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -206,7 +206,7 @@ class RoleController extends SimpleController
             ]);
         });
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'ROLE.DELETION_SUCCESSFUL', [

@@ -583,7 +583,7 @@ class UserControllerGuestTest extends TestCase
         $this->assertSame($group->id, $editedUser->group->id);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
@@ -677,7 +677,7 @@ class UserControllerGuestTest extends TestCase
         $this->assertSame($user->last_name, $editedUser->last_name);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);

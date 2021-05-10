@@ -203,7 +203,7 @@ class GroupControllerTest extends TestCase
         $this->assertSame('foo', $group->name);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
@@ -235,7 +235,7 @@ class GroupControllerTest extends TestCase
         $this->assertNull($group);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -263,7 +263,7 @@ class GroupControllerTest extends TestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -295,7 +295,7 @@ class GroupControllerTest extends TestCase
         $this->assertNull($group);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -321,7 +321,7 @@ class GroupControllerTest extends TestCase
         $this->assertNull(Group::where('slug', $group->slug)->first());
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
@@ -542,7 +542,7 @@ class GroupControllerTest extends TestCase
         $this->assertSame($group->description, $editedGroup->description);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('success', end($messages)['type']);
@@ -574,7 +574,7 @@ class GroupControllerTest extends TestCase
         $this->assertSame('bar', $editedGroup->name);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -606,7 +606,7 @@ class GroupControllerTest extends TestCase
         $this->assertNotNull($editedGroup);
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -636,7 +636,7 @@ class GroupControllerTest extends TestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);
@@ -666,7 +666,7 @@ class GroupControllerTest extends TestCase
         $this->assertSame('[]', (string) $result->getBody());
 
         // Test message
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
         $messages = $ms->getAndClearMessages();
         $this->assertSame('danger', end($messages)['type']);

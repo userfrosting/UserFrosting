@@ -130,7 +130,7 @@ class AccountController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -192,7 +192,7 @@ class AccountController extends SimpleController
      */
     public function forgotPassword(Request $request, Response $response, $args)
     {
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -336,7 +336,7 @@ class AccountController extends SimpleController
      */
     public function login(Request $request, Response $response, $args)
     {
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
@@ -797,7 +797,7 @@ class AccountController extends SimpleController
      */
     public function profile(Request $request, Response $response, $args)
     {
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -902,7 +902,7 @@ class AccountController extends SimpleController
      */
     public function register(Request $request, Response $response, $args)
     {
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -1034,7 +1034,7 @@ class AccountController extends SimpleController
      */
     public function resendVerification(Request $request, Response $response, $args)
     {
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -1133,7 +1133,7 @@ class AccountController extends SimpleController
      */
     public function setPassword(Request $request, Response $response, $args)
     {
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -1216,7 +1216,7 @@ class AccountController extends SimpleController
      */
     public function settings(Request $request, Response $response, $args)
     {
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -1329,7 +1329,7 @@ class AccountController extends SimpleController
      */
     public function suggestUsername(Request $request, Response $response, $args)
     {
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -1363,7 +1363,7 @@ class AccountController extends SimpleController
      */
     public function verify(Request $request, Response $response, $args)
     {
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */

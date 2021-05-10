@@ -121,7 +121,7 @@ class AdminController extends SimpleController
         // Flush cache
         $this->ci->cache->flush();
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'CACHE.CLEARED');

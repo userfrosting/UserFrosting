@@ -65,7 +65,7 @@ class GroupController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
@@ -207,7 +207,7 @@ class GroupController extends SimpleController
             ]);
         });
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'GROUP.DELETION_SUCCESSFUL', [
@@ -687,7 +687,7 @@ class GroupController extends SimpleController
         // Get PUT parameters: (name, slug, icon, description)
         $params = $request->getParsedBody();
 
-        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        /** @var \UserFrosting\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         // Load the request schema
