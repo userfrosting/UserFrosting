@@ -10,7 +10,7 @@
 
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
-use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
+use UserFrosting\Support\Exception\BadClassNameException;
 
 /**
  * MigrationDependencyAnalyser Class.

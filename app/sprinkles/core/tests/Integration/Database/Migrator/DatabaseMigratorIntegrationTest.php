@@ -13,7 +13,7 @@ namespace UserFrosting\Sprinkle\Core\Tests\Integration\Database\Migrator;
 use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocator;
 use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
-use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
+use UserFrosting\Support\Exception\BadClassNameException;
 use UserFrosting\Tests\TestCase;
 
 /**

@@ -15,7 +15,7 @@ use Illuminate\Support\Arr;
 use UserFrosting\Sprinkle\Core\Database\MigrationInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationDependencyAnalyser as Analyser;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRollbackDependencyAnalyser as RollbackAnalyser;
-use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
+use UserFrosting\Support\Exception\BadClassNameException;
 
 /**
  * Migrator Class.
