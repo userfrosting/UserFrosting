@@ -33,7 +33,7 @@
         "php": "^7.3 | ^8.0",
         "ext-gd": "*",
         "composer/installers": "^1.4.0",
-        "userfrosting/framework": "dev-master",
+        "userfrosting/framework": "dev-develop",
         "symfony/console": "^5.1",
         "wikimedia/composer-merge-plugin": "^2.1.0"
     },
