@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Upgrade `phpunit/phpunit` to ^9.5
 
 ### New Feature
-Added support for built-in PHP Server.
+- Added support for built-in PHP Server.
 
 ### Changes
 - Per user theme (`$user->theme`) is now deprecated and disabled by default. To enable back, change `per_user_theme` config to `true` ([#1131](https://github.com/userfrosting/UserFrosting/issues/1131)). This feature will be removed in future version.
