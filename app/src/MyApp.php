@@ -11,6 +11,9 @@
 namespace UserFrosting\App;
 
 use UserFrosting\App\Bakery\HelloCommand;
+use UserFrosting\Sprinkle\Account\Account;
+use UserFrosting\Sprinkle\Admin\Admin;
+use UserFrosting\Sprinkle\Core\Core;
 use UserFrosting\Sprinkle\SprinkleReceipe;
 
 class MyApp implements SprinkleReceipe
@@ -46,6 +49,10 @@ class MyApp implements SprinkleReceipe
      */
     public function getSprinkles(): array
     {
-        return [];
+        return [
+            new Core(),
+            new Account(),
+            new Admin(),
+        ];
     }
 }
