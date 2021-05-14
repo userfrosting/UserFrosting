@@ -97,7 +97,7 @@ jobs:
     - name: Execute tests
       run: | 
         echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-        app/vendor/bin/phpunit --coverage-clover=coverage.xml
+        vendor/bin/phpunit --coverage-clover=coverage.xml
     
     - name: Upload coverage to Codecov
       if: github.event_name != 'schedule'
@@ -168,7 +168,7 @@ jobs:
       - name: Execute tests
         run: | 
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-          app/vendor/bin/phpunit --coverage-clover=coverage.xml
+          vendor/bin/phpunit --coverage-clover=coverage.xml
       
       - name: Upload coverage to Codecov
         if: github.event_name != 'schedule'
@@ -245,7 +245,7 @@ jobs:
       - name: Execute tests
         run: | 
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-          app/vendor/bin/phpunit --coverage-clover=coverage.xml
+          vendor/bin/phpunit --coverage-clover=coverage.xml
       
       - name: Upload coverage to Codecov
         if: github.event_name != 'schedule'
@@ -308,7 +308,7 @@ jobs:
     - name: Execute tests
       run: | 
         echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-        app/vendor/bin/phpunit --coverage-clover=coverage.xml
+        vendor/bin/phpunit --coverage-clover=coverage.xml
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1

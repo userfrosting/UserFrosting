@@ -20,16 +20,18 @@
 /**
  * Require composer autoload file. Not having this file means Composer might not be installed / run
  */
-if (!file_exists(__DIR__ . '/app/vendor/autoload.php')) {
-    die("ERROR :: File `".__DIR__."/app/vendor/autoload.php` not found. This indicate that composer has not yet been run on this install. Install composer and run `composer install` from the project root directory. Check the documentation for more details.\n");
+if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
+    die("ERROR :: File `".__DIR__."/vendor/autoload.php` not found. This indicate that composer has not yet been run on this install. Install composer and run `composer install` from the project root directory. Check the documentation for more details.\n");
 } else {
-    require_once __DIR__ . '/app/vendor/autoload.php';
+    require_once __DIR__ . '/vendor/autoload.php';
 }
 
-use UserFrosting\System\Bakery\Bakery;
+use UserFrosting\App\MyApp;
+use UserFrosting\Bakery\Bakery;
 
 /**
  * Get and run CLI App
  */
-$bakery = new Bakery();
+$bakery = new Bakery(new MyApp);
+$bakery->init();
 $bakery->run();

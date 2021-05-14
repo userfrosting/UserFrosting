@@ -1,6 +1,6 @@
 parameters:
   autoload_files:
-    - app/vendor/autoload.php
+    - vendor/autoload.php
   level: max
   ignoreErrors:
     # Ignore false positive PHPStan can't understand, until we can fix it

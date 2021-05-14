@@ -59,7 +59,7 @@ tooling:
   phpunit:
     service: appserver
     description: "Run PHP Unit tests"
-    cmd: app/vendor/bin/phpunit
+    cmd: vendor/bin/phpunit
   redis-cli:
     service: cache
     description: "Redis cache CLI"

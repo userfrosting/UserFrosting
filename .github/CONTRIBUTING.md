@@ -132,7 +132,7 @@ The resulting documentation will be available in `api/`.
 PHP-CS-Fixer is automatically loaded by Composer and can be used from the UserFrosting root directory :
 
 ```
-app/vendor/bin/php-cs-fixer fix
+vendor/bin/php-cs-fixer fix
 ```
 
 ## Useful tools

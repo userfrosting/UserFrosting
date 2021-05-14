@@ -10,6 +10,6 @@
     <files>
         <directory>app/system</directory>
         <directory>app/sprinkles</directory>
-        <directory>app/vendor/userfrosting/*/src</directory>
+        <directory>vendor/userfrosting/*/src</directory>
     </files>
 </phpdoc>

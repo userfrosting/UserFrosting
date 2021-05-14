@@ -38,7 +38,7 @@ app/sprinkles.json
 app/sprinkles/site-dev
 
 # Ignore Composer vendor
-app/vendor/*
+vendor/*
 
 # Ignore node modules
 build/node_modules/*

@@ -20,22 +20,10 @@
             "homepage": "https://djmm.me"
         }
     ],
-    "config": {
-        "vendor-dir": "app/vendor"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/userfrosting/framework"
-        }
-    ],
     "require": {
-        "php": "^7.3 | ^8.0",
+        "php": "^8.0",
         "ext-gd": "*",
-        "composer/installers": "^1.4.0",
-        "userfrosting/framework": "dev-develop",
-        "symfony/console": "^5.1",
-        "wikimedia/composer-merge-plugin": "^2.1.0"
+        "userfrosting/framework": "dev-develop-5.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.13",
@@ -44,31 +32,16 @@
         "league/factory-muffin": "^3.0",
         "league/factory-muffin-faker": "^2.0"
     },
-    "extra": {
-        "merge-plugin": {
-            "include": [
-                "app/sprinkles.json",
-                "app/sprinkles/*/composer.json"
-            ],
-            "recurse": true,
-            "replace": false,
-            "merge-dev": true,
-            "merge-extra": false
-        }
-    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
-        "files" : [
-            "app/defines.php"
-        ],
         "psr-4": {
-            "UserFrosting\\System\\": "app/system/"
+            "UserFrosting\\App\\": "app/src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "UserFrosting\\Tests\\": "app/tests/"
+            "UserFrosting\\Tests\\App\\": "app/tests/"
         }
     },
     "scripts": {
