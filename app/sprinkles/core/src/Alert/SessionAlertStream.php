@@ -47,7 +47,7 @@ class SessionAlertStream extends AlertStream
      */
     public function messages()
     {
-        return $this->session->get($this->messagesKey) ?: [];
+        return $this->translateMessages($this->session->get($this->messagesKey) ?: []);
     }
 
     /**
