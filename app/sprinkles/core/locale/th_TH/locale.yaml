@@ -1,8 +1,0 @@
-name: Thai
-regional: ไทย
-authors:
-  - Karuhut Komol
-  - Atthaphon Urairat
-plural_rule: 1
-parents:
-  - en_US

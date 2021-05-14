@@ -1,7 +1,0 @@
-name: Chinese
-regional: 中文
-authors:
-  - BruceGui
-plural_rule: 0
-parents:
-  - en_US

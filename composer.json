@@ -20,10 +20,27 @@
             "homepage": "https://djmm.me"
         }
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../sprinkle-core"
+        },
+        {
+            "type": "path",
+            "url": "../sprinkle-admin"
+        },
+        {
+            "type": "path",
+            "url": "../sprinkle-account"
+        }
+    ],
     "require": {
         "php": "^8.0",
         "ext-gd": "*",
-        "userfrosting/framework": "dev-develop-5.0"
+        "userfrosting/framework": "dev-develop-5.0",
+        "userfrosting/sprinkle-core": "*",
+        "userfrosting/sprinkle-admin": "*",
+        "userfrosting/sprinkle-account": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.13",

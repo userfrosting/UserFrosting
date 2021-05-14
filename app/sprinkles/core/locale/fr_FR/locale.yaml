@@ -1,7 +1,0 @@
-name: French
-regional: Français
-authors:
-  - Louis Charette
-plural_rule: 2
-parents:
-  - en_US

@@ -1,7 +1,0 @@
-name: Spanish
-regional: Español
-authors:
-  - rafa31gz
-plural_rule: 1
-parents:
-  - en_US

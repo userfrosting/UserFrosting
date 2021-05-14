@@ -1,6 +1,0 @@
----
-slug:
-  validators:
-    required:
-      label: "&SLUG"
-      message: VALIDATE.REQUIRED

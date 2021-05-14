@@ -1,6 +1,0 @@
----
-user_name:
-  validators:
-    required:
-      label: "&USERNAME"
-      message: VALIDATE.REQUIRED

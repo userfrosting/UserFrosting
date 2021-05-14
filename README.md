@@ -1,4 +1,4 @@
-# UserFrosting 4.6
+# UserFrosting 5.0
 
 [![Latest Version](https://img.shields.io/github/release/userfrosting/UserFrosting.svg)](https://github.com/userfrosting/UserFrosting/releases)
 ![PHP Version](https://img.shields.io/badge/php-%5E7.4%20%7C%20%5E8.0-brightgreen)
