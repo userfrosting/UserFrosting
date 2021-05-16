@@ -26,6 +26,5 @@ if (PHP_SAPI == 'cli-server') {
 use UserFrosting\App\MyApp;
 use UserFrosting\UserFrosting;
 
-$uf = new UserFrosting(new MyApp);
-$uf->init();
+$uf = new UserFrosting(MyApp::class);
 $uf->run();

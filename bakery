@@ -32,6 +32,5 @@ use UserFrosting\Bakery\Bakery;
 /**
  * Get and run CLI App
  */
-$bakery = new Bakery(new MyApp);
-$bakery->init();
+$bakery = new Bakery(MyApp::class);
 $bakery->run();

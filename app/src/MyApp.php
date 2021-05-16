@@ -21,7 +21,7 @@ class MyApp implements SprinkleReceipe
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public static function getName(): string
     {
         return 'My Application';
     }
@@ -29,7 +29,7 @@ class MyApp implements SprinkleReceipe
     /**
      * {@inheritdoc}
      */
-    public function getPath(): string
+    public static function getPath(): string
     {
         return __DIR__;
     }
@@ -37,22 +37,22 @@ class MyApp implements SprinkleReceipe
     /**
      * {@inheritdoc}
      */
-    public function getBakeryCommands(): array
+    public static function getBakeryCommands(): array
     {
         return [
-            new HelloCommand(),
+            HelloCommand::class,
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSprinkles(): array
+    public static function getSprinkles(): array
     {
         return [
-            new Core(),
-            new Account(),
-            new Admin(),
+            Core::class,
+            Account::class,
+            Admin::class,
         ];
     }
 }
