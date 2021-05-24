@@ -31,7 +31,7 @@ class MyApp implements SprinkleReceipe
      */
     public static function getPath(): string
     {
-        return __DIR__;
+        return __DIR__ . '/../';
     }
 
     /**
@@ -54,5 +54,27 @@ class MyApp implements SprinkleReceipe
             Account::class,
             Admin::class,
         ];
+    }
+
+    /**
+     * Returns a list of routes definition in PHP files.
+     *
+     * @return string[]
+     */
+    public static function getRoutes(): array
+    {
+        return [
+            self::getPath() . '/routes/routes.php',
+        ];
+    }
+
+    /**
+     * Returns a list of all PHP-DI services/container definitions files.
+     *
+     * @return string[]
+     */
+    public static function getServices(): array
+    {
+        return [];
     }
 }
