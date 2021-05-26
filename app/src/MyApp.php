@@ -64,7 +64,7 @@ class MyApp implements SprinkleReceipe
     public static function getRoutes(): array
     {
         return [
-            self::getPath() . '/routes/routes.php',
+            Routes::class,
         ];
     }
 
@@ -75,6 +75,8 @@ class MyApp implements SprinkleReceipe
      */
     public static function getServices(): array
     {
-        return [];
+        return [
+            Services::class,
+        ];
     }
 }
