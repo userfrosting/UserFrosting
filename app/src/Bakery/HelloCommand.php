@@ -10,18 +10,20 @@
 
 namespace UserFrosting\App\Bakery;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UserFrosting\Bakery\CommandReceipe;
+use UserFrosting\Bakery\WithSymfonyStyle;
 
 /**
- * Automated testing CLI tool.
- * Sets up environment and runs PHPUnit tests in each Sprinkle.
- *
- * @author Alex Weissman (https://alexanderweissman.com)
+ * Sample BAkery command
+ * 
+ * N.B.: THIS FILE IS SAFE TO EDIT
  */
-class HelloCommand extends CommandReceipe
+class HelloCommand extends Command
 {
+    use WithSymfonyStyle;
+    
     /**
      * {@inheritdoc}
      */

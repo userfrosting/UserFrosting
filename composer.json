@@ -22,8 +22,8 @@
     ],
     "repositories": [
         {
-            "type": "path",
-            "url": "../sprinkle-core"
+            "type": "vcs",
+            "url": "https://github.com/userfrosting/sprinkle-core.git"
         },
         {
             "type": "path",

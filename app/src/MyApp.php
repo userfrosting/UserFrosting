@@ -51,8 +51,8 @@ class MyApp implements SprinkleReceipe
     {
         return [
             Core::class,
-            Account::class,
-            Admin::class,
+            // Account::class,
+            // Admin::class,
         ];
     }
 
@@ -78,5 +78,15 @@ class MyApp implements SprinkleReceipe
         return [
             Services::class,
         ];
+    }
+
+    /**
+     * Returns a list of all Middlewares classes.
+     *
+     * @return \Psr\Http\Server\MiddlewareInterface[]
+     */
+    public static function getMiddlewares(): array
+    {
+        return [];
     }
 }
