@@ -1,0 +1,102 @@
+{# This is the base layout template for all pages.  #}
+{% block page %}
+<!DOCTYPE html>
+<html lang="{{ currentLocale }}">
+    {% block head %}
+        <head>
+            <!-- The 'X-UA-Compatible' tag must be first, otherwise IE will not respect it.  See http://stackoverflow.com/questions/25557299/internet-explorer-11-disable-display-intranet-sites-in-compatibility-view-via -->
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta charset="utf-8">
+            <meta name="generator" content="UserFrosting" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+            <meta name="description" content="{% block page_description %}This page has not yet been configured.{% endblock %}">
+            <meta name="author" content="{% block page_author %}{{ site.author }}{% endblock %}">
+
+            <title>{{ site.title }} | {% block page_title %}New Page{% endblock %}</title>
+
+            {% include "pages/partials/favicons.html.twig" %}
+
+            {# Use this block to add extra content in page head without having to override the entire base layout #}
+            {% block head_extra %}{% endblock %}
+
+            {% block stylesheets %}
+                {# Override this block in a child layout template or page template to override site-level stylesheets. #}
+                {% block stylesheets_site %}
+                    <!-- Include main CSS asset bundle -->
+                    {{ assets.css() | raw }}
+                {% endblock %}
+
+                {# Override this block in a child layout template or page template to specify or override stylesheets for groups of similar pages. #}
+                {% block stylesheets_page_group %}
+                {% endblock %}
+
+                {# Override this block in a child layout template or page template to specify or override page-level stylesheets. #}
+                {% block stylesheets_page %}
+                {% endblock %}
+            {% endblock %}
+
+            {# Site author link #}
+            {% if site.uri.author %}
+                <link href="{% block page_author_link %}{{ site.uri.author }}{% endblock %}" rel="author" />
+            {% endif %}
+
+            {# Site publisher link #}
+            {% if site.uri.publisher %}
+                <link href="{% block page_publisher_link %}{{ site.uri.publisher }}{% endblock %}" rel="publisher" />
+            {% endif %}
+
+            {# Canonical page link #}
+            {% if block('page_canonical') %}
+                <link href="{{site.uri.base.scheme}}://{% block page_canonical %}{% endblock %}" rel="canonical" />
+            {% endif %}
+
+            <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+            <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+            <!--[if lt IE 9]>
+                <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+                <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+            <![endif]-->
+
+            {% include "pages/partials/analytics.html.twig" %}
+        </head>
+    {% endblock %}
+
+    {% block body %}
+        <body {% block body_attributes %}{% endblock %}>
+            {# Page Content #}
+            {% block content %}{% endblock %}
+
+            {# Handlebars template for uf-alerts. #}
+            {% block uf_alerts_template %}
+                {% include "pages/partials/alerts.html.twig" %}
+            {% endblock %}
+
+            <!-- Javascript configuration -->
+            <script>
+            {% include "pages/partials/config.js.twig" %}
+            </script>
+
+            {% block scripts %}
+                {# Override this block in a child layout template or page template to override site-level scripts. #}
+                {% block scripts_site %}
+                    <!-- Load jQuery -->
+                    <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
+                    <!-- Fallback if CDN is unavailable -->
+                    <script>window.jQuery || document.write('<script src="{{ assets.url("assets://vendor/jquery/dist/jquery.min.js", true) }}"><\/script>')</script>
+
+                    {{ assets.js() | raw }}
+                {% endblock %}
+
+                {# Override this block in a child layout template or page template to specify or override scripts for groups of similar pages. #}
+                {% block scripts_page_group %}
+                {% endblock %}
+
+                {# Override this block in a child layout template or page template to specify or override page-level scripts. #}
+                {% block scripts_page %}
+                {% endblock %}
+            {% endblock %}
+
+        </body>
+    {% endblock %}
+</html>
+{% endblock %}

@@ -11,12 +11,13 @@
 namespace UserFrosting\App\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Views\Twig;
 
 /**
  * CoreController Class.
  *
  * Implements some common sitewide routes.
- * 
+ *
  * N.B.: THIS FILE IS SAFE TO EDIT OR DELETE.
  */
 class AppController
@@ -25,15 +26,12 @@ class AppController
      * Renders the default home page for UserFrosting.
      * By default, this is the page that non-authenticated users will first see when they navigate to your website's root.
      * Request type: GET.
-     * 
+     *
      * @param Response $response
      */
-    public function pageIndex(Response $response): Response
+    public function pageIndex(Response $response, Twig $view): Response
     {
-        // return $this->ci->view->render($response, 'pages/index.html.twig');
-        $response->getBody()->write('Hello world !');
-
-        return $response;
+        return $view->render($response, 'pages/index.html.twig');
     }
 
     /**
@@ -42,20 +40,20 @@ class AppController
      *
      * @param Response $response
      */
-    public function pageAbout(Response $response): Response
+    public function pageAbout(Response $response, Twig $view): Response
     {
-        return $this->ci->view->render($response, 'pages/about.html.twig');
+        return $view->render($response, 'pages/about.html.twig');
     }
 
     /**
      * Renders terms of service page.
      * Request type: GET.
-     * 
+     *
      * @param Response $response
      */
-    public function pageLegal(Response $response): Response
+    public function pageLegal(Response $response, Twig $view): Response
     {
-        return $this->ci->view->render($response, 'pages/legal.html.twig');
+        return $view->render($response, 'pages/legal.html.twig');
     }
 
     /**
@@ -64,8 +62,8 @@ class AppController
      *
      * @param Response $response
      */
-    public function pagePrivacy(Response $response): Response
+    public function pagePrivacy(Response $response, Twig $view): Response
     {
-        return $this->ci->view->render($response, 'pages/privacy.html.twig');
+        return $view->render($response, 'pages/privacy.html.twig');
     }
 }

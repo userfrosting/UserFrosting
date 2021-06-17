@@ -1,0 +1,16 @@
+{% extends "pages/abstract/error.html.twig" %}
+
+{% block page_title %}{{ translate('ERROR.404.TITLE') }}{% endblock %}
+
+{% block page_description %}{{ translate('ERROR.404.DESCRIPTION') }}{% endblock %}
+
+{% block headline %}<h2 class="headline text-yellow">404</h2>{% endblock %}
+
+{% block heading %}<i class="fas fa-warning text-yellow"></i> {{ translate('ERROR.404.DETAIL') }}{% endblock %}
+
+{% block content %}
+    <p>
+        {{ translate('ERROR.404.EXPLAIN') }}
+        {{ translate('ERROR.404.RETURN', {url: site.uri.public})|raw }}
+    </p>
+{% endblock %}

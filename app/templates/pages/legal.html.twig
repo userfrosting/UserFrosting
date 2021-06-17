@@ -1,0 +1,12 @@
+{% extends "pages/abstract/default.html.twig" %}
+
+{% set page_active = "home" %}
+
+{# Overrides blocks in head of base template #}
+{% block page_title %}{{translate("LEGAL")}}{% endblock %}
+
+{% block page_description %}{{translate("LEGAL.DESCRIPTION")}}{% endblock %}
+
+{% block body_matter %}
+    {% include 'pages/partials/legal.html.twig' %}
+{% endblock %}

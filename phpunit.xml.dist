@@ -2,17 +2,12 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" backupStaticAttributes="false" bootstrap="vendor/autoload.php" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stderr="true" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
   <coverage includeUncoveredFiles="true" processUncoveredFiles="false">
     <include>
-      <directory suffix=".php">app/sprinkles/*/src/</directory>
-      <directory suffix=".php">app/system/</directory>
+      <directory suffix=".php">app/src/</directory>
     </include>
   </coverage>
   <testsuites>
     <testsuite name="Unit Tests">
-      <directory suffix="Test.php">app/tests/Unit</directory>
-      <directory suffix="Test.php">app/sprinkles/*/tests/Unit</directory>
-    </testsuite>
-    <testsuite name="Integration Tests">
-      <directory suffix=".php">app/sprinkles/*/tests/Integration</directory>
+      <directory suffix="Test.php">app/tests</directory>
     </testsuite>
   </testsuites>
   <php>

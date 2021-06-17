@@ -16,14 +16,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Bakery\WithSymfonyStyle;
 
 /**
- * Sample BAkery command
- * 
+ * Sample Bakery command
+ *
  * N.B.: THIS FILE IS SAFE TO EDIT
  */
 class HelloCommand extends Command
 {
     use WithSymfonyStyle;
-    
+
     /**
      * {@inheritdoc}
      */
