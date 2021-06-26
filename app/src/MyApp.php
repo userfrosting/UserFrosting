@@ -14,9 +14,9 @@ use UserFrosting\App\Bakery\HelloCommand;
 use UserFrosting\Sprinkle\Account\Account;
 use UserFrosting\Sprinkle\Admin\Admin;
 use UserFrosting\Sprinkle\Core\Core;
-use UserFrosting\Sprinkle\SprinkleReceipe;
+use UserFrosting\Sprinkle\SprinkleRecipe;
 
-class MyApp implements SprinkleReceipe
+class MyApp implements SprinkleRecipe
 {
     /**
      * {@inheritdoc}
