@@ -2,7 +2,7 @@ import gulp from "gulp";
 import minifyCss from "gulp-clean-css";
 import concatJs from "gulp-concat";
 import concatCss from "gulp-concat-css";
-import prune from "gulp-prune";
+import { prune } from "gulp-prune";
 import rev from "gulp-rev";
 import minifyJs from "gulp-terser";
 import { relative as relativePath } from "node:path";
