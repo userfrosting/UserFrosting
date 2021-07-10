@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.6.0]
+
+### Changed Requirements
+- Drop PHP 7.2 support. Gain PHP 8.0 support. PHP 8.0 is now recommended.
+
+### Dependencies upgrade
+- Replaced individual UserFrosting Assets, Cache, Config, Fortress, i18n, Session, Support and UniformResouceLocator repos with monolitic `userfrosting/framework` repo.
+- Upgrade all Laravel packages to ^8.x from ^5.8.
+- Upgrade `vlucas/phpdotenv`to ^5.3 from ^3.4.
+- Upgrade `symfony/console` to ^5.1 from ^4.3.
+- Upgrade `phpunit/phpunit` to ^9.5
+
+### New Feature
+- Added support for built-in PHP Server.
+
+### Changes
+- Per user theme (`$user->theme`) is now deprecated and disabled by default. To enable back, change `per_user_theme` config to `true` ([#1131](https://github.com/userfrosting/UserFrosting/issues/1131)). This feature will be removed in future version.
+- Bakery command `execute` method now requires to return an int (Symfony 4.4 upgrade : https://symfony.com/blog/new-in-symfony-4-4-console-improvements).
+- `UserFrosting\Sprinkle\Core\Database\EloquentBuilder` now uses `Illuminate\Database\Eloquent\Concerns\QueriesRelationships` Trait instead of manually implementing `withSum`, `withAvg`, `withMin`, `withMax` & `withAggregate`. See Laravel documentation for usage change.
+
 ## [v4.5.0]
 
 ### Changed Requirements
@@ -1063,3 +1083,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.4.4]: https://github.com/userfrosting/UserFrosting/compare/v4.4.3...v4.4.4
 [v4.4.5]: https://github.com/userfrosting/UserFrosting/compare/v4.4.4...v4.4.5
 [v4.5.0]: https://github.com/userfrosting/UserFrosting/compare/v4.4.5...v4.5.0
+[v4.6.0]: https://github.com/userfrosting/UserFrosting/compare/v4.5.0...v4.6.0

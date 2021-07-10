@@ -48,9 +48,10 @@ class ServicesProvider
          * @return \UserFrosting\Assets\Assets
          */
         $container->extend('assets', function ($assets, $c) {
-
-            // Force load the current user to add it's theme assets resources
-            $currentUser = $c->currentUser;
+            if ($c->config['per_user_theme']) {
+                // Force load the current user to add it's theme assets resources
+                $c->currentUser;
+            }
 
             return $assets;
         });
@@ -318,7 +319,7 @@ class ServicesProvider
             $currentUser = $authenticator->user();
 
             // Add user theme sprinkles resources
-            if ($authenticator->check() && $currentUser->theme) {
+            if ($c->config['per_user_theme'] && $authenticator->check() && $currentUser->theme) {
                 $c->sprinkleManager->addSprinkleResources($currentUser->theme);
             }
 

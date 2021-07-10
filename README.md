@@ -1,7 +1,7 @@
-# UserFrosting 4.5
+# UserFrosting 4.6
 
 [![Latest Version](https://img.shields.io/github/release/userfrosting/UserFrosting.svg)](https://github.com/userfrosting/UserFrosting/releases)
-![PHP Version](https://img.shields.io/packagist/php-v/userfrosting/userfrosting.svg?color=brightgreen)
+![PHP Version](https://img.shields.io/badge/php-%5E7.4%20%7C%20%5E8.0-brightgreen)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
 [![Join the chat at https://chat.userfrosting.com/channel/support](https://chat.userfrosting.com/api/v1/shield.svg?name=UserFrosting)](https://chat.userfrosting.com/channel/support)
 [![Backers on Open Collective](https://opencollective.com/userfrosting/backers/badge.svg)](#backers)

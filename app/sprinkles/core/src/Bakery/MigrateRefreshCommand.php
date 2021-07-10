@@ -83,7 +83,7 @@ class MigrateRefreshCommand extends MigrateCommand
         if (empty($rolledback)) {
             $this->io->warning('Nothing was refreshed !');
 
-            return;
+            return self::SUCCESS;
         }
 
         // Run back up again
@@ -95,5 +95,7 @@ class MigrateRefreshCommand extends MigrateCommand
         if (!empty($migrated)) {
             $this->io->success('Refresh successful !');
         }
+
+        return self::SUCCESS;
     }
 }

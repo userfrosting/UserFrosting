@@ -126,6 +126,8 @@ class CreateAdminUser extends BaseCommand
 
             $this->io->success('Root user creation successful!');
         }
+
+        return self::SUCCESS;
     }
 
     /**
