@@ -27,7 +27,7 @@
         "php": ">=7.2",
         "ext-gd": "*",
         "composer/installers": "^1.4.0",
-        "userfrosting/uniformresourcelocator": "~4.4.0",
+        "userfrosting/uniformresourcelocator": "~4.5.0",
         "symfony/console": "^4.3",
         "wikimedia/composer-merge-plugin": "^2.1.0"
     },
