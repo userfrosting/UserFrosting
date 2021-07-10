@@ -3,7 +3,7 @@
   "type": "module",
   "dependencies": {
     "@userfrosting/browserify-dependencies": "^4.0.0",
-    "@userfrosting/gulp-bundle-assets": "^5.0.1",
+    "@userfrosting/gulp-bundle-assets": "^5.0.2",
     "@userfrosting/merge-package-dependencies": "^3.0.0",
     "@userfrosting/ts-log-adapter-gulplog": "^1.0.0",
     "@userfrosting/vinyl-fs-vpath": "^3.0.1",
