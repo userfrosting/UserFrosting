@@ -2,9 +2,9 @@ import { legacyVendorAssetsGlob, sprinkles, sprinklesDir, vendorAssetsDir } from
 import { bower as mergeBowerDeps, npm as mergeNpmDeps } from "@userfrosting/merge-package-dependencies";
 import { browserifyDependencies } from "@userfrosting/browserify-dependencies";
 import { sync as deleteSync } from "del";
-import childProcess, { exec as _exec } from "node:child_process";
-import { existsSync } from "node:fs";
-import { promisify } from "node:util";
+import childProcess, { exec as _exec } from "child_process";
+import { existsSync } from "fs";
+import { promisify } from "util";
 import { GulpLogLogger } from "@userfrosting/ts-log-adapter-gulplog";
 
 // Promisify exec

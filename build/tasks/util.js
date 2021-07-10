@@ -1,5 +1,5 @@
 import gulplog from "gulplog";
-import { readFileSync } from "node:fs";
+import { readFileSync } from "fs";
 
 // Relative to gulpfile.esm.js
 const rootDir = "..";
