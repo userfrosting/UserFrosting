@@ -42,7 +42,7 @@ jobs:
 
     - uses: actions/setup-node@v2
       with:
-        node-version: 14
+        node-version: ^14.0.0
     
     - name: Setup Redis-server
       uses: supercharge/redis-github-action@1.1.0
@@ -135,7 +135,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: ^14.0.0
       
       - name: Setup Redis-server
         uses: supercharge/redis-github-action@1.1.0
@@ -217,7 +217,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: ^14.0.0
       
       - name: Setup Redis-server
         uses: supercharge/redis-github-action@1.1.0
@@ -321,8 +321,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.0']
-        node_versions: ['12.17.0', '14', '15'] 
+        php_versions: [ '8.0' ]
+        node_versions: [ ^12.17.0, ^14, ^15 ] 
         os: [ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
@@ -351,3 +351,23 @@ jobs:
     
     - name: Execute build
       run: php bakery build-assets
+
+  Asset-Build-Inspect:
+
+    name: Assets Build Inspection
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ^14.0.0
+
+      - name: Install Dependencies
+        working-directory: build
+        run: npm i
+
+      - name: Type Validation
+        working-directory: build
+        run: node_modules/.bin/tsc -p ./tsconfig.json

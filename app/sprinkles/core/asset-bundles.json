@@ -21,28 +21,14 @@
                 "userfrosting/js/uf-modal.js",
                 "userfrosting/js/uf-copy.js",
                 "userfrosting/js/uf-init.js"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "scripts": "plain"
-                    }
-                }
-            }
+            ]
         },
         "js/form-widgets": {
             "scripts": [
                 "vendor/speakingurl/speakingurl.min.js",
                 "userfrosting/js/uf-collection.js",
                 "vendor/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.js"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "scripts": "plain"
-                    }
-                }
-            }
+            ]
         },
         "css/main": {
             "styles": [
@@ -57,26 +43,12 @@
                 "userfrosting/css/AdminLTE.css",
                 "userfrosting/css/AdminLTE-skins-all.css",
                 "userfrosting/css/userfrosting.css"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "styles": "plain"
-                    }
-                }
-            }
+            ]
         },
         "css/form-widgets": {
             "styles": [
                 "userfrosting/css/uf-collection.css"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "styles": "plain"
-                    }
-                }
-            }
+            ]
         }
     }
 }
