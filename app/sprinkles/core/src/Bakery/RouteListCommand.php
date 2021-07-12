@@ -92,7 +92,7 @@ class RouteListCommand extends BaseCommand
     protected function getRouteInformation(Route $route, InputInterface $input)
     {
         $callable = is_string($route->getCallable()) ? $route->getCallable() : 'Callable';
-        
+
         return $this->filterRoute([
             'method' => implode('|', $route->getMethods()),
             'uri'    => $route->getPattern(),
