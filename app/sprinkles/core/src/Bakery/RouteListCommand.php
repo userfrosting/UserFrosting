@@ -78,7 +78,7 @@ class RouteListCommand extends BaseCommand
         }
 
         // Display routes
-        $this->io->table($this->headers, array_filter($routes));
+        $this->io->table($this->headers, $routes);
     }
 
     /**
@@ -91,11 +91,13 @@ class RouteListCommand extends BaseCommand
      */
     protected function getRouteInformation(Route $route, InputInterface $input)
     {
+        $callable = is_string($route->getCallable()) ? $route->getCallable() : 'Callable';
+
         return $this->filterRoute([
             'method' => implode('|', $route->getMethods()),
             'uri'    => $route->getPattern(),
             'name'   => $route->getName(),
-            'action' => $route->getCallable(),
+            'action' => $callable,
         ], $input);
     }
 

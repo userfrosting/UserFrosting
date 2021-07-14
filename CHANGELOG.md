@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.5.1]
+
+### Fixed
+- Fix `php bakery route:list` error on procedural routes ([#1162](https://github.com/userfrosting/UserFrosting/issues/1162)).
+- Fix `NO_DATA` alert when editing a User Role ([#1163](https://github.com/userfrosting/UserFrosting/issues/1163)).
+- [Vagrant/Homestead] Force use of PHP 7.4 for CLI (since default is now PHP 8).
+- Fix integration with [filp/whoops 2.14](https://github.com/filp/whoops/compare/2.13.0...2.14.0)
+
+### Changed
+- Updated Docker development images (PHP 7.2 to 7.4, NodeJS 12.x to 14.x) ([#1085]).
+
 ## [v4.5.0]
 
 ### Changed Requirements
@@ -1047,6 +1058,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [#1121]: https://github.com/userfrosting/UserFrosting/pull/1121
 [#1077]: https://github.com/userfrosting/UserFrosting/pull/1077
 [#1133]: https://github.com/userfrosting/UserFrosting/issues/1133
+[#1085]: https://github.com/userfrosting/UserFrosting/pull/1085
 
 [v4.2.0]: https://github.com/userfrosting/UserFrosting/compare/v4.1.22...v4.2.0
 [v4.2.1]: https://github.com/userfrosting/UserFrosting/compare/v4.2.0...v.4.2.1
@@ -1063,3 +1075,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.4.4]: https://github.com/userfrosting/UserFrosting/compare/v4.4.3...v4.4.4
 [v4.4.5]: https://github.com/userfrosting/UserFrosting/compare/v4.4.4...v4.4.5
 [v4.5.0]: https://github.com/userfrosting/UserFrosting/compare/v4.4.5...v4.5.0
+[v4.5.1]: https://github.com/userfrosting/UserFrosting/compare/v4.5.0...v4.5.1
