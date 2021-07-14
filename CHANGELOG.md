@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unknown]
+## [v4.5.1]
+
+### Fixed
+- Fix `php bakery route:list` error on procedural routes ([#1162](https://github.com/userfrosting/UserFrosting/issues/1162)).
+- Fix `NO_DATA` alert when editing a User Role ([#1163](https://github.com/userfrosting/UserFrosting/issues/1163)).
+- [Vagrant/Homestead] Force use of PHP 7.4 for CLI (since default is now PHP 8).
 
 ### Changed
 - Updated Docker development images (PHP 7.2 to 7.4, NodeJS 12.x to 14.x) ([#1085]).
@@ -1069,3 +1074,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.4.4]: https://github.com/userfrosting/UserFrosting/compare/v4.4.3...v4.4.4
 [v4.4.5]: https://github.com/userfrosting/UserFrosting/compare/v4.4.4...v4.4.5
 [v4.5.0]: https://github.com/userfrosting/UserFrosting/compare/v4.4.5...v4.5.0
+[v4.5.1]: https://github.com/userfrosting/UserFrosting/compare/v4.5.0...v4.5.1
