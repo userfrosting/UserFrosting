@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fix `php bakery route:list` error on procedural routes ([#1162](https://github.com/userfrosting/UserFrosting/issues/1162)).
 - Fix `NO_DATA` alert when editing a User Role ([#1163](https://github.com/userfrosting/UserFrosting/issues/1163)).
 - [Vagrant/Homestead] Force use of PHP 7.4 for CLI (since default is now PHP 8).
+- Fix integration with [filp/whoops 2.14](https://github.com/filp/whoops/compare/2.13.0...2.14.0)
 
 ### Changed
 - Updated Docker development images (PHP 7.2 to 7.4, NodeJS 12.x to 14.x) ([#1085]).
