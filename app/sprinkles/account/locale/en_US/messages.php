@@ -39,6 +39,7 @@ return [
             '@TRANSLATION'  => 'Account settings',
             'DESCRIPTION'   => 'Update your account settings, including email, name, and password.',
             'UPDATED'       => 'Account settings updated',
+            'NEW_EMAIL'     => 'A link to update your email has been sent to <strong>{{newEmail}}</strong>. Current email <strong>{{email}}</strong> will be used until you complete this step.',
         ],
 
         'TOOLS' => 'Account tools',

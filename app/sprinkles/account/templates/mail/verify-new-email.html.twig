@@ -1,0 +1,21 @@
+{% block subject %}
+    Hello {{user.first_name}} - please verify your new email for {{site.title}}
+{% endblock %}
+
+{% block body %}
+<p>Dear {{user.first_name}},
+</p>
+<p>
+You are receiving this email because you requested an email change at {{site.title}} ({{site.uri.public}}).
+</p>
+<p>
+You will need to verify your new email before change can be applied. Please follow the link below to verify your new email.
+</p>
+<p>
+<a href="{{site.uri.public}}/account/verify?token={{token}}">{{site.uri.public}}/account/verify?token={{token}}</a>
+</p>
+<p>
+With regards,<br>
+The {{site.title}} Team
+</p>
+{% endblock %}

@@ -13,7 +13,7 @@ namespace UserFrosting\Sprinkle\Account\Repository;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
 /**
- * Token repository class for new account verifications.
+ * Token repository class for new account verifications and email change verifications.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  *
@@ -31,7 +31,15 @@ class VerificationRepository extends TokenRepository
      */
     protected function updateUser(UserInterface $user, $args)
     {
-        $user->flag_verified = 1;
+        // If this is email update verification
+        if ( $user->flag_verified && $user->newEmail !== "" ) {
+            // Update email and remove requested
+            $user->email = $user->newEmail;
+            $user->newEmail = "";
+        } else {
+            // New user verification
+            $user->flag_verified = 1;
+        }
         // TODO: generate user activity? or do this in controller?
         $user->save();
     }
