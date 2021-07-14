@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Per user theme (`$user->theme`) is now deprecated and disabled by default. To enable back, change `per_user_theme` config to `true` ([#1131](https://github.com/userfrosting/UserFrosting/issues/1131)). This feature will be removed in future version.
 - Bakery command `execute` method now requires to return an int (Symfony 4.4 upgrade : https://symfony.com/blog/new-in-symfony-4-4-console-improvements).
 - `UserFrosting\Sprinkle\Core\Database\EloquentBuilder` now uses `Illuminate\Database\Eloquent\Concerns\QueriesRelationships` Trait instead of manually implementing `withSum`, `withAvg`, `withMin`, `withMax` & `withAggregate`. See Laravel documentation for usage change.
+
 ## [v4.5.1]
 
 ### Fixed
