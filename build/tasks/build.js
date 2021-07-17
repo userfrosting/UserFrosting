@@ -1,24 +1,24 @@
-// @ts-check
 import gulp from "gulp";
 import minifyCss from "gulp-clean-css";
 import concatJs from "gulp-concat";
 import concatCss from "gulp-concat-css";
-import prune from "gulp-prune";
+import { prune } from "gulp-prune";
 import rev from "gulp-rev";
 import minifyJs from "gulp-terser";
 import { relative as relativePath } from "path";
 import Bundler, { MergeRawConfigs, ValidateRawConfig } from "@userfrosting/gulp-bundle-assets";
 import { readFileSync, writeFileSync } from "fs";
 import { src } from "@userfrosting/vinyl-fs-vpath";
-import { Logger, vendorAssetsDir, sprinklesDir, sprinkles, sprinkleBundleFile, publicAssetsDir } from "./util.js";
+import { vendorAssetsDir, sprinklesDir, sprinkles, sprinkleBundleFile, publicAssetsDir } from "./util.js";
 import gulpIf from "gulp-if";
+import { GulpLogLogger } from "@userfrosting/ts-log-adapter-gulplog";
 import gulpSourcemaps from "gulp-sourcemaps";
 
 /**
  * Compiles frontend assets. Mapped to npm script "uf-bundle".
  */
 export function build() {
-    const log = new Logger(build.name);
+    const log = new GulpLogLogger(build.name);
 
     // Build sources list
     const sources = [];
@@ -35,6 +35,7 @@ export function build() {
     sources.push("!**.php");
 
     // Create bundle stream factories object
+    /** @type {import("@userfrosting/gulp-bundle-assets").Bundlers} */
     const bundleBuilder = {
         Scripts: (src, name) => {
             return src
@@ -131,7 +132,7 @@ export function build() {
         log.info("Finished writing results file.")
     };
 
-    rawConfig.Logger = new Logger(`${build.name} - @userfrosting/gulp-bundle-assets`);
+    rawConfig.Logger = new GulpLogLogger(`${build.name} - @userfrosting/gulp-bundle-assets`);
     rawConfig.cwd = publicAssetsDir;
 
     // Open stream
@@ -149,7 +150,7 @@ export function build() {
 
 /**
  * Used to filter to just styles and scripts.
- * @param {import("vinyl").NullFile} fs
+ * @param {import("vinyl")} fs
  */
 function stylesAndScriptsFilter(fs) {
     return scriptsFilter(fs) || stylesFilter(fs);
@@ -157,7 +158,7 @@ function stylesAndScriptsFilter(fs) {
 
 /**
  * Used to filter to just styles.
- * @param {import("vinyl").NullFile} fs
+ * @param {import("vinyl")} fs
  */
 function stylesFilter(fs) {
     return fs.extname === ".css";
@@ -165,7 +166,7 @@ function stylesFilter(fs) {
 
 /**
  * Used to filter to just scripts.
- * @param {import("vinyl").NullFile} fs
+ * @param {import("vinyl")} fs
  */
 function scriptsFilter(fs) {
     return fs.extname === ".js";

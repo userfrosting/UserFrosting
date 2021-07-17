@@ -88,7 +88,7 @@ class DebugCommand extends BaseCommand
         $this->io->success('Ready to bake !');
 
         // Command return success
-        return 0;
+        return self::SUCCESS;
     }
 
     /**

@@ -69,10 +69,11 @@ class BelongsToManyThroughTest extends TestCase
     {
         // We simulate a BelongsToManyThrough relationship that gets all related users for a specified permission(s).
         $builder = m::mock(EloquentBuilder::class);
-        $related = m::mock('Illuminate\Database\Eloquent\Model');
+        $related = m::mock('Illuminate\Database\Eloquent\Model')->makePartial();
         $related->shouldReceive('getKey')->andReturn(1);
         $related->shouldReceive('getTable')->andReturn('users');
         $related->shouldReceive('getKeyName')->andReturn('id');
+
         // Tie the mocked builder to the mocked related model
         $builder->shouldReceive('getModel')->andReturn($related);
 

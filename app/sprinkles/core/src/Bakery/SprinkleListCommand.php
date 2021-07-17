@@ -57,5 +57,7 @@ class SprinkleListCommand extends BaseCommand
 
         // Display table
         $this->io->table($this->headers, $sprinklesTable);
+
+        return self::SUCCESS;
     }
 }

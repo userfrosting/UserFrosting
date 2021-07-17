@@ -65,5 +65,7 @@ class TestMailCommand extends BaseCommand
         }
 
         $this->io->success("Test email sent to $to !");
+
+        return self::SUCCESS;
     }
 }

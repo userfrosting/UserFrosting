@@ -40,5 +40,7 @@ class SeedListCommand extends BaseCommand
         $this->io->title('Database Seeds List');
         $seeds = $this->ci->seeder->getSeeds();
         $this->io->table(['Name', 'Namespace', 'Sprinkle'], $seeds);
+
+        return self::SUCCESS;
     }
 }

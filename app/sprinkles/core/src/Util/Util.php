@@ -10,6 +10,9 @@
 
 namespace UserFrosting\Sprinkle\Core\Util;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 /**
  * Util Class.
  *
@@ -167,11 +170,11 @@ class Util
 
         for ($n = 0; $n < $maxTries; $n++) {
             $keys = array_rand($adjectives, $numAdjectives);
-            $matches = array_only($adjectives, $keys);
+            $matches = Arr::only($adjectives, $keys);
 
             $result = implode($separator, $matches);
             $result .= $separator . $nouns[array_rand($nouns)];
-            $result = str_slug($result, $separator);
+            $result = Str::slug($result, $separator);
             if (strlen($result) < $maxLength) {
                 return $result;
             }

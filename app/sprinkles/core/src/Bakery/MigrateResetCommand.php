@@ -48,6 +48,8 @@ class MigrateResetCommand extends MigrateCommand
         } else {
             $this->performReset($input);
         }
+
+        return self::SUCCESS;
     }
 
     /**

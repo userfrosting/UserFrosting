@@ -1,4 +1,3 @@
-// @ts-check
 import { exec as _exec } from "child_process";
 import { config as envConfig } from "dotenv";
 import { writeFileSync } from "fs";

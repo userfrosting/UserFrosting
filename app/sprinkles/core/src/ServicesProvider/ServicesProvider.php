@@ -233,7 +233,7 @@ class ServicesProvider
         $container['config'] = function ($c) {
             // Grab any relevant dotenv variables from the .env file
             try {
-                $dotenv = Dotenv::create(\UserFrosting\APP_DIR);
+                $dotenv = Dotenv::createImmutable(\UserFrosting\APP_DIR);
                 $dotenv->load();
             } catch (InvalidPathException $e) {
                 // Skip loading the environment config file if it doesn't exist.

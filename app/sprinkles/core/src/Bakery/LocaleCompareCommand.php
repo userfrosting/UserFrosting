@@ -68,7 +68,7 @@ class LocaleCompareCommand extends BaseCommand
         $this->emptyValues($rightDictionary);
 
         // Done
-        return 0;
+        return self::SUCCESS;
     }
 
     /**

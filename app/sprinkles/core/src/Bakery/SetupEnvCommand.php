@@ -68,6 +68,8 @@ class SetupEnvCommand extends BaseCommand
 
         // Success
         $this->io->success("Environment mode successfully changed to `$newEnvMode` in `{$this->envPath}`");
+
+        return self::SUCCESS;
     }
 
     /**

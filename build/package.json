@@ -1,26 +1,27 @@
 {
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@userfrosting/browserify-dependencies": "^3.1.0",
-    "@userfrosting/gulp-bundle-assets": "^4.0.1",
-    "@userfrosting/merge-package-dependencies": "^2.1.0",
-    "@userfrosting/vinyl-fs-vpath": "^2.0.0",
+    "@userfrosting/browserify-dependencies": "^4.0.0",
+    "@userfrosting/gulp-bundle-assets": "^5.0.2",
+    "@userfrosting/merge-package-dependencies": "^3.0.1",
+    "@userfrosting/ts-log-adapter-gulplog": "^1.0.0",
+    "@userfrosting/vinyl-fs-vpath": "^3.0.2",
     "@yarnpkg/shell": "^2.4.1",
     "bower": "^1.8.12",
     "del": "^6.0.0",
-    "dotenv": "^8.2.0",
-    "esm": "^3.2.25",
-    "gulp": "^4.0.2",
+    "dotenv": "^10.0.0",
     "gulp-clean-css": "^4.3.0",
-    "gulp-concat": "^2.6.1",
     "gulp-concat-css": "^3.1.0",
+    "gulp-concat": "^2.6.1",
     "gulp-if": "^3.0.0",
-    "gulp-prune": "^0.2.0",
+    "gulp-prune": "^2.0.0",
     "gulp-rev": "^9.0.0",
     "gulp-sourcemaps": "^3.0.0",
     "gulp-terser": "^2.0.1",
+    "gulp": "^4.0.2",
     "gulplog": "^1.0.0",
-    "strip-ansi": "^6.0.0"
+    "strip-ansi": "^7.0.0"
   },
   "scripts": {
     "uf-bundle": "shell './node_modules/.bin/gulp build'",
@@ -32,5 +33,17 @@
     "node": "^12.17.0 || >=14.0.0",
     "npm": ">=6.14.4"
   },
-  "engineStrict": true
+  "engineStrict": true,
+  "devDependencies": {
+    "@types/gulp": "^4.0.9",
+    "@types/gulp-clean-css": "^4.3.0",
+    "@types/gulp-concat": "^0.0.33",
+    "@types/gulp-if": "^0.0.34",
+    "@types/gulp-rev": "^5.0.32",
+    "@types/gulp-sourcemaps": "0.0.35",
+    "@types/gulp-terser": "^1.2.1",
+    "@types/node": "^16.3.1",
+    "@types/vinyl": "^2.0.5",
+    "typescript": "^4.3.5"
+  }
 }

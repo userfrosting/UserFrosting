@@ -96,5 +96,7 @@ class SeedCommand extends BaseCommand
 
         // Success
         $this->io->success('Seed successful !');
+
+        return self::SUCCESS;
     }
 }

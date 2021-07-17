@@ -59,6 +59,8 @@ class ClearCacheCommand extends BaseCommand
         }
 
         $this->io->success('Cache cleared !');
+
+        return self::SUCCESS;
     }
 
     /**
