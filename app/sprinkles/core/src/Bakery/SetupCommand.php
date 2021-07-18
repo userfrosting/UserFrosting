@@ -45,5 +45,7 @@ class SetupCommand extends BaseCommand
 
         $command = $this->getApplication()->find('setup:env');
         $command->run($input, $output);
+
+        return self::SUCCESS;
     }
 }

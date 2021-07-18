@@ -62,7 +62,7 @@ class MigrateCommand extends BaseCommand
         if (empty($pending)) {
             $this->io->success('Nothing to migrate');
 
-            return;
+            return self::SUCCESS;
         }
 
         // Show migrations about to be ran when in production mode
@@ -95,6 +95,8 @@ class MigrateCommand extends BaseCommand
         } else {
             $this->io->success('Migration successful !');
         }
+
+        return self::SUCCESS;
     }
 
     /**

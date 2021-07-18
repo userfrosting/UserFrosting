@@ -57,6 +57,8 @@ class BakeCommand extends BaseCommand
         $this->executeConfiguration($input, $output);
         $this->executeAsset($input, $output);
         $this->executeCleanup($input, $output);
+
+        return self::SUCCESS;
     }
 
     /**
