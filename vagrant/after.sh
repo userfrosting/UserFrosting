@@ -14,14 +14,9 @@ npm cache clean -f
 npm install -g n
 n -q lts
 
-# Ensuite PHP 7.4 is used (UF doesn't support PHP 8 yet...)
-echo "\n\n >> Forcing PHP 7.4 in CLI\n"
-sudo update-alternatives --set php /usr/bin/php7.4
-
 # Ensure composer deps are installed
 echo "\n\n >> Installating Composer\n"
 cd ${BASE_PATH}
-composer self-update --1
 composer install
 
 # Setup .env
