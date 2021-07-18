@@ -11,8 +11,8 @@
 | Branch | Version | Build | Coverage | Style |
 | ------ |:-------:|:-----:|:--------:|:-----:|
 | [master] | ![](https://img.shields.io/github/release/userfrosting/userfrosting.svg?color=success&label=Version) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=master)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/master/graph/badge.svg)][UF-Codecov] | [![][style-master]][style] |
-| [hotfix] | ![](https://img.shields.io/badge/Version-v4.5.x-yellow.svg) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=hotfix)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
-| [develop] | ![](https://img.shields.io/badge/Version-v4.6.x-orange.svg) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=develop)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
+| [hotfix] | ![](https://img.shields.io/badge/Version-v4.6.x-yellow.svg) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=hotfix)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/hotfix/graph/badge.svg)][UF-Codecov] | [![][style-hotfix]][style] |
+| [develop] | ![](https://img.shields.io/badge/Version-v4.7.x-orange.svg) | [![](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=develop)][UF-Build] | [![](https://codecov.io/gh/userfrosting/userfrosting/branch/develop/graph/badge.svg)][UF-Codecov] | [![][style-develop]][style] |
 
 <!-- Links -->
 [master]: https://github.com/userfrosting/UserFrosting
