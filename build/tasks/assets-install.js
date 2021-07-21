@@ -1,32 +1,35 @@
-// @ts-check
-import { Logger, legacyVendorAssetsGlob, sprinkles, sprinklesDir, vendorAssetsDir } from "./util.js";
+import { legacyVendorAssetsGlob, sprinkles, sprinklesDir, vendorAssetsDir } from "./util.js";
 import { bower as mergeBowerDeps, npm as mergeNpmDeps } from "@userfrosting/merge-package-dependencies";
-import browserifyDependencies from "@userfrosting/browserify-dependencies";
+import { browserifyDependencies } from "@userfrosting/browserify-dependencies";
 import { sync as deleteSync } from "del";
 import childProcess, { exec as _exec } from "child_process";
 import { existsSync } from "fs";
 import { promisify } from "util";
+import { GulpLogLogger } from "@userfrosting/ts-log-adapter-gulplog";
 
 // Promisify exec
 const exec = promisify(_exec);
 
 /**
  * Runs the provided command and captures output.
+ * @todo Add support for realtime logging
  * @param {string} source Used to annotate logs.
  * @param {string} cmd Command to execute.
  * @param {childProcess.ExecOptions} options Options to pass to `exec`.
  */
 async function runCommand(source, cmd, options) {
-    const log = new Logger(`${source}> ${cmd}`)
+    const log = new GulpLogLogger(`${source}> ${cmd}`)
     log.info("Running command");
 
     try {
         const result = await exec(cmd, options);
-        if (result.stdout) log.info(result.stdout);
-        if (result.stderr) log.error(result.stderr);
+        if (result.stdout) result.stdout.split("\n").forEach(msg => log.info(msg));
+        if (result.stderr) result.stderr.split("\n").forEach(msg => log.error(msg));
     } catch (e) {
-        if (e.stdout) log.info(e.stdout);
-        if (e.stderr) log.error(e.stderr);
+        /** @type {{ stdout: string, stderr: string }} */
+        const err = e;
+        if (e.stdout) err.stdout.split("\n").forEach(msg => log.info(msg));
+        if (e.stderr) err.stderr.split("\n").forEach(msg => log.error(msg));
         log.error("Command has completed with an error");
         throw e;
     }
@@ -38,7 +41,7 @@ async function runCommand(source, cmd, options) {
  * Installs vendor assets. Mapped to npm script "uf-assets-install".
  */
 export async function assetsInstall() {
-    const log = new Logger(assetsInstall.name);
+    const log = new GulpLogLogger(assetsInstall.name);
 
     // Clean up any legacy assets
     if (deleteSync(legacyVendorAssetsGlob, { force: true }))
@@ -66,6 +69,7 @@ export async function assetsInstall() {
             private: true
         };
         log.info("Collating dependencies...");
+        /** @type {{ private: boolean, dependencies?: { [x: string]: string } }} */
         const pkg = mergeNpmDeps(npmTemplate, npmPaths, vendorAssetsDir, true);
         log.info("Dependency collation complete.");
 
@@ -85,14 +89,14 @@ export async function assetsInstall() {
             await runCommand(assetsInstall.name, "npm audit", { cwd: vendorAssetsDir });
         }
         catch {
-            log.warn("There appear to be some vulerabilities within your dependencies. Updating is recommended.");
+            log.warn("There appear to be some vulnerabilities within your dependencies. Updating is recommended.");
         }
 
         // Browserify dependencies
         log.info("Compiling compatible node modules into UMD bundles with browserify");
         deleteSync(vendorAssetsDir + "browser_modules/", { force: true });
         await browserifyDependencies({
-            dependencies: Object.keys(pkg.dependencies),
+            dependencies: Object.keys(pkg.dependencies || []),
             inputDir: vendorAssetsDir + "node_modules/",
             outputDir: vendorAssetsDir + "browser_modules/",
             silentFailures: true,
@@ -114,8 +118,7 @@ export async function assetsInstall() {
     for (const sprinkle of sprinkles) {
         const path = sprinklesDir + sprinkle + "/bower.json";
         if (existsSync(path)) {
-            // TODO: We should really have a link to docs in the message
-            log.warn(`DEPRECATED: Detected bower.json in ${sprinkle} Sprinkle. Support for bower (bower.json) will be removed in the future, please use npm/yarn (package.json) instead.`);
+            log.warn(`DEPRECATED: Detected bower.json in ${sprinkle} Sprinkle. Support for bower (bower.json) will be removed in the future, please use npm/yarn (package.json) instead. https://learn.userfrosting.com/upgrading/41-to-42#bower-deprecation-new-npm-support`);
             bowerPaths.push(path);
         }
     }

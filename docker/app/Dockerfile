@@ -1,11 +1,11 @@
-FROM php:7.2-fpm
+FROM php:7.4-fpm
 
 RUN apt-get update
 
 RUN apt-get install -y apt-utils
 
 # Add NodeJS LTS Repository
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 
 RUN apt-get install -y \
     libc-client-dev \
@@ -16,20 +16,35 @@ RUN apt-get install -y \
     libxml2-dev \
     locales \
     zlib1g-dev \
+    libzip-dev\
     libpng-dev \
     libfreetype6-dev \
+    libjpeg62-turbo-dev \
     libjpeg-dev \
     zip \
     nodejs
 
+# Optional XDebug Install
+#RUN curl -fsSL 'https://xdebug.org/files/xdebug-2.9.4.tgz' -o xdebug.tar.gz \
+#    && mkdir -p xdebug \
+#    && tar -xf xdebug.tar.gz -C xdebug --strip-components=1 \
+#    && rm xdebug.tar.gz \
+#    && ( \
+#    cd xdebug \
+#    && phpize \
+#    && ./configure --enable-xdebug \
+#    && make -j$(nproc) \
+#    && make install \
+#    ) \
+#    && rm -r xdebug \
+#    && docker-php-ext-enable xdebug   
+
 # COMPOSER INSTALL
 RUN curl -sSfo /tmp/composer.phar https://getcomposer.org/installer
 RUN php /tmp/composer.phar --install-dir=/usr/local/bin --filename=composer
-# Force Composer Stable Version 1
-RUN composer selfupdate --1
 
 # Install and configure PHP extensions
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install -j$(nproc) pdo pdo_mysql \
     && docker-php-ext-install -j$(nproc) zip
