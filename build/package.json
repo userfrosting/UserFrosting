@@ -5,7 +5,7 @@
     "@userfrosting/gulp-bundle-assets": "^4.0.1",
     "@userfrosting/merge-package-dependencies": "^2.1.0",
     "@userfrosting/vinyl-fs-vpath": "^2.0.0",
-    "@yarnpkg/shell": "^2.4.1",
+    "@yarnpkg/shell": "^3.0.0",
     "bower": "^1.8.12",
     "del": "^6.0.0",
     "dotenv": "^8.2.0",
