@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fix
 - Fix error when building assets. Updated `@yarnpkg/shell` from `^2.4.1` to `^3.0.0` ([#1168](https://github.com/userfrosting/UserFrosting/issues/1168)).
+- Set `psr/log` in `composer.json` to avoid conflict with dependencies.
 
 ## [v4.6.0]
 
