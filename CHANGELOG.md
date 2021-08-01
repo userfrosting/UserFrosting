@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.6.1]
+
+### Fix
+- Fix error when building assets. Updated `@yarnpkg/shell` from `^2.4.1` to `^3.0.0` ([#1168](https://github.com/userfrosting/UserFrosting/issues/1168)).
+
 ## [v4.6.0]
 
 ### Changed Requirements
@@ -1098,3 +1103,4 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 [v4.5.0]: https://github.com/userfrosting/UserFrosting/compare/v4.4.5...v4.5.0
 [v4.5.1]: https://github.com/userfrosting/UserFrosting/compare/v4.5.0...v4.5.1
 [v4.6.0]: https://github.com/userfrosting/UserFrosting/compare/v4.5.0...v4.6.0
+[v4.6.1]: https://github.com/userfrosting/UserFrosting/compare/v4.6.0...v4.6.1
