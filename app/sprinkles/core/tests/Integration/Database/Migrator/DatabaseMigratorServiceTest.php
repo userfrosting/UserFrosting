@@ -22,6 +22,8 @@ class DatabaseMigratorServiceTest extends TestCase
 {
     public function testMigratorService()
     {
+        $this->setupTestDatabase();
+
         $this->assertInstanceOf(Migrator::class, $this->ci->migrator);
     }
 }
