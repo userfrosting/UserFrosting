@@ -11,6 +11,7 @@
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Database\Migrator;
 
 use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
+use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -20,6 +21,8 @@ use UserFrosting\Tests\TestCase;
  */
 class DatabaseMigratorServiceTest extends TestCase
 {
+    use TestDatabase;
+
     public function testMigratorService()
     {
         $this->setupTestDatabase();
