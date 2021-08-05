@@ -34,6 +34,8 @@ class DatabaseTests extends TestCase
         // Boot database
         $this->ci->db;
 
+        $this->schema($this->schemaName)->dropAllTables();
+
         $this->createSchema();
     }
 
