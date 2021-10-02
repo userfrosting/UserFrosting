@@ -12,24 +12,25 @@
  * Portuguese message token translations for the 'core' sprinkle.
  *
  * @author Bruno Silva (brunomnsilva@gmail.com)
+ * @author José Pedro Machado (V2)
  */
 return [
     'VALIDATE' => [
         'ARRAY'         => 'Os valores para <strong>{{label}}</strong> devem estar contidos num array.',
         'BOOLEAN'       => 'O valor para <strong>{{label}}</strong> deve ser \'0\' ou \'1\'.',
-        'INTEGER'       => 'O valor para <strong>{{label}}</strong> deve ser um inteiro.',
+        'INTEGER'       => 'O valor para <strong>{{label}}</strong> deve ser um número inteiro.',
         'INVALID_EMAIL' => 'Endereço de email inválido.',
         'LENGTH_RANGE'  => '{{label}} deve conter entre {{min}} e {{max}} caracteres.',
-        // 'MAX_LENGTH'    => '{{label}} must be maximum {{max}} characters in length.',
-        // 'MIN_LENGTH'    => '{{label}} must be minimum {{min}} characters in length.',
+        'MAX_LENGTH'    => '{{label}} só pode conter no máximo {{max}} caracteres.',
+        'MIN_LENGTH'    => '{{label}} tem de ter no mínimo {{min}} caracteres.',
         'NO_LEAD_WS'    => 'O valor para <strong>{{label}}</strong> não pode começar por espaços, tabulações, ou outros espaços em branco.',
         'NO_TRAIL_WS'   => 'O valor para <strong>{{label}}</strong> não pode terminar em espaços, tabulações, ou outros espaços em branco.',
-        // 'RANGE'         => 'The value for <strong>{{label}}</strong> must be between {{min}} and {{max}}.',
+        'RANGE'         => 'O valor para <strong>{{label}}</strong> tem de ser entre {{min}} e {{max}}.',
         'REQUIRED'      => 'Por favor especifique um valor para <strong>{{label}}</strong>.',
         'SPRUNJE'       => [
-            // 'BAD_FILTER' => '<strong>{{name}}</strong> is not a valid filter for this Sprunje.',
-            // 'BAD_LIST'   => '<strong>{{name}}</strong> is not a valid list for this Sprunje.',
-            // 'BAD_SORT'   => '<strong>{{name}}</strong> is not a valid sort field for this Sprunje.',
+            'BAD_FILTER' => '<strong>{{name}}</strong> não é um filtro válido para este "Sprunje".',
+            'BAD_LIST'   => '<strong>{{name}}</strong> não é uma lista válida para este "Sprunje".',
+            'BAD_SORT'   => '<strong>{{name}}</strong> não é uma ordenação válida para este "Sprunje".',
         ],
     ],
 ];

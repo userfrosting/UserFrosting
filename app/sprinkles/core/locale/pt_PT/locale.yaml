@@ -2,6 +2,7 @@ name: Portuguese
 regional: Português
 authors:
   - Bruno Silva
+  - José Pedro Machado
 plural_rule: 1
 parents:
   - en_US
