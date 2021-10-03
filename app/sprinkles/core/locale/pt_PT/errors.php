@@ -12,6 +12,7 @@
  * Portuguese message token translations for the 'core' sprinkle.
  *
  * @author Bruno Silva (brunomnsilva@gmail.com)
+ * @author José Pedro Machado (V2)
  */
 return [
     'ERROR' => [
@@ -19,7 +20,7 @@ return [
 
         '400' => [
             'TITLE'       => 'Erro 400: Pedido Inválido',
-            'DESCRIPTION' => 'Provavelmente a culpa não é sua.',
+            'DESCRIPTION' => 'Provavelmente o problema não foi seu.',
         ],
 
         '404' => [
@@ -37,7 +38,7 @@ return [
             'RETURN'      => 'Por favor corrija os seguintes erros, depois <a href="{{url}}">refresque</a> a página.',
         ],
 
-        'DESCRIPTION' => 'Sentimos uma grande perturbância na Força.',
+        'DESCRIPTION' => 'Sentimos uma grande perturbação na Engrenagem.',
         'DETAIL'      => 'Eis o que sabemos:',
 
         'ENCOUNTERED' => 'Uhhh...algo aconteceu.  Não sabemos bem o quê.',
@@ -48,6 +49,6 @@ return [
 
         'SERVER' => 'Oops, parece que o nosso servidor deu o berro. Se é um administrador, por favor consulte o log de erros PHP ou UF.',
 
-        'TITLE' => 'Perturbância na Força',
+        'TITLE' => 'Perturbação na Engrenagem',
     ],
 ];
