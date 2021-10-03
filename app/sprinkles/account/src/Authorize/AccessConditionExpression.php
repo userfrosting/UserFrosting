@@ -88,7 +88,7 @@ class AccessConditionExpression
      * The special parameter `self` is an array of the current user's data.
      * This get included automatically, and so does not need to be passed in.
      *
-     * @param string       $condition a boolean expression composed of calls to AccessCondition functions.
+     * @param string $condition a boolean expression composed of calls to AccessCondition functions.
      * @param array[mixed] $params    the parameters to be used when evaluating the expression.
      *
      * @return bool true if the condition is passed for the given parameters, otherwise returns false.
