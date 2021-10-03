@@ -58,7 +58,7 @@ return [
         'PAGE_DESCRIPTION'    => 'Lista de grupos do site. Contém opções para editar e remover grupos.',
         'SUMMARY'             => 'Resumo do grupo',
         'UPDATE'              => 'Detalhes do grupo <strong>{{name}}</strong> atualizados',
-        "NONE"                => "Nenhum grupo",
+        'NONE'                => 'Nenhum grupo',
     ],
     'MANUALLY_ACTIVATED'    => 'A conta de {{user_name}} foi ativada manualmente.',
     'MASTER_ACCOUNT_EXISTS' => 'A contra principal já existe!',
