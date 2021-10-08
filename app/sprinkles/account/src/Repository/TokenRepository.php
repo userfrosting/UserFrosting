@@ -223,7 +223,7 @@ abstract class TokenRepository
     protected function generateRandomToken($gen = null)
     {
         do {
-            $gen = md5(uniqid(mt_rand(), false));
+            $gen = bin2hex(random_bytes(16));
         } while ($this->classMapper->getClassMapping($this->modelIdentifier)
             ::where('hash', hash($this->algorithm, $gen))
             ->first());

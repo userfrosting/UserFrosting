@@ -68,8 +68,7 @@ class Captcha
      */
     public function generateRandomCode()
     {
-        $md5_hash = md5(rand(0, 99999));
-        $this->code = substr($md5_hash, 25, 5);
+        $this->code = substr( bin2hex( random_bytes( 3 ) ), 0, 5 );
         $enc = md5($this->code);
 
         // Store the generated captcha value to the session
