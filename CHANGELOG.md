@@ -8,10 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v4.6.2]
 
 ### Changes
-- Updated Portuguese translation
+- Updated Portuguese translation ([#1178](https://github.com/userfrosting/UserFrosting/pull/1178)).
 
 ### Fix
-- Fix `UF_MODE` not being loaded by Config.
+- Fix `UF_MODE` not being loaded by Config ([#1177](https://github.com/userfrosting/UserFrosting/issues/1177)).
 
 ## [v4.6.1]
 
