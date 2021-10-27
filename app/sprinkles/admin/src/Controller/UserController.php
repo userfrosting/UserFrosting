@@ -678,8 +678,7 @@ class UserController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Get the user to edit
-        $user = $classMapper->getClassMapping('user')
-            ::where('user_name', $user->user_name)
+        $user = $classMapper->getClassMapping('user')::where('user_name', $user->user_name)
             ->with('group')
             ->first();
 
@@ -1465,8 +1464,7 @@ class UserController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Get the user to delete
-        $user = $classMapper->getClassMapping('user')
-            ::where('user_name', $data['user_name'])
+        $user = $classMapper->getClassMapping('user')::where('user_name', $data['user_name'])
             ->first();
 
         return $user;

@@ -66,8 +66,7 @@ abstract class TokenRepository
         $hash = hash($this->algorithm, $token);
 
         // Find an incomplete reset request for the specified hash
-        $model = $this->classMapper->getClassMapping($this->modelIdentifier)
-            ::where('hash', $hash)
+        $model = $this->classMapper->getClassMapping($this->modelIdentifier)::where('hash', $hash)
             ->where('completed', false)
             ->first();
 
@@ -94,8 +93,7 @@ abstract class TokenRepository
         $hash = hash($this->algorithm, $token);
 
         // Find an unexpired, incomplete token for the specified hash
-        $model = $this->classMapper->getClassMapping($this->modelIdentifier)
-            ::where('hash', $hash)
+        $model = $this->classMapper->getClassMapping($this->modelIdentifier)::where('hash', $hash)
             ->where('completed', false)
             ->where('expires_at', '>', Carbon::now())
             ->first();
@@ -170,8 +168,7 @@ abstract class TokenRepository
      */
     public function exists(UserInterface $user, $token = null)
     {
-        $model = $this->classMapper->getClassMapping($this->modelIdentifier)
-            ::where('user_id', $user->id)
+        $model = $this->classMapper->getClassMapping($this->modelIdentifier)::where('user_id', $user->id)
             ->where('completed', false)
             ->where('expires_at', '>', Carbon::now());
 
@@ -193,8 +190,7 @@ abstract class TokenRepository
      */
     protected function removeExisting(UserInterface $user)
     {
-        return $this->classMapper->getClassMapping($this->modelIdentifier)
-            ::where('user_id', $user->id)
+        return $this->classMapper->getClassMapping($this->modelIdentifier)::where('user_id', $user->id)
             ->delete();
     }
 
@@ -205,8 +201,7 @@ abstract class TokenRepository
      */
     public function removeExpired()
     {
-        return $this->classMapper->getClassMapping($this->modelIdentifier)
-            ::where('completed', false)
+        return $this->classMapper->getClassMapping($this->modelIdentifier)::where('completed', false)
             ->where('expires_at', '<', Carbon::now())
             ->delete();
     }
@@ -224,8 +219,7 @@ abstract class TokenRepository
     {
         do {
             $gen = md5(uniqid(mt_rand(), false));
-        } while ($this->classMapper->getClassMapping($this->modelIdentifier)
-            ::where('hash', hash($this->algorithm, $gen))
+        } while ($this->classMapper->getClassMapping($this->modelIdentifier)::where('hash', hash($this->algorithm, $gen))
             ->first());
 
         return $gen;
