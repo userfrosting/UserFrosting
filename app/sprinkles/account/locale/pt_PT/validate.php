@@ -12,10 +12,11 @@
  * Portuguese message token translations for the 'account' sprinkle.
  *
  * @author Bruno Silva (brunomnsilva@gmail.com)
+ * @author José Pedro Machado (V2)
  */
 return [
     'VALIDATE' => [
         'PASSWORD_MISMATCH' => 'A password e respetiva confirmação têm de coincidir.',
-        // 'USERNAME'          => 'Username may consist only of lowercase letters, numbers, \'.\', \'-\', and \'_\'.',
+        'USERNAME'          => 'O Username apenas poderá conter letras minúsculas, números, \'.\', \'-\', e \'_\'.',
     ],
 ];

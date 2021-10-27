@@ -21,7 +21,6 @@ jobs:
 
     env:
       TEST_DB: default
-      UF_MODE: debug
       DB_DRIVER: mysql
       DB_HOST: 127.0.0.1
       DB_USER: userfrosting
@@ -118,7 +117,6 @@ jobs:
 
       env:
         TEST_DB: default
-        UF_MODE: debug
         DB_DRIVER: sqlite
         DB_NAME: database/database.sqlite
 
@@ -189,7 +187,6 @@ jobs:
 
       env:
         TEST_DB: default
-        UF_MODE: debug
         DB_DRIVER: pgsql
         DB_HOST: 127.0.0.1
         DB_USER: userfrosting
@@ -266,7 +263,6 @@ jobs:
 
     env:
       TEST_DB: default
-      UF_MODE: debug
       DB_DRIVER: sqlite
       DB_NAME: database/database.sqlite
 
