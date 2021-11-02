@@ -9,25 +9,73 @@ on:
   - cron: "0 0 * * 5"
 
 jobs:
+  PHPUnit-Memory:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php_versions: ['8.0']
+
+    runs-on: ubuntu-latest
+    name: PHPUnit - PHP ${{ matrix.php_versions }} - Memory SQLite
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php_versions }}
+          extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
+          coverage: xdebug
+          tools: pecl, composer
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      
+      - name: Setup Redis-server
+        uses: supercharge/redis-github-action@1.1.0
+        with:
+          redis-version: 6
+      
+      - name: Setup Memcached
+        uses: niden/actions-memcached@v7
+            
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-progress
+    
+      - name: Bakery Debug
+        run: php bakery debug
+
+      - name: Execute tests
+        run: | 
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+          vendor/bin/phpunit
+      
+      - name: Upload coverage to Codecov
+        if: github.event_name != 'schedule'
+        uses: codecov/codecov-action@v2
+        with:
+          file: ./_meta/coverage.xml
+          fail_ci_if_error: true
+
   PHPUnit-MySQL:
 
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['7.3', '7.4', '8.0']
+        php_versions: ['8.0']
 
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - MySQL
 
     env:
-      TEST_DB: default
-      UF_MODE: debug
-      DB_DRIVER: mysql
+      DB_TEST_CONNECTION: mysql
       DB_HOST: 127.0.0.1
       DB_USER: userfrosting
       DB_PASSWORD: password
       DB_NAME: userfrosting
-      DB_PORT: 3306
 
     steps:
     - uses: actions/checkout@v2
@@ -54,18 +102,8 @@ jobs:
     
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
-    
-    - name: Set up MySQL (PHP <= 7.3 -> MySQL 5)
-      if: ${{ matrix.php_versions == 7.3 }}
-      uses: mirromutth/mysql-action@v1.1
-      with:
-        mysql version: '5'
-        mysql database: 'userfrosting'
-        mysql user: 'userfrosting'
-        mysql password: 'password'
 
-    - name: Set up MySQL (PHP >= 7.4 -> MySQL 8)
-      if: ${{ matrix.php_versions != 7.3 }}
+    - name: Set up MySQL 8
       uses: mirromutth/mysql-action@v1.1
       with:
         mysql version: '8'
@@ -79,31 +117,22 @@ jobs:
           sleep 1
         done
     
-    - name: Copy .env
-      run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
-    
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress
     
     - name: Bakery Debug
       run: php bakery debug
 
-    - name: Migrate DB
-      run: php bakery migrate
-
-    - name: Build Assets
-      run: php bakery build-assets
-
     - name: Execute tests
       run: | 
         echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-        vendor/bin/phpunit --coverage-clover=coverage.xml
+        vendor/bin/phpunit
     
     - name: Upload coverage to Codecov
       if: github.event_name != 'schedule'
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v2
       with:
-        file: ./coverage.xml
+        file: ./_meta/coverage.xml
         fail_ci_if_error: true
 
   PHPUnit-SQLite:
@@ -111,16 +140,14 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          php_versions: ['7.3', '7.4', '8.0']
+          php_versions: ['8.0']
 
       runs-on: ubuntu-latest
       name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
 
       env:
-        TEST_DB: default
-        UF_MODE: debug
-        DB_DRIVER: sqlite
-        DB_NAME: database/database.sqlite
+        DB_TEST_CONNECTION: sqlite
+        DB_NAME: database.sqlite
 
       steps:
       - uses: actions/checkout@v2
@@ -144,37 +171,26 @@ jobs:
       
       - name: Setup Memcached
         uses: niden/actions-memcached@v7
-      
-      - name: Copy .env
-        run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
-      
+            
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress
-      
-      - name: Create SQLite Database
-        run: |
-          mkdir -p database
-          touch database/database.sqlite
-      
+    
       - name: Bakery Debug
         run: php bakery debug
-
-      - name: Migrate DB
-        run: php bakery migrate
-
-      - name: Build Assets
-        run: php bakery build-assets
+      
+      - name: Create SQLite Database
+        run: touch database.sqlite
 
       - name: Execute tests
         run: | 
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-          vendor/bin/phpunit --coverage-clover=coverage.xml
+          vendor/bin/phpunit
       
       - name: Upload coverage to Codecov
         if: github.event_name != 'schedule'
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
-          file: ./coverage.xml
+          file: ./_meta/coverage.xml
           fail_ci_if_error: true
   
   PHPUnit-Postgre:
@@ -182,20 +198,16 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          php_versions: ['7.3', '7.4', '8.0']
+          php_versions: ['8.0']
 
       runs-on: ubuntu-latest
       name: PHPUnit - PHP ${{ matrix.php_versions }} - PostgreSQL
 
       env:
-        TEST_DB: default
-        UF_MODE: debug
-        DB_DRIVER: pgsql
-        DB_HOST: 127.0.0.1
+        DB_TEST_CONNECTION: pgsql
         DB_USER: userfrosting
         DB_PASSWORD: password
         DB_NAME: userfrosting
-        DB_PORT: 5432
 
       steps:
       - uses: actions/checkout@v2
@@ -227,31 +239,22 @@ jobs:
       - name: Setup Memcached
         uses: niden/actions-memcached@v7
       
-      - name: Copy .env
-        run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
-      
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress
-      
+
       - name: Bakery Debug
         run: php bakery debug
-
-      - name: Migrate DB
-        run: php bakery migrate
-
-      - name: Build Assets
-        run: php bakery build-assets
 
       - name: Execute tests
         run: | 
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-          vendor/bin/phpunit --coverage-clover=coverage.xml
+          vendor/bin/phpunit
       
       - name: Upload coverage to Codecov
         if: github.event_name != 'schedule'
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
-          file: ./coverage.xml
+          file: ./_meta/coverage.xml
           fail_ci_if_error: true
 
   PHPUnit-Windows:
@@ -259,16 +262,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          php_versions: ['7.3', '7.4', '8.0']
+          php_versions: ['8.0']
 
     runs-on: windows-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
 
     env:
-      TEST_DB: default
-      UF_MODE: debug
-      DB_DRIVER: sqlite
-      DB_NAME: database/database.sqlite
+      DB_TEST_CONNECTION: sqlite
+      DB_NAME: database.sqlite
 
     steps:
     - uses: actions/checkout@v2
@@ -285,35 +286,24 @@ jobs:
       with:
         node-version: 14
     
-    - name: Copy .env
-      run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
-    
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress
     
-    - name: Create SQLite Database
-      run: |
-        mkdir -p database
-        touch database/database.sqlite
-
     - name: Bakery Debug
       run: php bakery debug
-
-    - name: Migrate DB
-      run: php bakery migrate
-
-    - name: Build Assets
-      run: php bakery build-assets
+    
+    - name: Create SQLite Database
+      run: touch database.sqlite
 
     - name: Execute tests
       run: | 
         echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-        vendor/bin/phpunit --coverage-clover=coverage.xml
+        vendor/bin/phpunit
     
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v2
       with:
-        file: ./coverage.xml
+        file: ./_meta/coverage.xml
         fail_ci_if_error: true
 
   Asset-Build:
