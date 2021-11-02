@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Bakery\WithSymfonyStyle;
 
 /**
- * Sample Bakery command
+ * Sample Bakery command.
  *
  * N.B.: THIS FILE IS SAFE TO EDIT
  */
