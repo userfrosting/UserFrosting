@@ -12,8 +12,9 @@ _meta/
 # Ignore personal config files (dev)
 app/.env
 
-# Ignore composer-generated files
+# Ignore lock files
 composer.lock
+package-lock.json
 
 # Ignore log, cache, sessions and storage directories
 app/cache/*

@@ -1,0 +1,75 @@
+
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
+
+/*
+ * This theme was upgraded to FONT AWESOME 5
+ * which is not supported by the original "AdminLTE" theme yet.
+ *
+ * So we have to do add add some additional styles:
+ */
+.sidebar-menu>li>a>.far,
+.sidebar-menu>li>a>.fas,
+.sidebar-menu>li>a>.fal,
+.sidebar-menu>li>a>.fab {
+    width: 20px;
+}
+
+.sidebar-menu .treeview-menu>li>a>.far,
+.sidebar-menu .treeview-menu>li>a>.fas,
+.sidebar-menu .treeview-menu>li>a>.fal,
+.sidebar-menu .treeview-menu>li>a>.fab {
+    width: 20px;
+}
+
+.main-header .sidebar-toggle {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+}
+
+.login-page form label {
+    padding-left: 5px;
+}
+
+.control-label.required:after {
+    content:" *";
+    font-size: 110%;
+}
+
+.timeline > li > .far,
+.timeline > li > .fas,
+.timeline > li > .fal,
+.timeline > li > .fab {
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    line-height: 30px;
+    position: absolute;
+    color: #666;
+    background: #d2d6de;
+    border-radius: 50%;
+    text-align: center;
+    left: 18px;
+    top: 0;
+}
+
+@media (min-width: $screen-sm-min) {
+    body.login-page {
+        .login-logo {
+            padding-top: 45px;
+            margin-bottom: 55px;
+        }
+    }
+}
+
+body.login-page {
+    .login-box-body {
+        padding: 20px;
+        box-shadow: 0px 29px 147.5px 102.5px rgba(0, 0, 0, 0.05), 0px 29px 95px 0px rgba(0, 0, 0, 0.16);
+    }
+    label {
+        font-weight: normal;
+    }
+    button.btn.btn-flat, input[type=text], input[type=password] {
+        border-radius: 3px;
+    }
+}

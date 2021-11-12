@@ -10,12 +10,22 @@
 
 namespace UserFrosting\App;
 
+use Fullpipe\TwigWebpackExtension\WebpackExtension;
 use UserFrosting\ServicesProvider\ServicesProviderInterface;
+use UserFrosting\UniformResourceLocator\ResourceLocatorInterface;
 
 class Services implements ServicesProviderInterface
 {
     public function register(): array
     {
-        return [];
+        return [
+            WebpackExtension::class => function(ResourceLocatorInterface $locator) {
+                $publicPath = $locator->getResource('public://');
+                $manifest = $locator->getResource('public://assets/manifest.json');
+                $extension = new WebpackExtension((string) $manifest, (string) $publicPath);
+
+                return $extension;
+            }
+        ];
     }
 }

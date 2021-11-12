@@ -23,7 +23,8 @@
                 {# Override this block in a child layout template or page template to override site-level stylesheets. #}
                 {% block stylesheets_site %}
                     <!-- Include main CSS asset bundle -->
-                    {{ assets.css() | raw }}
+                    {# {{ assets.css() | raw }} #}
+                    {% webpack_entry_css 'assets/adminlte' %}
                 {% endblock %}
 
                 {# Override this block in a child layout template or page template to specify or override stylesheets for groups of similar pages. #}
@@ -79,12 +80,15 @@
             {% block scripts %}
                 {# Override this block in a child layout template or page template to override site-level scripts. #}
                 {% block scripts_site %}
-                    <!-- Load jQuery -->
-                    <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
-                    <!-- Fallback if CDN is unavailable -->
-                    <script>window.jQuery || document.write('<script src="{{ assets.url("assets://vendor/jquery/dist/jquery.min.js", true) }}"><\/script>')</script>
+                    <script src="/assets/runtime.js" ></script>
+                    {% webpack_entry_js 'assets/adminlte' %}
 
-                    {{ assets.js() | raw }}
+                    <!-- Load jQuery -->
+                    {# // <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script> #}
+                    <!-- Fallback if CDN is unavailable -->
+                    {# // <script>window.jQuery || document.write('<script src="{{ assets.url("assets://vendor/jquery/dist/jquery.min.js", true) }}"><\/script>')</script> #}
+
+                    {# {{ assets.js() | raw }} #}
                 {% endblock %}
 
                 {# Override this block in a child layout template or page template to specify or override scripts for groups of similar pages. #}

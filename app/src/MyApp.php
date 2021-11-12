@@ -10,13 +10,17 @@
 
 namespace UserFrosting\App;
 
+use Fullpipe\TwigWebpackExtension\WebpackExtension;
 use UserFrosting\App\Bakery\HelloCommand;
-use UserFrosting\Sprinkle\Account\Account;
-use UserFrosting\Sprinkle\Admin\Admin;
+// use UserFrosting\Sprinkle\Account\Account;
+// use UserFrosting\Sprinkle\Admin\Admin;
 use UserFrosting\Sprinkle\Core\Core;
+use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\LocatorRecipe;
+use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\TwigExtensionRecipe;
 use UserFrosting\Sprinkle\SprinkleRecipe;
+use UserFrosting\UniformResourceLocator\ResourceStream;
 
-class MyApp implements SprinkleRecipe
+class MyApp implements SprinkleRecipe, TwigExtensionRecipe, LocatorRecipe
 {
     /**
      * {@inheritdoc}
@@ -88,5 +92,24 @@ class MyApp implements SprinkleRecipe
     public static function getMiddlewares(): array
     {
         return [];
+    }
+
+    public static function getTwigExtensions(): array
+    {
+        return [
+            WebpackExtension::class
+        ];
+    }
+
+    /**
+     * Return an array of all locator Resource Steams to register with locator.
+     *
+     * @return \UserFrosting\UniformResourceLocator\ResourceStreamInterface[]
+     */
+    public static function getResourceStreams(): array
+    {
+        return [
+            new ResourceStream('public', path: self::getPath() . '../public', shared: true),
+        ];
     }
 }
