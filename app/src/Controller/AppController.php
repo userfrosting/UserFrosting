@@ -28,6 +28,7 @@ class AppController
      * Request type: GET.
      *
      * @param Response $response
+     * @param Twig     $view
      */
     public function pageIndex(Response $response, Twig $view): Response
     {
@@ -39,6 +40,7 @@ class AppController
      * Request type: GET.
      *
      * @param Response $response
+     * @param Twig     $view
      */
     public function pageAbout(Response $response, Twig $view): Response
     {
@@ -50,6 +52,7 @@ class AppController
      * Request type: GET.
      *
      * @param Response $response
+     * @param Twig     $view
      */
     public function pageLegal(Response $response, Twig $view): Response
     {
@@ -61,6 +64,7 @@ class AppController
      * Request type: GET.
      *
      * @param Response $response
+     * @param Twig     $view
      */
     public function pagePrivacy(Response $response, Twig $view): Response
     {

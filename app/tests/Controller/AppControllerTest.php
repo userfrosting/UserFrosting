@@ -32,7 +32,7 @@ class AppControllerTest extends TestCase
         $response = $this->handleRequest($request);
 
         // Asserts
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertResponseJson(['Great work! Keep going!', 'Great work! Keep going!', 'bar'], $response); // TODO
+        $this->assertResponseStatus(200, $response);
+        $this->assertNotSame('', (string) $response->getBody());
     }
 }

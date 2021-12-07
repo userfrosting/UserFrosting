@@ -25,7 +25,7 @@ class MyApp implements SprinkleRecipe, TwigExtensionRecipe, LocatorRecipe
     /**
      * {@inheritdoc}
      */
-    public static function getName(): string
+    public function getName(): string
     {
         return 'My Application';
     }
@@ -33,7 +33,7 @@ class MyApp implements SprinkleRecipe, TwigExtensionRecipe, LocatorRecipe
     /**
      * {@inheritdoc}
      */
-    public static function getPath(): string
+    public function getPath(): string
     {
         return __DIR__ . '/../';
     }
@@ -41,7 +41,7 @@ class MyApp implements SprinkleRecipe, TwigExtensionRecipe, LocatorRecipe
     /**
      * {@inheritdoc}
      */
-    public static function getBakeryCommands(): array
+    public function getBakeryCommands(): array
     {
         return [
             HelloCommand::class,
@@ -51,7 +51,7 @@ class MyApp implements SprinkleRecipe, TwigExtensionRecipe, LocatorRecipe
     /**
      * {@inheritdoc}
      */
-    public static function getSprinkles(): array
+    public function getSprinkles(): array
     {
         return [
             Core::class,
@@ -65,7 +65,7 @@ class MyApp implements SprinkleRecipe, TwigExtensionRecipe, LocatorRecipe
      *
      * @return string[]
      */
-    public static function getRoutes(): array
+    public function getRoutes(): array
     {
         return [
             Routes::class,
@@ -77,7 +77,7 @@ class MyApp implements SprinkleRecipe, TwigExtensionRecipe, LocatorRecipe
      *
      * @return string[]
      */
-    public static function getServices(): array
+    public function getServices(): array
     {
         return [
             Services::class,
@@ -89,15 +89,15 @@ class MyApp implements SprinkleRecipe, TwigExtensionRecipe, LocatorRecipe
      *
      * @return \Psr\Http\Server\MiddlewareInterface[]
      */
-    public static function getMiddlewares(): array
+    public function getMiddlewares(): array
     {
         return [];
     }
 
-    public static function getTwigExtensions(): array
+    public function getTwigExtensions(): array
     {
         return [
-            WebpackExtension::class
+            WebpackExtension::class,
         ];
     }
 
@@ -106,7 +106,7 @@ class MyApp implements SprinkleRecipe, TwigExtensionRecipe, LocatorRecipe
      *
      * @return \UserFrosting\UniformResourceLocator\ResourceStreamInterface[]
      */
-    public static function getResourceStreams(): array
+    public function getResourceStreams(): array
     {
         return [
             new ResourceStream('public', path: self::getPath() . '../public', shared: true),

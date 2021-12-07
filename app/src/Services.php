@@ -19,13 +19,13 @@ class Services implements ServicesProviderInterface
     public function register(): array
     {
         return [
-            WebpackExtension::class => function(ResourceLocatorInterface $locator) {
+            WebpackExtension::class => function (ResourceLocatorInterface $locator) {
                 $publicPath = $locator->getResource('public://');
                 $manifest = $locator->getResource('public://assets/manifest.json');
                 $extension = new WebpackExtension((string) $manifest, (string) $publicPath);
 
                 return $extension;
-            }
+            },
         ];
     }
 }
