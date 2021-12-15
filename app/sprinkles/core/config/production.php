@@ -52,6 +52,9 @@ return [
             'ajax' => false,
             'info' => false,
         ],
+        'uri' => [
+            'public' => 'https://example.com',
+        ],
     ],
     /*
      * Send errors to log
