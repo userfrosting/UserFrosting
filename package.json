@@ -1,0 +1,5 @@
+{
+    "dependencies": {
+        "sprinkle-core": "github:userfrosting/sprinkle-core#5.0"
+    }
+}

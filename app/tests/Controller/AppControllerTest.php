@@ -4,7 +4,7 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2019 Alexander Weissman
+ * @copyright Copyright (c) 2021 Alexander Weissman & Louis Charette
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
@@ -32,7 +32,7 @@ class AppControllerTest extends TestCase
         $response = $this->handleRequest($request);
 
         // Asserts
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertResponseJson(['Great work! Keep going!', 'Great work! Keep going!', 'bar'], $response); // TODO
+        $this->assertResponseStatus(200, $response);
+        $this->assertNotSame('', (string) $response->getBody());
     }
 }

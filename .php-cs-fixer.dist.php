@@ -3,17 +3,17 @@
 $header = 'UserFrosting (http://www.userfrosting.com)
 
 @link      https://github.com/userfrosting/UserFrosting
-@copyright Copyright (c) 2019 Alexander Weissman
+@copyright Copyright (c) 2021 Alexander Weissman & Louis Charette
 @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)';
 
 $rules = [
     '@PSR2'                                       => true,
     'array_indentation'                           => true,
     'array_syntax'                                => ['syntax' => 'short'],
-    'binary_operator_spaces'                      => ['align_double_arrow' => true, 'align_equals' => false],
+    'binary_operator_spaces'                      => ['operators' => ['=>' => 'align', '=' => 'single_space']],
     'blank_line_after_namespace'                  => true,
     'blank_line_after_opening_tag'                => true,
-    'blank_line_before_return'                    => true,
+    'blank_line_before_statement'                 => ['statements' => ['return']],
     'braces'                                      => true,
     'cast_spaces'                                 => true,
     'class_definition'                            => true,
@@ -24,16 +24,15 @@ $rules = [
     'full_opening_tag'                            => true,
     'function_declaration'                        => true,
     'function_typehint_space'                     => true,
-    'hash_to_slash_comment'                       => true,
+    'single_line_comment_style'                   => ['comment_types' => ['hash']],
     'heredoc_to_nowdoc'                           => true,
     'include'                                     => true,
     'indentation_type'                            => true,
     'line_ending'                                 => true,
     'lowercase_cast'                              => true,
-    'lowercase_constants'                         => true,
+    'constant_case'                               => ['case' => 'lower'],
     'lowercase_keywords'                          => true,
     'method_argument_space'                       => true,
-    'method_separation'                           => true,
     'multiline_whitespace_before_semicolons'      => true,
     'native_function_casing'                      => true,
     'new_with_braces'                             => true,
@@ -65,19 +64,21 @@ $rules = [
     'no_whitespace_in_blank_line'                 => true,
     'normalize_index_brace'                       => true,
     'object_operator_without_whitespace'          => true,
+    'ordered_imports'                             => ['sort_algorithm' => 'alpha'],
     'phpdoc_align'                                => true,
     'phpdoc_indent'                               => true,
-    'phpdoc_inline_tag'                           => true,
+    'general_phpdoc_tag_rename'                   => true,
+    'phpdoc_inline_tag_normalizer'                => true,
+    'phpdoc_tag_type'                             => ['tags' => ['inheritdoc' => 'inline']],
     'phpdoc_no_empty_return'                      => true,
     'phpdoc_no_access'                            => true,
-    'phpdoc_no_alias_tag'                         => ['type' => 'var'],
     'phpdoc_no_package'                           => true,
     'phpdoc_order'                                => true,
     'phpdoc_scalar'                               => true,
     'phpdoc_single_line_var_spacing'              => true,
     'phpdoc_trim'                                 => true,
     'phpdoc_types'                                => true,
-    'psr4'                                        => true,
+    'psr_autoloading'                             => true,
     'short_scalar_cast'                           => true,
     'simplified_null_return'                      => true,
     'single_blank_line_at_eof'                    => true,
@@ -91,7 +92,6 @@ $rules = [
     'switch_case_semicolon_to_colon'              => true,
     'switch_case_space'                           => true,
     'ternary_operator_spaces'                     => true,
-    'trailing_comma_in_multiline_array'           => true,
     'trim_array_spaces'                           => true,
     'unary_operator_spaces'                       => true,
     'visibility_required'                         => true,
@@ -109,7 +109,8 @@ $finder = PhpCsFixer\Finder::create()
         __DIR__ . '/public'
     ]);
 
-return PhpCsFixer\Config::create()
+$config = new PhpCsFixer\Config();
+return $config
     ->setRules($rules)
     ->setFinder($finder)
     ->setUsingCache(true)

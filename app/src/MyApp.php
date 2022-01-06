@@ -4,24 +4,26 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2019 Alexander Weissman
+ * @copyright Copyright (c) 2021 Alexander Weissman & Louis Charette
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
 namespace UserFrosting\App;
 
 use UserFrosting\App\Bakery\HelloCommand;
-use UserFrosting\Sprinkle\Account\Account;
-use UserFrosting\Sprinkle\Admin\Admin;
+// use UserFrosting\Sprinkle\Account\Account;
+// use UserFrosting\Sprinkle\Admin\Admin;
 use UserFrosting\Sprinkle\Core\Core;
+use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\LocatorRecipe;
 use UserFrosting\Sprinkle\SprinkleRecipe;
+use UserFrosting\UniformResourceLocator\ResourceStream;
 
-class MyApp implements SprinkleRecipe
+class MyApp implements SprinkleRecipe, LocatorRecipe
 {
     /**
      * {@inheritdoc}
      */
-    public static function getName(): string
+    public function getName(): string
     {
         return 'My Application';
     }
@@ -29,7 +31,7 @@ class MyApp implements SprinkleRecipe
     /**
      * {@inheritdoc}
      */
-    public static function getPath(): string
+    public function getPath(): string
     {
         return __DIR__ . '/../';
     }
@@ -37,7 +39,7 @@ class MyApp implements SprinkleRecipe
     /**
      * {@inheritdoc}
      */
-    public static function getBakeryCommands(): array
+    public function getBakeryCommands(): array
     {
         return [
             HelloCommand::class,
@@ -47,7 +49,7 @@ class MyApp implements SprinkleRecipe
     /**
      * {@inheritdoc}
      */
-    public static function getSprinkles(): array
+    public function getSprinkles(): array
     {
         return [
             Core::class,
@@ -61,7 +63,7 @@ class MyApp implements SprinkleRecipe
      *
      * @return string[]
      */
-    public static function getRoutes(): array
+    public function getRoutes(): array
     {
         return [
             Routes::class,
@@ -73,7 +75,7 @@ class MyApp implements SprinkleRecipe
      *
      * @return string[]
      */
-    public static function getServices(): array
+    public function getServices(): array
     {
         return [
             Services::class,
@@ -85,8 +87,20 @@ class MyApp implements SprinkleRecipe
      *
      * @return \Psr\Http\Server\MiddlewareInterface[]
      */
-    public static function getMiddlewares(): array
+    public function getMiddlewares(): array
     {
         return [];
+    }
+
+    /**
+     * Return an array of all locator Resource Steams to register with locator.
+     *
+     * @return \UserFrosting\UniformResourceLocator\ResourceStreamInterface[]
+     */
+    public function getResourceStreams(): array
+    {
+        return [
+            new ResourceStream('public', path: self::getPath() . '../public', shared: true),
+        ];
     }
 }

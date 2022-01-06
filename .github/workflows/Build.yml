@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.0']
+        php_versions: ['8.0', '8.1']
 
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Memory SQLite
@@ -44,9 +44,6 @@ jobs:
             
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress
-    
-      - name: Bakery Debug
-        run: php bakery debug
 
       - name: Execute tests
         run: | 
@@ -65,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.0']
+        php_versions: ['8.0', '8.1']
 
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - MySQL
@@ -119,9 +116,6 @@ jobs:
     
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress
-    
-    - name: Bakery Debug
-      run: php bakery debug
 
     - name: Execute tests
       run: | 
@@ -140,7 +134,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          php_versions: ['8.0']
+          php_versions: ['8.0', '8.1']
 
       runs-on: ubuntu-latest
       name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
@@ -174,9 +168,6 @@ jobs:
             
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress
-    
-      - name: Bakery Debug
-        run: php bakery debug
       
       - name: Create SQLite Database
         run: touch database.sqlite
@@ -198,7 +189,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          php_versions: ['8.0']
+          php_versions: ['8.0', '8.1']
 
       runs-on: ubuntu-latest
       name: PHPUnit - PHP ${{ matrix.php_versions }} - PostgreSQL
@@ -242,9 +233,6 @@ jobs:
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Bakery Debug
-        run: php bakery debug
-
       - name: Execute tests
         run: | 
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -262,7 +250,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          php_versions: ['8.0']
+          php_versions: ['8.0', '8.1']
 
     runs-on: windows-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
@@ -289,9 +277,6 @@ jobs:
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress
     
-    - name: Bakery Debug
-      run: php bakery debug
-    
     - name: Create SQLite Database
       run: touch database.sqlite
 
@@ -306,38 +291,38 @@ jobs:
         file: ./_meta/coverage.xml
         fail_ci_if_error: true
 
-  Asset-Build:
+  # Asset-Build:
 
-    strategy:
-      fail-fast: false
-      matrix:
-        php_versions: ['8.0']
-        node_versions: ['12.17.0', '14', '15'] 
-        os: [ubuntu-latest, windows-latest]
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       php_versions: ['8.0', '8.1']
+  #       node_versions: ['12.17.0', '14', '15'] 
+  #       os: [ubuntu-latest, windows-latest]
 
-    runs-on: ${{ matrix.os }}
-    name: Assets Build - PHP ${{ matrix.php_versions }} - Node ${{ matrix.node_versions }} - ${{ matrix.os }}
+  #   runs-on: ${{ matrix.os }}
+  #   name: Assets Build - PHP ${{ matrix.php_versions }} - Node ${{ matrix.node_versions }} - ${{ matrix.os }}
 
-    steps:
-    - uses: actions/checkout@v2
+  #   steps:
+  #   - uses: actions/checkout@v2
     
-    - name: Setup PHP, with composer and extensions
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php_versions }}
-        extensions: mbstring, dom, fileinfo, gd
-        coverage: xdebug
-        tools: pecl, composer
+  #   - name: Setup PHP, with composer and extensions
+  #     uses: shivammathur/setup-php@v2
+  #     with:
+  #       php-version: ${{ matrix.php_versions }}
+  #       extensions: mbstring, dom, fileinfo, gd
+  #       coverage: xdebug
+  #       tools: pecl, composer
 
-    - uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node_versions }}
+  #   - uses: actions/setup-node@v2
+  #     with:
+  #       node-version: ${{ matrix.node_versions }}
     
-    - name: Copy .env
-      run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
+  #   - name: Copy .env
+  #     run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
     
-    - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress
+  #   - name: Install Dependencies
+  #     run: composer install --prefer-dist --no-progress
     
-    - name: Execute build
-      run: php bakery build-assets
+  #   - name: Execute build
+  #     run: php bakery build-assets

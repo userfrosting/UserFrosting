@@ -4,7 +4,7 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2019 Alexander Weissman
+ * @copyright Copyright (c) 2021 Alexander Weissman & Louis Charette
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/LICENSE.md (MIT License)
  */
 
@@ -19,8 +19,8 @@ class Routes implements RouteDefinitionInterface
     public function register(App $app): void
     {
         $app->get('/', [AppController::class, 'pageIndex'])->setName('index');
-        $app->get('/about', [AppController::class, 'pageAbout']);
-        $app->get('/legal', [AppController::class, 'pageLegal']);
-        $app->get('/privacy', [AppController::class, 'pagePrivacy']);
+        $app->get('/about', [AppController::class, 'pageAbout'])->setName('about');
+        $app->get('/legal', [AppController::class, 'pageLegal'])->setName('legal');
+        $app->get('/privacy', [AppController::class, 'pagePrivacy'])->setName('privacy');
     }
 }
