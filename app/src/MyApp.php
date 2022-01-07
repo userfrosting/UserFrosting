@@ -16,6 +16,7 @@ use UserFrosting\App\Bakery\HelloCommand;
 use UserFrosting\Sprinkle\Core\Core;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\LocatorRecipe;
 use UserFrosting\Sprinkle\SprinkleRecipe;
+use UserFrosting\Theme\AdminLTE\AdminLTE;
 use UserFrosting\UniformResourceLocator\ResourceStream;
 
 class MyApp implements SprinkleRecipe, LocatorRecipe
@@ -53,6 +54,7 @@ class MyApp implements SprinkleRecipe, LocatorRecipe
     {
         return [
             Core::class,
+            AdminLTE::class,
             // Account::class,
             // Admin::class,
         ];

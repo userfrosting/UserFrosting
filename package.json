@@ -1,5 +1,12 @@
 {
     "dependencies": {
-        "sprinkle-core": "github:userfrosting/sprinkle-core#5.0"
+        "theme-adminlte": "github:userfrosting/theme-adminlte"
+    },
+    "devDependencies": {
+        "@symfony/webpack-encore": "^1.6.1",
+        "webpack-notifier": "^1.14.1"
+    },
+    "scripts": {
+        "encore": "encore"
     }
 }

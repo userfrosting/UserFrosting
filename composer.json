@@ -24,13 +24,18 @@
         {
             "type": "vcs",
             "url": "https://github.com/userfrosting/sprinkle-core.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/userfrosting/theme-adminlte.git"
         }
     ],
     "require": {
         "php": "^8.0",
         "ext-gd": "*",
         "userfrosting/framework": "dev-develop-5.0",
-        "userfrosting/sprinkle-core": "*"
+        "userfrosting/sprinkle-core": "*",
+        "userfrosting/theme-adminlte": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",

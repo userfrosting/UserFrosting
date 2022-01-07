@@ -24,11 +24,11 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     // .addEntry('app', './app/assets/app.js')
-    .addEntry('adminlte', './app/assets/adminlte/admin-lte.js')
+    .addEntry('adminlte', './vendor/userfrosting/theme-adminlte')
     //.addEntry('page2', './assets/page2.js')
 
-    .copyFiles({ from: './app/assets/userfrosting/images', to: 'images/[path][name].[hash:8].[ext]' })
-    .copyFiles({ from: './app/assets/userfrosting/favicons', to: 'favicons/[path][name].[hash:8].[ext]' })
+    // .copyFiles({ from: './app/assets/userfrosting/images', to: 'images/[path][name].[hash:8].[ext]' })
+    // .copyFiles({ from: './app/assets/userfrosting/favicons', to: 'favicons/[path][name].[hash:8].[ext]' })
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
