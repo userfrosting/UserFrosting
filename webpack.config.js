@@ -26,8 +26,8 @@ Encore
     .addEntry('app', './app/assets/app.js')
     //.addEntry('mypage', './assets/mypage.js')
 
-    // .copyFiles({ from: './app/assets/images', to: 'images/[path][name].[hash:8].[ext]' })
-    // .copyFiles({ from: './app/assets/favicons', to: 'favicons/[path][name].[hash:8].[ext]' })
+    // Copy Favicons
+    .copyFiles({ from: './app/assets/favicons', to: 'favicons/[path][name].[hash:8].[ext]' })
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
