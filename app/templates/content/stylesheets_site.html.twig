@@ -1,0 +1,3 @@
+{# This file should contain the list of css to include site wide. It will be injected into the base template headers #}
+{# The `app` entry from Webpack config is loaded here #}
+{% block stylesheets_site %}{{ encore_entry_link_tags('app') }}{% endblock %}

@@ -1,0 +1,3 @@
+{# This file should contain the list of javascript script to include site wide. It will be injected into the base template #}
+{# The `app` entry from Webpack config is loaded here #}
+{% block scripts_site %}{{ encore_entry_script_tags('app') }}{% endblock %}
