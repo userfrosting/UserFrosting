@@ -3,10 +3,13 @@
         "theme-adminlte": "github:userfrosting/theme-adminlte"
     },
     "devDependencies": {
-        "@symfony/webpack-encore": "^1.6.1",
+        "@symfony/webpack-encore": "^1.7.0",
         "webpack-notifier": "^1.14.1"
     },
     "scripts": {
-        "encore": "encore"
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
     }
 }
