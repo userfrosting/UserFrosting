@@ -12,7 +12,7 @@ namespace UserFrosting\App;
 
 use UserFrosting\ServicesProvider\ServicesProviderInterface;
 
-class Services implements ServicesProviderInterface
+class MyServices implements ServicesProviderInterface
 {
     public function register(): array
     {

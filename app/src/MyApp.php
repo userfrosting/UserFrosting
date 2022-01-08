@@ -68,7 +68,7 @@ class MyApp implements SprinkleRecipe, LocatorRecipe
     public function getRoutes(): array
     {
         return [
-            Routes::class,
+            MyRoutes::class,
         ];
     }
 
@@ -80,7 +80,7 @@ class MyApp implements SprinkleRecipe, LocatorRecipe
     public function getServices(): array
     {
         return [
-            Services::class,
+            MyServices::class,
         ];
     }
 

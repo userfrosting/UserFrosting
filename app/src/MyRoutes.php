@@ -14,7 +14,7 @@ use Slim\App;
 use UserFrosting\App\Controller\AppController;
 use UserFrosting\Routes\RouteDefinitionInterface;
 
-class Routes implements RouteDefinitionInterface
+class MyRoutes implements RouteDefinitionInterface
 {
     public function register(App $app): void
     {
