@@ -14,12 +14,10 @@ use UserFrosting\App\Bakery\HelloCommand;
 // use UserFrosting\Sprinkle\Account\Account;
 // use UserFrosting\Sprinkle\Admin\Admin;
 use UserFrosting\Sprinkle\Core\Core;
-use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\LocatorRecipe;
 use UserFrosting\Sprinkle\SprinkleRecipe;
 use UserFrosting\Theme\AdminLTE\AdminLTE;
-use UserFrosting\UniformResourceLocator\ResourceStream;
 
-class MyApp implements SprinkleRecipe, LocatorRecipe
+class MyApp implements SprinkleRecipe
 {
     /**
      * {@inheritdoc}
@@ -92,17 +90,5 @@ class MyApp implements SprinkleRecipe, LocatorRecipe
     public function getMiddlewares(): array
     {
         return [];
-    }
-
-    /**
-     * Return an array of all locator Resource Steams to register with locator.
-     *
-     * @return \UserFrosting\UniformResourceLocator\ResourceStreamInterface[]
-     */
-    public function getResourceStreams(): array
-    {
-        return [
-            new ResourceStream('public', path: self::getPath() . '../public', shared: true),
-        ];
     }
 }
