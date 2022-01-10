@@ -136,6 +136,11 @@ class UserController extends SimpleController
             $data['group_id'] = $currentUser->group_id;
         }
 
+        // 0 maps to "No group", database requires a NULL to avoid issues with foreign keys
+        if (isset($data['group_id']) && $data['group_id'] == 0) {
+            $data['group_id'] = null;
+        }
+
         $data['flag_verified'] = 1;
         if (!isset($data['password'])) {
             // Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
