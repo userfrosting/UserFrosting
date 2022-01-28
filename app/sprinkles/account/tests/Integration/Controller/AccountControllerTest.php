@@ -111,6 +111,9 @@ class AccountControllerTest extends TestCase
      */
     public function testRegister()
     {
+        // Force Registration
+        $this->ci->config['site.registration.enabled'] = true;
+
         // Force locale config
         $this->ci->config['site.registration.user_defaults.locale'] = 'en_US';
         $this->ci->config['site.locales.available'] = [
@@ -146,6 +149,9 @@ class AccountControllerTest extends TestCase
      */
     public function testRegisterWithNoEmailVerification()
     {
+        // Force Registration
+        $this->ci->config['site.registration.enabled'] = true;
+
         // Delete previous attempt so we can reuse the same shared test code
         if ($user = User::where('email', 'testRegister@test.com')->first()) {
             $user->delete(true);
@@ -763,6 +769,12 @@ class AccountControllerTest extends TestCase
      */
     public function testpageRegister(AccountController $controller)
     {
+        // Force Registration
+        $this->ci->config['site.registration.enabled'] = true;
+        
+        // Recreate controller to use new config
+        $controller = $this->getController();
+
         $result = $controller->pageRegister($this->getRequest(), $this->getResponse(), []);
         $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $result);
         $this->assertSame($result->getStatusCode(), 200);
@@ -793,6 +805,7 @@ class AccountControllerTest extends TestCase
     {
         // Force config
         $this->ci->config['site.locales.available'] = [];
+        $this->ci->config['site.registration.enabled'] = true;
 
         // Recreate controller to use new config
         $controller = $this->getController();
@@ -809,6 +822,9 @@ class AccountControllerTest extends TestCase
      */
     public function testpageRegisterWithLoggedInUser()
     {
+        // Force Config
+        $this->ci->config['site.registration.enabled'] = true;
+
         // Create a test user
         $testUser = $this->createTestUser(false, true);
 
@@ -1179,6 +1195,9 @@ class AccountControllerTest extends TestCase
      */
     public function testRegisterWithFailedThrottle()
     {
+        // Force config
+        $this->ci->config['site.registration.enabled'] = true;
+
         // Create fake throttler
         $throttler = m::mock(Throttler::class);
         $throttler->shouldReceive('getDelay')->once()->with('registration_attempt')->andReturn(90);
@@ -1211,6 +1230,12 @@ class AccountControllerTest extends TestCase
      */
     public function testRegisterWithFailedCaptcha(AccountController $controller)
     {
+        // Force config
+        $this->ci->config['site.registration.enabled'] = true;
+
+        // Recreate controller with new config
+        $controller = $this->getController();
+        
         // Bypass security feature
         $fm = $this->ci->factory;
         $dummyUser = $fm->create(User::class);
@@ -1240,6 +1265,12 @@ class AccountControllerTest extends TestCase
      */
     public function testRegisterWithFailedValidation(AccountController $controller)
     {
+        // Force config
+        $this->ci->config['site.registration.enabled'] = true;
+
+        // Recreate controller with new config
+        $controller = $this->getController();
+        
         // Bypass security feature
         $fm = $this->ci->factory;
         $dummyUser = $fm->create(User::class);
