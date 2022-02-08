@@ -1322,11 +1322,15 @@ class UserController extends SimpleController
         // Get PUT parameters: value
         $put = $request->getParsedBody();
 
-        // Make sure data is part of $_PUT data
+        // Make sure data is part of $_PUT data, default to empty value if sensible, otherwise error
         if (isset($put[$fieldName])) {
             $fieldData = $put[$fieldName];
         } else {
-            throw new BadRequestException();
+            if ($fieldName == 'roles') {
+                $fieldData = [];
+            } else {
+                throw new BadRequestException();
+            }
         }
 
         // Create and validate key -> value pair
