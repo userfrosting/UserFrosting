@@ -71,7 +71,7 @@ abstract class Model extends LaravelModel
         $query = static::whereRaw("LOWER($identifier) = ?", [mb_strtolower($value)]);
 
         if ($checkDeleted && $query->hasMacro('withTrashed')) {
-           $query = $query->withTrashed();
+            $query = $query->withTrashed();
         }
 
         return $query->first();
