@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.6.4](https://github.com/userfrosting/UserFrosting/compare/v4.6.3...v4.6.4)
+
+### Fix
+- Foreign Key constraint fails when an admin attempts to create a new user ([#1190](https://github.com/userfrosting/UserFrosting/pull/1190))
+- Fix for AccountControllerTest when registration is disabled ([#1192](https://github.com/userfrosting/UserFrosting/pull/1192))
+- Native install on PHP 8.* install fails due to eventdispatcher incompatibility between rockettheme and Symphony ([#1195](https://github.com/userfrosting/UserFrosting/issues/1195) & [#1196](https://github.com/userfrosting/UserFrosting/issues/1196))
+- Fix PHP7.4+ compatibility in Model findUnique ([#1193](https://github.com/userfrosting/UserFrosting/pull/1193))
+- Handle the case where all roles are removed from a user ([#1194](https://github.com/userfrosting/UserFrosting/pull/1194))
+
 ## [v4.6.3](https://github.com/userfrosting/UserFrosting/compare/v4.6.2...v4.6.3)
 
 ### Security

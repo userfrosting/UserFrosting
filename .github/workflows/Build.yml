@@ -348,22 +348,22 @@ jobs:
     - name: Execute build
       run: php bakery build-assets
 
-  Asset-Build-Inspect:
+  # Asset-Build-Inspect:
 
-    name: Assets Build Inspection
-    runs-on: ubuntu-latest
+  #   name: Assets Build Inspection
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ^14.0.0
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: ^14.0.0
 
-      - name: Install Dependencies
-        working-directory: build
-        run: npm i
+  #     - name: Install Dependencies
+  #       working-directory: build
+  #       run: npm i
 
-      - name: Type Validation
-        working-directory: build
-        run: node_modules/.bin/tsc -p ./tsconfig.json
+  #     - name: Type Validation
+  #       working-directory: build
+  #       run: node_modules/.bin/tsc -p ./tsconfig.json
