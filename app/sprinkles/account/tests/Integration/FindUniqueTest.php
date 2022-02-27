@@ -37,6 +37,9 @@ class FindUniqueTest extends TestCase
         // Setup test database
         $this->setupTestDatabase();
         $this->refreshDatabase();
+
+        $this->ci->classMapper->setClassMapping('user', 'UserFrosting\Sprinkle\Account\Database\Models\User');
+        $this->ci->classMapper->setClassMapping('group', 'UserFrosting\Sprinkle\Account\Database\Models\Group');
     }
 
     /**
