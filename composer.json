@@ -27,6 +27,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/userfrosting/sprinkle-account.git"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/userfrosting/theme-adminlte.git"
         }
     ],
@@ -35,6 +39,7 @@
         "ext-gd": "*",
         "userfrosting/framework": "dev-develop-5.0",
         "userfrosting/sprinkle-core": "*",
+        "userfrosting/sprinkle-account": "*",
         "userfrosting/theme-adminlte": "*"
     },
     "require-dev": {
