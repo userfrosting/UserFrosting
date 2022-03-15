@@ -90,17 +90,22 @@ class Registration
         // Validate the userdata
         $this->validate();
 
-        // Set default group
-        $defaultGroup = $this->ci->classMapper->getClassMapping('group')::where('slug', $this->defaultGroup)->first();
+        if ($this->defaultGroup) {
+            // Set default group using the configuration "site.registration.user_defaults.group"
+            $defaultGroup = $this->ci->classMapper->getClassMapping('group')::where('slug', $this->defaultGroup)->first();
 
-        if (!$defaultGroup) {
-            $e = new HttpException("Account registration is not working because the default group '{$this->defaultGroup}' does not exist.");
-            $e->addUserMessage('ACCOUNT.REGISTRATION_BROKEN');
+            if (!$defaultGroup) {
+                $e = new HttpException("Account registration is not working because the default group '{$this->defaultGroup}' does not exist.");
+                $e->addUserMessage('ACCOUNT.REGISTRATION_BROKEN');
 
-            throw $e;
+                throw $e;
+            }
+
+            $this->setUserProperty('group_id', $defaultGroup->id);
+        } else {
+            // Users default to not being in a group on registration (configuration value === null)
+            $this->setUserProperty('group_id', null);
         }
-
-        $this->setUserProperty('group_id', $defaultGroup->id);
 
         // Hash password
         $this->hashPassword();
