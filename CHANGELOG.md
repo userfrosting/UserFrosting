@@ -8,10 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unknown]
 
 ### Changed Requirements
-- Raised minmum NodeJS from from `12.17` to `14.0.0`.
+- Raised minmum NodeJS version from `12.17` to `14.0.0`.
+- Raised minimum NPM version from `6.14.4` to `8.3.1`
 
 ### Changes
-- Made NodeJS 16 the default version in integrated tooling.
+- Made NodeJS 16 and NPM 8.3.1 the default versions in integrated tooling.
 
 ## [v4.6.4](https://github.com/userfrosting/UserFrosting/compare/v4.6.3...v4.6.4)
 

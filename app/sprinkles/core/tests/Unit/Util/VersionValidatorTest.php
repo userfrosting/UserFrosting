@@ -179,9 +179,9 @@ class VersionValidatorTest extends TestCase
     public function nodeVersionProvider(): array
     {
         return [
-            ['v12.18.1', 'v12.18.1', true],
-            ['v13.12.3', 'v13.12.3', false],
-            ['v14.0.0 ', 'v14.0.0', true], // Test trim here
+            ['v12.18.1', 'v12.18.1', false],
+            ['v14.0.0 ', 'v14.0.0', true],
+            ['v16.14.0 ', 'v16.14.0', true], // Test trim here
         ];
     }
 
@@ -193,8 +193,8 @@ class VersionValidatorTest extends TestCase
     public function npmVersionProvider(): array
     {
         return [
-            [' 6.14.10 ', '6.14.10', true], // Trim
-            ['6.14.4', '6.14.4', true],
+            [' 8.3.1 ', '8.3.1', true], // Trim
+            ['6.14.4', '6.14.4', false],
             ['5.12.14', '5.12.14', false],
         ];
     }

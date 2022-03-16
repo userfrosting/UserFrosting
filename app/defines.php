@@ -16,7 +16,7 @@ define('UserFrosting\DS', '/');
 define('UserFrosting\PHP_MIN_VERSION', '^7.3 | ^8.0');
 define('UserFrosting\PHP_RECOMMENDED_VERSION', '^8.0');
 define('UserFrosting\NODE_MIN_VERSION', '>=14.0.0');
-define('UserFrosting\NPM_MIN_VERSION', '>=6.14.4');
+define('UserFrosting\NPM_MIN_VERSION', '>=8.3.1');
 
 // Directories and Paths
 
