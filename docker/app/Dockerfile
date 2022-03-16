@@ -5,7 +5,7 @@ RUN apt-get update
 RUN apt-get install -y apt-utils
 
 # Add NodeJS LTS Repository
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 
 RUN apt-get install -y \
     libc-client-dev \

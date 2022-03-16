@@ -17,7 +17,7 @@ services:
       - a2enmod headers
       # Patch to bring NodeJS into app server container
       # https://docs.lando.dev/guides/installing-node-in-your-lando-php-service.html
-      - curl -sL https://deb.nodesource.com/setup_14.x | bash -
+      - curl -sL https://deb.nodesource.com/setup_16.x | bash -
       - apt-get install -y nodejs
     overrides:
       environment:
