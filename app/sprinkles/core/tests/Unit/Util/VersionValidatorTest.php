@@ -193,8 +193,8 @@ class VersionValidatorTest extends TestCase
     public function npmVersionProvider(): array
     {
         return [
-            [' 8.3.1 ', '8.3.1', true], // Trim
-            ['6.14.4', '6.14.4', false],
+            [' 6.14.10 ', '6.14.10', true], // Trim
+            ['6.14.4', '6.14.4', true],
             ['5.12.14', '5.12.14', false],
         ];
     }
