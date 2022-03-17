@@ -41,7 +41,7 @@ jobs:
 
     - uses: actions/setup-node@v2
       with:
-        node-version: ^14.0.0
+        node-version: ^16.0.0
     
     - name: Setup Redis-server
       uses: supercharge/redis-github-action@1.1.0
@@ -133,7 +133,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: ^14.0.0
+          node-version: ^16.0.0
       
       - name: Setup Redis-server
         uses: supercharge/redis-github-action@1.1.0
@@ -214,7 +214,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: ^14.0.0
+          node-version: ^16.0.0
       
       - name: Setup Redis-server
         uses: supercharge/redis-github-action@1.1.0
@@ -279,7 +279,7 @@ jobs:
 
     - uses: actions/setup-node@v2
       with:
-        node-version: 14
+        node-version: 16
     
     - name: Copy .env
       run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
@@ -318,7 +318,7 @@ jobs:
       fail-fast: false
       matrix:
         php_versions: [ '8.0' ]
-        node_versions: [ ^12.17.0, ^14, ^15 ] 
+        node_versions: [ ^14, ^16 ] 
         os: [ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
@@ -358,7 +358,7 @@ jobs:
 
   #     - uses: actions/setup-node@v2
   #       with:
-  #         node-version: ^14.0.0
+  #         node-version: ^16.0.0
 
   #     - name: Install Dependencies
   #       working-directory: build

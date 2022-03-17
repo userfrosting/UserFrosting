@@ -179,9 +179,9 @@ class VersionValidatorTest extends TestCase
     public function nodeVersionProvider(): array
     {
         return [
-            ['v12.18.1', 'v12.18.1', true],
-            ['v13.12.3', 'v13.12.3', false],
-            ['v14.0.0 ', 'v14.0.0', true], // Test trim here
+            ['v12.18.1', 'v12.18.1', false],
+            ['v14.0.0 ', 'v14.0.0', true],
+            ['v16.14.0 ', 'v16.14.0', true], // Test trim here
         ];
     }
 
