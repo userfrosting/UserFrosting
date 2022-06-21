@@ -20,26 +20,13 @@
             "homepage": "https://djmm.me"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/userfrosting/sprinkle-core.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/userfrosting/sprinkle-account.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/userfrosting/theme-adminlte.git"
-        }
-    ],
     "require": {
         "php": "^8.0",
         "ext-gd": "*",
         "userfrosting/framework": "dev-develop-5.0",
         "userfrosting/sprinkle-core": "*",
         "userfrosting/sprinkle-account": "*",
+        "userfrosting/sprinkle-admin": "*",
         "userfrosting/theme-adminlte": "*"
     },
     "require-dev": {
