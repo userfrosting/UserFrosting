@@ -26,6 +26,25 @@ Encore
     .addEntry('app', './app/assets/app.js')
     //.addEntry('mypage', './assets/mypage.js')
 
+    // ACCOUNT, ADMIN & ADMIN-LTE entries
+    .addEntry('dashboard', './node_modules/sprinkle-admin/app/assets/dashboard.js')
+    .addEntry('page.dashboard', './node_modules/sprinkle-admin/app/assets/page.dashboard.js')
+    .addEntry('page.activities', './node_modules/sprinkle-admin/app/assets/page.activities.js')
+    .addEntry('page.group', './node_modules/sprinkle-admin/app/assets/page.group.js')
+    .addEntry('page.groups', './node_modules/sprinkle-admin/app/assets/page.groups.js')
+    .addEntry('page.role', './node_modules/sprinkle-admin/app/assets/page.role.js')
+    .addEntry('page.roles', './node_modules/sprinkle-admin/app/assets/page.roles.js')
+    .addEntry('page.permission', './node_modules/sprinkle-admin/app/assets/page.permission.js')
+    .addEntry('page.permissions', './node_modules/sprinkle-admin/app/assets/page.permissions.js')
+    .addEntry('page.user', './node_modules/sprinkle-admin/app/assets/page.user.js')
+    .addEntry('page.users', './node_modules/sprinkle-admin/app/assets/page.users.js')
+    .addEntry('page.register', './node_modules/theme-adminlte/app/assets/register.js')
+    .addEntry('page.sign-in', './node_modules/theme-adminlte/app/assets/sign-in.js')
+    .addEntry('page.forgot-password', './node_modules/theme-adminlte/app/assets/forgot-password.js')
+    .addEntry('page.resend-verification', './node_modules/theme-adminlte/app/assets/resend-verification.js')
+    .addEntry('page.set-or-reset-password', './node_modules/theme-adminlte/app/assets/set-or-reset-password.js')
+    .addEntry('page.account-settings', './node_modules/theme-adminlte/app/assets/account-settings.js')
+
     // Copy Favicons
     .copyFiles({ from: './app/assets/favicons', to: 'favicons/[path][name].[hash:8].[ext]' })
 
