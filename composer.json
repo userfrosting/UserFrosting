@@ -21,7 +21,11 @@
         }
     ],
     "config": {
-        "vendor-dir": "app/vendor"
+        "vendor-dir": "app/vendor",
+        "allow-plugins": {
+            "composer/installers": true,
+            "wikimedia/composer-merge-plugin": true
+        }
     },
     "require": {
         "php": "^7.3 | ^8.0",
