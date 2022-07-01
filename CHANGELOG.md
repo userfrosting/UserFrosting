@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.6.5](https://github.com/userfrosting/UserFrosting/compare/v4.6.4...v4.6.5)
+
+### Fix
+- Fix for FindUniqueTest when class mappings are changed ([#1201](https://github.com/userfrosting/UserFrosting/pull/1201))
+- Allowing no default group on register ([#1202](https://github.com/userfrosting/UserFrosting/pull/1202))
+- Allow Composer plugin by default
+- Add PHP 8.1 version to test suite
+
 ## [v4.6.4](https://github.com/userfrosting/UserFrosting/compare/v4.6.3...v4.6.4)
 
 ### Fix
