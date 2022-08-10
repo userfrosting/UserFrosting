@@ -23,11 +23,11 @@
     "require": {
         "php": "^8.0",
         "ext-gd": "*",
-        "userfrosting/framework": "dev-develop-5.0",
-        "userfrosting/sprinkle-core": "*",
-        "userfrosting/sprinkle-account": "*",
-        "userfrosting/sprinkle-admin": "*",
-        "userfrosting/theme-adminlte": "*"
+        "userfrosting/framework": "^5.0.0@alpha",
+        "userfrosting/sprinkle-core": "^5.0.0@alpha",
+        "userfrosting/sprinkle-account": "^5.0.0@alpha",
+        "userfrosting/sprinkle-admin": "^5.0.0@alpha",
+        "userfrosting/theme-adminlte": "^5.0.0@alpha"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
