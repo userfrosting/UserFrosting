@@ -21,6 +21,17 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
  */
 class AddingForeignKeys extends Migration
 {
+    public static $dependencies = [
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\GroupsTable',
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable',
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\VerificationsTable',
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\ActivitiesTable',
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PasswordResetsTable',
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PermissionsTable', // which itself requires RolesTable and PermissionsRolesTable
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PersistencesTable',
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RoleUsersTable',
+    ];
+    
     /**
      * @var array List of operation to do
      */
