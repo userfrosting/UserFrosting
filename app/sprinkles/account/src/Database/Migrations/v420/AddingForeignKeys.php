@@ -31,7 +31,7 @@ class AddingForeignKeys extends Migration
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PersistencesTable',
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RoleUsersTable',
     ];
-    
+
     /**
      * @var array List of operation to do
      */
