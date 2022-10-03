@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.6.6](https://github.com/userfrosting/UserFrosting/compare/v4.6.5...v4.6.6)
+
+### Fix
+- Added dependencies to AddingForeignKeys Migration ([#1212](https://github.com/userfrosting/UserFrosting/pull/1212))
+
 ## [v4.6.5](https://github.com/userfrosting/UserFrosting/compare/v4.6.4...v4.6.5)
 
 ### Fix
