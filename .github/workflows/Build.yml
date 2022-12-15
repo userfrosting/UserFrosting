@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.0', '8.1']
+        php_versions: ['8.0', '8.1', '8.2']
 
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Memory SQLite
@@ -52,7 +52,7 @@ jobs:
       
       - name: Upload coverage to Codecov
         if: github.event_name != 'schedule'
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           file: ./_meta/coverage.xml
           fail_ci_if_error: true
@@ -62,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.0', '8.1']
+        php_versions: ['8.0', '8.1', '8.2']
 
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - MySQL
@@ -124,7 +124,7 @@ jobs:
     
     - name: Upload coverage to Codecov
       if: github.event_name != 'schedule'
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v3
       with:
         file: ./_meta/coverage.xml
         fail_ci_if_error: true
@@ -134,7 +134,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          php_versions: ['8.0', '8.1']
+          php_versions: ['8.0', '8.1', '8.2']
 
       runs-on: ubuntu-latest
       name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
@@ -179,7 +179,7 @@ jobs:
       
       - name: Upload coverage to Codecov
         if: github.event_name != 'schedule'
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           file: ./_meta/coverage.xml
           fail_ci_if_error: true
@@ -189,7 +189,7 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          php_versions: ['8.0', '8.1']
+          php_versions: ['8.0', '8.1', '8.2']
 
       runs-on: ubuntu-latest
       name: PHPUnit - PHP ${{ matrix.php_versions }} - PostgreSQL
@@ -240,7 +240,7 @@ jobs:
       
       - name: Upload coverage to Codecov
         if: github.event_name != 'schedule'
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           file: ./_meta/coverage.xml
           fail_ci_if_error: true
@@ -250,7 +250,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          php_versions: ['8.0', '8.1']
+          php_versions: ['8.0', '8.1', '8.2']
 
     runs-on: windows-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
@@ -286,7 +286,7 @@ jobs:
         vendor/bin/phpunit
     
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v3
       with:
         file: ./_meta/coverage.xml
         fail_ci_if_error: true
@@ -296,7 +296,7 @@ jobs:
   #   strategy:
   #     fail-fast: false
   #     matrix:
-  #       php_versions: ['8.0', '8.1']
+  #       php_versions: ['8.0', '8.1', '8.2']
   #       node_versions: ['12.17.0', '14', '15'] 
   #       os: [ubuntu-latest, windows-latest]
 
