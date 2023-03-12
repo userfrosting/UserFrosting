@@ -13,11 +13,14 @@ namespace UserFrosting\App;
 use UserFrosting\App\Bakery\HelloCommand;
 use UserFrosting\Sprinkle\Account\Account;
 use UserFrosting\Sprinkle\Admin\Admin;
+use UserFrosting\Sprinkle\BakeryRecipe;
 use UserFrosting\Sprinkle\Core\Core;
 use UserFrosting\Sprinkle\SprinkleRecipe;
 use UserFrosting\Theme\AdminLTE\AdminLTE;
 
-class MyApp implements SprinkleRecipe
+class MyApp implements
+    SprinkleRecipe,
+    BakeryRecipe
 {
     /**
      * {@inheritdoc}
@@ -80,15 +83,5 @@ class MyApp implements SprinkleRecipe
         return [
             MyServices::class,
         ];
-    }
-
-    /**
-     * Returns a list of all Middlewares classes.
-     *
-     * @return \Psr\Http\Server\MiddlewareInterface[]
-     */
-    public function getMiddlewares(): array
-    {
-        return [];
     }
 }
