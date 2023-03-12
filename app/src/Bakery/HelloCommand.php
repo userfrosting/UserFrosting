@@ -27,7 +27,7 @@ class HelloCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('hello')
              ->setDescription('Show hello world message');
