@@ -20,7 +20,7 @@ jobs:
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Memory SQLite
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
@@ -44,6 +44,12 @@ jobs:
             
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress
+      
+      - name: Npm Install
+        run: npm install
+      
+      - name: Run Webpack
+        run: npm run dev
 
       - name: Execute tests
         run: | 
@@ -75,7 +81,7 @@ jobs:
       DB_NAME: userfrosting
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
@@ -116,6 +122,12 @@ jobs:
     
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress
+      
+    - name: Npm Install
+      run: npm install
+    
+    - name: Run Webpack
+      run: npm run dev
 
     - name: Execute tests
       run: | 
@@ -144,7 +156,7 @@ jobs:
         DB_NAME: database.sqlite
 
       steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
@@ -168,6 +180,12 @@ jobs:
             
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress
+      
+      - name: Npm Install
+        run: npm install
+      
+      - name: Run Webpack
+        run: npm run dev
       
       - name: Create SQLite Database
         run: touch database.sqlite
@@ -201,7 +219,7 @@ jobs:
         DB_NAME: userfrosting
 
       steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
@@ -232,6 +250,12 @@ jobs:
       
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress
+      
+      - name: Npm Install
+        run: npm install
+      
+      - name: Run Webpack
+        run: npm run dev
 
       - name: Execute tests
         run: | 
@@ -260,7 +284,7 @@ jobs:
       DB_NAME: database.sqlite
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
@@ -276,6 +300,12 @@ jobs:
     
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress
+      
+    - name: Npm Install
+      run: npm install
+    
+    - name: Run Webpack
+      run: npm run dev
     
     - name: Create SQLite Database
       run: touch database.sqlite
@@ -290,39 +320,3 @@ jobs:
       with:
         file: ./_meta/coverage.xml
         fail_ci_if_error: true
-
-  # Asset-Build:
-
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       php_versions: ['8.0', '8.1', '8.2']
-  #       node_versions: ['12.17.0', '14', '15'] 
-  #       os: [ubuntu-latest, windows-latest]
-
-  #   runs-on: ${{ matrix.os }}
-  #   name: Assets Build - PHP ${{ matrix.php_versions }} - Node ${{ matrix.node_versions }} - ${{ matrix.os }}
-
-  #   steps:
-  #   - uses: actions/checkout@v2
-    
-  #   - name: Setup PHP, with composer and extensions
-  #     uses: shivammathur/setup-php@v2
-  #     with:
-  #       php-version: ${{ matrix.php_versions }}
-  #       extensions: mbstring, dom, fileinfo, gd
-  #       coverage: xdebug
-  #       tools: pecl, composer
-
-  #   - uses: actions/setup-node@v2
-  #     with:
-  #       node-version: ${{ matrix.node_versions }}
-    
-  #   - name: Copy .env
-  #     run: php -r "copy('app/sprinkles.example.json', 'app/sprinkles.json');"
-    
-  #   - name: Install Dependencies
-  #     run: composer install --prefer-dist --no-progress
-    
-  #   - name: Execute build
-  #     run: php bakery build-assets
