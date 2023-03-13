@@ -48,6 +48,9 @@ Encore
     // Copy Favicons
     .copyFiles({ from: './app/assets/favicons', to: 'favicons/[path][name].[hash:8].[ext]' })
 
+    // Copy images
+    .copyFiles({ from: './app/assets/images', to: 'images/[path][name].[hash:8].[ext]' })
+
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
