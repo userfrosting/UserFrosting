@@ -22,6 +22,7 @@ use Whoops\Exception\Formatter;
 use Whoops\Exception\Inspector;
 use Whoops\Handler\Handler;
 use Whoops\Handler\PlainTextHandler;
+use Whoops\Run;
 use Whoops\Util\Misc;
 use Whoops\Util\TemplateHelper;
 
@@ -293,6 +294,8 @@ class WhoopsRenderer extends ErrorRenderer
         $vars['tables'] = array_merge($extraTables, $vars['tables']);
 
         $plainTextHandler = new PlainTextHandler();
+        //$plainTextHandler->setRun($this->getRun()); // upstream fix for https://github.com/filp/whoops/issues/752, but here $this->getRun() appears to be null
+        $plainTextHandler->setRun(new Run()); // this works
         $plainTextHandler->setException($this->getException());
         $plainTextHandler->setInspector($this->getInspector());
         $vars['preface'] = "<!--\n\n\n" . $plainTextHandler->generateResponse() . "\n\n\n\n\n\n\n\n\n\n\n-->";
