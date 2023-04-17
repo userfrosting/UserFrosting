@@ -47,7 +47,6 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles
 
         // Process bundles
         foreach ($schema['bundle'] as $bundleName => $_) {
-
             // Get collision setting.
             $collisionRule = $schema["bundle.$bundleName.options.sprinkle.onCollision"] ?: 'replace';
 
@@ -96,7 +95,7 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles
                 case 'replace':
                     // Replaces the existing bundle.
                     $bundleStore[$bundleName] = $standardizedBundle;
-                break;
+                    break;
                 case 'merge':
                     // Merge with existing bundle.
                     foreach ($standardizedBundle as $assetPath) {
@@ -104,15 +103,15 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles
                             $bundleStore[$bundleName][] = $assetPath;
                         }
                     }
-                break;
+                    break;
                 case 'ignore':
-                break;
+                    break;
                 case 'error':
                     throw new \ErrorException("The bundle '$bundleName' is already defined.");
-                break;
+                    break;
                 default:
                     throw new \OutOfBoundsException("Invalid value '$collisionRule' provided for 'onCollision' key in bundle '$bundleName'.");
-                break;
+                    break;
             }
         }
     }

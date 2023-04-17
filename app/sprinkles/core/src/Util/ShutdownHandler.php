@@ -69,7 +69,6 @@ class ShutdownHandler
 
         // Handle fatal errors and parse errors
         if ($error !== null && in_array($error['type'], $fatalErrorTypes)) {
-
             // Build the appropriate error message (debug or client)
             if ($this->displayErrorInfo) {
                 $errorMessage = $this->buildErrorInfoMessage($error);
@@ -93,7 +92,7 @@ class ShutdownHandler
             }
 
             header('HTTP/1.1 500 Internal Server Error');
-            exit();
+            exit;
         }
     }
 

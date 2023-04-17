@@ -123,7 +123,6 @@ class ServicesProvider
 
             // Load asset schema
             if ($config['assets.use_raw']) {
-
                 // Register sprinkle assets stream, plus vendor assets in shared streams
                 $locator->registerStream('assets', 'vendor', \UserFrosting\NPM_ASSET_DIR, true);
                 $locator->registerStream('assets', 'vendor', \UserFrosting\BROWSERIFIED_ASSET_DIR, true);
@@ -151,7 +150,6 @@ class ServicesProvider
                     $assets->addAssetBundles($bundles);
                 }
             } else {
-
                 // Register compiled assets stream in public folder + alias for vendor ones + build stream for CompiledAssetBundles
                 $locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
                 $locator->registerStream('assets', 'vendor', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
@@ -397,7 +395,6 @@ class ServicesProvider
          * @return \League\FactoryMuffin\FactoryMuffin
          */
         $container['factory'] = function ($c) {
-
             // Get the path of all of the sprinkle's factories
             $factoriesPath = $c->locator->findResources('factories://', true);
 
@@ -616,7 +613,6 @@ class ServicesProvider
          * @return \Slim\Views\Twig
          */
         $container['view'] = function ($c) {
-
             /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
             $locator = $c->locator;
 

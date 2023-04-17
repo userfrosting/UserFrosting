@@ -237,7 +237,6 @@ class AccountController extends SimpleController
         // All checks passed!  log events/activities, update user, and send email
         // Begin transaction - DB will be rolled back if an exception occurs
         Capsule::transaction(function () use ($classMapper, $data, $throttler, $throttleData, $config) {
-
             // Log throttleable event
             $throttler->logEvent('password_reset_request', $throttleData);
 
@@ -410,7 +409,7 @@ class AccountController extends SimpleController
         $authenticator = $this->ci->authenticator;
 
         try {
-            $currentUser = $authenticator->attempt(($isEmail ? 'email' : 'user_name'), $userIdentifier, $data['password'], $data['rememberme']);
+            $currentUser = $authenticator->attempt($isEmail ? 'email' : 'user_name', $userIdentifier, $data['password'], $data['rememberme']);
         } catch (\Exception $e) {
             // only let unsuccessful logins count toward the throttling limit
             $throttler->logEvent('sign_in_attempt', $throttleData);

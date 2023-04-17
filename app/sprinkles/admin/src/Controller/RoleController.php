@@ -475,7 +475,7 @@ class RoleController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "slug", "description" for this role
         $fieldNames = ['name', 'slug', 'description'];
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
-            'role' => $role,
+            'role'   => $role,
             'fields' => $fieldNames,
         ])) {
             throw new ForbiddenException();
@@ -540,7 +540,7 @@ class RoleController extends SimpleController
 
         // Access-controlled resource - check that currentUser has permission to edit "permissions" field for this role
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
-            'role' => $role,
+            'role'   => $role,
             'fields' => ['permissions'],
         ])) {
             throw new ForbiddenException();
@@ -586,7 +586,7 @@ class RoleController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
-            'role' => $role,
+            'role'     => $role,
             'property' => 'permissions',
         ])) {
             throw new ForbiddenException();
@@ -642,7 +642,7 @@ class RoleController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
-            'role' => $role,
+            'role'     => $role,
             'property' => 'users',
         ])) {
             throw new ForbiddenException();
@@ -706,7 +706,7 @@ class RoleController extends SimpleController
 
         foreach ($fieldNames as $field) {
             if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
-                'role' => $role,
+                'role'     => $role,
                 'property' => $field,
             ])) {
                 $fields['hidden'][] = $field;
@@ -719,7 +719,7 @@ class RoleController extends SimpleController
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
-            'role' => $role,
+            'role'   => $role,
             'fields' => ['name', 'slug', 'description'],
         ])) {
             $editButtons['hidden'][] = 'edit';
@@ -838,7 +838,7 @@ class RoleController extends SimpleController
 
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this role
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
-            'role' => $role,
+            'role'   => $role,
             'fields' => array_values(array_unique($fieldNames)),
         ])) {
             throw new ForbiddenException();
@@ -933,7 +933,7 @@ class RoleController extends SimpleController
 
         // Access-controlled resource - check that currentUser has permission to edit the specified field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
-            'role' => $role,
+            'role'   => $role,
             'fields' => [$fieldName],
         ])) {
             throw new ForbiddenException();
