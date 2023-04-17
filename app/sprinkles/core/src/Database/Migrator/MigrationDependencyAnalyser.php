@@ -116,7 +116,6 @@ class MigrationDependencyAnalyser
 
         // Loop dependencies. If one is not fulfillable, then this migration is not either
         foreach ($dependencies as $dependency) {
-
             // The dependency might already be installed. Check that first
             if ($this->installed->contains($dependency)) {
                 continue;

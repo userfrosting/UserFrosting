@@ -97,7 +97,6 @@ class Bakery
 
         // Add commands to the App
         foreach ($commandResources as $commandResource) {
-
             // Translate the resource to a class. Skip if class not found
             if (!$command = $this->getResourceClass($commandResource)) {
                 continue;
@@ -128,7 +127,6 @@ class Bakery
     {
         // Process sprinkle and system commands
         if (!is_null($location = $file->getLocation())) {
-
             // Format the sprinkle name for the namespace
             $sprinkleName = $file->getLocation()->getName();
             $sprinkleName = Str::studly($sprinkleName);

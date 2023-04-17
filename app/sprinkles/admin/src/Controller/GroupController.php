@@ -464,7 +464,7 @@ class GroupController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "slug", "icon", "description" for this group
         $fieldNames = ['name', 'slug', 'icon', 'description'];
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
-            'group' => $group,
+            'group'  => $group,
             'fields' => $fieldNames,
         ])) {
             throw new ForbiddenException();
@@ -524,7 +524,7 @@ class GroupController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
-            'group' => $group,
+            'group'    => $group,
             'property' => 'users',
         ])) {
             throw new ForbiddenException();
@@ -591,7 +591,7 @@ class GroupController extends SimpleController
 
         foreach ($fieldNames as $field) {
             if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
-                'group' => $group,
+                'group'    => $group,
                 'property' => $field,
             ])) {
                 $fields['hidden'][] = $field;
@@ -604,7 +604,7 @@ class GroupController extends SimpleController
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
-            'group' => $group,
+            'group'  => $group,
             'fields' => ['name', 'slug', 'icon', 'description'],
         ])) {
             $editButtons['hidden'][] = 'edit';
@@ -720,7 +720,7 @@ class GroupController extends SimpleController
 
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this group
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
-            'group' => $group,
+            'group'  => $group,
             'fields' => array_values(array_unique($fieldNames)),
         ])) {
             throw new ForbiddenException();

@@ -191,7 +191,6 @@ class DefaultPermissions extends BaseSeed
     protected function savePermissions(array &$permissions)
     {
         foreach ($permissions as $slug => $permission) {
-
             // Trying to find if the permission already exist
             $existingPermission = Permission::where(['slug' => $permission->slug, 'conditions' => $permission->conditions])->first();
 

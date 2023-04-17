@@ -327,7 +327,6 @@ abstract class Sprunje
     {
         $result = [];
         foreach ($this->listable as $name) {
-
             // Determine if a custom filter method has been defined
             $methodName = 'list' . Str::studly($name);
 

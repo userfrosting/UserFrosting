@@ -200,7 +200,7 @@ class Registration
      */
     public function usernameIsUnique($username)
     {
-        return !($this->ci->classMapper->getClassMapping('user')::findUnique($username, 'user_name'));
+        return !$this->ci->classMapper->getClassMapping('user')::findUnique($username, 'user_name');
     }
 
     /**
@@ -213,7 +213,7 @@ class Registration
      */
     public function emailIsUnique($email)
     {
-        return !($this->ci->classMapper->getClassMapping('user')::findUnique($email, 'email'));
+        return !$this->ci->classMapper->getClassMapping('user')::findUnique($email, 'email');
     }
 
     /**

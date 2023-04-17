@@ -272,7 +272,6 @@ class Migrator
         // which will reverse each migration in order. This getLast method on the
         // repository already returns these migration's class names in reverse order.
         foreach ($migrations as $migration) {
-
             // We have to make sure the class exist first
             if (!$availableMigrations->contains($migration)) {
                 // NOTE This next was commented because if a class doesn't exist,
