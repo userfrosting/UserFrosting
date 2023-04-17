@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.6.7](https://github.com/userfrosting/UserFrosting/compare/v4.6.5...v4.6.7)
+
+### Fix
+- Integrating upstream Whoops issue 752/PR 751 ([#1217](https://github.com/userfrosting/UserFrosting/pull/1217)) - Thanks [@StrykeSlammerII](https://github.com/userfrosting/UserFrosting/commits?author=StrykeSlammerII) !
+- [Fix error with hardcoded date in test](https://github.com/userfrosting/UserFrosting/commit/6f0f8d3c13bf1eee7b7218824c1def6bd142521b)
+
 ## [v4.6.6](https://github.com/userfrosting/UserFrosting/compare/v4.6.5...v4.6.6)
 
 ### Fix

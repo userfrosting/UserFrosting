@@ -303,7 +303,6 @@ class Authenticator
         $user = null;
 
         if (!$this->loggedOut) {
-
             // Return any cached user
             if (!is_null($this->user)) {
                 return $this->user;
@@ -426,7 +425,6 @@ class Authenticator
     protected function validateUserAccount($userId)
     {
         if ($userId) {
-
             // Load user from db, cache the result
             $key = $this->config['cache.user.key'] . $userId;
             $user = $this->cache->remember($key, $this->config['cache.user.delay'] * 60, function () use ($userId) {

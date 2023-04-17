@@ -47,7 +47,7 @@ class PDOStorageTest extends TestCase
     protected $validDBPersistentToken = 'd27d330764ef61e99adf5d16f90b95a2a63c209a';
     protected $invalidDBToken = 'ec15fbc40cdff6a2050a1bcbbc1b2196222f13f4';
 
-    protected $expire = '2022-12-21 21:21:00';
+    protected $expire;
 
     protected function setUp(): void
     {
@@ -56,6 +56,9 @@ class PDOStorageTest extends TestCase
         // Setup test database
         $this->setupTestDatabase();
         $this->refreshDatabase();
+
+        // Set dynamic date (can't be done in property declaration)
+        $this->expire = Carbon::now()->addYear();
 
         // Create a test user
         $this->testUser = $this->createTestUser();

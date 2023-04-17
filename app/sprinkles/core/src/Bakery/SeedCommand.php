@@ -63,7 +63,6 @@ class SeedCommand extends BaseCommand
 
         // Start by getting seeds
         foreach ($classes as $className) {
-
             // Get seed class and
             try {
                 $seedClass = $this->seeder->getSeedClass($className);

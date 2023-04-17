@@ -233,7 +233,7 @@ class UserController extends SimpleController
 
         // Access-controlled resource - check that currentUser has permission to edit "password" for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => ['password'],
         ])) {
             throw new ForbiddenException();
@@ -247,7 +247,6 @@ class UserController extends SimpleController
 
         // Begin transaction - DB will be rolled back if an exception occurs
         Capsule::transaction(function () use ($user, $config) {
-
             // Create a password reset and shoot off an email
             $passwordReset = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.reset']);
 
@@ -385,7 +384,7 @@ class UserController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
-            'user' => $user,
+            'user'     => $user,
             'property' => 'activities',
         ])) {
             throw new ForbiddenException();
@@ -696,7 +695,7 @@ class UserController extends SimpleController
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "email", "locale" for this user
         $fieldNames = ['name', 'email', 'locale'];
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => $fieldNames,
         ])) {
             throw new ForbiddenException();
@@ -719,7 +718,7 @@ class UserController extends SimpleController
 
         // Disable group field if currentUser doesn't have permission to modify group
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => ['group'],
         ])) {
             $fields['disabled'][] = 'group';
@@ -790,7 +789,7 @@ class UserController extends SimpleController
 
         // Access-controlled resource - check that currentUser has permission to edit "password" field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => ['password'],
         ])) {
             throw new ForbiddenException();
@@ -847,7 +846,7 @@ class UserController extends SimpleController
 
         // Access-controlled resource - check that currentUser has permission to edit "roles" field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => ['roles'],
         ])) {
             throw new ForbiddenException();
@@ -892,7 +891,7 @@ class UserController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
-            'user' => $user,
+            'user'     => $user,
             'property' => 'permissions',
         ])) {
             throw new ForbiddenException();
@@ -945,7 +944,7 @@ class UserController extends SimpleController
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
-            'user' => $user,
+            'user'     => $user,
             'property' => 'roles',
         ])) {
             throw new ForbiddenException();
@@ -1017,7 +1016,7 @@ class UserController extends SimpleController
         // Determine which fields should be hidden
         foreach ($fieldNames as $field) {
             if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
-                'user' => $user,
+                'user'     => $user,
                 'property' => $field,
             ])) {
                 $fields['hidden'][] = $field;
@@ -1035,35 +1034,35 @@ class UserController extends SimpleController
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => ['name', 'email', 'locale'],
         ])) {
             $editButtons['hidden'][] = 'edit';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => ['flag_enabled'],
         ])) {
             $editButtons['hidden'][] = 'enable';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => ['flag_verified'],
         ])) {
             $editButtons['hidden'][] = 'activate';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => ['password'],
         ])) {
             $editButtons['hidden'][] = 'password';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => ['roles'],
         ])) {
             $editButtons['hidden'][] = 'roles';
@@ -1081,14 +1080,14 @@ class UserController extends SimpleController
         ];
 
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
-            'user' => $user,
+            'user'     => $user,
             'property' => 'permissions',
         ])) {
             $widgets['hidden'][] = 'permissions';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
-            'user' => $user,
+            'user'     => $user,
             'property' => 'activities',
         ])) {
             $widgets['hidden'][] = 'activities';
@@ -1207,7 +1206,7 @@ class UserController extends SimpleController
 
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => array_values(array_unique($fieldNames)),
         ])) {
             throw new ForbiddenException();
@@ -1307,7 +1306,7 @@ class UserController extends SimpleController
 
         // Access-controlled resource - check that currentUser has permission to edit the specified field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
-            'user' => $user,
+            'user'   => $user,
             'fields' => [$fieldName],
         ])) {
             throw new ForbiddenException();

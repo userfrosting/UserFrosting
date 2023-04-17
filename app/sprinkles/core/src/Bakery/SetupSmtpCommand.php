@@ -168,17 +168,17 @@ class SetupSmtpCommand extends BaseCommand
         switch ($choice) {
             case self::Setup_SMTP:
                 return $this->askForSmtp($input);
-            break;
+                break;
             case self::Setup_Gmail:
                 return $this->askForGmail($input);
-            break;
+                break;
             case self::Setup_Native:
                 return $this->askForNative($input);
-            break;
+                break;
             case self::Setup_None:
             default:
                 return $this->askForNone($input);
-            break;
+                break;
         }
     }
 

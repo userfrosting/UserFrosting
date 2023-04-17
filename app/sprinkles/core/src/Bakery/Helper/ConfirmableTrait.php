@@ -36,7 +36,6 @@ trait ConfirmableTrait
         $shouldConfirm = $callback instanceof \Closure ? call_user_func($callback) : $callback;
 
         if ($shouldConfirm & !$force) {
-
             // Display warning
             $this->io->warning($warning);
 
