@@ -340,6 +340,7 @@ return [
                 'it_IT' => true,
                 'th_TH' => true,
                 'fa'    => true,
+                'sw_TZ' => true,
                 'el'    => true,
                 'sr_RS' => true,
             ],

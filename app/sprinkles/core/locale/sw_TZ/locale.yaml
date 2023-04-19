@@ -1,0 +1,7 @@
+name: Swahili
+regional: Swahili
+authors:
+  - MegamindAme
+plural_rule: 1
+parents:
+  - en_US
