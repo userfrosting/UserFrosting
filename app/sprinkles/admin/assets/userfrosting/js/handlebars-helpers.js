@@ -60,10 +60,10 @@ Handlebars.registerHelper('calc', function (v1, operator, v2, options) {
  * usage: {{dateFormat creation_date format="MMMM YYYY"}}
  * @requires momentjs http://momentjs.com/
  */
-Handlebars.registerHelper('dateFormat', function(context, block) {
+Handlebars.registerHelper('dateFormat', function(context, block, utc) {
     if (window.moment) {
         var f = block.hash.format || "MMM Do, YYYY";
-        return moment(context).format(f);
+        return (utc === true) ? moment(context).utc().format(f) : moment(context).format(f);
     } else {
         //  moment plugin not available. return data as is.
         console.log("The moment.js plugin is not loaded.  Please make sure you have included moment.js on this page.");
