@@ -54,6 +54,6 @@
         }
     },
     "scripts": {
-        "test" : "phpunit --colors=always"
+        "post-create-project-cmd" : "php bakery bake"
     }
 }
