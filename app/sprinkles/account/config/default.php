@@ -162,7 +162,18 @@ return [
         'check_username_request' => null,
         'password_reset_request' => null,
         'registration_attempt'   => null,
-        'sign_in_attempt'        => null,
+        'sign_in_attempt'        => [
+            'method'   => 'ip',
+            'interval' => 3600,
+            'delays'   => [
+                4 => 5,
+                5 => 10,
+                6 => 20,
+                7 => 40,
+                8 => 80,
+                9 => 600,
+            ],
+        ],
         'verification_request'   => null,
     ],
 

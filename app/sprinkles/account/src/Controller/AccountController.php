@@ -29,6 +29,7 @@ use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\NotFoundException;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
 /**
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
@@ -1181,13 +1182,19 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
 
-        // Log out any existing user, and create a new session
-        if ($authenticator->check()) {
-            $authenticator->logout();
+        // Remove persistent sessions across all browsers/devices, and create a new session
+        $user = $passwordReset->user;
+
+        // Make sure logout will have a valid user
+        if (!$authenticator->check()) {
+            $authenticator->login($user);
         }
 
+        // Remove persistent sessions
+        $authenticator->logout(true);
+
         // Auto-login the user (without "remember me")
-        $user = $passwordReset->user;
+        // Create a new session
         $authenticator->login($user);
 
         $ms->addMessageTranslated('success', 'WELCOME', $user->toArray());
@@ -1276,10 +1283,26 @@ class AccountController extends SimpleController
         unset($data['passwordcheck']);
         unset($data['passwordc']);
 
-        // If new email was submitted, check that the email address is not in use
-        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->getClassMapping('user')::findUnique($data['email'], 'email')) {
-            $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
-            $error = true;
+        // If new email was submitted
+        if (isset($data['email']) && $data['email'] != $currentUser->email) {
+
+            // Check that the email address is not in use
+            if ($classMapper->getClassMapping('user')::findUnique($data['email'], 'email')) {
+                $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
+                $error = true;
+            } elseif ($this->ci->config['site.registration.require_email_verification']) {
+                // If email verification is configured
+
+                // Avoid setting email until verified
+                $data['newEmail'] = $data['email'];
+                unset($data['email']);
+
+                // Send verification email
+                $this->sendVerificationForNewEmail($currentUser, $data['newEmail']);
+
+                // Show verification message
+                $ms->addMessageTranslated('success', 'ACCOUNT.SETTINGS.NEW_EMAIL', $currentUser->toArray());
+            }
         }
 
         if ($error) {
@@ -1299,6 +1322,20 @@ class AccountController extends SimpleController
         $currentUser->fill($data);
 
         $currentUser->save();
+
+        // If user changed his password, remove persistent sessions across all browsers/devices, and create a new session
+        if (isset($data['password'])) {
+
+            /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+            $authenticator = $this->ci->authenticator;
+
+            // Keep user to re-login after persistent session cleanup
+            $user = $currentUser;
+            $authenticator->logout(true);
+
+            // Auto-login the user (without "remember me")
+            $authenticator->login($user);
+        }
 
         // Create activity record
         $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated their account settings.", [
@@ -1403,5 +1440,29 @@ class AccountController extends SimpleController
 
         // Forward to login page
         return $response->withRedirect($loginPage);
+    }
+
+    /**
+     * Send verification email for specified user on new email request.
+     *
+     * @param \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $user The user to send the email for
+     * @param String $newEmail The requested new email
+     */
+    protected function sendVerificationForNewEmail(UserInterface $user, String $newEmail)
+    {
+        // Try to generate a new verification request
+        $verification = $this->ci->repoVerification->create($user, $this->ci->config['verification.timeout']);
+
+        // Create and send verification email
+        $message = new TwigMailMessage($this->ci->view, 'mail/verify-new-email.html.twig');
+
+        $message->from($this->ci->config['address_book.admin'])
+                ->addEmailRecipient(new EmailRecipient($newEmail, $user->full_name))
+                ->addParams([
+                    'user'  => $user,
+                    'token' => $verification->getToken(),
+                ]);
+
+        $this->ci->mailer->send($message);
     }
 }
