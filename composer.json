@@ -27,11 +27,17 @@
             "wikimedia/composer-merge-plugin": true
         }
     },
+    "repositories": [
+        {
+            "url": "https://github.com/phillmac/userfrosting-framework.git",
+            "type": "git"
+        }
+    ],
     "require": {
         "php": "^7.3 | ^8.0",
         "ext-gd": "*",
         "composer/installers": "^1.4.0",
-        "phillmac/userfrosting-framework": "4.6.3-sasl",
+        "phillmac/userfrosting-framework": "dev-master#4.6.3-sasl",
         "symfony/console": "^5.1",
         "wikimedia/composer-merge-plugin": "^2.1.0"
     },
