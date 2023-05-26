@@ -115,6 +115,11 @@ class SprinkleManager
 
     /**
      * Returns the claculated sprinkle namespace.
+     * 
+     * First attempts to find a php file in [sprinkleName]/src directory which contains
+     * a namespace declaration. Failure to do that, fall back to the Str::studly naming
+     * method. This allows namespaces to have consecutive caps:
+     * e.g. (uf-tweaks) UFTweaks vs UfTweaks.
      *
      * @param string $sprinkleName
      *
@@ -124,16 +129,21 @@ class SprinkleManager
     {
         $namespaces = [];
 
+        // Get the path of the sprinkle's src directory from the sprinkleName
         $srcPath = $this->getSprinklesPath() . $sprinkleName . DIRECTORY_SEPARATOR . 'src';
 
+        // If there is a src directory, we can attempt to find a namespace, otherwise default to Str::studly
         if (file_exists($srcPath)) {
+            // Scan the src directory
             $dirContent = scandir($srcPath);
+            // We're only interested in php files, usually in the form of [sprinkle class].php
             $phpFiles = array_filter(
                 $dirContent,
                 function ($dirEntry) {
                     return str_ends_with($dirEntry, '.php');
                 }
             );
+            // Prefix the directory path to the file name
             $phpFiles = array_map(
                 function ($fileName) use ($srcPath) {
                     return $srcPath . DIRECTORY_SEPARATOR . $fileName;
@@ -146,6 +156,7 @@ class SprinkleManager
                     $foundNS = null;
 
                     try {
+                        // Open the php file, search for a line starting with "namespace" which should be near the top
                         $handle = fopen($file, 'r');
                         if ($handle) {
                             while (($line = fgets($handle)) !== false) {
@@ -167,10 +178,12 @@ class SprinkleManager
             ));
         }
 
+        // If there is more than 1 php file and they have different namespaces, this is probably a bad design decision.
         if (count($namespaces) > 1) {
             throw new SprinkleClassException("Multiple namespaces discovered for $sprinkleName. There should only be one!");
         }
 
+        // Use the found namespace else fall back to the Str::studly way of guessing the name
         if (count($namespaces) == 1) {
             $className = array_values($namespaces)[0];
         } else {
