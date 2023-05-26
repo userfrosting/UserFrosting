@@ -115,7 +115,7 @@ class SprinkleManager
 
     /**
      * Returns the claculated sprinkle namespace.
-     * 
+     *
      * First attempts to find a php file in [sprinkleName]/src directory which contains
      * a namespace declaration. Failure to do that, fall back to the Str::studly naming
      * method. This allows namespaces to have consecutive caps:
