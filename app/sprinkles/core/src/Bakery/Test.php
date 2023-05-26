@@ -125,8 +125,7 @@ class Test extends BaseCommand
             exit(1);
         }
 
-        $sprinkleName = Str::studly($sprinkle);
-        $this->io->note("Executing all tests for Sprinkle '$sprinkleName'");
+        $this->io->note("Executing all tests for Sprinkle '$sprinkle'");
 
         // Check if sprinkle has phpunit.xml file
         $phpunitConfig = $sprinkleManager->getSprinklePath($sprinkle) . \UserFrosting\DS . 'phpunit.xml';
@@ -135,7 +134,7 @@ class Test extends BaseCommand
         }
 
         // Add command part
-        $testClass = $sprinkleManager->getSprinkleClassNamespace($sprinkleName) . "\Tests";
+        $testClass = $sprinkleManager->getSprinkleClassNamespace($sprinkle) . "\Tests";
         $testClass = str_replace($this->slashes, $this->slashes . $this->slashes, $testClass);
 
         return " --filter='$testClass' ";

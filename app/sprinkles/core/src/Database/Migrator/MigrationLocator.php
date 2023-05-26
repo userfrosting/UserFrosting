@@ -11,6 +11,8 @@
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 use Illuminate\Support\Str;
+use Psr\Container\ContainerInterface;
+use UserFrosting\System\Sprinkle\SprinkleManager;
 use UserFrosting\UniformResourceLocator\Resource as ResourceInstance;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 
@@ -24,9 +26,9 @@ use UserFrosting\UniformResourceLocator\ResourceLocator;
 class MigrationLocator implements MigrationLocatorInterface
 {
     /**
-     * @var ResourceLocator The locator service
+     * @var ContainerInterface
      */
-    protected $locator;
+    protected $ci;
 
     /**
      * @var string The resource locator migration scheme
@@ -36,11 +38,11 @@ class MigrationLocator implements MigrationLocatorInterface
     /**
      * Class Constructor.
      *
-     * @param ResourceLocator $locator The locator services
+     * @param ContainerInterface $ci
      */
-    public function __construct(ResourceLocator $locator)
+    public function __construct(ContainerInterface $ci)
     {
-        $this->locator = $locator;
+        $this->ci = $ci;
     }
 
     /**
@@ -50,7 +52,10 @@ class MigrationLocator implements MigrationLocatorInterface
      */
     public function getMigrations()
     {
-        $migrationFiles = $this->locator->listResources($this->scheme, false, false);
+        /** @var \UserFrosting\UniformResourceLocator\ResourceLocator */
+        $locator = $this->ci->locator;
+
+        $migrationFiles = $locator->listResources($this->scheme, false, false);
 
         $migrations = [];
         foreach ($migrationFiles as $migrationFile) {
@@ -73,16 +78,18 @@ class MigrationLocator implements MigrationLocatorInterface
      */
     protected function getMigrationDetails(ResourceInstance $file)
     {
+        /** @var \UserFrosting\System\Sprinkle\SprinkleManager */
+        $sprinkleManager = $this->ci->sprinkleManager;
+
         // Format the sprinkle name for the namespace
         $sprinkleName = $file->getLocation()->getName();
-        $sprinkleName = Str::studly($sprinkleName);
+        $sprinkleNS = $sprinkleManager->getSprinkleClassNamespace($sprinkleName);
 
         // Getting base path, name and class name
         $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
-        $name = $basePath . $file->getFilename();
         $className = str_replace('/', '\\', $basePath) . $file->getFilename();
 
         // Build the class name and namespace
-        return "\\UserFrosting\\Sprinkle\\$sprinkleName\\Database\\Migrations\\$className";
+        return "\\$sprinkleNS\\Database\\Migrations\\$className";
     }
 }

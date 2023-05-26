@@ -11,7 +11,9 @@
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Database\Migrator;
 
 use Mockery as m;
+use Slim\Container;
 use UserFrosting\Tests\TestCase;
+use UserFrosting\System\Sprinkle\SprinkleManager;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocator;
 use UserFrosting\UniformResourceLocator\Resource;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
@@ -51,7 +53,16 @@ class MigrationLocatorTest extends TestCase
 
         // When `MigrationLocator` will ask the resource locator to `listResources`, we simulate returning no Resources
         $resourceLocator->shouldReceive('listResources')->once()->andReturn([]);
-        $locator = new MigrationLocator($resourceLocator);
+
+        // We must create our own CI with a custom locator for theses tests
+        $fakeCi = new Container();
+        $fakeCi->locator = $resourceLocator;
+
+        // Migrations require the sprinkle manager to source sprinkles
+        $fakeCi->sprinkleManager = new SprinkleManager($fakeCi);
+
+        // Create a new MigrationLocator instance with our simulated ResourceLocation
+        $locator = new MigrationLocator($fakeCi);
         $results = $locator->getMigrations();
 
         // Test results match expectations
@@ -99,8 +110,15 @@ class MigrationLocatorTest extends TestCase
             new Resource($resourceStream, $resourceAccountLocation, 'bar.phpbar'),
         ]);
 
+        // We must create our own CI with a custom locator for theses tests
+        $fakeCi = new Container();
+        $fakeCi->locator = $resourceLocator;
+
+        // Migrations require the sprinkle manager to source sprinkles
+        $fakeCi->sprinkleManager = new SprinkleManager($fakeCi);
+
         // Create a new MigrationLocator instance with our simulated ResourceLocation
-        $locator = new MigrationLocator($resourceLocator);
+        $locator = new MigrationLocator($fakeCi);
         $results = $locator->getMigrations();
 
         // The `getMigration` method should return this
@@ -133,7 +151,7 @@ class MigrationLocatorTest extends TestCase
 
         // Create a new MigrationLocator instance with our real SprinkleManager and filesystem
         // and ask to find core sprinkle migration files
-        $locator = new MigrationLocator($this->ci->locator);
+        $locator = new MigrationLocator($this->ci);
         $results = $locator->getMigrations();
 
         // We'll need to convert the array returned by `getMigrations` to a

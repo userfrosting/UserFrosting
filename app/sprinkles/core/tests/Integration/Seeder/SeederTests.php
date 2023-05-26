@@ -13,6 +13,7 @@ namespace UserFrosting\Tests\Integration\Seeder;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Container\ContainerInterface;
+use UserFrosting\System\Sprinkle\SprinkleManager;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
@@ -42,6 +43,9 @@ class SeederTests extends TestCase
         // Register services stub
         $serviceProvider = new ServicesProviderStub();
         $serviceProvider->register($this->fakeCi);
+
+        // Use test locale data
+        $this->fakeCi->sprinkleManager = new SprinkleManager($this->fakeCi);
     }
 
     public function tearDown(): void

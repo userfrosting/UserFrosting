@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use UserFrosting\System\Sprinkle\SprinkleManager;
 use UserFrosting\System\UserFrosting;
 use UserFrosting\UniformResourceLocator\Resource;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
@@ -127,10 +128,16 @@ class Bakery
     {
         // Process sprinkle and system commands
         if (!is_null($location = $file->getLocation())) {
+            /**
+             * @var SprinkleManager
+             */
+            $sprinkleManager = $this->ci->sprinkleManager;
+            
             // Format the sprinkle name for the namespace
             $sprinkleName = $file->getLocation()->getName();
-            $sprinkleName = Str::studly($sprinkleName);
-            $classPath = "\\UserFrosting\\Sprinkle\\$sprinkleName\\Bakery\\{$this->getClassNameFromFile($file)}";
+            $sprinkleNS = $sprinkleManager->getSprinkleClassNamespace($sprinkleName);
+
+            $classPath = "\\$sprinkleNS\\Bakery\\{$this->getClassNameFromFile($file)}";
         } else {
             $classPath = "\\UserFrosting\\System\\Bakery\\Command\\{$this->getClassNameFromFile($file)}";
         }

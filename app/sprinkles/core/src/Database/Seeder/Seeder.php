@@ -156,9 +156,12 @@ class Seeder
      */
     protected function getSeedDetails(ResourceInstance $file)
     {
+        /** @var \UserFrosting\System\Sprinkle\SprinkleManager */
+        $sprinkleManager = $this->ci->sprinkleManager;
+
         // Format the sprinkle name for the namespace
         $sprinkleName = $file->getLocation()->getName();
-        $sprinkleName = Str::studly($sprinkleName);
+        $sprinkleNS = $sprinkleManager->getSprinkleClassNamespace($sprinkleName);
 
         // Getting base path, name and class name
         $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
@@ -168,7 +171,7 @@ class Seeder
         // Build the class name and namespace
         return [
             'name'     => $name,
-            'class'    => "\\UserFrosting\\Sprinkle\\$sprinkleName\\Database\\Seeds\\$className",
+            'class'    => "\\$sprinkleNS\\Database\\Seeds\\$className",
             'sprinkle' => $sprinkleName,
         ];
     }

@@ -61,7 +61,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
 
         // Get the repository and locator instances
         $this->repository = new DatabaseMigrationRepository($this->ci->db, $this->migrationTable);
-        $this->locator = new MigrationLocatorStub($this->ci->locator);
+        $this->locator = new MigrationLocatorStub($this->ci);
 
         // Get the migrator instance and setup right connection
         $this->migrator = new Migrator($this->ci->db, $this->repository, $this->locator);
@@ -190,7 +190,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
     public function testWithInvalidClass()
     {
         // Change the repository so we can test with the InvalidMigrationLocatorStub
-        $locator = new InvalidMigrationLocatorStub($this->ci->locator);
+        $locator = new InvalidMigrationLocatorStub($this->ci);
         $this->migrator->setLocator($locator);
 
         // Expect a `BadClassNameException` exception
@@ -203,7 +203,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
     public function testDependableMigrations()
     {
         // Change the repository so we can test with the DependableMigrationLocatorStub
-        $locator = new DependableMigrationLocatorStub($this->ci->locator);
+        $locator = new DependableMigrationLocatorStub($this->ci);
         $this->migrator->setLocator($locator);
 
         // Run up
@@ -227,7 +227,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $this->assertTrue($this->schema->hasTable('password_resets'));
 
         // Change the repository so we can run up the `two` migrations
-        $locator = new FlightsTableMigrationLocatorStub($this->ci->locator);
+        $locator = new FlightsTableMigrationLocatorStub($this->ci);
         $this->migrator->setLocator($locator);
 
         // Run up again
@@ -243,7 +243,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
     public function testUnfulfillableMigrations()
     {
         // Change the repository so we can test with the unfulfillable Stub
-        $locator = new UnfulfillableMigrationLocatorStub($this->ci->locator);
+        $locator = new UnfulfillableMigrationLocatorStub($this->ci);
         $this->migrator->setLocator($locator);
 
         // Should have an exception for unfulfilled migrations
@@ -254,7 +254,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
     public function testSpecificMigrationCanBeRollback()
     {
         // Change the repository so we can test with the DependableMigrationLocatorStub
-        $locator = new DependableMigrationLocatorStub($this->ci->locator);
+        $locator = new DependableMigrationLocatorStub($this->ci);
         $this->migrator->setLocator($locator);
 
         // Run up
@@ -278,7 +278,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
     public function testSpecificMigrationRollbackWithDependencies()
     {
         // Change the repository so we can test with the DependableMigrationLocatorStub
-        $locator = new DependableMigrationLocatorStub($this->ci->locator);
+        $locator = new DependableMigrationLocatorStub($this->ci);
         $this->migrator->setLocator($locator);
 
         // Run up

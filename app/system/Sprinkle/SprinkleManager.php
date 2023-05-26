@@ -106,9 +106,11 @@ class SprinkleManager
      */
     protected function getSprinkleClass(string $sprinkleName): string
     {
-        $className = Str::studly($sprinkleName);
+        $sprinkleNS = $this->getSprinkleClassNamespace($sprinkleName);
 
-        return $this->getSprinkleClassNamespace($sprinkleName) . "\\$className";
+        $className = array_reverse(explode('\\', $sprinkleNS))[0];
+
+        return $sprinkleNS . "\\$className";
     }
 
     /**
@@ -120,9 +122,60 @@ class SprinkleManager
      */
     public function getSprinkleClassNamespace(string $sprinkleName): string
     {
-        $className = Str::studly($sprinkleName);
+        $namespaces = [];
 
-        return "UserFrosting\\Sprinkle\\$className";
+        $srcPath = $this->getSprinklesPath() . $sprinkleName . DIRECTORY_SEPARATOR . 'src';
+
+        if (file_exists($srcPath)) {
+            $dirContent = scandir($srcPath);
+            $phpFiles = array_filter(
+                $dirContent,
+                function($dirEntry) {
+                    return str_ends_with($dirEntry, '.php');
+                }
+            );
+            $phpFiles = array_map(
+                function($fileName) use ($srcPath) {
+                    return $srcPath . DIRECTORY_SEPARATOR . $fileName;
+                },
+                $phpFiles
+            );
+
+            $namespaces = array_unique(array_map(
+                function($file) { #extract_namespace
+                    $foundNS = NULL;
+                    try {
+                        $handle = fopen($file, "r");
+                        if ($handle) {
+                            while (($line = fgets($handle)) !== false) {
+                                if (strpos($line, 'namespace') === 0) {
+                                    $parts = explode(' ', $line);
+                                    $foundNS = rtrim(trim($parts[1]), ';');
+                                    break;
+                                }
+                            }
+                            fclose($handle);
+                        }
+                    } catch (Exception $e) {
+                        // Silently fall back to the old studly way
+                    }
+                    return $foundNS;
+                },
+                $phpFiles
+            ));
+        }
+
+        if (count($namespaces) > 1) {
+            throw new SprinkleClassException("Multiple namespaces discovered for $sprinkleName. There should only be one!");
+        }
+
+        if (count($namespaces) == 1) {
+            $className = array_values($namespaces)[0];
+        } else {
+            $className = 'UserFrosting\\Sprinkle\\' . Str::studly($sprinkleName);
+        }
+
+        return $className;
     }
 
     /**
