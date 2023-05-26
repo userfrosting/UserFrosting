@@ -10,7 +10,6 @@
 
 namespace UserFrosting\System\Bakery;
 
-use Illuminate\Support\Str;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -132,7 +131,7 @@ class Bakery
              * @var SprinkleManager
              */
             $sprinkleManager = $this->ci->sprinkleManager;
-            
+
             // Format the sprinkle name for the namespace
             $sprinkleName = $file->getLocation()->getName();
             $sprinkleNS = $sprinkleManager->getSprinkleClassNamespace($sprinkleName);

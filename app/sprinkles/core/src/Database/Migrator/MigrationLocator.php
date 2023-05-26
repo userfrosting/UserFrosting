@@ -10,11 +10,8 @@
 
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
-use Illuminate\Support\Str;
 use Psr\Container\ContainerInterface;
-use UserFrosting\System\Sprinkle\SprinkleManager;
 use UserFrosting\UniformResourceLocator\Resource as ResourceInstance;
-use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * MigrationLocator Class.

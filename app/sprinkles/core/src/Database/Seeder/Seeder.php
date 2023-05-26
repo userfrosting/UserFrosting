@@ -10,7 +10,6 @@
 
 namespace UserFrosting\Sprinkle\Core\Database\Seeder;
 
-use Illuminate\Support\Str;
 use Psr\Container\ContainerInterface;
 use UserFrosting\UniformResourceLocator\Resource as ResourceInstance;
 

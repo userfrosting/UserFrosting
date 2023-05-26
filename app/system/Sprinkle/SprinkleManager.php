@@ -130,22 +130,23 @@ class SprinkleManager
             $dirContent = scandir($srcPath);
             $phpFiles = array_filter(
                 $dirContent,
-                function($dirEntry) {
+                function ($dirEntry) {
                     return str_ends_with($dirEntry, '.php');
                 }
             );
             $phpFiles = array_map(
-                function($fileName) use ($srcPath) {
+                function ($fileName) use ($srcPath) {
                     return $srcPath . DIRECTORY_SEPARATOR . $fileName;
                 },
                 $phpFiles
             );
 
             $namespaces = array_unique(array_map(
-                function($file) { #extract_namespace
-                    $foundNS = NULL;
+                function ($file) { //extract_namespace
+                    $foundNS = null;
+
                     try {
-                        $handle = fopen($file, "r");
+                        $handle = fopen($file, 'r');
                         if ($handle) {
                             while (($line = fgets($handle)) !== false) {
                                 if (strpos($line, 'namespace') === 0) {
@@ -159,6 +160,7 @@ class SprinkleManager
                     } catch (Exception $e) {
                         // Silently fall back to the old studly way
                     }
+
                     return $foundNS;
                 },
                 $phpFiles
