@@ -1,0 +1,12 @@
+{
+    "myField" : {
+        "form" : {
+            "type" : "foo"
+        }
+    },
+    "myOtherField" : {
+        "form" : {
+            "value" : "Bar"
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "dependencies": {
+      "bootstrap-3-typeahead": "~4.0.2"
+  }
+}

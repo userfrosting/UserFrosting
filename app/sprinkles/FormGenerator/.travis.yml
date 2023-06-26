@@ -1,0 +1,47 @@
+dist: xenial
+language: php
+
+php:
+  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
+
+env:
+  jobs:
+    - UF_BRANCH=4.3.*
+    - UF_BRANCH=4.4.*
+    - UF_BRANCH=dev-develop
+
+jobs:
+  fast_finish: true
+  allow_failures:
+    - env: UF_BRANCH=dev-develop
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_install:
+  # clone UserFrosting
+  - cd ../
+  - composer create-project userfrosting/userfrosting UserFrosting $UF_BRANCH --no-install
+  - cd UserFrosting
+  # move and add sprinkle
+  - mv ../UF_FormGenerator app/sprinkles/FormGenerator/
+  - echo "{\"base\":[\"core\",\"account\",\"admin\",\"FormGenerator\"]}" > app/sprinkles.json
+
+before_script:
+  # install deps and UF
+  - composer install
+
+script:
+  # run unit tests
+  - app/vendor/bin/phpunit -c app/sprinkles/FormGenerator/phpunit.xml --coverage-clover=app/sprinkles/FormGenerator/coverage.xml
+
+after_failure:
+  - cat app/log/userfrosting.log
+
+after_success:
+  - cd app/sprinkles/FormGenerator/
+  - bash <(curl -s https://codecov.io/bash)

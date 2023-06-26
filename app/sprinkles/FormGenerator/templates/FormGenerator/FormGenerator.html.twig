@@ -1,0 +1,33 @@
+{% import "FormGenerator/macros/checkbox.html.twig" as checkbox %}
+{% import "FormGenerator/macros/textarea.html.twig" as textarea %}
+{% import "FormGenerator/macros/select.html.twig" as select %}
+{% import "FormGenerator/macros/text.html.twig" as text %}
+{% import "FormGenerator/macros/hidden.html.twig" as hidden %}
+{% import "FormGenerator/macros/alert.html.twig" as alert %}
+
+{% for name,input in fields %}
+    {% if input.type == "hidden" %}
+        {{ hidden.generate(input) }}
+    {% elseif input.type == "alert" %}
+        {{ alert.generate(input) }}
+    {% else %}
+        {% if not input.hidden %}
+        {% if formLayout == 'horizontal' %}<div class="form-group has-feedback clearfix">{% else %}<div class="form-group has-feedback">{% endif %}
+            {% if formLayout == 'horizontal' %}<label for="{{input.id}}" class="col-sm-2 control-label">{% else %}<label for="{{input.id}}">{% endif %}
+                {% if input.label %}{{translate(input.label)}}{% else %}&nbsp;{% endif %}
+            </label>
+            {% if formLayout == 'horizontal' %}<div class="col-sm-10">{% endif %}
+                {% if input.type == "textarea" %}
+                    {{ textarea.generate(input) }}
+                {% elseif input.type == "checkbox" %}
+                    {{ checkbox.generate(input) }}
+                {% elseif input.type == "select" %}
+                    {{ select.generate(input) }}
+                {% else %}
+                    {{ text.generate(input) }}
+                {% endif %}
+            {% if formLayout == 'horizontal' %}</div>{% endif %}
+        </div>
+        {% endif %}
+    {% endif %}
+{% endfor %}

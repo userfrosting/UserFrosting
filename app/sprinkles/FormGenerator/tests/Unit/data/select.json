@@ -1,0 +1,19 @@
+{
+    "status" : {
+        "form" : {
+            "type" : "select",
+            "label" : "Status",
+            "options" : {
+                "0" : "Closed",
+                "1" : "Open"
+            }
+        }
+    },
+    "color" : {
+        "form" : {
+            "type" : "select",
+            "label" : "Color",
+            "placeholder" : "Select color"
+        }
+    }
+}

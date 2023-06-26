@@ -1,0 +1,3 @@
+{% macro generate(input) %}
+    <input{% for type,value in input %} {{type}}="{{value}}"{% endfor %}></input>
+{% endmacro %}

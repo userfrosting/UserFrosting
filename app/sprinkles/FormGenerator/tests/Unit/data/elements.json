@@ -1,0 +1,92 @@
+{
+    "name" : {
+        "form" : {
+            "type" : "text",
+            "label" : "Project Name",
+            "icon" : "fa-flag",
+            "placeholder" : "Project Name"
+        }
+    },
+    "owner" : {
+        "form" : {
+            "type" : "text",
+            "label" : "Project Owner",
+            "icon" : "fa-user",
+            "id" : "owner",
+            "placeholder" : "Project Owner",
+            "default" : "Foo"
+        }
+    },
+    "description" : {
+        "form" : {
+            "type" : "textarea",
+            "label" : "Project Description",
+            "icon" : "fa-pencil",
+            "placeholder" : "Project Description",
+            "rows" : 5
+        }
+    },
+    "status" : {
+        "form" : {
+            "type" : "select",
+            "label" : "Project Status",
+            "options" : {
+                "0" : "Closed",
+                "1" : "Open"
+            }
+        }
+    },
+    "color" : {
+        "form" : {
+            "type" : "select",
+            "label" : "Color",
+            "placeholder" : "Select color",
+            "default" : "blue",
+            "options" : {
+                "red" : "Rouge",
+                "blue" : "Bleu",
+                "white" : "Blanc"
+            }
+        }
+    },
+    "active" : {
+        "form" : {
+            "type" : "checkbox",
+            "label" : "Active"
+        }
+    },
+    "open" : {
+        "form" : {
+            "type" : "checkbox",
+            "label" : "Open ?",
+            "binary": false,
+            "default": "yes"
+        }
+    },
+    "pretty" : {
+        "form" : {
+            "type" : "checkbox",
+            "label" : "Pretty",
+            "binary": false
+        }
+    },
+    "hidden" : {
+        "form" : {
+            "type" : "hidden",
+            "default" : "Something"
+        }
+    },
+    "secret" : {
+        "form" : {
+            "type" : "hidden"
+        }
+    },
+    "alert" : {
+        "form" : {
+            "type" : "alert",
+            "class" : "alert-success",
+            "icon" : "fa-check",
+            "default" : "You're awesome!"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+{% macro generate(input) %}
+    <select{% for type,value in input %}{% if type != "options" %} {{type}}="{{value}}"{% endif %}{% endfor %}>
+        {% for option, label in input.options %}<option value="{{option}}" {% if (option == input.value) %}selected{% endif %}>{{translate(label)}}</option>{% endfor %}
+    </select>
+{% endmacro %}

@@ -1,0 +1,10 @@
+parameters:
+  autoload_files:
+    - ../../vendor/autoload.php
+  level: max
+  treatPhpDocTypesAsCertain: false
+  ignoreErrors:
+    # Ignore false positive PHPStan can't understand, until we can fix it
+    - '#Call to an undefined method Psr\\Container\\ContainerInterface::extend().#'
+    - '#Access to an undefined property Psr\\Container\\ContainerInterface::\$[a-zA-Z0-9\\_]+.#' # Ignore our CI container
+    - '#Call to an undefined static method UserFrosting\\Sprinkle\\[a-zA-Z0-9\\_]+\\Facades\\[a-zA-Z0-9\\_\(\):]+.#' # Ignore Facades

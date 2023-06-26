@@ -1,0 +1,30 @@
+{
+    "name": "lcharette/uf_formgenerator",
+    "type": "userfrosting-sprinkle",
+    "description": "Form generator for UserFrosting V4",
+    "keywords": ["Form", "generator", "userfrosting"],
+    "homepage": "https://github.com/lcharette/UF_FormGenerator",
+    "license" : "MIT",
+    "authors" : [
+        {
+            "name": "Louis Charette",
+            "homepage": "https://bbqsoftwares.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "UserFrosting\\Sprinkle\\FormGenerator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "UserFrosting\\Sprinkle\\FormGenerator\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "installer-name": "FormGenerator"
+    }
+}

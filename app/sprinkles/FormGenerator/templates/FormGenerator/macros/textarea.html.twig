@@ -1,0 +1,5 @@
+{% macro generate(input) %}
+    {% if input.icon %}<div class="input-group"><span class="input-group-addon"><i class="fa {{input.icon}} fa-fw"></i></span>{% endif %}
+    <textarea{% for type,value in input %} {{type}}="{{value}}"{% endfor %}>{{input.value}}</textarea>
+    {% if input.icon %}</div>{% endif %}
+{% endmacro %}

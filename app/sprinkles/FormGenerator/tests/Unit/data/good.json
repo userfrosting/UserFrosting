@@ -1,0 +1,30 @@
+{
+    "name" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 100
+            },
+            "required" : {
+                "message" : "Name required"
+            }
+        },
+        "form" : {
+            "type" : "text",
+            "label" : "Project Name",
+            "icon" : "fa-flag",
+            "placeholder" : "Project Name"
+        }
+    },
+    "description" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 100
+            },
+            "required" : {
+                "message" : "Name required"
+            }
+        }
+    }
+}

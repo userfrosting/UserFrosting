@@ -1,0 +1,17 @@
+{
+    "bundle": {
+        "js/FormGenerator": {
+            "scripts": [
+                "vendor/bootstrap-3-typeahead/bootstrap3-typeahead.js",
+                "js/widget-formGenerator.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                      "scripts": "plain"
+                    }
+                }
+            }
+        }
+    }
+}

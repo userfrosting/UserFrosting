@@ -1,0 +1,5 @@
+{% macro generate(input) %}
+    <div class="checkbox icheck">
+        <input{% for type,value in input %} {{type}}="{{value}}"{% endfor %}></input>
+    </div>
+{% endmacro %}

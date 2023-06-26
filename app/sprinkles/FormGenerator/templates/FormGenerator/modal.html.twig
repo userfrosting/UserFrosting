@@ -1,0 +1,62 @@
+{% block modal %}
+<div id='{{box_id}}' class='modal fade'>
+  <div class="modal-dialog {% block modal_size %}{% endblock %}" role="document">
+    <div class="modal-content">
+        <form name="ModalFormGenerator" method="{{ (form_method) ? form_method : 'post' }}" action="{{form_action}}">
+            {% include "forms/csrf.html.twig" %}
+            <div class='modal-header'>
+                <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+                <h4 class='modal-title'>{% if box_title %}{{ translate(box_title) }}{% endif %}</h4>
+            </div>
+            <div class='modal-body'>
+                <div id="form-alerts"></div>
+                {% block form_content %}
+                    {% include 'FormGenerator/FormGenerator.html.twig' %}
+                {% endblock %}
+            </div>
+            <div class='modal-footer'>
+                <div class="row">
+                    {% if "submit" not in buttons.hidden %}
+                    <div class="col-xs-8 col-sm-4">
+                        <div class="vert-pad">
+                            <button type="submit" class="btn btn-block btn-lg btn-success js-submit"{% if 'submit' in buttons.disabled %} disabled{% endif %}>
+                                {% if submit_button %}{{ translate(submit_button) }}{% else %}{{translate("SUBMIT")}}{% endif %}
+                            </button>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if "cancel" not in buttons.hidden %}
+                    <div class="col-xs-4 col-sm-3 pull-right">
+                        <div class="vert-pad">
+                            <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal"{% if 'cancel' in buttons.disabled %} disabled{% endif %}>
+                                {{ translate("CANCEL") }}
+                            </button>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+{% endblock %}
+
+{% block scripts_page %}
+    <!-- Need to reload and reaply those since we're in modal -->
+    <script>
+        // Load the validator rules for this form
+        var validators = {{validators|default('{}')| raw}};
+
+        $(function() {
+            $('#{{box_id}}').iCheck({
+              checkboxClass: 'icheckbox_square-blue',
+              radioClass: 'iradio_square-blue',
+              increaseArea: '20%' // optional
+            });
+            $('#{{box_id}}').find('.js-select2').select2({ minimumResultsForSearch: Infinity, width: '100%' });
+        });
+    </script>
+{% endblock %}
