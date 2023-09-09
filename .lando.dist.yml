@@ -4,7 +4,7 @@ name: userfrosting
 recipe: lamp
 config:
   webroot: ./public
-  php: '7.4'
+  php: '8.2'
   composer_version: '2-latest'
   database: mariadb
   xdebug: true
