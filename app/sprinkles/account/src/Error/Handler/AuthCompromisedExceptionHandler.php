@@ -33,6 +33,6 @@ class AuthCompromisedExceptionHandler extends HttpExceptionHandler
         return $this->response
             ->withStatus($this->statusCode)
             ->withHeader('Content-type', $this->contentType)
-            ->write($template->render());
+            ->write($template->render([]));
     }
 }
