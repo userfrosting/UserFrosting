@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v4.6.8](https://github.com/userfrosting/UserFrosting/compare/v4.6.7...v4.6.8)
+### Fix
+- Fix missing render context arg ([#1226](https://github.com/userfrosting/UserFrosting/pull/1226)) - Thanks [@phillmac](https://github.com/phillmac) !
+- Fix [#1227](https://github.com/userfrosting/UserFrosting/issues/1227) - HTML in page_description block bleed in the template 
+
 ## [v4.6.7](https://github.com/userfrosting/UserFrosting/compare/v4.6.5...v4.6.7)
 
 ### Fix
