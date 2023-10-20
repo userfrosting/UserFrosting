@@ -1,32 +1,25 @@
 # Docker Development Environment
 
->This is also documented at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
+> This is also documented at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
 
-First, install [Docker Compose](https://docs.docker.com/compose/install/).
+First, install [Docker Compose or Docker Desktop](https://docs.docker.com/compose/install/).
 
 Second, initialize a new UserFrosting project:
 
 1. Clone UserFrost git repository with `git clone https://github.com/userfrosting/UserFrosting.git userfrosting`
 2. Change to the new directory `cd userfrosting`
-3. Copy `app/sprinkles.example.json` to `app/sprinkles.json`
-4. Copy `app/.env.example` to `app/.env`
-4. Run `chmod 777 app/{logs,cache,sessions}` to fix file permissions for web server. (NOTE: File
-   permissions should be properly secured in a production environment!)
-5. Run `docker-compose build --no-cache` to build all the docker containers.
-6. Run `docker-compose up -d` to to start all the containers.
-7. Run `docker-compose exec app sh -c "composer update"` to install all composer modules used in UserFrosting.
-8. Run `docker-compose exec app sh -c "php bakery bake"` to install UserFrosting (database configuration and migrations, creation of admin user, ...). You'll need to provide info to create the admin user.
+3. Run `docker-compose build --no-cache` to build all the docker containers.
+4. Run `docker-compose up -d` to to start all the containers.
+5. Run `docker-compose exec app sh -c "composer update"` to install all composer modules used in UserFrosting.
+6. Run `docker-compose exec app sh -c "php bakery bake"` to install UserFrosting (database configuration and migrations, creation of admin user, ...). You'll need to provide info to create the admin user.
 
-Now visit `http://localhost:8591/` to see your UserFrosting homepage!
+Now visit `http://localhost:8888/` to see your UserFrosting homepage!
 
 **You can paste these into a bash file and execute it!**
 
 ```bash
 git clone https://github.com/userfrosting/UserFrosting.git userfrosting
 cd userfrosting
-cp app/sprinkles.example.json app/sprinkles.json
-cp app/.env.example app/.env
-chmod 777 app/{logs,cache,sessions}
 docker-compose build --no-cache
 docker-compose up -d
 docker-compose exec app sh -c "composer update"

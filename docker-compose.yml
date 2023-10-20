@@ -7,11 +7,15 @@ services:
       context: docker/app
     environment:
       - DB_CONNECTION=mysql
-      - DB_HOST=ufmysql
+      - DB_HOST=mysql
       - DB_PORT=3306
       - DB_NAME=userfrosting
       - DB_USER=docker
       - DB_PASSWORD=secret
+      - SMTP_HOST=mailpit
+      - SMTP_PORT=1025
+      - SMTP_SECURE=false
+      - SMTP_AUTH=false
     volumes:
       - .:/app
       - ./docker/app/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
@@ -22,20 +26,29 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "8591:80"
-      - "8592:443"
+      - "8080:80"
+      - "8043:443"
     build:
       context: ./docker/nginx
     volumes:
       - .:/app
     depends_on:
       - app
-      - ufmysql
+      - mysql
+      - mailpit
     networks:
       - frontend
       - backend
 
-  ufmysql:
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - backend
+
+  mysql:
     image: mysql:8.0
     networks:
       - backend
@@ -56,3 +69,4 @@ volumes:
 networks:
   frontend:
   backend:
+    driver: bridge
