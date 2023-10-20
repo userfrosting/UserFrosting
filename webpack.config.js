@@ -56,9 +56,9 @@ Encore
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
+
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
-    // .enableVersioning()
 
     // enables @babel/preset-env polyfills
     .configureBabelPresetEnv((config) => {
@@ -79,7 +79,7 @@ Encore
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
 
-    // uncomment if you use API Platform Admin (composer require api-admin)
+    // uncomment if you use React
     //.enableReactPreset()
 ;
 
