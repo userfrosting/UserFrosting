@@ -27,7 +27,6 @@ services:
     tty: true
     ports:
       - "8080:80"
-      - "8043:443"
     build:
       context: ./docker/nginx
     volumes:
