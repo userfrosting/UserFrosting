@@ -91,7 +91,7 @@ Srinivas's a web applications architect, with a passion for open source technolo
 
 ## Contributing
 
-This project exists thanks to all the people who contribute. If you're interested in contributing to the UserFrosting codebase, please see our [contributing guidelines](.github/CONTRIBUTING.md) as well as our [style guidelines](STYLE-GUIDE.md).
+This project exists thanks to all the people who contribute. If you're interested in contributing to the UserFrosting codebase, please see our [contributing guidelines](.github/CONTRIBUTING.md) as well as our [style guidelines](.github/STYLE-GUIDE.md).
 
 [![](https://opencollective.com/userfrosting/contributors.svg?width=890&button=false)](https://github.com/userfrosting/UserFrosting/graphs/contributors)
 
