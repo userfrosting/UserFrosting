@@ -13,7 +13,7 @@ Second, initialize a new UserFrosting project:
 5. Run `docker-compose exec app sh -c "composer update"` to install all composer modules used in UserFrosting.
 6. Run `docker-compose exec app sh -c "php bakery bake"` to install UserFrosting (database configuration and migrations, creation of admin user, ...). You'll need to provide info to create the admin user.
 
-Now visit `http://localhost:8888/` to see your UserFrosting homepage!
+Now visit [http://localhost:8080](http://localhost:8080) to see your UserFrosting homepage!
 
 **You can paste these into a bash file and execute it!**
 
