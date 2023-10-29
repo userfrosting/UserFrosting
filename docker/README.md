@@ -1,29 +1,34 @@
 # Docker Development Environment
 
-> This is also documented at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
+> You can find the complete version of thi guide at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
 
 First, install [Docker Compose or Docker Desktop](https://docs.docker.com/compose/install/).
 
 Second, initialize a new UserFrosting project:
 
-1. Clone UserFrost git repository with `git clone https://github.com/userfrosting/UserFrosting.git userfrosting`
-2. Change to the new directory `cd userfrosting`
+1. Get UserFrosting repository : `docker run --rm -it -v "$(pwd):/app" composer create-project userfrosting/userfrosting UserFrosting "^5.0" --no-scripts --no-install --ignore-platform-reqs`
+2. Change to the new directory `cd UserFrosting`
 3. Run `docker-compose build --no-cache` to build all the docker containers.
 4. Run `docker-compose up -d` to to start all the containers.
-5. Run `docker-compose exec app sh -c "composer update"` to install all composer modules used in UserFrosting.
-6. Run `docker-compose exec app sh -c "php bakery bake"` to install UserFrosting (database configuration and migrations, creation of admin user, ...). You'll need to provide info to create the admin user.
+5. Run `sudo chown -R $USER: .` and `sudo chmod 777 app/{logs,cache,sessions}` to set some directory permissions (your may have to enter your root password):
+6. Run `docker-compose exec app composer update` to install all composer modules used in UserFrosting.
+7. Run `docker-compose exec app php bakery bake` to install UserFrosting (database configuration and migrations, creation of admin user, ...). You'll need to provide info to create the admin user.
 
 Now visit [http://localhost:8080](http://localhost:8080) to see your UserFrosting homepage!
+
+> All call to bakery commands need to be prefixed by docker-compose, since you need to run theses commands on the containers, not your computer. For example : `docker-compose exec app php bakery ...`.
 
 **You can paste these into a bash file and execute it!**
 
 ```bash
-git clone https://github.com/userfrosting/UserFrosting.git userfrosting
-cd userfrosting
+docker run --rm -it -v "$(pwd):/app" composer create-project userfrosting/userfrosting UserFrosting "^5.0" --no-scripts --no-install --ignore-platform-reqs
+cd UserFrosting
 docker-compose build --no-cache
 docker-compose up -d
-docker-compose exec app sh -c "composer update"
-docker-compose exec app sh -c "php bakery bake"
+sudo chown -R $USER: .
+sudo chmod 777 app/{logs,cache,sessions}
+docker-compose exec app composer update
+docker-compose exec app php bakery bake
 ```
 
 **Start / stop containers**
