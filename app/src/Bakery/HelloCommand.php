@@ -18,7 +18,7 @@ use UserFrosting\Bakery\WithSymfonyStyle;
 /**
  * Sample Bakery command.
  *
- * N.B.: THIS FILE IS SAFE TO EDIT
+ * N.B.: THIS FILE IS SAFE TO EDIT OR DELETE.
  */
 class HelloCommand extends Command
 {
