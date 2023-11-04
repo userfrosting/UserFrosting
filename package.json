@@ -1,7 +1,7 @@
 {
     "dependencies": {
-        "sprinkle-admin": "github:userfrosting/sprinkle-admin",
-        "theme-adminlte": "github:userfrosting/theme-adminlte"
+        "@userfrosting/sprinkle-admin": "^5.0.0-rc.1",
+        "@userfrosting/theme-adminlte": "^5.0.0-rc.1"
     },
     "devDependencies": {
         "@symfony/webpack-encore": "^4.4.0",
