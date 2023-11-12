@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/v/release/userfrosting/userfrosting?include_prereleases&sort=semver)](https://github.com/userfrosting/UserFrosting/releases)
 ![PHP Version](https://img.shields.io/badge/php-%5E8.0-brightgreen)
-[![Build](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=5.0)](https://github.com/userfrosting/userfrosting/actions?query=workflow%3ABuild)
+[![Build](https://github.com/userfrosting/UserFrosting/actions/workflows/Build.yml/badge.svg?branch=5.0)](https://github.com/userfrosting/userfrosting/actions?query=workflow%3ABuild)
 [![Codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/5.0/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting)
 [![Style](https://github.styleci.io/repos/18148206/shield?branch=5.0&style=flat)](https://github.styleci.io/repos/18148206)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
