@@ -2,22 +2,23 @@
 
 [![Latest Version](https://img.shields.io/github/v/release/userfrosting/userfrosting?include_prereleases&sort=semver)](https://github.com/userfrosting/UserFrosting/releases)
 ![PHP Version](https://img.shields.io/badge/php-%5E8.0-brightgreen)
-[![Build](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=develop-5.0)](https://github.com/userfrosting/userfrosting/actions?query=workflow%3ABuild)
-[![Codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/develop-5.0/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting)
-[![Style](https://github.styleci.io/repos/18148206/shield?branch=develop-5.0&style=flat)](https://github.styleci.io/repos/18148206)
+[![Build](https://github.com/userfrosting/userfrosting/workflows/Build/badge.svg?branch=5.0)](https://github.com/userfrosting/userfrosting/actions?query=workflow%3ABuild)
+[![Codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/5.0/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting)
+[![Style](https://github.styleci.io/repos/18148206/shield?branch=5.0&style=flat)](https://github.styleci.io/repos/18148206)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![Join the chat at https://chat.userfrosting.com/channel/support](https://chat.userfrosting.com/api/v1/shield.svg?name=UserFrosting)](https://chat.userfrosting.com/channel/support)
-[![Backers on Open Collective](https://opencollective.com/userfrosting/backers/badge.svg)](#backers)
-[![Sponsors on Open Collective](https://opencollective.com/userfrosting/sponsors/badge.svg)](#sponsors)
-[![Donate](https://img.shields.io/badge/Open%20Collective-Donate-blue.svg)](https://opencollective.com/userfrosting#backer) 
+[![Join the chat](https://img.shields.io/badge/Chat-UserFrosting-brightgreen?logo=Rocket.Chat)](https://chat.userfrosting.com/channel/support)
+[![Backers on Open Collective](https://img.shields.io/opencollective/backers/userfrosting?logo=opencollective)](#backers)
+[![Sponsors on Open Collective](https://img.shields.io/opencollective/sponsors/userfrosting?logo=opencollective)](#sponsors)
+[![Donate](https://img.shields.io/badge/Open_Collective-Donate-blue?logo=Open%20Collective)](https://opencollective.com/userfrosting#backer)
+[![Donate](https://img.shields.io/badge/Ko--fi-Donate-blue?logo=ko-fi&logoColor=white)](https://ko-fi.com/lcharette)
 
 [https://www.userfrosting.com](https://www.userfrosting.com)
 
-If you simply want to show that you like this project, or want to remember it for later, you should **star**, not **fork**, this repository.  Forking is only for when you are ready to create your own copy of the code to work on.
+If you simply want to show that you like this project, or want to remember it for later, you should **star**, not **fork**, this repository. Forking is only for when you are ready to create your own copy of the code to work on.
 
-## By [Alex Weissman](https://alexanderweissman.com)
+## By [Alex Weissman](https://alexanderweissman.com) and [Louis Charette](https://bbqsoftwares.com)
 
-Copyright (c) 2019, free to use in personal and commercial software as per the [license](LICENSE.md).
+Copyright (c) 2019-2023, free to use in personal and commercial software as per the [license](LICENSE.md).
 
 UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.8/eloquent#introduction) ORM.
 
@@ -40,13 +41,13 @@ Please see our [installation guide](https://learn.userfrosting.com/installation)
 
 ## Troubleshooting
 
-If you are having trouble installing UserFrosting, please [join us in chat](https://chat.userfrosting.com) or try our [forums](https://forums.userfrosting.com).
+If you are having trouble installing UserFrosting, please [join us in chat](https://chat.userfrosting.com).
 
 If you are generally confused about the structure and layout of the code, or it doesn't look like the kind of PHP code that you're used to, please [start from the beginning](https://learn.userfrosting.com/background).
 
 ## Mission Objectives
 
-UserFrosting seeks to balance modern programming principles, like DRY and MVC, with a shallow learning curve for new developers.  Our goals are to:
+UserFrosting seeks to balance modern programming principles, like DRY and MVC, with a shallow learning curve for new developers. Our goals are to:
 
 - Create a fully-functioning user management script that can be set up in just a few minutes
 - Make it easy for users to quickly adapt the code for their needs
@@ -62,10 +63,6 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 ### [API documentation](http://api.userfrosting.com)
 
 ### [Change log](CHANGELOG.md)
-
-## Running tests
-
-Run `php bakery test` from the root project directory. Any tests included in `sprinkles/*/tests` will be run.
 
 ## Development Team
 

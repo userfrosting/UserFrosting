@@ -2,7 +2,7 @@
     "name": "userfrosting/userfrosting",
     "type": "project",
     "description": "A secure, modern user management system for PHP.",
-    "keywords": ["php user management", "usercake", "bootstrap"],
+    "keywords": ["php user management", "userfrosting", "php", "login", "web-framework", "user-management", "login-system", "login"],
     "homepage": "https://github.com/userfrosting/UserFrosting",
     "license" : "MIT",
     "authors" : [
