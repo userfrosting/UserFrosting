@@ -19,7 +19,7 @@ use UserFrosting\Sprinkle\SprinkleRecipe;
 use UserFrosting\Theme\AdminLTE\AdminLTE;
 
 /**
- * The Sprinkle Recipe
+ * The Sprinkle Recipe.
  *
  * @see https://learn.userfrosting.com/sprinkles/recipe
  */
