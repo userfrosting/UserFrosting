@@ -18,12 +18,21 @@ use UserFrosting\Sprinkle\Core\Core;
 use UserFrosting\Sprinkle\SprinkleRecipe;
 use UserFrosting\Theme\AdminLTE\AdminLTE;
 
+/**
+ * The Sprinkle Recipe
+ *
+ * @see https://learn.userfrosting.com/sprinkles/recipe
+ */
 class MyApp implements
     SprinkleRecipe,
     BakeryRecipe
 {
     /**
-     * {@inheritdoc}
+     * Return the Sprinkle name.
+     *
+     * @see https://learn.userfrosting.com/sprinkles/recipe#name
+     *
+     * @return string
      */
     public function getName(): string
     {
@@ -31,7 +40,11 @@ class MyApp implements
     }
 
     /**
-     * {@inheritdoc}
+     * Return the Sprinkle dir path.
+     *
+     * @see https://learn.userfrosting.com/sprinkles/recipe#path
+     *
+     * @return string
      */
     public function getPath(): string
     {
@@ -39,17 +52,14 @@ class MyApp implements
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getBakeryCommands(): array
-    {
-        return [
-            HelloCommand::class,
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
+     * Return dependent sprinkles.
+     *
+     * First one will be loaded first, with this sprinkle being last.
+     * Dependent sprinkle dependencies will also be loaded recursively.
+     *
+     * @see https://learn.userfrosting.com/sprinkles/recipe#dependent-sprinkles
+     *
+     * @return string[]|SprinkleRecipe[]
      */
     public function getSprinkles(): array
     {
@@ -64,6 +74,8 @@ class MyApp implements
     /**
      * Returns a list of routes definition in PHP files.
      *
+     * @see https://learn.userfrosting.com/sprinkles/recipe#routes
+     *
      * @return string[]
      */
     public function getRoutes(): array
@@ -74,14 +86,30 @@ class MyApp implements
     }
 
     /**
-     * Returns a list of all PHP-DI services/container definitions files.
+     * Returns a list of all PHP-DI services/container definitions class.
      *
-     * @return string[]
+     * @see https://learn.userfrosting.com/sprinkles/recipe#services
+     *
+     * @return string[]|\UserFrosting\ServicesProvider\ServicesProviderInterface[]
      */
     public function getServices(): array
     {
         return [
             MyServices::class,
+        ];
+    }
+
+    /**
+     * Return an array of all registered Bakery Commands.
+     *
+     * @see https://learn.userfrosting.com/sprinkles/recipe#bakeryrecipe
+     *
+     * @return string[]
+     */
+    public function getBakeryCommands(): array
+    {
+        return [
+            HelloCommand::class,
         ];
     }
 }
