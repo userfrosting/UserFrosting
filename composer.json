@@ -41,8 +41,6 @@
         "league/factory-muffin": "^3.0",
         "league/factory-muffin-faker": "^2.0"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "UserFrosting\\App\\": "app/src"
