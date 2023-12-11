@@ -31,8 +31,14 @@ jQuery.validator.setDefaults({
     errorElement: 'p',
     errorClass: 'error-block',
     errorPlacement: function(error, element) {
-        if(element.parent('.input-group').length) {
+        if (element.hasClass('js-select2') && element.next('.select2-container').length) {
+            error.insertAfter(element.next('.select2-container'));
+        } else if (element.parent('.input-group').length) {
             error.insertAfter(element.parent());
+        } else if (element.prop('type') === 'radio' && element.parent('.radio-inline').length) {
+            error.insertAfter(element.parent().parent());
+        } else if (element.prop('type') === 'checkbox' || element.prop('type') === 'radio') {
+            error.appendTo(element.parent().parent());
         } else {
             error.insertAfter(element);
         }
