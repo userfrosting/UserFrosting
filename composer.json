@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-gd": "*",
         "userfrosting/framework": "^5.0",
         "userfrosting/sprinkle-core": "^5.0",
