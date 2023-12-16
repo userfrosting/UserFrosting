@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Drop PHP 8.1 support, add PHP 8.3 support
 - Update to Laravel 10
 - Update to PHPUnit 10
+- Test against MariaDB [#1238](https://github.com/userfrosting/UserFrosting/issues/1238)
 
 ## [v4.6.0]
 

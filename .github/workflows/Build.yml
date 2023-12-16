@@ -143,6 +143,78 @@ jobs:
         file: ./_meta/coverage.xml
         fail_ci_if_error: true
 
+  PHPUnit-MariaDB:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php_versions: ['8.1', '8.2', '8.3']
+
+    runs-on: ubuntu-latest
+    name: PHPUnit - PHP ${{ matrix.php_versions }} - MariaDB
+
+    env:
+      DB_TEST_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_USER: userfrosting
+      DB_PASSWORD: password
+      DB_NAME: userfrosting
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_versions }}
+        extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
+        coverage: xdebug
+        tools: pecl, composer
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    
+    - name: Setup Redis-server
+      uses: supercharge/redis-github-action@1.1.0
+      with:
+        redis-version: 6
+    
+    - name: Setup Memcached
+      uses: niden/actions-memcached@v7
+    
+    - name: Shutdown Ubuntu MySQL (SUDO)
+      run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
+
+    - name: Set up MariaDB
+      uses: getong/mariadb-action@v1.1
+      with:
+        mysql database: 'userfrosting'
+        mysql user: 'userfrosting'
+        mysql password: 'password'
+
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-progress
+      
+    - name: Npm Install
+      run: npm install
+    
+    - name: Run Webpack
+      run: npm run dev
+
+    - name: Execute tests
+      run: | 
+        echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+        vendor/bin/phpunit
+    
+    - name: Upload coverage to Codecov
+      if: github.event_name != 'schedule'
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./_meta/coverage.xml
+        fail_ci_if_error: true
+
   PHPUnit-SQLite:
 
       strategy:
