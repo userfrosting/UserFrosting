@@ -14,9 +14,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\Twig;
 
 /**
- * CoreController Class.
+ * AppController Class.
  *
- * Implements some common sitewide routes.
+ * Implements some common site wide routes.
  *
  * N.B.: THIS FILE IS SAFE TO EDIT OR DELETE.
  */
