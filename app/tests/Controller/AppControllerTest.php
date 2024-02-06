@@ -16,7 +16,7 @@ use UserFrosting\Testing\TestCase;
 /**
  * Tests for AppController Class.
  *
- * N.B.: THIS FILE IS SAFE TO EDIT OR DELETE.
+ * N.B.: This file is sage to edit or delete.
  */
 class AppControllerTest extends TestCase
 {

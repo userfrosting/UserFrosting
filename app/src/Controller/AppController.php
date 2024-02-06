@@ -18,7 +18,8 @@ use Slim\Views\Twig;
  *
  * Implements some common site wide routes.
  *
- * N.B.: THIS FILE IS SAFE TO EDIT OR DELETE.
+ * N.B.: This file is sage to edit or delete. If you delete this class, don't
+ *       forget to delete the corresponding routes and entry in the Sprinkle Recipe!
  */
 class AppController
 {
