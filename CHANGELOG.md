@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.0.2](https://github.com/userfrosting/UserFrosting/compare/5.0.1...5.0.2)
+- Fix Dockerfile - npm missing from the App Image [#1242](https://github.com/userfrosting/UserFrosting/issues/1242)
+- Fix AppController says "safe to be deleted", but this breaks 4 routes [#1241](https://github.com/userfrosting/UserFrosting/issues/1241)
+- Add PHP 8.3 to test suite
+
+## [5.0.1](https://github.com/userfrosting/UserFrosting/compare/5.0.0...5.0.1)
+- [Add env for public URI, default back to empty string](https://github.com/userfrosting/UserFrosting/commit/d89d67b7b76d8043df437ddbebe3d171c86d9b97)
+- [Core Sprinkle] [Add env for public URI, default back to empty string](https://github.com/userfrosting/sprinkle-core/commit/1349e309574fb7e4fa910e0b6e81957e257f1a2a)
+- [Core Sprinkle] [Remove rel=author, rel=publisher tags from base template](https://github.com/userfrosting/sprinkle-core/commit/b90f7dc3d993a08b383a182d20cec2b381e20a27)
+- [Admin Sprinkle] Update success message when admin resets password for a user - Fix [#852](https://github.com/userfrosting/UserFrosting/issues/852)
+- [Account Sprinkle] Add deliberate warning when Mail exception occurs during registration - Fix [#1229](https://github.com/userfrosting/UserFrosting/issues/1229)
+
+## [5.0.0](https://github.com/userfrosting/UserFrosting/compare/v4.6.7...5.0.0)
+For detailled changelog, see : https://github.com/userfrosting/UserFrosting/releases/tag/5.0.0
+
 ## [v4.6.0]
 
 ### Changed Requirements
