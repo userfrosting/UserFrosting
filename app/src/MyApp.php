@@ -59,7 +59,7 @@ class MyApp implements
      *
      * @see https://learn.userfrosting.com/sprinkles/recipe#dependent-sprinkles
      *
-     * @return string[]|SprinkleRecipe[]
+     * @return class-string<SprinkleRecipe>[]
      */
     public function getSprinkles(): array
     {
@@ -76,7 +76,7 @@ class MyApp implements
      *
      * @see https://learn.userfrosting.com/sprinkles/recipe#routes
      *
-     * @return string[]
+     * @return class-string<\UserFrosting\Routes\RouteDefinitionInterface>[]
      */
     public function getRoutes(): array
     {
@@ -90,7 +90,7 @@ class MyApp implements
      *
      * @see https://learn.userfrosting.com/sprinkles/recipe#services
      *
-     * @return string[]|\UserFrosting\ServicesProvider\ServicesProviderInterface[]
+     * @return class-string<\UserFrosting\ServicesProvider\ServicesProviderInterface>[]
      */
     public function getServices(): array
     {
@@ -104,7 +104,7 @@ class MyApp implements
      *
      * @see https://learn.userfrosting.com/sprinkles/recipe#bakeryrecipe
      *
-     * @return string[]
+     * @return class-string<\Symfony\Component\Console\Command\Command>[]
      */
     public function getBakeryCommands(): array
     {
