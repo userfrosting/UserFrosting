@@ -105,7 +105,7 @@ class MyApp implements
      * @see https://learn.userfrosting.com/sprinkles/recipe#bakeryrecipe
      *
      * @return class-string<\Symfony\Component\Console\Command\Command>[]
-     * 
+     *
      * @codeCoverageIgnore
      */
     public function getBakeryCommands(): array
