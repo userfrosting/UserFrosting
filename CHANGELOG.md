@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Update to PHPUnit 10
 - Test against MariaDB [#1238](https://github.com/userfrosting/UserFrosting/issues/1238)
 
+**Upgrade guide : https://learn.userfrosting.com/5.1/upgrading/50-to-51**
+
 ## [5.0.2](https://github.com/userfrosting/UserFrosting/compare/5.0.1...5.0.2)
 - Fix Dockerfile - npm missing from the App Image [#1242](https://github.com/userfrosting/UserFrosting/issues/1242)
 - Fix AppController says "safe to be deleted", but this breaks 4 routes [#1241](https://github.com/userfrosting/UserFrosting/issues/1241)
