@@ -35,4 +35,46 @@ class AppControllerTest extends TestCase
         $this->assertResponseStatus(200, $response);
         $this->assertNotSame('', (string) $response->getBody());
     }
+
+    /**
+     * Test index (`/about`) page.
+     */
+    public function testPageAbout(): void
+    {
+        // Create request with method and url and fetch response
+        $request = $this->createRequest('GET', '/about');
+        $response = $this->handleRequest($request);
+
+        // Asserts
+        $this->assertResponseStatus(200, $response);
+        $this->assertNotSame('', (string) $response->getBody());
+    }
+
+    /**
+     * Test index (`/legal`) page.
+     */
+    public function testPageLegal(): void
+    {
+        // Create request with method and url and fetch response
+        $request = $this->createRequest('GET', '/legal');
+        $response = $this->handleRequest($request);
+
+        // Asserts
+        $this->assertResponseStatus(200, $response);
+        $this->assertNotSame('', (string) $response->getBody());
+    }
+
+    /**
+     * Test index (`/privacy`) page.
+     */
+    public function testPagePrivacy(): void
+    {
+        // Create request with method and url and fetch response
+        $request = $this->createRequest('GET', '/privacy');
+        $response = $this->handleRequest($request);
+
+        // Asserts
+        $this->assertResponseStatus(200, $response);
+        $this->assertNotSame('', (string) $response->getBody());
+    }
 }
