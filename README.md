@@ -1,10 +1,10 @@
-# UserFrosting 5.0
+# UserFrosting 5.1
 
 [![Latest Version](https://img.shields.io/github/v/release/userfrosting/userfrosting?include_prereleases&sort=semver)](https://github.com/userfrosting/UserFrosting/releases)
-![PHP Version](https://img.shields.io/badge/php-%5E8.0-brightgreen)
-[![Build](https://img.shields.io/github/actions/workflow/status/userfrosting/UserFrosting/Build.yml?branch=5.0&logo=github)](https://github.com/userfrosting/UserFrosting/actions)
-[![Codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/5.0/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting)
-[![Style](https://github.styleci.io/repos/18148206/shield?branch=5.0&style=flat)](https://github.styleci.io/repos/18148206)
+![PHP Version](https://img.shields.io/badge/php-%5E8.1-brightgreen)
+[![Build](https://img.shields.io/github/actions/workflow/status/userfrosting/UserFrosting/Build.yml?branch=5.1&logo=github)](https://github.com/userfrosting/UserFrosting/actions)
+[![Codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/5.1/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting)
+[![Style](https://github.styleci.io/repos/18148206/shield?branch=5.1&style=flat)](https://github.styleci.io/repos/18148206)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
 [![Join the chat](https://img.shields.io/badge/Chat-UserFrosting-brightgreen?logo=Rocket.Chat)](https://chat.userfrosting.com/channel/support)
 [![Backers on Open Collective](https://img.shields.io/opencollective/backers/userfrosting?logo=opencollective)](#backers)
@@ -18,9 +18,9 @@ If you simply want to show that you like this project, or want to remember it fo
 
 ## By [Alex Weissman](https://alexanderweissman.com) and [Louis Charette](https://bbqsoftwares.com)
 
-Copyright (c) 2019-2023, free to use in personal and commercial software as per the [license](LICENSE.md).
+Copyright (c) 2013-2024, free to use in personal and commercial software as per the [license](LICENSE.md).
 
-UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.8/eloquent#introduction) ORM.
+UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/10.x/eloquent#introduction) ORM.
 
 ## Features
 
