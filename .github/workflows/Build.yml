@@ -2,11 +2,12 @@ name: Build
 
 on:
   push:
-    branches: ['*']
+    branches: [5.0, 5.1, 5.2]
   pull_request:
-    branches: ['*']
+    branches: [5.0, 5.1, 5.2]
   schedule:
-  - cron: "0 0 * * 5"
+    - cron: "0 0 * * 5"
+  workflow_dispatch:
 
 jobs:
   PHPUnit-Memory:
