@@ -1,10 +1,10 @@
-# UserFrosting 5.1
+# UserFrosting 5.2
 
 [![Latest Version](https://img.shields.io/github/v/release/userfrosting/userfrosting?include_prereleases&sort=semver)](https://github.com/userfrosting/UserFrosting/releases)
 ![PHP Version](https://img.shields.io/badge/php-%5E8.1-brightgreen)
-[![Build](https://img.shields.io/github/actions/workflow/status/userfrosting/UserFrosting/Build.yml?branch=5.1&logo=github)](https://github.com/userfrosting/UserFrosting/actions)
-[![Codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/5.1/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting)
-[![Style](https://github.styleci.io/repos/18148206/shield?branch=5.1&style=flat)](https://github.styleci.io/repos/18148206)
+[![Build](https://img.shields.io/github/actions/workflow/status/userfrosting/UserFrosting/Build.yml?branch=5.2&logo=github)](https://github.com/userfrosting/UserFrosting/actions)
+[![Codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/5.2/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting)
+[![Style](https://github.styleci.io/repos/18148206/shield?branch=5.2&style=flat)](https://github.styleci.io/repos/18148206)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
 [![Join the chat](https://img.shields.io/badge/Chat-UserFrosting-brightgreen?logo=Rocket.Chat)](https://chat.userfrosting.com/channel/support)
 [![Backers on Open Collective](https://img.shields.io/opencollective/backers/userfrosting?logo=opencollective)](#backers)
