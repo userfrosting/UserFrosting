@@ -32,7 +32,7 @@ const router = createRouter({
             component: () => import('../layouts/LayoutDashboard.vue'),
             children: [...AdminRoutes],
             meta: {
-                title: 'ADMIN'
+                title: 'ADMIN_PANEL'
             }
         }
     ]

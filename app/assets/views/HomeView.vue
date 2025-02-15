@@ -32,7 +32,7 @@ const helloMsg = computed(() => {
 
         <div class="uk-grid-small uk-child-width-auto" uk-grid>
             <div>
-                <a class="uk-button uk-button-text" href="#">Read more</a>
+                <a class="uk-button uk-button-text" href="#">{{ $t('READ_MORE') }}</a>
             </div>
         </div>
     </article>

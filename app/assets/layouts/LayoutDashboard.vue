@@ -7,7 +7,7 @@ import { SidebarMenuItems } from '@userfrosting/sprinkle-admin/components'
 <template>
     <NavBar />
     <UFSideBar>
-        <UFSideBarLabel label="Admin Panel" />
+        <UFSideBarLabel :label="$t('ADMIN_PANEL')" />
         <SidebarMenuItems />
     </UFSideBar>
     <UFMainContent>
