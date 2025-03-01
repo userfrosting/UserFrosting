@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 
 /**
- * French translations
+ * French translations.
  */
 return [
     'ABOUT'        => 'À propos',
