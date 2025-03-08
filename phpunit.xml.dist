@@ -21,6 +21,9 @@
       <directory suffix="Test.php">app/tests</directory>
     </testsuite>
   </testsuites>
+  <logging>
+    <junit outputFile="_meta/junit.xml"/>
+  </logging>
   <php>
     <env name="UF_MODE" value="testing"/>
   </php>

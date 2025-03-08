@@ -65,6 +65,13 @@ jobs:
           file: ./_meta/coverage.xml
           fail_ci_if_error: true
 
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: ./_meta/junit.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+
   PHPUnit-MySQL:
 
     strategy:
@@ -144,6 +151,13 @@ jobs:
         file: ./_meta/coverage.xml
         fail_ci_if_error: true
 
+    - name: Upload test results to Codecov
+      if: ${{ !cancelled() }}
+      uses: codecov/test-results-action@v1
+      with:
+        files: ./_meta/junit.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
+
   PHPUnit-MariaDB:
 
     strategy:
@@ -216,6 +230,13 @@ jobs:
         file: ./_meta/coverage.xml
         fail_ci_if_error: true
 
+    - name: Upload test results to Codecov
+      if: ${{ !cancelled() }}
+      uses: codecov/test-results-action@v1
+      with:
+        files: ./_meta/junit.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
+
   PHPUnit-SQLite:
 
       strategy:
@@ -277,6 +298,13 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./_meta/coverage.xml
           fail_ci_if_error: true
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: ./_meta/junit.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
   
   PHPUnit-Postgre:
 
@@ -346,6 +374,13 @@ jobs:
           file: ./_meta/coverage.xml
           fail_ci_if_error: true
 
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: ./_meta/junit.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+
   PHPUnit-Windows:
 
     strategy:
@@ -398,3 +433,10 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./_meta/coverage.xml
         fail_ci_if_error: true
+
+    - name: Upload test results to Codecov
+      if: ${{ !cancelled() }}
+      uses: codecov/test-results-action@v1
+      with:
+        files: ./_meta/junit.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
