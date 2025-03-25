@@ -1,5 +1,6 @@
 import AccountRoutes from '@userfrosting/sprinkle-account/routes'
 import AdminRoutes from '@userfrosting/sprinkle-admin/routes'
+import ErrorRoutes from '@userfrosting/sprinkle-core/routes'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -24,7 +25,8 @@ const router = createRouter({
                     component: () => import('../views/AboutView.vue')
                 },
                 // Include sprinkles routes
-                ...AccountRoutes
+                ...AccountRoutes,
+                ...ErrorRoutes
             ]
         },
         {
