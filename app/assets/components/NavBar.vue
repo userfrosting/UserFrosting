@@ -24,9 +24,13 @@ const auth = useAuthStore()
             :username="auth.user.full_name"
             :avatar="auth.user.avatar"
             :meta="auth.user.user_name">
-            <UFNavBarUserCardButton :label="$t('ADMIN_PANEL')" :to="{ name: 'admin.dashboard' }" />
+            <UFNavBarUserCardButton
+                :label="$t('ADMIN_PANEL')"
+                v-if="$checkAccess('uri_dashboard')"
+                :to="{ name: 'admin.dashboard' }" />
             <UFNavBarUserCardButton
                 :label="$t('ACCOUNT.SETTINGS')"
+                v-if="$checkAccess('update_account_settings')"
                 :to="{ name: 'account.settings' }" />
             <UFNavBarUserCardButton :label="$t('LOGOUT')" @click="auth.logout()" />
         </UFNavBarUserCard>
