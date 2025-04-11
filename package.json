@@ -34,7 +34,7 @@
         "prettier": "^3.2.5",
         "ts-loader": "^9.5.1",
         "typescript": "^5.4.5",
-        "vite": "^5.2.8",
+        "vite": "^6.2",
         "vite-plugin-vue-devtools": "^7.5.4",
         "vue-loader": "^17.2.2",
         "vue-tsc": "^2.1.10",
