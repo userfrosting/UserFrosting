@@ -18,6 +18,7 @@ const auth = useAuthStore()
             v-if="!auth.isAuthenticated" />
         <UFNavBarLogin
             v-if="!auth.isAuthenticated"
+            @goto-login="router.push({ name: 'account.login' })"
             @goto-registration="router.push({ name: 'account.register' })" />
         <UFNavBarUserCard
             v-if="auth.isAuthenticated"
