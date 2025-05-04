@@ -1,8 +1,6 @@
 <script setup>
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
-const router = useRouter()
 const config = useConfigStore()
 
 // Logout API variables
@@ -15,11 +13,8 @@ const auth = useAuthStore()
         <UFNavBarItem
             :to="{ name: 'account.register' }"
             :label="$t('REGISTER')"
-            v-if="!auth.isAuthenticated" />
-        <UFNavBarLogin
-            v-if="!auth.isAuthenticated"
-            @goto-login="router.push({ name: 'account.login' })"
-            @goto-registration="router.push({ name: 'account.register' })" />
+            v-if="!auth.isAuthenticated && useConfigStore().get('site.registration.enabled')" />
+        <UFNavBarLogin v-if="!auth.isAuthenticated" />
         <UFNavBarUserCard
             v-if="auth.isAuthenticated"
             :username="auth.user.full_name"
