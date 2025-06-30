@@ -1,10 +1,12 @@
 <script setup>
+import { useLogoutApi } from '@userfrosting/sprinkle-account/composables'
 import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 const config = useConfigStore()
 
-// Logout API variables
+// Auth and Logout API variables
 const auth = useAuthStore()
+const { submitLogout } = useLogoutApi()
 </script>
 
 <template>
@@ -28,7 +30,7 @@ const auth = useAuthStore()
                 :label="$t('ACCOUNT.SETTINGS')"
                 v-if="$checkAccess('update_account_settings')"
                 :to="{ name: 'account.settings' }" />
-            <UFNavBarUserCardButton :label="$t('LOGOUT')" @click="auth.logout()" />
+            <UFNavBarUserCardButton :label="$t('LOGOUT')" @click="submitLogout()" />
         </UFNavBarUserCard>
     </UFNavBar>
 </template>
