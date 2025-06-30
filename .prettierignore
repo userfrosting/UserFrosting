@@ -1,3 +1,11 @@
-# Ignore all png and svg files:
+# Ignore all images files:
 *.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.bmp
+*.tiff
+*.tif
 *.svg
+*.ico
