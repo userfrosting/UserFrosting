@@ -31,22 +31,27 @@
         {
             "label": "Frontend - Vite Dev",
             "type": "shell",
-            "command": "npm run --workspace=userfrosting vite:dev"
+            "command": "npm run vite:dev"
         },
         {
             "label": "Frontend - Vite Build",
             "type": "shell",
-            "command": "npm run --workspace=userfrosting vite:build"
+            "command": "npm run vite:build"
         },
         {
             "label": "Frontend - Format Code",
             "type": "shell",
-            "command": "npm run --workspaces format"
+            "command": "npm run format"
         },
         {
             "label": "Frontend - Type Check",
             "type": "shell",
-            "command": "npm run --workspaces typecheck"
+            "command": "npm run typecheck"
+        },
+        {
+            "label": "Frontend - Eslint",
+            "type": "shell",
+            "command": "npm run lint"
         },
         {
             "label": "Frontend - Tests",

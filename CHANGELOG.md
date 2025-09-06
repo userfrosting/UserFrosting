@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add 'limax' to optimizeDeps (Prevents "importing binding name 'default' cannot be resolved by star export entries")
 - Add YAML loader
 - Update VSCode tasks
+- Update Eslint config
 
 ## [6.0.0-beta.2](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.1...6.0.0-beta.2)
 - Update dependencies to version 6.0.0-beta across all packages
