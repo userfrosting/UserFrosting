@@ -40,6 +40,6 @@ export default defineConfig({
     // Force optimization of UiKit in dev mode to avoid to avoid the error:
     // "importing binding name 'default' cannot be resolved by star export entries"
     optimizeDeps: {
-        include: ['uikit', 'uikit/dist/js/uikit-icons'],
+        include: ['uikit', 'uikit/dist/js/uikit-icons', 'limax'],
     }
 })

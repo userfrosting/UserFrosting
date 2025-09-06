@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.0-beta.3](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.2...6.0.0-beta.3)
+- Add 'limax' to optimizeDeps (Prevents "importing binding name 'default' cannot be resolved by star export entries")
+
+## [6.0.0-beta.2](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.1...6.0.0-beta.2)
+- Update dependencies to version 6.0.0-beta across all packages
+
+## 6.0.0-beta.1
+First beta release of UserFrosting 6
+
 ## [5.2.0](https://github.com/userfrosting/userfrosting/compare/5.1.0...5.2.0)
 - Renamed npm scripts, add Vite npm scripts
 
