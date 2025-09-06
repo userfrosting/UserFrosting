@@ -4,6 +4,9 @@
         "xdebug.php-debug",
         "neilbrayfield.php-docblocker",
         "bmewburn.vscode-intelephense-client",
-        "sanderronde.phpstan-vscode"
+        "sanderronde.phpstan-vscode",
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
     ]
 }

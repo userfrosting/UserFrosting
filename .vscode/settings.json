@@ -1,7 +1,10 @@
 {
-    "cSpell.words": [
-        "axios",
-        "pinia",
-        "Sprunjer"
-    ]
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "tsconfig.json": "tsconfig.*.json, env.d.ts",
+        "vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
+        "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .oxlint*, oxlint*, .prettier*, prettier*, .editorconfig",
+        "composer.json": "composer.lock, phpunit.xml*, phpstan.neon*, phpstan-baseline.neon*, .php-cs*, .php_cs*, .styleci.yml*, .phpdoc.*"
+    },
+    "cSpell.words": ["axios", "pinia", "Sprunjer"]
 }
