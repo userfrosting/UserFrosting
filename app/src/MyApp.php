@@ -17,8 +17,6 @@ use UserFrosting\Sprinkle\BakeryRecipe;
 use UserFrosting\Sprinkle\Core\Core;
 use UserFrosting\Sprinkle\SprinkleRecipe;
 
-// use UserFrosting\Theme\AdminLTE\AdminLTE;
-
 /**
  * The Sprinkle Recipe.
  *

@@ -14,9 +14,9 @@ declare(strict_types=1);
  * French translations.
  */
 return [
-    'ABOUT'        => 'À propos',
+    'ABOUT' => 'À propos',
 
-    'READ_MORE'   => 'Lire la suite',
+    'READ_MORE' => 'Lire la suite',
 
-    'WELCOME_TO'               => 'Bienvenue sur {{title}}, {{user}}!',
+    'WELCOME_TO' => 'Bienvenue sur {{title}}, {{user}}!',
 ];
