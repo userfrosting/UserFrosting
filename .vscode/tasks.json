@@ -3,63 +3,63 @@
     // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
+        /**
+         * Main task - Serve the UserFrosting instance for development
+         */
         {
-            "label": "PHPUnit",
-            "type": "shell",
-            "options": {
-                "env": {
-                    "XDEBUG_CONFIG": "idekey=VSCODE"
-                }
-            },
-            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "PHP CS Fixer",
-            "type": "shell",
-            "command": "vendor/bin/php-cs-fixer fix",
+            "label": "==> Serve",
+            "dependsOn": [
+                "Bakery - Serve",
+                "Frontend - Vite Dev"
+            ],
             "problemMatcher": []
         },
+
+        /**
+         * NPM Tasks
+         */
         {
-            "label": "Bake",
+            "label": "Frontend - npm install",
             "type": "shell",
-            "options": {},
-            "command": "php bakery bake",
-            "problemMatcher": [],
+            "command": "npm install"
         },
         {
-            "label": "PHPStan",
+            "label": "Frontend - npm update",
             "type": "shell",
-            "command": "vendor/bin/phpstan analyse app/src/ app/tests/ --memory-limit=4G",
-            "problemMatcher": []
+            "command": "npm update"
         },
         {
-            "label": "Serve",
+            "label": "Frontend - Vite Dev",
             "type": "shell",
-            "options": {},
-            "command": "php bakery serve",
-            "problemMatcher": []
+            "command": "npm run --workspace=userfrosting vite:dev"
         },
         {
-            "label": "npm install",
+            "label": "Frontend - Vite Build",
             "type": "shell",
-            "options": {},
-            "command": "npm install",
-            "problemMatcher": []
+            "command": "npm run --workspace=userfrosting vite:build"
         },
         {
-            "label": "npm update",
+            "label": "Frontend - Format Code",
             "type": "shell",
-            "options": {},
-            "command": "npm update",
-            "problemMatcher": []
+            "command": "npm run --workspaces format"
         },
         {
-            "label": "webpack:dev",
+            "label": "Frontend - Type Check",
+            "type": "shell",
+            "command": "npm run --workspaces typecheck"
+        },
+        {
+            "label": "Frontend - Tests",
+            "type": "shell",
+            "command": "npm run test"
+        },
+        {
+            "label": "Frontend - Coverage",
+            "type": "shell",
+            "command": "npm run coverage"
+        },
+        {
+            "label": "Frontend - webpack:dev",
             "type": "shell",
             "options": {},
             "command": "npm run webpack:dev",
@@ -67,7 +67,7 @@
             "group": "build"
         },
         {
-            "label": "webpack:server (HMR)",
+            "label": "Frontend - webpack:server (HMR)",
             "type": "shell",
             "options": {},
             "command": "npm run webpack:server",
@@ -75,46 +75,63 @@
             "group": "build"
         },
         {
-            "label": "webpack:watch",
+            "label": "Frontend - webpack:watch",
             "type": "shell",
             "options": {},
             "command": "npm run webpack:watch",
             "problemMatcher": []
         },
         {
-            "label": "webpack:build",
+            "label": "Frontend - webpack:build",
             "type": "shell",
             "options": {},
             "command": "npm run webpack:build",
             "problemMatcher": []
         },
+
+        /**
+         * PHP Tasks
+         */
         {
-            "label": "lint",
+            "label": "Bakery - Bake",
             "type": "shell",
             "options": {},
-            "command": "npm run lint",
-            "problemMatcher": []
+            "command": "php bakery bake",
+            "problemMatcher": [],
         },
         {
-            "label": "format",
+            "label": "Bakery - Serve",
             "type": "shell",
-            "options": {},
-            "command": "npm run format",
-            "problemMatcher": []
+            "command": "php bakery serve"
         },
         {
-            "label": "vite:dev",
+            "label": "Backend - Composer Update",
             "type": "shell",
-            "options": {},
-            "command": "npm run vite:dev",
-            "problemMatcher": []
+            "command": "composer update"
         },
         {
-            "label": "vite:build",
+            "label": "Backend - PHPUnit",
             "type": "shell",
-            "options": {},
-            "command": "npm run vite:build",
-            "problemMatcher": []
-        }
+            "options": {
+                "env": {
+                    "XDEBUG_CONFIG": "idekey=VSCODE"
+                }
+            },
+            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Backend - PHP CS Fixer",
+            "type": "shell",
+            "command": "vendor/bin/php-cs-fixer fix"
+        },
+        {
+            "label": "Backend - PHPStan",
+            "type": "shell",
+            "command": "vendor/bin/phpstan analyse"
+        },
     ]
 }
