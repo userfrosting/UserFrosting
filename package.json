@@ -42,13 +42,15 @@
         "webpack-notifier": "^1.15.0"
     },
     "scripts": {
-        "typecheck": "vue-tsc --noEmit",
         "webpack:server": "encore dev-server --port 9000",
         "webpack:dev": "encore dev",
         "webpack:watch": "encore dev --watch",
         "webpack:build": "encore production --progress",
         "vite:dev": "vite",
         "vite:build": "vue-tsc && vite build",
+        "test": "vitest",
+        "coverage": "vitest run --coverage",
+        "typecheck": "vue-tsc --noEmit",
         "lint": "eslint app/assets/ --fix",
         "format": "prettier --write app/assets/"
     }
