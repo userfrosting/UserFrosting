@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useLogoutApi } from '@userfrosting/sprinkle-account/composables'
 import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
