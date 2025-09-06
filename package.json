@@ -15,6 +15,7 @@
         "vue-router": "^4.2.4"
     },
     "devDependencies": {
+        "@modyfi/vite-plugin-yaml": "^1.1.1",
         "@rushstack/eslint-patch": "^1.8.0",
         "@symfony/webpack-encore": "^5.1.0",
         "@tsconfig/node20": "^20.1.4",

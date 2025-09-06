@@ -16,7 +16,8 @@
         "baseUrl": ".",
         "rootDir": "app/assets",
         "outDir": "public/assets/",
-        "allowJs": true
+        "allowJs": true,
+        "types": ["@modyfi/vite-plugin-yaml/modules"]
     },
     "references": [
         {
