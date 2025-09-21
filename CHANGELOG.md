@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [6.0.0-beta.4](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.3...6.0.0-beta.4)
 - Add exclude list for optimizeDeps in Vite config
 - Add Admin Sprinkle to main.ts
+- Go back to Vite default port (`5173`) + allows Vite port to be in env variable
 
 ## [6.0.0-beta.3](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.2...6.0.0-beta.3)
 - Add 'limax' to optimizeDeps (Prevents "importing binding name 'default' cannot be resolved by star export entries")
