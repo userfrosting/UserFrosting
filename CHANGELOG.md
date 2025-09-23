@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > This file contains the changelog of the Skeleton itself. You should replace it with your own Changelog!
 
 ## [6.0.0-beta.4](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.3...6.0.0-beta.4)
+- Update Docker setup (@ssnukala)
 - Add exclude list for optimizeDeps in Vite config
 - Add Admin Sprinkle to main.ts
 - Go back to Vite default port (`5173`) + allows Vite port to be in env variable

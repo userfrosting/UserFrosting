@@ -1,27 +1,16 @@
-version: "3.2"
 services:
   app:
     restart: unless-stopped
     tty: true
     build:
-      context: docker/app
-    environment:
-      - DB_CONNECTION=mysql
-      - DB_HOST=mysql
-      - DB_PORT=3306
-      - DB_NAME=userfrosting
-      - DB_USER=docker
-      - DB_PASSWORD=secret
-      - SMTP_HOST=mailpit
-      - SMTP_PORT=1025
-      - SMTP_SECURE=false
-      - SMTP_AUTH=false
+      context: ./docker/app
+    env_file:
+      - ./app/.env
     volumes:
       - .:/app
       - ./docker/app/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     networks:
       - backend
-
   nginx:
     restart: unless-stopped
     tty: true
@@ -33,12 +22,37 @@ services:
       - .:/app
     depends_on:
       - app
-      - mysql
       - mailpit
     networks:
       - frontend
       - backend
-
+  vue-frontend:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: .
+      dockerfile: ./docker/vue/Dockerfile
+    env_file:
+      - ./app/.env
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+    networks:
+      - frontend
+  mysql:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: ./docker/mysql
+    env_file:
+      - ./app/.env
+    ports:
+      - "8503:3306"
+    volumes:
+      - userfrosting-db:/var/lib/mysql
+    networks:
+      - backend
   mailpit:
     image: 'axllent/mailpit:latest'
     ports:
@@ -46,25 +60,9 @@ services:
       - '8025:8025'
     networks:
       - backend
-
-  mysql:
-    image: mysql:8.0
-    networks:
-      - backend
-    environment:
-      - MYSQL_DATABASE=userfrosting
-      - MYSQL_ROOT_PASSWORD=secret
-      - MYSQL_USER=docker
-      - MYSQL_PASSWORD=secret
-    ports:
-      - 8593:3306
-    volumes:
-      - userfrosting-db:/var/lib/mysql
-
 volumes:
   userfrosting-db:
     driver: local
-
 networks:
   frontend:
   backend:

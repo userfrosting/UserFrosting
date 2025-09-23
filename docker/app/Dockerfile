@@ -1,15 +1,12 @@
+# Use the official PHP 8.2 FPM image
 FROM php:8.2-fpm
 
-RUN apt-get update
+# Set environment variables for non-interactive installations
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get install -y apt-utils
-
-# Add NodeJS 18 Repository
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs
-
-RUN apt-get install -y \
-    libc-client-dev \
+# Update and install all necessary system dependencies in a single RUN command
+RUN apt-get update && apt-get install -y apt-utils curl git unzip gnupg2 \
+    libpq-dev \
     libicu-dev \
     libkrb5-dev \
     libssl-dev \
@@ -17,37 +14,32 @@ RUN apt-get install -y \
     libxml2-dev \
     locales \
     zlib1g-dev \
-    libzip-dev\
+    libzip-dev \
     libpng-dev \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libjpeg-dev \
     zip \
-    nodejs
+    default-mysql-client \
+    # Clean up the package cache to reduce image size
+    && rm -rf /var/lib/apt/lists/*
 
-# Optional XDebug Install
-#RUN curl -fsSL 'https://xdebug.org/files/xdebug-2.9.4.tgz' -o xdebug.tar.gz \
-#    && mkdir -p xdebug \
-#    && tar -xf xdebug.tar.gz -C xdebug --strip-components=1 \
-#    && rm xdebug.tar.gz \
-#    && ( \
-#    cd xdebug \
-#    && phpize \
-#    && ./configure --enable-xdebug \
-#    && make -j$(nproc) \
-#    && make install \
-#    ) \
-#    && rm -r xdebug \
-#    && docker-php-ext-enable xdebug   
+# Add NodeJS 20 Repository and install nodejs
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
 
-# COMPOSER INSTALL
-RUN curl -sSfo /tmp/composer.phar https://getcomposer.org/installer
-RUN php /tmp/composer.phar --install-dir=/usr/local/bin --filename=composer
+# Install XDebug via PECL
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
-# Install and configure PHP extensions
+# Install Composer
+RUN curl -sSfo /tmp/composer.phar https://getcomposer.org/installer \
+    && php /tmp/composer.phar --install-dir=/usr/local/bin --filename=composer
+
+# Configure and install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install -j$(nproc) pdo pdo_mysql \
-    && docker-php-ext-install -j$(nproc) zip
+    && docker-php-ext-install -j$(nproc) pdo pdo_mysql zip
 
 WORKDIR /app

@@ -10,6 +10,20 @@
             "request": "launch",
             "port": 9000,
             "log": false,
+        },
+        {
+            "name": "Listen for Xdebug on Docker",
+            "type": "php",
+            "request": "launch",
+            "port": 9001,
+            "pathMappings": {
+                "/app": "${workspaceFolder}"
+            },
+            "xdebugSettings": {
+                "max_children": 128,
+                "max_data": 512,
+                "max_depth": 3
+            }
         }
     ]
 }
