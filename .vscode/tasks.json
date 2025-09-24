@@ -31,7 +31,8 @@
         {
             "label": "Frontend - Vite Dev",
             "type": "shell",
-            "command": "npm run vite:dev"
+            "command": "npm run vite:dev",
+            "isBackground": true
         },
         {
             "label": "Frontend - Vite Build",
@@ -66,25 +67,23 @@
         {
             "label": "Frontend - webpack:dev",
             "type": "shell",
-            "options": {},
             "command": "npm run webpack:dev",
-            "problemMatcher": [],
-            "group": "build"
+            "problemMatcher": []
         },
         {
             "label": "Frontend - webpack:server (HMR)",
             "type": "shell",
-            "options": {},
             "command": "npm run webpack:server",
             "problemMatcher": [],
-            "group": "build"
+            "isBackground": true
         },
         {
             "label": "Frontend - webpack:watch",
             "type": "shell",
             "options": {},
             "command": "npm run webpack:watch",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "isBackground": true
         },
         {
             "label": "Frontend - webpack:build",
@@ -100,14 +99,15 @@
         {
             "label": "Bakery - Bake",
             "type": "shell",
-            "options": {},
             "command": "php bakery bake",
-            "problemMatcher": [],
+            "problemMatcher": []
         },
         {
             "label": "Bakery - Serve",
             "type": "shell",
-            "command": "php bakery serve"
+            "command": "php bakery serve",
+            "problemMatcher": [],
+            "isBackground": true
         },
         {
             "label": "Backend - Composer Update",
@@ -138,5 +138,54 @@
             "type": "shell",
             "command": "vendor/bin/phpstan analyse"
         },
+
+        /**
+         * Docker Tasks
+         */
+        {
+            "label": "Docker - Build",
+            "type": "shell",
+            "command": "docker-compose build --no-cache"
+        },
+        {
+            "label": "Docker - Up",
+            "type": "shell",
+            "command": "docker-compose up -d"
+        },
+        {
+            "label": "Docker - Down",
+            "type": "shell",
+            "command": "docker-compose down"
+        },
+        {
+            "label": "Docker - Composer Update",
+            "type": "shell",
+            "command": "docker-compose exec app composer update"
+        },
+        {
+            "label": "Docker - Bakery Bake",
+            "type": "shell",
+            "command": "docker-compose exec app php bakery bake"
+        },
+        {
+            "label": "Docker - PHPUnit",
+            "type": "shell",
+            "command": "docker-compose exec app vendor/bin/phpunit"
+        },
+        {
+            "label": "Docker - PHP CS Fixer",
+            "type": "shell",
+            "command": "docker-compose exec app vendor/bin/php-cs-fixer fix"
+        },
+        {
+            "label": "Docker - PHPStan",
+            "type": "shell",
+            "command": "docker-compose exec app vendor/bin/phpstan analyse"
+        },
+        {
+            "label": "Docker - Shell (App)",
+            "type": "shell",
+            "command": "docker-compose exec app bash"
+        }
     ]
 }
