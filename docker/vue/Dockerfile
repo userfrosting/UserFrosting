@@ -24,4 +24,4 @@ EXPOSE 5173
 ENV PATH=/app/node_modules/.bin:$PATH
 
 # Default command: run Vite dev server
-CMD ["npx", "vite", "dev", "--host", "--force"]
+CMD ["npx", "vite"]

@@ -16,6 +16,7 @@ export default defineConfig({
         })
     ],
     server: {
+        host: true, // Allows external access (needed for Docker)
         strictPort: true,
         port: vitePort,
         origin: `http://localhost:${vitePort}`,
