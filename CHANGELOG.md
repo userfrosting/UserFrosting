@@ -8,11 +8,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > [!TIP]
 > This file contains the changelog of the Skeleton itself. You should replace it with your own Changelog!
 
-## [6.0.0-beta.4](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.3...6.0.0-beta.4)
+## [6.0.0-beta.6](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.5...6.0.0-beta.6)
+- No changes
+
+## [6.0.0-beta.5](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.4...6.0.0-beta.5)
 - Update Docker setup (@ssnukala)
+- Go back to Vite default port (`5173`) + allows Vite port to be in env variable
+
+## [6.0.0-beta.4](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.3...6.0.0-beta.4)
 - Add exclude list for optimizeDeps in Vite config
 - Add Admin Sprinkle to main.ts
-- Go back to Vite default port (`5173`) + allows Vite port to be in env variable
 
 ## [6.0.0-beta.3](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.2...6.0.0-beta.3)
 - Add 'limax' to optimizeDeps (Prevents "importing binding name 'default' cannot be resolved by star export entries")
