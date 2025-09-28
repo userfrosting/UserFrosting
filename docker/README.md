@@ -39,7 +39,6 @@ Second, initialize a new UserFrosting project:
    ```bash
    docker-compose exec app php bakery bake
    ```
-
 9. Restart Vue Container now that Bakery installed frontend assets:
     ```bash
     docker-compose restart vue-frontend
