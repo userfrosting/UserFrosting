@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > This file contains the changelog of the Skeleton itself. You should replace it with your own Changelog!
 
 ## [6.0.0-beta.6](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.5...6.0.0-beta.6)
-- No changes
+- Remove Limax from optimizeDeps
 
 ## [6.0.0-beta.5](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.4...6.0.0-beta.5)
 - Update Docker setup (@ssnukala)
