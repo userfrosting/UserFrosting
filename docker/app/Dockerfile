@@ -24,8 +24,8 @@ RUN apt-get update && apt-get install -y apt-utils curl git unzip gnupg2 \
     # Clean up the package cache to reduce image size
     && rm -rf /var/lib/apt/lists/*
 
-# Add NodeJS 20 Repository and install nodejs
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+# Add NodeJS 22 Repository and install nodejs
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
