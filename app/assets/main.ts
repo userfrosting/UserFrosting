@@ -27,9 +27,11 @@ import AdminSprinkle from '@userfrosting/sprinkle-admin'
 app.use(AdminSprinkle)
 
 /** Setup Theme */
-import '@userfrosting/theme-pink-cupcake/less/main.less'
 import PinkCupcake from '@userfrosting/theme-pink-cupcake'
 app.use(PinkCupcake)
+
+// Import custom theme overrides
+import './theme.less'
 
 // Done
 app.mount('#app')
