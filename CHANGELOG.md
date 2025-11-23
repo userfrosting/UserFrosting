@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [6.0.0-beta.6](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.5...6.0.0-beta.6)
 - Remove Limax from optimizeDeps
 - Add example file on how to overwrite the Less/CSS theme
+- Add PHP 8.5 to test environment
 
 ## [6.0.0-beta.5](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.4...6.0.0-beta.5)
 - Update Docker setup (@ssnukala)
