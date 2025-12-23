@@ -1,3 +1,5 @@
 <template>
-    <UFFooterContent>{{ $t('COPYRIGHT', { year: new Date().getFullYear() }) }}</UFFooterContent>
+    <UFFooterContent>
+        <div>{{ $t('COPYRIGHT', { year: new Date().getFullYear() }) }}</div>
+    </UFFooterContent>
 </template>
