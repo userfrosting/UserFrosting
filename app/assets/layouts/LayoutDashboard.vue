@@ -1,18 +1,26 @@
 <script setup lang="ts">
-import NavBar from '../components/NavBar.vue'
+import NavBarContent from '../components/NavBarContent.vue'
+import SideBarContent from '../components/SideBarContent.vue'
 import FooterContent from '../components/FooterContent.vue'
-import { UFAdminSidebarMenuItems } from '@userfrosting/sprinkle-admin/components'
+import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
+const config = useConfigStore()
 </script>
 
 <template>
-    <NavBar />
+    <UFNavBar :title="config.get('site.title')" :to="{ name: 'home' }">
+        <NavBarContent />
+    </UFNavBar>
+
     <UFSideBar>
-        <UFSideBarLabel :label="$t('ADMIN_PANEL')" />
-        <UFAdminSidebarMenuItems />
+        <SideBarContent />
     </UFSideBar>
+
     <UFMainContent>
         <UFHeaderPage />
         <RouterView />
     </UFMainContent>
-    <FooterContent />
+
+    <UFFooter>
+        <FooterContent />
+    </UFFooter>
 </template>
