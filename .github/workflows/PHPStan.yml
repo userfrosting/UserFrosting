@@ -1,33 +1,34 @@
-name: PHPStan
+## GitHub Actions Workflow template for PHPStan Testing.
+## Uncomment this file to enable PHPStan testing on GitHub Actions.
 
-on:
-  push:
-    branches: [5.0, 5.1, 5.2]
-  pull_request:
-    branches: [5.0, 5.1, 5.2]
-  workflow_dispatch:
+# name: PHPStan
 
-jobs:
-  PHPStan:
+# on:
+#   push:
+#     branches: ['*'] # Apply to all branches. List specific branches if needed.
+#   pull_request:
+#     branches: ['*'] # Apply to all branches. List specific branches if needed.
+#   workflow_dispatch:
 
-    strategy:
-      fail-fast: false
-      matrix:
-        php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+# jobs:
+#   PHPStan:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5'] # PHP versions to test against
+#     runs-on: ubuntu-latest
+#     name: PHPStan - ${{ matrix.php_versions }}
 
-    runs-on: ubuntu-latest
-    name: PHPStan - ${{ matrix.php_versions }}
+#     steps:
+#       - uses: actions/checkout@v4
+      
+#       - name: Setup PHP, with composer and extensions
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: ${{ matrix.php_versions }}
 
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup PHP, with composer and extensions
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php_versions }}
+#       - name: Install Dependencies
+#         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-    - name: Install Dependencies
-      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-
-    - name: Run PHPStan
-      run: vendor/bin/phpstan analyse
+#       - name: Run PHPStan
+#         run: vendor/bin/phpstan analyse

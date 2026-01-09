@@ -1,0 +1,314 @@
+## GitHub Actions Workflow template for PHPUnit Testing.
+## Uncomment this file to enable PHPUnit testing on GitHub Actions.
+
+# name: PHPUnit
+
+# on:
+#   push:
+#     branches: ['*'] # Apply to all branches. List specific branches if needed.
+#   pull_request:
+#     branches: ['*'] # Apply to all branches. List specific branches if needed.
+#   workflow_dispatch:
+
+# # Each jobs section defines a different testing database configuration. 
+# # You should test against all databases you intend to support (locally and in production).
+# jobs:
+#   # Running on SQLite database stored in memory. The fastest option.
+#   Memory:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5'] # PHP versions to test against
+#     runs-on: ubuntu-latest
+#     name: PHPUnit - PHP ${{ matrix.php_versions }} - Memory SQLite
+
+#     steps:
+#       - uses: actions/checkout@v4
+      
+#       - name: Setup PHP, with composer and extensions
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: ${{ matrix.php_versions }}
+#           extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
+#           coverage: xdebug
+#           tools: pecl, composer
+
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+      
+#       - name: Setup Redis-server
+#         uses: supercharge/redis-github-action@1.1.0
+#         with:
+#           redis-version: 6
+      
+#       - name: Setup Memcached
+#         uses: niden/actions-memcached@v7
+            
+#       - name: Install Dependencies
+#         run: composer install --prefer-dist --no-progress
+
+#       - name: Execute tests
+#         run: | 
+#           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+#           vendor/bin/phpunit
+
+#   # MySQL Database Testing
+#   PHPUnit-MySQL:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+#     runs-on: ubuntu-latest
+#     name: PHPUnit - PHP ${{ matrix.php_versions }} - MySQL
+
+#     env:
+#       DB_TEST_CONNECTION: mysql
+#       DB_HOST: 127.0.0.1
+#       DB_USER: userfrosting
+#       DB_PASSWORD: password
+#       DB_NAME: userfrosting
+
+#     steps:
+#     - uses: actions/checkout@v4
+    
+#     - name: Setup PHP, with composer and extensions
+#       uses: shivammathur/setup-php@v2
+#       with:
+#         php-version: ${{ matrix.php_versions }}
+#         extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
+#         coverage: xdebug
+#         tools: pecl, composer
+
+#     - uses: actions/setup-node@v3
+#       with:
+#         node-version: 18
+    
+#     - name: Shutdown Ubuntu MySQL (SUDO)
+#       run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
+
+#     - name: Set up MySQL 8
+#       uses: mirromutth/mysql-action@v1.1
+#       with:
+#         mysql version: '8'
+#         mysql database: 'userfrosting'
+#         mysql user: 'userfrosting'
+#         mysql password: 'password'
+
+#     - name: Wait for MySQL
+#       run: |
+#         while ! mysqladmin ping --host=127.0.0.1 --password=password --silent; do
+#           sleep 1
+#         done
+    
+#     - name: Setup Redis-server
+#       uses: supercharge/redis-github-action@1.1.0
+#       with:
+#         redis-version: 6
+    
+#     - name: Setup Memcached
+#       uses: niden/actions-memcached@v7
+    
+#     - name: Install Dependencies
+#       run: composer install --prefer-dist --no-progress
+
+#     - name: Execute tests
+#       run: | 
+#         echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+#         vendor/bin/phpunit
+
+#   # MariaDB Database Testing
+#   PHPUnit-MariaDB:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+#     runs-on: ubuntu-latest
+#     name: PHPUnit - PHP ${{ matrix.php_versions }} - MariaDB
+
+#     env:
+#       DB_TEST_CONNECTION: mysql
+#       DB_HOST: 127.0.0.1
+#       DB_USER: userfrosting
+#       DB_PASSWORD: password
+#       DB_NAME: userfrosting
+
+#     steps:
+#     - uses: actions/checkout@v4
+    
+#     - name: Setup PHP, with composer and extensions
+#       uses: shivammathur/setup-php@v2
+#       with:
+#         php-version: ${{ matrix.php_versions }}
+#         extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
+#         coverage: xdebug
+#         tools: pecl, composer
+
+#     - uses: actions/setup-node@v3
+#       with:
+#         node-version: 18
+    
+#     - name: Shutdown Ubuntu MySQL (SUDO)
+#       run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
+
+#     - name: Set up MariaDB
+#       uses: getong/mariadb-action@v1.1
+#       with:
+#         mysql database: 'userfrosting'
+#         mysql user: 'userfrosting'
+#         mysql password: 'password'
+    
+#     - name: Setup Redis-server
+#       uses: supercharge/redis-github-action@1.1.0
+#       with:
+#         redis-version: 6
+    
+#     - name: Setup Memcached
+#       uses: niden/actions-memcached@v7
+
+#     - name: Install Dependencies
+#       run: composer install --prefer-dist --no-progress
+
+#     - name: Execute tests
+#       run: | 
+#         echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+#         vendor/bin/phpunit
+
+#   # SQLite Database Testing (Using a file-based database)
+#   PHPUnit-SQLite:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+#     runs-on: ubuntu-latest
+#     name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
+
+#     env:
+#       DB_TEST_CONNECTION: sqlite
+#       DB_NAME: database.sqlite
+
+#     steps:
+#       - uses: actions/checkout@v4
+      
+#       - name: Setup PHP, with composer and extensions
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: ${{ matrix.php_versions }}
+#           extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
+#           coverage: xdebug
+#           tools: pecl, composer
+
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+      
+#       - name: Setup Redis-server
+#         uses: supercharge/redis-github-action@1.1.0
+#         with:
+#           redis-version: 6
+      
+#       - name: Setup Memcached
+#         uses: niden/actions-memcached@v7
+            
+#       - name: Install Dependencies
+#         run: composer install --prefer-dist --no-progress
+      
+#       - name: Create SQLite Database
+#         run: touch database.sqlite
+
+#       - name: Execute tests
+#         run: | 
+#           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+#           vendor/bin/phpunit
+  
+#   # PostgreSQL Database Testing
+#   PHPUnit-Postgre:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+#     runs-on: ubuntu-latest
+#     name: PHPUnit - PHP ${{ matrix.php_versions }} - PostgreSQL
+
+#     env:
+#       DB_TEST_CONNECTION: pgsql
+#       DB_USER: userfrosting
+#       DB_PASSWORD: password
+#       DB_NAME: userfrosting
+
+#     steps:
+#       - uses: actions/checkout@v4
+      
+#       - name: Setup PHP, with composer and extensions
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: ${{ matrix.php_versions }}
+#           extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite, pdo_pgsql
+#           coverage: xdebug
+#           tools: pecl, composer
+      
+#       - name: Setup PostgreSQL
+#         uses: harmon758/postgresql-action@v1
+#         with:
+#           postgresql db: 'userfrosting'
+#           postgresql user: 'userfrosting'
+#           postgresql password: 'password'
+
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+      
+#       - name: Setup Redis-server
+#         uses: supercharge/redis-github-action@1.1.0
+#         with:
+#           redis-version: 6
+      
+#       - name: Setup Memcached
+#         uses: niden/actions-memcached@v7
+      
+#       - name: Install Dependencies
+#         run: composer install --prefer-dist --no-progress
+
+#       - name: Execute tests
+#         run: | 
+#           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+#           vendor/bin/phpunit
+
+#   # Windows Testing Environment - Using SQLite file-based database
+#   PHPUnit-Windows:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#           php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+#     runs-on: windows-latest
+#     name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
+
+#     env:
+#       DB_TEST_CONNECTION: sqlite
+#       DB_NAME: database.sqlite
+
+#     steps:
+#     - uses: actions/checkout@v4
+    
+#     - name: Setup PHP, with composer and extensions
+#       uses: shivammathur/setup-php@v2
+#       with:
+#         php-version: ${{ matrix.php_versions }}
+#         extensions: mbstring, dom, fileinfo, gd, pdo, sqlite, pdo_sqlite
+#         coverage: xdebug
+#         tools: pecl, composer
+
+#     - uses: actions/setup-node@v3
+#       with:
+#         node-version: 18
+    
+#     - name: Install Dependencies
+#       run: composer install --prefer-dist --no-progress
+    
+#     - name: Create SQLite Database
+#       run: touch database.sqlite
+
+#     - name: Execute tests
+#       run: | 
+#         echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+#         vendor/bin/phpunit

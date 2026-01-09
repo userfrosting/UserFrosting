@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > [!TIP]
 > This file contains the changelog of the Skeleton itself. You should replace it with your own Changelog!
 
+## [6.0.0-beta.8](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.7...6.0.0-beta.8)
+- Convert workflow files to templates
+
 ## [6.0.0-beta.7](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.6...6.0.0-beta.7)
 - [Docker] Update tp PHP 8.4
 - Add mobile navigation
