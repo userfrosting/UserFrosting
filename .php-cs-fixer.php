@@ -1,5 +1,8 @@
 <?php
 
+/*
+ * Tip : Update the header to match your own project
+ */
 $header = 'UserFrosting (http://www.userfrosting.com)
 
 @link      https://github.com/userfrosting/UserFrosting
