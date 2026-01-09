@@ -46,15 +46,7 @@ export default defineConfig({
     // Force optimization of UiKit (not module packages) in dev mode 
     // to avoid the error:
     // "importing binding name 'default' cannot be resolved by star export entries"
-    // Also, treat all sprinkles as source code (not prebuilt) and tell Vite 
-    // not to prebundle them.
     optimizeDeps: {
-        include: ['uikit', 'uikit/dist/js/uikit-icons'],
-        exclude: [
-            '@userfrosting/sprinkle-core',
-            '@userfrosting/sprinkle-account',
-            '@userfrosting/sprinkle-admin',
-            '@userfrosting/theme-pink-cupcake'
-        ]
+        include: ['uikit', 'uikit/dist/js/uikit-icons']
     }
 })
