@@ -15,6 +15,9 @@ export default defineConfig({
             appendTo: 'app/assets/main.ts'
         })
     ],
+    resolve: {
+        conditions: ['development', 'import']
+    },
     server: {
         host: true, // Allows external access (needed for Docker)
         strictPort: true,
@@ -46,7 +49,15 @@ export default defineConfig({
     // Force optimization of UiKit (not module packages) in dev mode 
     // to avoid the error:
     // "importing binding name 'default' cannot be resolved by star export entries"
+    // Sprinkle packages are pre-built but during monorepo development we
+    // still treat them as source code to enable hot module reload
     optimizeDeps: {
-        include: ['uikit', 'uikit/dist/js/uikit-icons']
+        include: ['uikit', 'uikit/dist/js/uikit-icons'],
+        exclude: [
+            '@userfrosting/sprinkle-core',
+            '@userfrosting/sprinkle-account',
+            '@userfrosting/sprinkle-admin',
+            '@userfrosting/theme-pink-cupcake'
+        ]
     }
 })
