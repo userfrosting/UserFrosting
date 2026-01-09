@@ -2,9 +2,15 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import ViteYaml from '@modyfi/vite-plugin-yaml'
+import { existsSync } from 'fs'
+import { resolve } from 'path'
 
 // Get vite port from env, default to 3000
 const vitePort = parseInt(process.env.VITE_PORT || '5173', 10)
+
+// Detect if we're in a monorepo by checking for workspace root
+const isMonorepo = existsSync(resolve(__dirname, '../../package.json')) && 
+                   existsSync(resolve(__dirname, '../../packages'))
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,9 +21,11 @@ export default defineConfig({
             appendTo: 'app/assets/main.ts'
         })
     ],
-    resolve: {
+    // In monorepo, use 'development' condition to resolve to source TS files for HMR
+    // In standalone usage, use 'import' to resolve to published dist files
+    resolve: isMonorepo ? {
         conditions: ['development', 'import']
-    },
+    } : undefined,
     server: {
         host: true, // Allows external access (needed for Docker)
         strictPort: true,
