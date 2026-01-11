@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [6.0.0-beta.8](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.7...6.0.0-beta.8)
 - Updated `vite.config.ts` : Other packages removed from `optimizeDeps`
+- Docker - Suppress PHP warnings in custom PHP ini
 - Specify node engine version
 - Convert GitHub Actions workflow files to reusable templates
 
