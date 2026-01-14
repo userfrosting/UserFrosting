@@ -7,9 +7,6 @@ _meta/
 # Ignore personal config files (dev)
 app/.env
 
-# Ignore lock files
-composer.lock
-
 # Ignore log, cache, sessions and storage directories
 app/cache/*
 app/database/*
