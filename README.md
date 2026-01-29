@@ -1,50 +1,70 @@
-# UserFrosting 5.2
+# UserFrosting 6.0
+[![][UF6-VER-I]][UF6-VER-L]
+[![][UF6-LIS-I]][UF6-LIS-L]
+[![][UF6-VIT-I]][UF6-VIT-L]
+[![][UF6-BUI-I]][UF6-BUI-L]
+[![][UF6-COV-I]][UF6-COV-L]
+[![][UF6-STY-I]][UF6-STY-L]
+[![][UF6-STA-I]][UF6-STA-L]
+[![][UF6-CHA-I]][UF6-CHA-L]
+[![][UF6-COL-I]][UF6-COL-L]
+[![][UF6-KOF-I]][UF6-KOF-L]
 
-[![Latest Version](https://img.shields.io/github/v/release/userfrosting/userfrosting?include_prereleases&sort=semver)](https://github.com/userfrosting/UserFrosting/releases)
-![PHP Version](https://img.shields.io/badge/php-%5E8.1-brightgreen)
-[![Build](https://img.shields.io/github/actions/workflow/status/userfrosting/UserFrosting/Build.yml?branch=5.2&logo=github)](https://github.com/userfrosting/UserFrosting/actions)
-[![Codecov](https://codecov.io/gh/userfrosting/userfrosting/branch/5.2/graph/badge.svg)](https://codecov.io/gh/userfrosting/userfrosting)
-[![Style](https://github.styleci.io/repos/18148206/shield?branch=5.2&style=flat)](https://github.styleci.io/repos/18148206)
-[![PHPStan](https://img.shields.io/github/actions/workflow/status/userfrosting/userfrosting/PHPStan.yml?branch=5.2&label=PHPStan)](https://github.com/userfrosting/userfrosting/actions/workflows/PHPStan.yml)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![Join the chat](https://img.shields.io/badge/Chat-UserFrosting-brightgreen?logo=Rocket.Chat)](https://chat.userfrosting.com/channel/support)
-[![Backers on Open Collective](https://img.shields.io/opencollective/backers/userfrosting?logo=opencollective)](#backers)
-[![Sponsors on Open Collective](https://img.shields.io/opencollective/sponsors/userfrosting?logo=opencollective)](#sponsors)
-[![Donate](https://img.shields.io/badge/Open_Collective-Donate-blue?logo=Open%20Collective)](https://opencollective.com/userfrosting#backer)
-[![Donate](https://img.shields.io/badge/Ko--fi-Donate-blue?logo=ko-fi&logoColor=white)](https://ko-fi.com/lcharette)
+<!-- Links -->
+[UF6-VER-I]: https://img.shields.io/github/v/release/userfrosting/monorepo?include_prereleases
+[UF6-VER-L]: https://github.com/userfrosting/monorepo/releases
+[UF6-LIS-I]: https://img.shields.io/badge/license-MIT-brightgreen.svg
+[UF6-LIS-L]: LICENSE
+[UF6-BUI-I]: https://img.shields.io/github/actions/workflow/status/userfrosting/monorepo/PHPUnit.yml?branch=6.0&logo=github&label=PHPUnit
+[UF6-BUI-L]: https://github.com/userfrosting/monorepo/actions?query=workflow%3ABuild
+[UF6-COV-I]: https://codecov.io/gh/userfrosting/monorepo/branch/6.0/graph/badge.svg
+[UF6-COV-L]: https://app.codecov.io/gh/userfrosting/monorepo/branch/6.0
+[UF6-STY-I]: https://github.styleci.io/repos/900493101/shield?branch=6.0&style=flat
+[UF6-STY-L]: https://github.styleci.io/repos/900493101
+[UF6-STA-I]: https://img.shields.io/github/actions/workflow/status/userfrosting/monorepo/PHPStan.yml?branch=6.0&label=PHPStan
+[UF6-STA-L]: https://github.com/userfrosting/monorepo/actions/workflows/PHPStan.yml
+[UF6-VIT-I]: https://img.shields.io/github/actions/workflow/status/userfrosting/monorepo/Frontend.yml?branch=6.0&logo=vitest&label=Vitest
+[UF6-VIT-L]: https://github.com/userfrosting/monorepo/actions/workflows/Frontend.yml
+[UF6-CHA-I]: https://img.shields.io/badge/Chat-UserFrosting-brightgreen?logo=Rocket.Chat
+[UF6-CHA-L]: https://chat.userfrosting.com
+[UF6-COL-I]: https://img.shields.io/badge/Open_Collective-Donate-blue?logo=Open%20Collective
+[UF6-COL-L]: https://opencollective.com/userfrosting#backer
+[UF6-KOF-I]: https://img.shields.io/badge/Ko--fi-Donate-blue?logo=ko-fi&logoColor=white
+[UF6-KOF-L]: https://ko-fi.com/lcharette
 
 [https://www.userfrosting.com](https://www.userfrosting.com)
 
-If you simply want to show that you like this project, or want to remember it for later, you should **star**, not **fork**, this repository. Forking is only for when you are ready to create your own copy of the code to work on.
+> [!NOTE]
+> If you simply want to show that you like this project, or want to remember it for later, you should **star**, not **fork**, this repository. Forking is only for when you are ready to create your own copy of the code to work on.
 
 ## By [Alex Weissman](https://alexanderweissman.com) and [Louis Charette](https://bbqsoftwares.com)
 
-Copyright (c) 2013-2024, free to use in personal and commercial software as per the [license](LICENSE.md).
+Copyright (c) 2013-2026, free to use in personal and commercial software as per the [MIT license](LICENSE.md).
 
-UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/10.x/eloquent#introduction) ORM.
+UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, [Eloquent](https://laravel.com/docs/10.x/eloquent#introduction) ORM, [Vite](https://vitejs.dev/), [Vue](https://vuejs.org/), and [UiKit](https://getuikit.com/).
 
 ## Features
 
 ### User login screen
-![User login script](https://raw.githubusercontent.com/userfrosting/.github/main/screenshots/login.png)
+![User login script](https://raw.githubusercontent.com/userfrosting/.github/main/screenshots/loginV6.png)
 
 ### User management page
-![PHP user management script](https://raw.githubusercontent.com/userfrosting/.github/main/screenshots/users.png)
+![PHP user management script](https://raw.githubusercontent.com/userfrosting/.github/main/screenshots/usersV6.png)
 
 ### Permissions management page
-![UserFrosting permissions management](https://raw.githubusercontent.com/userfrosting/.github/main/screenshots/permissions.png)
+![UserFrosting permissions management](https://raw.githubusercontent.com/userfrosting/.github/main/screenshots/permissionsV6.png)
 
-## [Demo](https://demo.userfrosting.com)
+And much more! For a full list of features, please see the [features page](https://www.userfrosting.com/features).
 
 ## Installation
 
-Please see our [installation guide](https://learn.userfrosting.com/installation).
+Please see our [installation guide](https://learn6.userfrosting.com/installation).
 
 ## Troubleshooting
 
 If you are having trouble installing UserFrosting, please [join us in chat](https://chat.userfrosting.com).
 
-If you are generally confused about the structure and layout of the code, or it doesn't look like the kind of PHP code that you're used to, please [start from the beginning](https://learn.userfrosting.com/background).
+If you are generally confused about the structure and layout of the code, or it doesn't look like the kind of PHP code that you're used to, please [start from the beginning](https://learn6.userfrosting.com/background).
 
 ## Mission Objectives
 
@@ -60,8 +80,6 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 ## Documentation
 
 ### [Learning UserFrosting](https://learn.userfrosting.com)
-
-### [API documentation](http://api.userfrosting.com)
 
 ### [Change log](CHANGELOG.md)
 
