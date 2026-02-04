@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.1.4](https://github.com/userfrosting/userfrosting/compare/5.1.3...5.1.4)
+- Update npm dependencies (@symfony/webpack-encore => ^5.1.0)
+- Bump frontend dependencies by @dependabot
+
 ## [5.1.3](https://github.com/userfrosting/userfrosting/compare/5.1.2...5.1.3)
 - Bump frontend dependencies by @dependabot
 - Add PHP 8.4 support & tests
