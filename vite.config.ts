@@ -1,10 +1,14 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import ViteYaml from '@modyfi/vite-plugin-yaml'
 
+// Load environment variables from the app directory where UserFrosting stores its .env file
+const envDir = 'app'
+const env = loadEnv('development', envDir, ['VITE_', 'UF_'])
+
 // Get vite port from env, default to 5173
-const vitePort = parseInt(process.env.VITE_PORT || '5173', 10)
+const vitePort = parseInt(env.VITE_PORT || process.env.VITE_PORT || '5173', 10)
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,6 +19,8 @@ export default defineConfig({
             appendTo: 'app/assets/main.ts'
         })
     ],
+    // Load .env from app directory (where UserFrosting stores its .env file)
+    envDir: 'app',
     server: {
         host: true, // Allows external access (needed for Docker)
         strictPort: true,
