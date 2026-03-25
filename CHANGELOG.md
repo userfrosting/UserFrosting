@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [6.0.0-beta.9](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.8...6.0.0-beta.9)
 - Remove `composer.lock` from `.gitignore`
 - Load `.env` file in Vite config
+- Add Vitest config
 
 ## [6.0.0-beta.8](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.7...6.0.0-beta.8)
 - Updated `vite.config.ts` : Other packages removed from `optimizeDeps`
