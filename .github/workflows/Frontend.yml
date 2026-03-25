@@ -1,0 +1,98 @@
+# GitHub Actions Workflow template for PHPStan Testing.
+# Uncomment the "on" section below to enable PHPStan testing on GitHub Actions on push.
+
+name: Frontend
+
+on:
+#   push:
+#     branches: ['*'] # Apply to all branches. List specific branches if needed.
+#   pull_request:
+#     branches: ['*'] # Apply to all branches. List specific branches if needed.
+  workflow_dispatch:
+
+# Each jobs section defines a different action:
+# - Build: Builds the frontend packages to make sure there are no build errors.
+# - Coverage: Runs tests and collects coverage information.
+# - Prettier: Checks code style and runs type checks and linting.
+jobs:
+  Build:
+    strategy:
+      fail-fast: false
+      matrix:
+        node_versions: [18, 22, 24]
+
+    runs-on: ubuntu-latest
+    name: Build - Node ${{ matrix.node_versions }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node_versions }}
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Packages
+        run: npm run vite:build
+
+  Coverage:
+    strategy:
+      fail-fast: false
+      matrix:
+        node_versions: [18, 22, 24]
+
+    runs-on: ubuntu-latest
+    name: Test & Coverage - Node ${{ matrix.node_versions }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node_versions }}
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Test & Coverage
+        run: npm run coverage
+
+      - name: Upload coverage to Codecov
+        if: github.event_name != 'schedule'
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./_meta/_coverage/clover.xml
+          fail_ci_if_error: true
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: ./_meta/junit_frontend.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  Prettier:
+    runs-on: ubuntu-latest
+    name: Code Style Check
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Prettier dry run
+        run: npm run format-dry-run
+
+      - name: TypeCheck
+        run: npm run typecheck
+
+      - name: Eslint
+        run: npm run lint

@@ -61,6 +61,7 @@ jobs:
         php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - MySQL
+    needs: Memory
 
     env:
       DB_TEST_CONNECTION: mysql
@@ -125,6 +126,7 @@ jobs:
         php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - MariaDB
+    needs: Memory
 
     env:
       DB_TEST_CONNECTION: mysql
@@ -182,6 +184,7 @@ jobs:
         php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
+    needs: Memory
 
     env:
       DB_TEST_CONNECTION: sqlite
@@ -229,6 +232,7 @@ jobs:
         php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - PostgreSQL
+    needs: Memory
 
     env:
       DB_TEST_CONNECTION: pgsql
@@ -282,6 +286,7 @@ jobs:
           php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
     runs-on: windows-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
+    needs: Memory
 
     env:
       DB_TEST_CONNECTION: sqlite

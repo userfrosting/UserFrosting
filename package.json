@@ -61,6 +61,7 @@
         "coverage": "vitest run --coverage",
         "typecheck": "vue-tsc --noEmit",
         "lint": "eslint app/assets/ --fix",
-        "format": "prettier --write app/assets/"
+        "format": "prettier --write app/assets/",
+        "format-dry-run": "prettier --check app/assets/"
     }
 }
