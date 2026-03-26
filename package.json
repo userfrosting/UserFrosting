@@ -33,7 +33,7 @@
         "eslint-plugin-vue": "^10.4.0",
         "file-loader": "^6.2.0",
         "fork-ts-checker-webpack-plugin": "^9.0.2",
-        "happy-dom": "^20.0.2",
+        "happy-dom": "^20.8.8",
         "jiti": "^2.5.1",
         "less": "^4.2.0",
         "less-loader": "^11.1.3",
