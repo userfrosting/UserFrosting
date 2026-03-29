@@ -4,7 +4,7 @@
         "@userfrosting/theme-adminlte": "~5.1.0"
     },
     "devDependencies": {
-        "@symfony/webpack-encore": "^5.1.0",
+        "@symfony/webpack-encore": "^6.0.0",
         "file-loader": "^6.2.0",
         "sass": "^1.51.0",
         "webpack-notifier": "^1.14.1"
