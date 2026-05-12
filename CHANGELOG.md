@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > [!TIP]
 > This file contains the changelog of the Skeleton itself. You should replace it with your own Changelog!
 
+## [6.0.0-rc.2](https://github.com/userfrosting/UserFrosting/compare/6.0.0-rc.1...6.0.0-rc.2)
+- Fix package dependency issue.
+
 ## [6.0.0-rc.1](https://github.com/userfrosting/UserFrosting/compare/6.0.0-beta.8...6.0.0-rc.1)
 - Remove `composer.lock` from `.gitignore`
 - Load `.env` file in Vite config
