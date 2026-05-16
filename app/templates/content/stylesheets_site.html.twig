@@ -2,6 +2,7 @@
 {# The `app` entry from Webpack config is loaded here #}
 {% block stylesheets_site %}
     {# {{ encore_entry_link_tags('app') }} #}
+    {{ vite_css_preload('main.ts') }}
     {{ vite_css('main.ts') }}
     {{ vite_preload('main.ts') }}
 {% endblock %}
