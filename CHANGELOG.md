@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - `stylesheets_site.html.twig` now calls `vite_css_preload('main.ts')` before `vite_css()`, emitting `<link rel="preload" as="style">` hints for CSS files (requires `userfrosting/vite-php-twig` ^1.2.0).
 
+### Added
+- [Docker] Upgrade Node.js from 22 to 24 in all Docker configurations (`docker/app/Dockerfile`, `docker/vue/Dockerfile`).
+
 ## [6.0.0-rc.2](https://github.com/userfrosting/UserFrosting/compare/6.0.0-rc.1...6.0.0-rc.2)
 - Fix package dependency issue.
 
