@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > [!TIP]
 > This file contains the changelog of the Skeleton itself. You should replace it with your own Changelog!
 
-## [Unreleased]
+## [6.0.0-rc.3] - 2026-05-16
 
 ### Fixed
 - [Docker] Fix `.env.docker` `SMTP_PORT` from 2025 to 1025 (Mailpit's actual SMTP port).
