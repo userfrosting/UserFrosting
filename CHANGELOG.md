@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- [Docker] Fix `.env.docker` `SMTP_PORT` from 2025 to 1025 (Mailpit's actual SMTP port).
+- [Docker] Remove unused `DB_ROOT_PASSWORD` and `ROOT_PASSWORD` variables from `.env.docker`.
+- [Docker] Set `UF_MODE=debug` (was empty) in `.env.docker`.
+
 ### Changed
 - `stylesheets_site.html.twig` now calls `vite_css_preload('main.ts')` before `vite_css()`, emitting `<link rel="preload" as="style">` hints for CSS files (requires `userfrosting/vite-php-twig` ^1.2.0).
 
