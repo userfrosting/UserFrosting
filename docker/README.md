@@ -91,7 +91,7 @@ And then start the installation process again.
 
 You may be tempted to run with this in production but this setup has not been security-hardened. For example:
 
-- Database is exposed on port 8593 so you can access MySQL using your favorite client at localhost:8593. However, the way Docker exposes this actually bypasses common firewalls like `ufw` so this should not be exposed in production.
+- Database is exposed on port 8503 so you can access MySQL using your favorite client at localhost:8503. However, the way Docker exposes this actually bypasses common firewalls like `ufw` so this should not be exposed in production.
 - Database credentials are hard-coded so obviously not secure.
 - File permissions may be more open than necessary.
 - HTTPS not implemented fully
