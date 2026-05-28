@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > [!TIP]
 > This file contains the changelog of the Skeleton itself. You should replace it with your own Changelog!
 
+## [Unreleased]
+
+### Security
+- Force `js-yaml` to `4.1.1` via npm `overrides` to fix prototype pollution vulnerability in merge (`<<`) operator ([GHSA-mh29-5h37-fv8m](https://github.com/advisories/GHSA-mh29-5h37-fv8m)) introduced transitively via `@modyfi/vite-plugin-yaml`.
+
 ## [6.0.0-rc.3] - 2026-05-16
 
 ### Fixed

@@ -63,5 +63,10 @@
         "lint": "eslint app/assets/ --fix",
         "format": "prettier --write app/assets/",
         "format-dry-run": "prettier --check app/assets/"
+    },
+    "overrides": {
+        "@modyfi/vite-plugin-yaml": {
+            "js-yaml": "4.1.1"
+        }
     }
 }
