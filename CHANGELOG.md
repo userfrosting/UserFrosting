@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.0.0-rc.4] - 2026-05-28
+
 ### Security
 - Force `js-yaml` to `4.1.1` via npm `overrides` to fix prototype pollution vulnerability in merge (`<<`) operator ([GHSA-mh29-5h37-fv8m](https://github.com/advisories/GHSA-mh29-5h37-fv8m)) introduced transitively via `@modyfi/vite-plugin-yaml`. Temp fix until `@modyfi/vite-plugin-yaml` is updated to use `js-yaml` 4.1.1 or later.
 
