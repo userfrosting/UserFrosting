@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node_versions: [18, 22, 24]
+        node_versions: [20, 22, 24]
 
     runs-on: ubuntu-latest
     name: Build - Node ${{ matrix.node_versions }}
@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node_versions: [18, 22, 24]
+        node_versions: [20, 22, 24]
 
     runs-on: ubuntu-latest
     name: Test & Coverage - Node ${{ matrix.node_versions }}
