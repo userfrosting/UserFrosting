@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > This file contains the changelog of the Skeleton itself. You should replace it with your own Changelog!
 
 ## [Unreleased]
+- Updated npm dependencies (no functional changes).
 
 ## [6.0.0](https://github.com/userfrosting/UserFrosting/compare/6.0.0-rc.5...6.0.0) - 2026-06-12
 - No changes.
