@@ -47,7 +47,7 @@
         "vitest": "^4.1.0",
         "vue-loader": "^17.2.2",
         "vue-tsc": "^2.1.10",
-        "webpack-dev-server": "^5.2.2",
+        "webpack-dev-server": "^5.2.6",
         "webpack-notifier": "^1.15.0"
     },
     "scripts": {
