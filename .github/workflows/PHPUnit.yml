@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5'] # PHP versions to test against
+        php_versions: ['8.3', '8.4', '8.5'] # PHP versions to test against
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Memory SQLite
 
@@ -58,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+        php_versions: ['8.3', '8.4', '8.5']
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - MySQL
     needs: Memory
@@ -123,7 +123,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+        php_versions: ['8.3', '8.4', '8.5']
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - MariaDB
     needs: Memory
@@ -181,7 +181,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+        php_versions: ['8.3', '8.4', '8.5']
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
     needs: Memory
@@ -229,7 +229,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+        php_versions: ['8.3', '8.4', '8.5']
     runs-on: ubuntu-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - PostgreSQL
     needs: Memory
@@ -283,7 +283,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+          php_versions: ['8.3', '8.4', '8.5']
     runs-on: windows-latest
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Windows
     needs: Memory

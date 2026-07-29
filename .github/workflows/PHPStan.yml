@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5'] # PHP versions to test against
+        php_versions: ['8.3', '8.4', '8.5'] # PHP versions to test against
     runs-on: ubuntu-latest
     name: PHPStan - ${{ matrix.php_versions }}
 
