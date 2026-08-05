@@ -29,7 +29,7 @@ class HelloCommandTest extends TestCase
     public function testCommand(): void
     {
         /** @var HelloCommand */
-        $command = $this->ci->get(HelloCommand::class);
+        $command = $this->getService(HelloCommand::class);
         $result = BakeryTester::runCommand($command);
 
         // Assert some output
