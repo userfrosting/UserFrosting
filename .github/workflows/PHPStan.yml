@@ -20,7 +20,7 @@ jobs:
     name: PHPStan - ${{ matrix.php_versions }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2

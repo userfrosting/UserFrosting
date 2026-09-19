@@ -25,9 +25,9 @@ jobs:
     name: Build - Node ${{ matrix.node_versions }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node_versions }}
 
@@ -47,9 +47,9 @@ jobs:
     name: Test & Coverage - Node ${{ matrix.node_versions }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node_versions }}
 
@@ -61,7 +61,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: github.event_name != 'schedule'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./_meta/_coverage/clover.xml
@@ -69,9 +69,10 @@ jobs:
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+        uses: codecov/codecov-action@v7
         with:
           files: ./_meta/junit_frontend.xml
+          report_type: test_results
           token: ${{ secrets.CODECOV_TOKEN }}
 
   Prettier:
@@ -79,9 +80,9 @@ jobs:
     name: Code Style Check
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
 
