@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.0.3](https://github.com/userfrosting/UserFrosting/compare/6.0.2...6.0.3) - 2026-09-28
+- No changes.
+
 ## [6.0.2](https://github.com/userfrosting/UserFrosting/compare/6.0.1...6.0.2) - 2026-08-02
 - No changes.
 
