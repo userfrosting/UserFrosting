@@ -38,6 +38,7 @@ services:
       - "5173:5173"
     volumes:
       - .:/app
+      - /app/node_modules
     networks:
       - frontend
   mysql:

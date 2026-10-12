@@ -26,6 +26,7 @@ Second, initialize a new UserFrosting project:
    ```bash
    docker-compose up -d
    ```
+   The Vue frontend installs dependencies from the current package files when its container starts. Its `node_modules` directory is stored separately from the host's, so changes to the lockfile are picked up on the next container start.
 6. Set some directory permissions (your may have to enter your root password):
    ```bash
    sudo chown -R $USER: .

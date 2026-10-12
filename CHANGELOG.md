@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Converted locale message files from PHP arrays to YAML.
 
+### Fixed
+- [Docker] Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.
+
 ## [6.0.3](https://github.com/userfrosting/UserFrosting/compare/6.0.2...6.0.3) - 2026-09-28
 - No changes.
 
