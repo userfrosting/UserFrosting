@@ -78,15 +78,21 @@ To start containers again, change to your userfrosting directory and run:
 docker-compose up -d
 ```
 
-**Purge docker containers to start over**
+**Reset the database and containers**
 
-If you need to purge your docker containers (this will not delete any source file or sprinkle, but will empty the database), run:
+To stop the containers but keep the database volume, run:
 
 ```bash
 docker-compose down --remove-orphans
 ```
 
-And then start the installation process again.
+To also delete the persisted database and start with a clean database, add `--volumes`:
+
+```bash
+docker-compose down --remove-orphans --volumes
+```
+
+This permanently removes the database data and Docker-managed frontend dependency volume; the frontend reinstalls its dependencies when it starts again. Source files and sprinkles are not deleted.
 
 **This is not (yet) meant for production!**
 
