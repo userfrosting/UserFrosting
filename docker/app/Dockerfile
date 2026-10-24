@@ -1,5 +1,5 @@
-# Use the official PHP 8.4 FPM image
-FROM php:8.4-fpm
+# Use the official PHP 8.5 FPM image
+FROM php:8.5-fpm
 
 # Set environment variables for non-interactive installations
 ENV DEBIAN_FRONTEND=noninteractive

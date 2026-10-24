@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Converted locale message files from PHP arrays to YAML.
+- Updated Docker setup to use PHP 8.5.
 
 ### Fixed
 - [Docker] Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.
