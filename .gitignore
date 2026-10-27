@@ -5,6 +5,7 @@
 _meta/
 
 # Ignore personal config files (dev)
+.env
 app/.env
 
 # Ignore log, cache, sessions and storage directories

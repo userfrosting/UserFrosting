@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Converted locale message files from PHP arrays to YAML.
 - Updated Docker setup to use PHP 8.5.
+- [Docker] Configure Compose project names and host ports through a dedicated top-level Docker `.env` file copied from `docker/.env.example`, making it easier for separate instances to use isolated resources. Use Compose's standard `COMPOSE_PROJECT_NAME` to override the container project name if needed.
 
 ### Fixed
 - [Docker] Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.

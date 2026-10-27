@@ -16,17 +16,25 @@ Second, initialize a new UserFrosting project:
    ```
 3. Copy the default env file : 
    ```bash
+   cp docker/.env.example .env
    cp app/.env.docker app/.env
    ```
-4. Build all the docker containers:
+   > [!NOTE]
+   > The `.env` file (copied from `docker/.env.example`) define `COMPOSE_PROJECT_NAME`, which defines the containers, images, networks, and volumes names. If it is unset, Compose uses the checkout directory name instead.
+   >
+   > The default host ports are `8080` (HTTP), `5173` (Vite), `8503` (MySQL), `1025` (SMTP), and `8025` (Mailpit). Override them in `.env` when running multiple checkouts.
+   >
+   > Use this to run parallel instances of UserFrosting with isolated resources.
+4. Build all the Docker containers:
    ```bash
-   docker-compose build --no-cache
+   docker compose build --no-cache
    ```
 5. Start all the containers:
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
-   The Vue frontend installs dependencies from the current package files when its container starts. Its `node_modules` directory is stored separately from the host's, so changes to the lockfile are picked up on the next container start.
+   > [!NOTE]
+   > The Vue frontend installs dependencies from the current package files when its container starts. Its `node_modules` directory is stored separately from the host's, so changes to the lockfile are picked up on the next container start.
 6. Set some directory permissions (your may have to enter your root password):
    ```bash
    sudo chown -R $USER: .
@@ -34,20 +42,21 @@ Second, initialize a new UserFrosting project:
    ```
 7. Install all composer modules used in UserFrosting:
    ```bash
-   docker-compose exec app composer update
+   docker compose exec app composer update
    ```
 8. Install UserFrosting (database configuration and migrations, creation of admin user, ...). You'll need to provide info to create the admin user.
    ```bash
-   docker-compose exec app php bakery bake
+   docker compose exec app php bakery bake
    ```
 9. Restart Vue Container now that Bakery installed frontend assets:
     ```bash
-    docker-compose restart vue-frontend
+    docker compose restart vue-frontend
     ```
 
 Now visit [http://localhost:8080](http://localhost:8080) to see your UserFrosting homepage!
 
-> All call to bakery commands need to be prefixed by docker-compose, since you need to run theses commands on the containers, not your computer. For example : `docker-compose exec app php bakery ...`.
+> All calls to Bakery commands need to be prefixed by `docker compose`, since they need to run on the containers, not your computer. For example:
+> `docker compose exec app php bakery ...`.
 
 **You can paste these into a bash file and execute it!**
 
@@ -55,13 +64,14 @@ Now visit [http://localhost:8080](http://localhost:8080) to see your UserFrostin
 docker run --rm -it -v "$(pwd):/app" composer create-project userfrosting/userfrosting UserFrosting "^6.0" --no-scripts --no-install --ignore-platform-reqs  --stability=beta
 cd UserFrosting
 cp app/.env.docker app/.env
-docker-compose build --no-cache
-docker-compose up -d
+cp docker/.env.example .env
+docker compose build --no-cache
+docker compose up -d
 sudo chown -R $USER: .
 sudo chmod 777 app/{logs,cache,sessions}
-docker-compose exec app composer update
-docker-compose exec app php bakery bake
-docker-compose restart vue-frontend
+docker compose exec app composer update
+docker compose exec app php bakery bake
+docker compose restart vue-frontend
 ```
 
 **Start / stop containers**
@@ -69,13 +79,13 @@ docker-compose restart vue-frontend
 If you need to stop the UserFrosting docker containers, just change to your userfrosting directory and run:
 
 ```bash
-docker-compose stop
+docker compose stop
 ```
 
 To start containers again, change to your userfrosting directory and run:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 **Reset the database and containers**
@@ -83,13 +93,13 @@ docker-compose up -d
 To stop the containers but keep the database volume, run:
 
 ```bash
-docker-compose down --remove-orphans
+docker compose down --remove-orphans
 ```
 
 To also delete the persisted database and start with a clean database, add `--volumes`:
 
 ```bash
-docker-compose down --remove-orphans --volumes
+docker compose down --remove-orphans --volumes
 ```
 
 This permanently removes the database data and Docker-managed frontend dependency volume; the frontend reinstalls its dependencies when it starts again. Source files and sprinkles are not deleted.
@@ -98,7 +108,7 @@ This permanently removes the database data and Docker-managed frontend dependenc
 
 You may be tempted to run with this in production but this setup has not been security-hardened. For example:
 
-- Database is exposed on port 8503 so you can access MySQL using your favorite client at localhost:8503. However, the way Docker exposes this actually bypasses common firewalls like `ufw` so this should not be exposed in production.
+- Database is exposed on port 8503 by default so you can access MySQL using your favorite client at localhost:8503. However, the way Docker exposes this actually bypasses common firewalls like `ufw` so this should not be exposed in production.
 - Database credentials are hard-coded so obviously not secure.
 - File permissions may be more open than necessary.
 - HTTPS not implemented fully

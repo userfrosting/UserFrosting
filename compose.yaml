@@ -4,8 +4,6 @@ services:
     tty: true
     build:
       context: ./docker/app
-    env_file:
-      - ./app/.env
     depends_on:
       mysql:
         condition: service_healthy
@@ -18,8 +16,8 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "127.0.0.1:8080:80"
-      - "[::1]:8080:80"
+      - "127.0.0.1:${DOCKER_HTTP_PORT:-8080}:80"
+      - "[::1]:${DOCKER_HTTP_PORT:-8080}:80"
     build:
       context: ./docker/nginx
     volumes:
@@ -36,11 +34,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/vue/Dockerfile
-    env_file:
-      - ./app/.env
     ports:
-      - "127.0.0.1:5173:5173"
-      - "[::1]:5173:5173"
+      - "127.0.0.1:${DOCKER_VITE_PORT:-5173}:5173"
+      - "[::1]:${DOCKER_VITE_PORT:-5173}:5173"
     volumes:
       - .:/app
       - /app/node_modules
@@ -51,11 +47,14 @@ services:
     tty: true
     build:
       context: ./docker/mysql
-    env_file:
-      - ./app/.env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-userfrosting}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-secret}
+      MYSQL_USER: ${MYSQL_USER:-docker}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-secret}
     ports:
-      - "127.0.0.1:8503:3306"
-      - "[::1]:8503:3306"
+      - "127.0.0.1:${DOCKER_MYSQL_PORT:-8503}:3306"
+      - "[::1]:${DOCKER_MYSQL_PORT:-8503}:3306"
     volumes:
       - userfrosting-db:/var/lib/mysql
     healthcheck:
@@ -69,10 +68,10 @@ services:
   mailpit:
     image: 'axllent/mailpit:latest'
     ports:
-      - '127.0.0.1:1025:1025'
-      - '[::1]:1025:1025'
-      - '127.0.0.1:8025:8025'
-      - '[::1]:8025:8025'
+      - '127.0.0.1:${DOCKER_SMTP_PORT:-1025}:1025'
+      - '[::1]:${DOCKER_SMTP_PORT:-1025}:1025'
+      - '127.0.0.1:${DOCKER_MAILPIT_PORT:-8025}:8025'
+      - '[::1]:${DOCKER_MAILPIT_PORT:-8025}:8025'
     networks:
       - backend
 volumes:
