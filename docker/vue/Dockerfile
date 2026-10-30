@@ -17,5 +17,7 @@ EXPOSE 5173
 # Add node_modules/.bin to PATH
 ENV PATH=/app/node_modules/.bin:$PATH
 
-# Install dependencies from the mounted project before running Vite.
-CMD ["sh", "-c", "npm install && exec npx vite"]
+# Bakery in the app container installs dependencies into the shared node_modules volume.
+CMD echo "Waiting for Bakery to install frontend dependencies..."; \
+    until [ -x /app/node_modules/.bin/vite ] && [ -f /app/node_modules/.package-lock.json ]; do sleep 5; done; \
+    exec npm run vite:dev

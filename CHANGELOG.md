@@ -17,11 +17,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated the Docker setup to use PHP 8.5.
 - Added a production Compose configuration, selectable with `DOCKER_MODE`. Production Docker config includes compiled frontend assets, production PHP settings, private MySQL, Memcached, and a production app environment config.
 - Use `app/.env` as the PHP environment file in both Docker modes; production Compose mounts it read-only and the ignore rules exclude it.
-- Changed `npm install` to `npm ci` for repeatable production asset builds.
+- Production images install Composer and npm dependencies (`npm ci` with a lockfile, `npm install` without one) and compile frontend assets; the app clears the Memcached and filesystem caches on startup.
 - Configured Compose project names and host ports through a dedicated top-level Docker `.env` file copied from `docker/.env.example`, making it easier for separate instances to use isolated resources. 
 - Use Compose's standard `COMPOSE_PROJECT_NAME` to override the container project name if needed.
 - Used Memcached as the production cache and injected MySQL credentials from the project-root `.env` into the application container to keep them in sync.
-- Installed frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`, in a separate Docker volume.
+- Shared a Docker-managed `node-modules` volume between the development app and Vue containers; Bakery installs dependencies and Vue waits for them before starting Vite.
 - Applied the standalone MySQL configuration and removed the duplicate PHP `memory_limit` setting.
 - Bound development service ports to IPv4 and IPv6 loopback, waited for MySQL health, and clarified database-volume reset behavior.
 

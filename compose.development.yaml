@@ -17,6 +17,7 @@ services:
       DB_PASSWORD: ${MYSQL_PASSWORD:-secret}
     volumes:
       - .:/app
+      - node-modules:/app/node_modules
       - ./docker/app/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     networks:
       - backend
@@ -47,7 +48,7 @@ services:
       - "[::1]:${DOCKER_VITE_PORT:-5173}:5173"
     volumes:
       - .:/app
-      - /app/node_modules
+      - node-modules:/app/node_modules
     networks:
       - frontend
   mysql:
@@ -83,6 +84,8 @@ services:
     networks:
       - backend
 volumes:
+  node-modules:
+    driver: local
   userfrosting-db:
     driver: local
 networks:

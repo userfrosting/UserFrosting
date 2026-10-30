@@ -1,130 +1,226 @@
 # UserFrosting Docker Environment
 
-> You can find the complete version of thi guide at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
-
-First, install [Docker Compose v2.20+ or Docker Desktop](https://docs.docker.com/compose/install/).
+> You can find the complete version of this guide at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
 
 The Skeleton package supports development and production Docker configurations.
 
-## Development
+## Development Environment
+
+### Prerequisites
+
+Install [Docker Compose v2.20+ or Docker Desktop](https://docs.docker.com/compose/install/).
+
+### Initial Setup
 
 Initialize a new UserFrosting project:
 
-1. Get UserFrosting repository : 
-   ```bash
-   docker run --rm -it -v "$(pwd):/app" composer create-project userfrosting/userfrosting UserFrosting "^6.0" --no-scripts --no-install --ignore-platform-reqs --stability=beta
-   ```
-2. Change to the new directory : 
-   ```bash
-   cd UserFrosting
-   ```
-3. Copy the default env file : 
-   ```bash
-   cp docker/.env.example .env
-   cp app/.env.docker app/.env
-   ```
-   > [!NOTE]
-   > The project-root `.env` selects the Compose file with `DOCKER_MODE` and sets `COMPOSE_PROJECT_NAME`, which defines the containers, images, networks, and volumes names.
-   >
-   > Compose passes the database settings from this file's `MYSQL_*` variables to the application, so those values stay synchronized.
-   >
-   > The default host ports are `8080` (HTTP), `5173` (Vite), `8503` (MySQL), `1025` (SMTP), and `8025` (Mailpit). Override them in the project-root `.env` when running multiple checkouts.
-   >
-   > Use this to run parallel instances of UserFrosting with isolated resources.
-4. Build all the Docker containers:
-   ```bash
-   docker compose build --no-cache
-   ```
-5. Start all the containers:
-   ```bash
-   docker compose up -d
-   ```
-   > [!NOTE]
-   > The Vue frontend installs dependencies from the current package files when its container starts. Its `node_modules` directory is stored separately from the host's, so changes to the lockfile are picked up on the next container start.
-6. Set some directory permissions (your may have to enter your root password):
-   ```bash
-   sudo chown -R $USER: .
-   sudo chmod 777 app/{logs,cache,sessions}
-   ```
-7. Install all composer modules used in UserFrosting:
-   ```bash
-   docker compose exec app composer update
-   ```
-8. Install UserFrosting (database configuration and migrations, creation of admin user, ...). You'll need to provide info to create the admin user.
-   ```bash
-   docker compose exec app php bakery bake
-   ```
-Now visit [http://localhost:8080](http://localhost:8080) to see your UserFrosting homepage!
+```bash
+docker run --rm -it -v "$(pwd):/app" composer create-project userfrosting/userfrosting UserFrosting "^6.1" --no-scripts --no-install --ignore-platform-reqs --stability=beta
+```
 
-> All calls to Bakery commands need to be prefixed by `docker compose`, since they need to run on the containers, not your computer. For example:
-> `docker compose exec app php bakery ...`.
-
-**You can paste these into a bash file and execute it!**
+Change to the new directory:
 
 ```bash
-docker run --rm -it -v "$(pwd):/app" composer create-project userfrosting/userfrosting UserFrosting "^6.0" --no-scripts --no-install --ignore-platform-reqs  --stability=beta
 cd UserFrosting
-cp app/.env.docker app/.env
+```
+
+Copy the default environment files:
+
+```bash
 cp docker/.env.example .env
-docker compose build --no-cache
-docker compose up -d
+cp app/.env.docker app/.env
+```
+
+> [!TIP]
+> The `.env` file (copied from `docker/.env.example`) can define `COMPOSE_PROJECT_NAME`, which determines the names of containers, images, networks, and volumes. If it is unset, Compose uses the checkout directory name instead. You can set it to a unique value to avoid conflicts with other projects or branch checkouts.
+>
+> You can also define other environment variables here, such as database credentials or service ports.
+
+> [!NOTE]
+> Compose passes the database settings from `MYSQL_*` environment variables in this file to the PHP app, keeping its connection credentials synchronized with MySQL. You don't need to configure the database connection manually in the app, including in its `.env` file.
+
+Set the directory permissions (you may need to enter your root password):
+
+```bash
 sudo chown -R $USER: .
 sudo chmod 777 app/{logs,cache,sessions}
+```
+
+### Build and Start Containers
+
+Build and start all the Docker containers:
+
+```bash
+docker compose up -d --build
+```
+
+> [!NOTE]
+> At this point, the Docker containers are built and running, but setup is not yet complete. You still need to install the Composer dependencies and run the Bakery commands to set up UserFrosting. Otherwise, the UI will not function correctly and may display a blank page.
+
+### Install Composer Modules
+
+Install all Composer dependencies used by UserFrosting:
+
+```bash
 docker compose exec app composer update
+```
+
+### Install UserFrosting
+
+Set up UserFrosting by running the Bake command to apply database migrations and create an administrator account. You'll be prompted for the information needed to create the account.
+
+```bash
 docker compose exec app php bakery bake
 ```
 
-**Start / stop containers**
+Now visit [http://localhost:8080](http://localhost:8080) to see your UserFrosting homepage!
 
-If you need to stop the UserFrosting docker containers, just change to your userfrosting directory and run:
+## Using the Docker Environment
+
+### Start/stop containers
+
+To stop the UserFrosting Docker containers, change to your UserFrosting directory and run:
 
 ```bash
 docker compose stop
 ```
 
-To start containers again, change to your userfrosting directory and run:
+To start the containers again, change to your UserFrosting directory and run:
 
 ```bash
 docker compose up -d
 ```
 
-**Reset the database and containers**
+If you need to rebuild the containers without starting them, run:
 
-To stop the containers but keep the database volume, run:
+```bash
+docker compose build
+```
+
+### Running Bakery commands
+
+Prefix all Bakery commands with `docker compose` so they run in the containers rather than on your computer. For example:
+
+```bash
+docker compose exec app php bakery ...
+```
+
+### Updating frontend dependencies
+
+The `app` and `vue-frontend` containers share a Docker-managed `node_modules` volume, separate from your host's `node_modules`. The Vue frontend waits for the dependencies to be installed by Bakery before starting Vite. On a fresh setup, `docker compose exec app php bakery bake` installs the locked dependencies as part of setup.
+
+To install dependencies from the current lockfile, run:
+
+```bash
+docker compose exec app php bakery assets:install
+```
+
+To update dependencies and the lockfile, run:
+
+```bash
+docker compose exec app php bakery assets:update
+```
+
+After changing dependencies, restart the Vue dev server to ensure it reloads them:
+
+```bash
+docker compose restart vue-frontend
+```
+
+> [!NOTE]
+> Vue Hot Module Replacement (HMR) is enabled and will automatically reload the frontend when changes are detected in the source files. You don't need to restart the Vue dev server manually when editing source files.
+
+### Using Mailpit
+
+Mailpit is used to capture outgoing emails from the application. You can access the Mailpit web interface at [http://localhost:8025](http://localhost:8025) to view and manage emails sent by UserFrosting.
+
+### Reset the database and containers
+
+To remove the containers while keeping the database and frontend dependency volumes, run:
 
 ```bash
 docker compose down --remove-orphans
 ```
 
-To also delete the persisted database and start with a clean database, add `--volumes`:
+To also delete the persisted database and frontend dependency volumes and start with a clean slate, add `--volumes`:
 
 ```bash
 docker compose down --remove-orphans --volumes
 ```
 
-This permanently removes the database data and Docker-managed application volumes. In development, the frontend reinstalls its dependencies when it starts again. Source files and sprinkles are not deleted.
+> [!WARNING]
+> This permanently removes the database data volume. Source files and sprinkles are not deleted.
 
-## Production
+## Production Environment
 
-1. Copy the production app environment template:
-   ```bash
-   cp app/.env.docker.production app/.env
-   ```
-2. Set `DOCKER_MODE=production` in the project-root `.env`. Compose then selects `compose.production.yaml`.
-3. Replace both sample MySQL passwords in the project-root `.env`, set a unique `CSRF_SECRET`, the public HTTPS `URI_PUBLIC`, and real SMTP settings in `app/.env`. Compose injects the MySQL credentials from the project-root `.env` into the PHP container, so do not duplicate them in the app env file.
-4. Build and start the production images:
-   ```bash
-   docker compose build
-   docker compose up -d
-   ```
-5. Apply database migrations and create the initial administrator:
-   ```bash
-   docker compose exec app php bakery migrate --force
-   docker compose exec app php bakery create:admin-user
-   ```
+The production environment uses a separate Docker Compose configuration and environment settings optimized for deployment. The production image build installs npm dependencies with `npm ci` when a lockfile is present, or `npm install` otherwise, then compiles the frontend with `npm run vite:build`. It installs Composer dependencies without development packages. The compiled public assets and Vite manifest are copied into the web and PHP images respectively; source code is not mounted at runtime. Before PHP-FPM starts, the app waits for Memcached to be healthy and runs Bakery's `clear-cache` command against the production Memcached cache and application cache files. Memcached is used for runtime caching. Mailpit is not available in the production environment, so you'll need a real SMTP server for sending emails.
 
-Production builds frontend assets into the image, installs Composer dependencies without development packages, and does not mount source code. The PHP image uses the Memcached extension and the application uses the private Memcached service for cache data. MySQL and Memcached are private to the Compose network; Mailpit, Vite, and development ports are not started or exposed. The database and application writable directories use Docker-managed volumes. Memcached is an ephemeral cache and is not persisted.
+To set up and run the production environment, first make sure your project is configured and tested on the Docker [development environment](#development-environment). To serve the production environment on a live server, you'll need to install Docker and Docker Compose on the server, and copy or pull your project files to the server.
 
-Do not run `php bakery bake` in the production container: that command also tries to build frontend assets, which are compiled into the image and do not require Node.js at runtime.
+### Setting Up the Production Environment
 
-The web container listens on loopback at port 8080 by default. Put it behind a TLS-terminating reverse proxy; if that proxy is in another container or host, configure the production `ports` binding in `compose.production.yaml` for the proxy's network. Configure the proxy to forward the original HTTPS scheme and host. Back up the database volume and protect both environment files; the sample credentials and secrets must be replaced before deployment.
+Copy the production app environment template:
+```bash
+cp app/.env.docker.production app/.env
+```
+
+Edit the root Docker `.env` file:
+```bash
+nano .env
+```
+
+Set `DOCKER_MODE=production` to enable the production environment and replace **both** sample MySQL passwords:
+```diff
+- DOCKER_MODE=development
++ DOCKER_MODE=production
+
+MYSQL_ROOT_PASSWORD=replace-this-before-production <-- Change this !
+MYSQL_PASSWORD=replace-this-before-production <-- Change this !
+```
+
+Next, edit the project `app/.env` file:
+```bash
+nano app/.env
+```
+
+Set a unique `CSRF_SECRET`, the public HTTPS `URI_PUBLIC`, and real SMTP settings in `app/.env`.
+
+Docker will inject the MySQL credentials from the project-root `.env` file into the PHP container, so you don't need to duplicate them in the app's environment file.
+
+### Build and Start Containers
+
+Build and start the production images:
+```bash
+docker compose up -d --build
+```
+
+Apply database migrations:
+```bash
+docker compose exec app php bakery migrate --force
+```
+
+If this is the first time setting up the production environment, you will also need to create the initial administrator user:
+```bash
+docker compose exec app php bakery create:admin-user
+```
+
+> [!WARNING]
+> Avoid running `php bakery bake` in the production container: that command also tries to build frontend assets, which are compiled into the image and do not require Node.js at runtime. Prefer running individual Bakery commands like `php bakery migrate` and `php bakery create:admin-user` instead.
+
+### Setting Up HTTPS
+
+The web container listens on loopback at port 8080 by default. You can configure a different port by modifying the `DOCKER_HTTP_PORT` variable in the root `.env` file. This is useful if you run multiple containers on the same host and need to avoid port conflicts.
+
+To enable HTTPS, configure a TLS-terminating reverse proxy in front of the web container. The reverse proxy handles the HTTPS connection and forwards requests to the web container over HTTP:
+
+```text
+Browser <-----> Reverse Proxy (HTTPS) <-----> Web Container (HTTP)
+```
+
+Ensure that your reverse proxy is configured to handle TLS termination and forward requests to the web container over HTTP. Nginx and Traefik are common choices for managing HTTPS in containerized environments.
+
+### Updating the Production Environment
+
+When updating the production environment, stop the running containers, fetch the latest changes, and rebuild the production image with `docker compose up -d --build`. The Composer and npm dependencies will be updated as part of the build process and frontend assets will be recompiled. When the app container starts, Bakery's `clear-cache` command clears the configured Memcached cache and application cache files.
+
+Avoid running `php bakery bake` as it attempts to rebuild frontend assets. Instead, use individual Bakery commands like `php bakery migrate` for database migrations, or other purposes.

@@ -9,7 +9,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . .
-RUN npm ci --no-audit --no-fund \
+RUN if [ -f package-lock.json ]; then \
+        npm ci --no-audit --no-fund; \
+    else \
+        npm install --no-audit --no-fund; \
+    fi \
+    && npm install-scripts approve vue-demi --all --no-allow-scripts-pin \
+    && npm install --no-audit --no-fund \
     && npm run vite:build
 
 FROM php:8.5-fpm AS app

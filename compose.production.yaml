@@ -9,7 +9,7 @@ services:
       mysql:
         condition: service_healthy
       memcached:
-        condition: service_started
+        condition: service_healthy
     environment:
       DB_CONNECTION: mysql
       DB_HOST: mysql
@@ -17,6 +17,7 @@ services:
       DB_NAME: ${MYSQL_DATABASE:-userfrosting}
       DB_USER: ${MYSQL_USER:-userfrosting}
       DB_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in the project .env}
+    command: ["sh", "-c", "php bakery clear-cache && exec php-fpm"]
     volumes:
       - ./app/.env:/app/app/.env:ro
       - app-cache:/app/app/cache
@@ -65,6 +66,12 @@ services:
     restart: unless-stopped
     image: memcached:1.6-alpine
     command: ["memcached", "-m", "${MEMCACHED_MEMORY_LIMIT:-128}", "-p", "11211", "-U", "0"]
+    healthcheck:
+      test: ["CMD-SHELL", "echo version | nc -w 1 127.0.0.1 11211 | grep -q '^VERSION'"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+      start_period: 5s
     networks:
       - backend
 
