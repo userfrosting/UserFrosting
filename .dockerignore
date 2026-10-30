@@ -1,0 +1,13 @@
+.git
+.env
+node_modules
+vendor
+public/assets
+public/.vite
+app/.env
+app/.env.*
+app/cache
+app/database
+app/logs
+app/sessions
+app/storage

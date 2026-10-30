@@ -1,0 +1,91 @@
+# Development-only Docker Compose configuration.
+services:
+  app:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: ./docker/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_NAME: ${MYSQL_DATABASE:-userfrosting}
+      DB_USER: ${MYSQL_USER:-docker}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-secret}
+    volumes:
+      - .:/app
+      - ./docker/app/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - backend
+  nginx:
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "127.0.0.1:${DOCKER_HTTP_PORT:-8080}:80"
+      - "[::1]:${DOCKER_HTTP_PORT:-8080}:80"
+    build:
+      context: ./docker/nginx
+    volumes:
+      - .:/app
+    depends_on:
+      - app
+      - vue-frontend
+    networks:
+      - frontend
+      - backend
+  vue-frontend:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: .
+      dockerfile: ./docker/vue/Dockerfile
+    ports:
+      - "127.0.0.1:${DOCKER_VITE_PORT:-5173}:5173"
+      - "[::1]:${DOCKER_VITE_PORT:-5173}:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - frontend
+  mysql:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: ./docker/mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-userfrosting}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-secret}
+      MYSQL_USER: ${MYSQL_USER:-docker}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-secret}
+    ports:
+      - "127.0.0.1:${DOCKER_MYSQL_PORT:-8503}:3306"
+      - "[::1]:${DOCKER_MYSQL_PORT:-8503}:3306"
+    volumes:
+      - userfrosting-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --protocol=tcp --host=127.0.0.1 --user=root --password=\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - backend
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '127.0.0.1:${DOCKER_SMTP_PORT:-1025}:1025'
+      - '[::1]:${DOCKER_SMTP_PORT:-1025}:1025'
+      - '127.0.0.1:${DOCKER_MAILPIT_PORT:-8025}:8025'
+      - '[::1]:${DOCKER_MAILPIT_PORT:-8025}:8025'
+    networks:
+      - backend
+volumes:
+  userfrosting-db:
+    driver: local
+networks:
+  frontend:
+  backend:
+    driver: bridge

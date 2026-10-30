@@ -1,0 +1,82 @@
+services:
+  app:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: docker/production.Dockerfile
+      target: app
+    depends_on:
+      mysql:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_NAME: ${MYSQL_DATABASE:-userfrosting}
+      DB_USER: ${MYSQL_USER:-userfrosting}
+      DB_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in the project .env}
+    volumes:
+      - ./app/.env:/app/app/.env:ro
+      - app-cache:/app/app/cache
+      - app-logs:/app/app/logs
+      - app-sessions:/app/app/sessions
+      - app-storage:/app/app/storage
+    networks:
+      - web
+      - backend
+
+  nginx:
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${DOCKER_HTTP_PORT:-8080}:80"
+      - "[::1]:${DOCKER_HTTP_PORT:-8080}:80"
+    build:
+      context: .
+      dockerfile: docker/production.Dockerfile
+      target: web
+    depends_on:
+      - app
+    networks:
+      - web
+
+  mysql:
+    restart: unless-stopped
+    build:
+      context: ./docker/mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-userfrosting}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in the project .env}
+      MYSQL_USER: ${MYSQL_USER:-userfrosting}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in the project .env}
+    volumes:
+      - userfrosting-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --protocol=tcp --host=127.0.0.1 --user=root --password=\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - backend
+
+  memcached:
+    restart: unless-stopped
+    image: memcached:1.6-alpine
+    command: ["memcached", "-m", "${MEMCACHED_MEMORY_LIMIT:-128}", "-p", "11211", "-U", "0"]
+    networks:
+      - backend
+
+volumes:
+  userfrosting-db:
+    driver: local
+  app-cache:
+  app-logs:
+  app-sessions:
+  app-storage:
+
+networks:
+  web:
+  backend:
+    driver: bridge

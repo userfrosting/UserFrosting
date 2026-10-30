@@ -12,13 +12,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Converted locale message files from PHP arrays to YAML.
-- Updated Docker setup to use PHP 8.5.
-- [Docker] Configure Compose project names and host ports through a dedicated top-level Docker `.env` file copied from `docker/.env.example`, making it easier for separate instances to use isolated resources. Use Compose's standard `COMPOSE_PROJECT_NAME` to override the container project name if needed.
 
-### Fixed
-- [Docker] Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.
-- [Docker] Apply the standalone MySQL configuration and remove the duplicate PHP `memory_limit` setting.
-- [Docker] Bind development service ports to IPv4 and IPv6 loopback, wait for MySQL health, and clarify database-volume reset behavior.
+### Docker Changes & Fixes
+- Updated the Docker setup to use PHP 8.5.
+- Added a production Compose configuration, selectable with `DOCKER_MODE`. Production Docker config includes compiled frontend assets, production PHP settings, private MySQL, Memcached, and a production app environment config.
+- Use `app/.env` as the PHP environment file in both Docker modes; production Compose mounts it read-only and the ignore rules exclude it.
+- Changed `npm install` to `npm ci` for repeatable production asset builds.
+- Configured Compose project names and host ports through a dedicated top-level Docker `.env` file copied from `docker/.env.example`, making it easier for separate instances to use isolated resources. 
+- Use Compose's standard `COMPOSE_PROJECT_NAME` to override the container project name if needed.
+- Used Memcached as the production cache and injected MySQL credentials from the project-root `.env` into the application container to keep them in sync.
+- Installed frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`, in a separate Docker volume.
+- Applied the standalone MySQL configuration and removed the duplicate PHP `memory_limit` setting.
+- Bound development service ports to IPv4 and IPv6 loopback, waited for MySQL health, and clarified database-volume reset behavior.
 
 ## [6.0.3](https://github.com/userfrosting/UserFrosting/compare/6.0.2...6.0.3) - 2026-09-28
 - No changes.
