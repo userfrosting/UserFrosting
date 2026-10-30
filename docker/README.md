@@ -204,7 +204,7 @@ If this is the first time setting up the production environment, you will also n
 docker compose exec app php bakery create:admin-user
 ```
 
-> [!WARNING]
+> [!WARNING]
 > Avoid running `php bakery bake` in the production container: that command also tries to build frontend assets, which are compiled into the image and do not require Node.js at runtime. Prefer running individual Bakery commands like `php bakery migrate` and `php bakery create:admin-user` instead.
 
 ### Setting Up HTTPS
