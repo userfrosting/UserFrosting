@@ -1,0 +1,48 @@
+services:
+  app:
+    restart: unless-stopped
+    build:
+      context: ..
+      dockerfile: docker/production.Dockerfile
+      target: app
+      args:
+        PHP_VERSION: ${DOCKER_PHP_VERSION:-8.5}
+        APP_UID: ${DOCKER_UID:-1000}
+        APP_GID: ${DOCKER_GID:-1000}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+        required: false
+      pgsql:
+        condition: service_healthy
+        required: false
+      memcached:
+        condition: service_healthy
+        required: false
+      redis:
+        condition: service_healthy
+        required: false
+    environment:
+      UF_MODE: production
+      VITE_DEV_ENABLED: "false"
+      DB_CONNECTION: ${DOCKER_DB_CONNECTION:-mysql}
+      DB_HOST: ${DOCKER_DB_CONNECTION:-mysql}
+      DB_PORT: ${DOCKER_DB_PORT:-3306}
+      DB_NAME: ${DOCKER_DB_NAME:-userfrosting}
+      DB_USER: ${DOCKER_DB_USER:-docker}
+      DB_PASSWORD: ${DOCKER_DB_PASSWORD:?Set DOCKER_DB_PASSWORD in the project .env}
+      CACHE_DRIVER: ${DOCKER_CACHE_DRIVER:-memcached}
+      MEMCACHED_HOST: memcached
+      REDIS_HOST: redis
+    command: ["sh", "-c", "php bakery clear-cache && exec php-fpm"]
+    volumes:
+      - ../app/.env:/app/app/.env:ro
+      - app-cache:/app/app/cache
+      - app-logs:/app/app/logs
+      - app-sessions:/app/app/sessions
+      - app-storage:/app/app/storage
+    networks:
+      - web
+      - backend

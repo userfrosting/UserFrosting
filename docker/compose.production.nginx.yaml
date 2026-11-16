@@ -1,0 +1,14 @@
+services:
+  nginx:
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${DOCKER_HTTP_PORT:-8080}:8080"
+      - "[::1]:${DOCKER_HTTP_PORT:-8080}:8080"
+    build:
+      context: ..
+      dockerfile: docker/production.Dockerfile
+      target: web
+    depends_on:
+      - app
+    networks:
+      - web

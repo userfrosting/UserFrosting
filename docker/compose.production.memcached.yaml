@@ -1,0 +1,13 @@
+services:
+  memcached:
+    restart: unless-stopped
+    image: memcached:1.6-alpine
+    command: ["memcached", "-m", "${MEMCACHED_MEMORY_LIMIT:-128}", "-p", "11211", "-U", "0"]
+    healthcheck:
+      test: ["CMD-SHELL", "echo version | nc -w 1 127.0.0.1 11211 | grep -q '^VERSION'"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+      start_period: 5s
+    networks:
+      - backend

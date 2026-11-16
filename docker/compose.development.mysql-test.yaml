@@ -1,0 +1,20 @@
+services:
+  mysql-test:
+    build:
+      context: ./mysql
+    environment:
+      MYSQL_DATABASE: ${DOCKER_DB_TEST_NAME:-userfrosting_test}
+      MYSQL_ROOT_PASSWORD: ${DOCKER_DB_TEST_ROOT_PASSWORD:-testsecret}
+      MYSQL_USER: ${DOCKER_DB_TEST_USER:-userfrosting_test}
+      MYSQL_PASSWORD: ${DOCKER_DB_TEST_PASSWORD:-testsecret}
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --protocol=tcp --host=127.0.0.1 --user=root --password=\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    profiles: [mysql-test]
+    networks:
+      - backend

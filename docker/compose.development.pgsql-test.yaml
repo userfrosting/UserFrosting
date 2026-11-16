@@ -1,0 +1,18 @@
+services:
+  pgsql-test:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${DOCKER_DB_TEST_NAME:-userfrosting_test}
+      POSTGRES_USER: ${DOCKER_DB_TEST_USER:-userfrosting_test}
+      POSTGRES_PASSWORD: ${DOCKER_DB_TEST_PASSWORD:-testsecret}
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    profiles: [pgsql-test]
+    networks:
+      - backend

@@ -1,0 +1,17 @@
+services:
+  nginx:
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "127.0.0.1:${DOCKER_HTTP_PORT:-8080}:8080"
+      - "[::1]:${DOCKER_HTTP_PORT:-8080}:8080"
+    build:
+      context: ./nginx
+    volumes:
+      - ..:/app
+    depends_on:
+      - app
+      - vue-frontend
+    networks:
+      - frontend
+      - backend

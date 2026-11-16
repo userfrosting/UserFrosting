@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Converted locale message files from PHP arrays to YAML.
 
 ### Docker Changes & Fixes
+- Split development and production Compose services into separate, mode-specific files under `docker/`.
+- Added optional MariaDB, PostgreSQL, and Redis providers; added optional Memcached and provider-backed database testing profiles for development, with provider selection for production.
+- Run PHP, Vite, and Nginx services as non-root users and configure host UID/GID mapping for development bind mounts.
 - Updated the Docker setup to use PHP 8.5.
 - Added a production Compose configuration, selectable with `DOCKER_MODE`. Production Docker config includes compiled frontend assets, production PHP settings, private MySQL, Memcached, and a production app environment config.
 - Use `app/.env` as the PHP environment file in both Docker modes; production Compose mounts it read-only and the ignore rules exclude it.
@@ -24,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Shared a Docker-managed `node-modules` volume between the development app and Vue containers; Bakery installs dependencies and Vue waits for them before starting Vite.
 - Applied the standalone MySQL configuration and removed the duplicate PHP `memory_limit` setting.
 - Bound development service ports to IPv4 and IPv6 loopback, waited for MySQL health, and clarified database-volume reset behavior.
+- Allow selecting PHP 8.3–8.5 for development and production Docker images with `DOCKER_PHP_VERSION` (default: 8.5).
 
 ## [6.0.3](https://github.com/userfrosting/UserFrosting/compare/6.0.2...6.0.3) - 2026-09-28
 - No changes.

@@ -1,0 +1,12 @@
+services:
+  memcached:
+    image: memcached:1.6-alpine
+    profiles: [memcached]
+    healthcheck:
+      test: ["CMD-SHELL", "echo version | nc -w 1 127.0.0.1 11211 | grep -q '^VERSION'"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+      start_period: 5s
+    networks:
+      - backend

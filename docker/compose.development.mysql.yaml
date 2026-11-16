@@ -1,0 +1,24 @@
+services:
+  mysql:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: ./mysql
+    environment:
+      MYSQL_DATABASE: ${DOCKER_DB_NAME:-userfrosting}
+      MYSQL_ROOT_PASSWORD: ${DOCKER_DB_ROOT_PASSWORD:-secret}
+      MYSQL_USER: ${DOCKER_DB_USER:-docker}
+      MYSQL_PASSWORD: ${DOCKER_DB_PASSWORD:-secret}
+    ports:
+      - "127.0.0.1:${DOCKER_MYSQL_PORT:-8503}:3306"
+      - "[::1]:${DOCKER_MYSQL_PORT:-8503}:3306"
+    volumes:
+      - userfrosting-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --protocol=tcp --host=127.0.0.1 --user=root --password=\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - backend

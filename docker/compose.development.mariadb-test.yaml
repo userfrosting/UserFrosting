@@ -1,0 +1,19 @@
+services:
+  mariadb-test:
+    image: mariadb:11.8
+    environment:
+      MARIADB_DATABASE: ${DOCKER_DB_TEST_NAME:-userfrosting_test}
+      MARIADB_ROOT_PASSWORD: ${DOCKER_DB_TEST_ROOT_PASSWORD:-testsecret}
+      MARIADB_USER: ${DOCKER_DB_TEST_USER:-userfrosting_test}
+      MARIADB_PASSWORD: ${DOCKER_DB_TEST_PASSWORD:-testsecret}
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    profiles: [mariadb-test]
+    networks:
+      - backend

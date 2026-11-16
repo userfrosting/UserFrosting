@@ -1,5 +1,8 @@
 FROM node:24-bookworm
 
+ARG NODE_UID=1000
+ARG NODE_GID=1000
+
 # Set working directory
 WORKDIR /app
 
@@ -10,6 +13,13 @@ RUN apt-get update && apt-get install -y \
   g++ \
   make \
   && rm -rf /var/lib/apt/lists/*
+
+RUN groupmod --non-unique --gid "${NODE_GID}" node \
+  && usermod --non-unique --uid "${NODE_UID}" --gid "${NODE_GID}" node \
+  && mkdir -p /app/node_modules \
+  && chown node:node /app/node_modules
+
+USER node
 
 # Expose Vite dev port
 EXPOSE 5173

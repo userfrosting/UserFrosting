@@ -1,0 +1,23 @@
+services:
+  mariadb:
+    image: mariadb:11.8
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DOCKER_DB_NAME:-userfrosting}
+      MARIADB_ROOT_PASSWORD: ${DOCKER_DB_ROOT_PASSWORD:-secret}
+      MARIADB_USER: ${DOCKER_DB_USER:-docker}
+      MARIADB_PASSWORD: ${DOCKER_DB_PASSWORD:-secret}
+    ports:
+      - "127.0.0.1:${DOCKER_MARIADB_PORT:-13307}:3306"
+      - "[::1]:${DOCKER_MARIADB_PORT:-13307}:3306"
+    volumes:
+      - userfrosting-mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    profiles: [mariadb]
+    networks:
+      - backend

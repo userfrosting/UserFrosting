@@ -1,0 +1,56 @@
+services:
+  app:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: ./app
+      args:
+        PHP_VERSION: ${DOCKER_PHP_VERSION:-8.5}
+        APP_UID: ${DOCKER_UID:-1000}
+        APP_GID: ${DOCKER_GID:-1000}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+        required: false
+      pgsql:
+        condition: service_healthy
+        required: false
+      mysql-test:
+        condition: service_healthy
+        required: false
+      mariadb-test:
+        condition: service_healthy
+        required: false
+      pgsql-test:
+        condition: service_healthy
+        required: false
+      memcached:
+        condition: service_healthy
+        required: false
+      redis:
+        condition: service_healthy
+        required: false
+    environment:
+      DB_CONNECTION: ${DOCKER_DB_CONNECTION:-mysql}
+      DB_HOST: ${DOCKER_DB_CONNECTION:-mysql}
+      DB_PORT: ${DOCKER_DB_PORT:-3306}
+      DB_NAME: ${DOCKER_DB_NAME:-userfrosting}
+      DB_USER: ${DOCKER_DB_USER:-docker}
+      DB_PASSWORD: ${DOCKER_DB_PASSWORD:-secret}
+      DB_TEST_CONNECTION: ${DOCKER_DB_TEST_CONNECTION:-memory}
+      DB_TEST_HOST: ${DOCKER_DB_TEST_HOST:-${DOCKER_DB_TEST_CONNECTION:-memory}-test}
+      DB_TEST_PORT: ${DOCKER_DB_TEST_PORT:-3306}
+      DB_TEST_NAME: ${DOCKER_DB_TEST_NAME:-userfrosting_test}
+      DB_TEST_USER: ${DOCKER_DB_TEST_USER:-userfrosting_test}
+      DB_TEST_PASSWORD: ${DOCKER_DB_TEST_PASSWORD:-testsecret}
+      CACHE_DRIVER: ${DOCKER_CACHE_DRIVER:-file}
+      MEMCACHED_HOST: memcached
+      REDIS_HOST: redis
+    volumes:
+      - ..:/app
+      - node-modules:/app/node_modules
+      - ./app/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - backend

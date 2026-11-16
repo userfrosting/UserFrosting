@@ -1,0 +1,19 @@
+services:
+  pgsql:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DOCKER_DB_NAME:-userfrosting}
+      POSTGRES_USER: ${DOCKER_DB_USER:-docker}
+      POSTGRES_PASSWORD: ${DOCKER_DB_PASSWORD:?Set DOCKER_DB_PASSWORD in the project .env}
+    volumes:
+      - userfrosting-pgsql:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    profiles: [pgsql]
+    networks:
+      - backend
