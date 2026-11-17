@@ -13,7 +13,9 @@ RUN apt-get update && apt-get install -y apt-utils curl git unzip gnupg2 \
     libpq-dev \
     libicu-dev \
     libkrb5-dev \
+    libonig-dev \
     libssl-dev \
+    libtool \
     libxslt1-dev \
     libxml2-dev \
     locales \
@@ -34,12 +36,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Install XDebug via PECL
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
+# Install PIE (PHP Installer Environment)
+COPY --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
 
-RUN pecl install memcached redis \
-    && docker-php-ext-enable memcached redis
+# Install XDebug, Memcached, and Redis via PIE
+RUN pie install xdebug/xdebug
+RUN pie install php-memcached/php-memcached
+RUN pie install phpredis/phpredis
 
 # Install Composer
 RUN curl -sSfo /tmp/composer.phar https://getcomposer.org/installer \
@@ -48,6 +51,7 @@ RUN curl -sSfo /tmp/composer.phar https://getcomposer.org/installer \
 # Configure and install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install -j$(nproc) mbstring \
     && docker-php-ext-install -j$(nproc) pcntl pdo pdo_mysql pdo_pgsql zip
 
 WORKDIR /app
