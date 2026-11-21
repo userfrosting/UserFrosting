@@ -122,10 +122,14 @@
                     "XDEBUG_CONFIG": "idekey=VSCODE"
                 }
             },
-            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit",
+            "command": "vendor/bin/phpunit",
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "presentation": {
+                "clear": true,
+                "panel": "dedicated"
             }
         },
         {
@@ -170,7 +174,11 @@
         {
             "label": "Docker - PHPUnit",
             "type": "shell",
-            "command": "docker-compose exec app vendor/bin/phpunit"
+            "command": "docker-compose exec app vendor/bin/phpunit",
+            "presentation": {
+                "clear": true,
+                "panel": "dedicated"
+            }
         },
         {
             "label": "Docker - PHP CS Fixer",
@@ -185,7 +193,16 @@
         {
             "label": "Docker - Shell (App)",
             "type": "shell",
-            "command": "docker-compose exec app bash"
+            "command": "docker-compose exec app bash",
+            "isBackground": true,
+            "runOptions": {
+                "instanceLimit": 99
+            },
+            "presentation": {
+                "panel": "new",
+                "close": true,
+                "showReuseMessage": false
+            }
         }
     ]
 }
