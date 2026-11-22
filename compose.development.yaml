@@ -15,11 +15,11 @@ include:
 volumes:
   node-modules:
     driver: local
-  userfrosting-db:
+  mysql-db:
     driver: local
-  userfrosting-mariadb:
+  mariadb-db:
     driver: local
-  userfrosting-pgsql:
+  pgsql-db:
     driver: local
 networks:
   frontend:

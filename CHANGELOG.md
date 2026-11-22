@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Align development database volume names with the monorepo Compose configuration.
+
 ## [6.1.0-beta.1](https://github.com/userfrosting/UserFrosting/compare/6.0.3...6.1.0-beta.1) - 2026-11-22
 ### Changed
 - Converted locale message files from PHP arrays to YAML.

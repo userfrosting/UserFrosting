@@ -13,7 +13,7 @@ services:
       - "127.0.0.1:${DOCKER_MYSQL_PORT:-8503}:3306"
       - "[::1]:${DOCKER_MYSQL_PORT:-8503}:3306"
     volumes:
-      - userfrosting-db:/var/lib/mysql
+      - mysql-db:/var/lib/mysql
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping --protocol=tcp --host=127.0.0.1 --user=root --password=\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
       interval: 5s

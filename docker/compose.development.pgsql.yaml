@@ -10,7 +10,7 @@ services:
       - "127.0.0.1:${DOCKER_PGSQL_PORT:-15432}:5432"
       - "[::1]:${DOCKER_PGSQL_PORT:-15432}:5432"
     volumes:
-      - userfrosting-pgsql:/var/lib/postgresql/data
+      - pgsql-db:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
       interval: 5s

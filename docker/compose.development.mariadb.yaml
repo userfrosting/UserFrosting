@@ -11,7 +11,7 @@ services:
       - "127.0.0.1:${DOCKER_MARIADB_PORT:-13307}:3306"
       - "[::1]:${DOCKER_MARIADB_PORT:-13307}:3306"
     volumes:
-      - userfrosting-mariadb:/var/lib/mysql
+      - mariadb-db:/var/lib/mysql
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
