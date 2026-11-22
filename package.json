@@ -1,16 +1,16 @@
 {
     "name": "userfrosting",
-    "version": "6.0.3",
+    "version": "6.1.0-beta.1",
     "private": true,
     "type": "module",
     "engines": {
         "node": ">= 20"
     },
     "dependencies": {
-        "@userfrosting/sprinkle-account": "^6.0.0-beta",
-        "@userfrosting/sprinkle-admin": "^6.0.0-beta",
-        "@userfrosting/sprinkle-core": "^6.0.0-beta",
-        "@userfrosting/theme-pink-cupcake": "^6.0.0-beta",
+        "@userfrosting/sprinkle-account": "^6.1.0-beta",
+        "@userfrosting/sprinkle-admin": "^6.1.0-beta",
+        "@userfrosting/sprinkle-core": "^6.1.0-beta",
+        "@userfrosting/theme-pink-cupcake": "^6.1.0-beta",
         "axios": "^1.16.0",
         "pinia": "^2.1.6",
         "pinia-plugin-persistedstate": "^3.2.0",
