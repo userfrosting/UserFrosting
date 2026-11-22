@@ -36,7 +36,7 @@ services:
       CACHE_DRIVER: ${DOCKER_CACHE_DRIVER:-memcached}
       MEMCACHED_HOST: memcached
       REDIS_HOST: redis
-    command: ["sh", "-c", "php bakery clear-cache && exec php-fpm"]
+    command: ["sh", "-c", "php bakery clean:cache && exec php-fpm"]
     volumes:
       - ../app/.env:/app/app/.env:ro
       - app-cache:/app/app/cache
